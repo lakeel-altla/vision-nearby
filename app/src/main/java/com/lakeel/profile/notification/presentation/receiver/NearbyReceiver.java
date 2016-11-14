@@ -7,7 +7,8 @@ import com.google.android.gms.nearby.messages.Distance;
 import com.google.android.gms.nearby.messages.Message;
 
 import com.lakeel.altla.library.AttachmentListener;
-import com.lakeel.profile.notification.presentation.constants.AttachmentType;
+import com.lakeel.profile.notification.presentation.attachment.AttachmentState;
+import com.lakeel.profile.notification.presentation.attachment.AttachmentStateFactory;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -28,12 +29,10 @@ public final class NearbyReceiver extends BroadcastReceiver {
 
                     @Override
                     protected void onFound(String type, String value) {
-                        AttachmentType attachmentType = AttachmentType.toType(type);
-                        if (attachmentType == AttachmentType.UNKNOWN) {
-                            LOGGER.warn("Unhandled type:type=" + type);
-                            return;
+                        AttachmentState state = AttachmentStateFactory.create(value);
+                        if (state != null) {
+                            state.startService(context, value);
                         }
-                        attachmentType.startService(context, value);
                     }
 
                     @Override
