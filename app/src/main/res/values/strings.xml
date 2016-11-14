@@ -60,7 +60,8 @@
     <string name="message_not_found">Not found.</string>
     <string name="message_temperature">%1$s℃</string>
     <string name="message_humidity">%1$s%%</string>
-    <string name="message_line_user_found">%1$s is using LINE App.</string>
+    <string name="message_line_user_found">LINE user is found.</string>
+    <string name="message_user_using_line">%1$s is using LINE App.</string>
     <string name="message_user_found">User found.</string>
 
     <string name="button_add">Add</string>

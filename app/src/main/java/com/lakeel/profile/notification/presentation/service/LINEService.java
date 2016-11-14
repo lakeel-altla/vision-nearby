@@ -10,22 +10,18 @@ import com.lakeel.profile.notification.R;
 import com.lakeel.profile.notification.data.entity.ItemsEntity;
 import com.lakeel.profile.notification.data.entity.LINELinksEntity;
 import com.lakeel.profile.notification.presentation.intent.IntentKey;
+import com.lakeel.profile.notification.presentation.intent.PendingIntentCreator;
+import com.lakeel.profile.notification.presentation.view.notification.NotificationNotifier;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import android.app.IntentService;
-import android.app.Notification;
-import android.app.NotificationManager;
 import android.app.PendingIntent;
-import android.content.Context;
 import android.content.Intent;
 import android.net.Uri;
-import android.support.v4.app.NotificationCompat;
-import android.support.v4.content.ContextCompat;
 
 import java.util.Iterator;
-import java.util.UUID;
 
 import rx.Single;
 import rx.SingleSubscriber;
@@ -55,7 +51,7 @@ public class LINEService extends IntentService {
     protected void onHandleIntent(Intent intent) {
         String lineUrl = intent.getStringExtra(IntentKey.LINE_URL.name());
 
-        LOGGER.info("Line URL was found:LINE URL = " + lineUrl);
+        LOGGER.info("Line URL was found:URL = " + lineUrl);
 
         findUserIdByLINEUrl(lineUrl)
                 .flatMap(new Func1<LINELinksEntity, Single<ItemsEntity>>() {
@@ -66,30 +62,19 @@ public class LINEService extends IntentService {
                 }).subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribe(entity -> {
-                    Intent notificationIntent = new Intent(Intent.ACTION_VIEW);
-                    notificationIntent.setFlags(Intent.FLAG_ACTIVITY_SINGLE_TOP | Intent.FLAG_ACTIVITY_CLEAR_TOP);
-                    notificationIntent.setData(Uri.parse(lineUrl));
 
-                    Context context = getApplicationContext();
+                    // Notify a notification.
+                    PendingIntentCreator creator = new PendingIntentCreator(getApplicationContext(), Uri.parse(lineUrl));
+                    PendingIntent pendingIntent = creator.create();
 
-                    PendingIntent pendingIntent = PendingIntent.getActivity(context, 0, notificationIntent, 0);
-
-                    int uuid = UUID.randomUUID().hashCode();
-
-                    Notification notification = new NotificationCompat.Builder(context)
-                            .setContentTitle(context.getResources().getString(R.string.message_line_user_found, entity.name))
-                            .setTicker(lineUrl)
-                            .setContentText(lineUrl)
-                            .setSmallIcon(R.mipmap.ic_nearby_white)
-                            .setVibrate(new long[]{0, 200, 100, 200, 100, 200})
-                            .setAutoCancel(true)
-                            .setContentIntent(pendingIntent)
-                            .setColor(ContextCompat.getColor(context, R.color.colorPrimary))
+                    NotificationNotifier notifier = new NotificationNotifier.Builder(getApplicationContext())
+                            .intent(pendingIntent)
+                            .title(R.string.message_line_user_found)
+                            .text(R.string.message_user_using_line, entity.name)
                             .build();
+                    notifier.notifyNotification();
 
-                    NotificationManager manager = (NotificationManager) context.getSystemService(Context.NOTIFICATION_SERVICE);
-                    manager.notify(uuid, notification);
-                }, e -> LOGGER.error("Failed to notify LINE notification.", e));
+                }, e -> LOGGER.error("Failed to notify a LINE notification.", e));
     }
 
     Single<LINELinksEntity> findUserIdByLINEUrl(String url) {
