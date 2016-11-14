@@ -29,7 +29,7 @@ public final class NearbyReceiver extends BroadcastReceiver {
 
                     @Override
                     protected void onFound(String type, String value) {
-                        AttachmentState state = AttachmentStateFactory.create(value);
+                        AttachmentState state = AttachmentStateFactory.create(type);
                         if (state != null) {
                             state.startService(context, value);
                         }

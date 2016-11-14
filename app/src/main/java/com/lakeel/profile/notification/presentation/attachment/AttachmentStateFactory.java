@@ -8,8 +8,8 @@ public final class AttachmentStateFactory {
     private AttachmentStateFactory() {
     }
 
-    public static AttachmentState create(String value) {
-        AttachmentType type = AttachmentType.toType(value);
+    public static AttachmentState create(String attachmentType) {
+        AttachmentType type = AttachmentType.toType(attachmentType);
         switch (type) {
             case USER_ID:
                 return new UserIdAttachment();
