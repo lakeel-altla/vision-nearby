@@ -1,0 +1,111 @@
+package com.lakeel.profile.notification.presentation.view.fragment.recently;
+
+import com.lakeel.profile.notification.R;
+import com.lakeel.profile.notification.presentation.intent.IntentExtra;
+import com.lakeel.profile.notification.presentation.intent.RecentlyIntentData;
+import com.lakeel.profile.notification.presentation.presenter.recently.RecentlyPresenter;
+import com.lakeel.profile.notification.presentation.view.RecentlyView;
+import com.lakeel.profile.notification.presentation.view.activity.MainActivity;
+import com.lakeel.profile.notification.presentation.view.activity.RecentlyUserUserActivity;
+import com.lakeel.profile.notification.presentation.view.adapter.RecentlyAdapter;
+import com.lakeel.profile.notification.presentation.view.divider.DividerItemDecoration;
+import com.marshalchen.ultimaterecyclerview.UltimateRecyclerView;
+import com.marshalchen.ultimaterecyclerview.layoutmanagers.ScrollSmoothLineaerLayoutManager;
+import com.marshalchen.ultimaterecyclerview.swipe.SwipeItemManagerInterface;
+
+import android.content.Intent;
+import android.os.Bundle;
+import android.support.design.widget.Snackbar;
+import android.support.v4.app.Fragment;
+import android.support.v7.widget.LinearLayoutManager;
+import android.support.v7.widget.RecyclerView;
+import android.view.LayoutInflater;
+import android.view.View;
+import android.view.ViewGroup;
+import android.widget.RelativeLayout;
+
+import javax.inject.Inject;
+
+import butterknife.BindView;
+import butterknife.ButterKnife;
+
+public final class RecentlyFragment extends Fragment implements RecentlyView {
+
+    @Inject
+    RecentlyPresenter mPresenter;
+
+    @BindView(R.id.layout)
+    RelativeLayout mRelativeLayout;
+
+    @BindView(R.id.recycler_view)
+    UltimateRecyclerView mUltimateRecyclerView;
+
+    public static RecentlyFragment newInstance() {
+        return new RecentlyFragment();
+    }
+
+    @Override
+    public View onCreateView(LayoutInflater inflater, ViewGroup container,
+                             Bundle savedInstanceState) {
+        View view = inflater.inflate(R.layout.fragment_list, container, false);
+        ButterKnife.bind(this, view);
+
+        // Dagger
+        MainActivity.getUserComponent(this).inject(this);
+
+        mPresenter.onCreateView(this);
+
+        return view;
+    }
+
+    @Override
+    public void onActivityCreated(Bundle savedInstanceState) {
+        super.onActivityCreated(savedInstanceState);
+
+        RecyclerView.LayoutManager mLayoutManager = new ScrollSmoothLineaerLayoutManager(getContext(), LinearLayoutManager.VERTICAL, false, 500);
+        mUltimateRecyclerView.setLayoutManager(mLayoutManager);
+
+        RecentlyAdapter adapter = new RecentlyAdapter(mPresenter);
+        adapter.setMode(SwipeItemManagerInterface.Mode.Single);
+
+        // 縦方向のレイアウト。
+        mUltimateRecyclerView.addItemDecoration(new DividerItemDecoration(getContext()));
+        mUltimateRecyclerView.setAdapter(adapter);
+    }
+
+    @Override
+    public void onResume() {
+        super.onResume();
+        mPresenter.onResume();
+    }
+
+    @Override
+    public void onStop() {
+        super.onStop();
+        mPresenter.onStop();
+    }
+
+    @Override
+    public void showTitle() {
+        getActivity().setTitle(R.string.title_recently);
+    }
+
+    @Override
+    public void updateItems() {
+        RecentlyAdapter adapter = ((RecentlyAdapter) mUltimateRecyclerView.getAdapter());
+        adapter.removeAll();
+        adapter.insert(mPresenter.getItems());
+    }
+
+    @Override
+    public void showSnackBar(int resId) {
+        Snackbar.make(mRelativeLayout, resId, Snackbar.LENGTH_SHORT).show();
+    }
+
+    @Override
+    public void showRecentlyUserActivity(RecentlyIntentData data) {
+        Intent intent = new Intent(getContext(), RecentlyUserUserActivity.class);
+        intent.putExtra(IntentExtra.RECENTLY.name(), data);
+        getContext().startActivity(intent);
+    }
+}
