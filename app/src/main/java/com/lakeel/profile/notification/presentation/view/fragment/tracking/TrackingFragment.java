@@ -81,6 +81,12 @@ public final class TrackingFragment extends Fragment implements TrackingView, On
     }
 
     @Override
+    public void onStop() {
+        super.onStop();
+        mPresenter.onStop();
+    }
+
+    @Override
     public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
         super.onCreateOptionsMenu(menu, inflater);
     }

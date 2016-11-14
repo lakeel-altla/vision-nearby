@@ -14,6 +14,7 @@ import android.os.Bundle;
 import android.support.annotation.StringRes;
 import android.support.design.widget.Snackbar;
 import android.support.v7.preference.EditTextPreference;
+import android.support.v7.preference.Preference;
 import android.support.v7.preference.PreferenceCategory;
 import android.support.v7.preference.PreferenceFragmentCompat;
 import android.support.v7.preference.PreferenceScreen;
@@ -39,6 +40,8 @@ public final class SettingsFragment extends PreferenceFragmentCompat implements 
     private static final String KEY_CM_SECRET_KEY = "cmSecretKey";
 
     private static final String KEY_CM_JID = "cmJid";
+
+    private static final String KEY_DEVICES = "devices";
 
     private PreferenceScreen mPreferenceScreen;
 
@@ -90,6 +93,16 @@ public final class SettingsFragment extends PreferenceFragmentCompat implements 
                 ((MainActivity) getActivity()).onUnSubscribe();
             }
             return true;
+        });
+
+        PreferenceScreen screen = (PreferenceScreen) findPreference(KEY_DEVICES);
+        screen.setOnPreferenceClickListener(new Preference.OnPreferenceClickListener() {
+            @Override
+            public boolean onPreferenceClick(Preference preference) {
+                ((MainActivity) getActivity()).showBleEnabledActivity();
+
+                return false;
+            }
         });
 
         mLINEUrlPreference = (EditTextPreference) findPreference(KEY_LINE_URL);
