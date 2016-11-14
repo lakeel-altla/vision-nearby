@@ -11,7 +11,7 @@ import com.lakeel.altla.cm.CMApplication;
 import com.lakeel.altla.cm.config.AccessConfig;
 import com.lakeel.altla.library.ResolutionResultCallback;
 import com.lakeel.profile.notification.R;
-import com.lakeel.profile.notification.data.MyUser;
+import com.lakeel.profile.notification.presentation.firebase.MyUser;
 import com.lakeel.profile.notification.data.entity.BeaconIdEntity;
 import com.lakeel.profile.notification.data.entity.CMLinksEntity;
 import com.lakeel.profile.notification.data.entity.PreferencesEntity;
@@ -20,7 +20,6 @@ import com.lakeel.profile.notification.domain.usecase.FindCMLinksUseCase;
 import com.lakeel.profile.notification.domain.usecase.FindPreferencesUseCase;
 import com.lakeel.profile.notification.domain.usecase.ObserveConnectionUseCase;
 import com.lakeel.profile.notification.domain.usecase.SaveBeaconIdUseCase;
-import com.lakeel.profile.notification.presentation.FirebaseUserData;
 import com.lakeel.profile.notification.presentation.checker.BleState;
 import com.lakeel.profile.notification.presentation.checker.BluetoothChecker;
 import com.lakeel.profile.notification.presentation.presenter.BasePresenter;
@@ -174,7 +173,7 @@ public final class ActivityPresenter extends BasePresenter<ActivityView> impleme
     public void onSignedIn() {
         mObserveConnectionUseCase.execute();
 
-        FirebaseUserData userData = MyUser.getUserData();
+        MyUser.UserData userData = MyUser.getUserData();
         getView().showProfile(userData.mDisplayName, userData.mEmail, userData.mImageUri);
 
         if (ActivityCompat.checkSelfPermission(mContext, Manifest.permission.ACCESS_FINE_LOCATION) == PackageManager.PERMISSION_GRANTED) {

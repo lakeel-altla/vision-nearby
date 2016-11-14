@@ -1,6 +1,6 @@
 package com.lakeel.profile.notification.presentation.constants;
 
-import com.lakeel.profile.notification.data.MyUser;
+import com.lakeel.profile.notification.presentation.firebase.MyUser;
 import com.lakeel.profile.notification.presentation.intent.IntentKey;
 import com.lakeel.profile.notification.presentation.service.LINEService;
 import com.lakeel.profile.notification.presentation.service.LocationService;

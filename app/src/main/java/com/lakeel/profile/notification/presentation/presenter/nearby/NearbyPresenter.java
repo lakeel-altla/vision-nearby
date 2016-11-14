@@ -7,7 +7,7 @@ import com.google.android.gms.nearby.Nearby;
 import com.lakeel.altla.library.AttachmentListener;
 import com.lakeel.altla.library.ResolutionResultCallback;
 import com.lakeel.profile.notification.R;
-import com.lakeel.profile.notification.data.MyUser;
+import com.lakeel.profile.notification.presentation.firebase.MyUser;
 import com.lakeel.profile.notification.domain.usecase.FindConfigsUseCase;
 import com.lakeel.profile.notification.domain.usecase.FindItemUseCase;
 import com.lakeel.profile.notification.domain.usecase.SaveUsersToCmFavoritesUseCase;

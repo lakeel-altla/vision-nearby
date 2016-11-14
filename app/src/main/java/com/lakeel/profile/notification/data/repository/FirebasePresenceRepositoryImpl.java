@@ -7,7 +7,7 @@ import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ServerValue;
 import com.google.firebase.database.ValueEventListener;
 
-import com.lakeel.profile.notification.data.MyUser;
+import com.lakeel.profile.notification.presentation.firebase.MyUser;
 import com.lakeel.profile.notification.data.entity.PresencesEntity;
 import com.lakeel.profile.notification.domain.repository.FirebasePresenceRepository;
 

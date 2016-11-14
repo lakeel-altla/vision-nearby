@@ -12,7 +12,7 @@ import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
 
-import com.lakeel.profile.notification.data.MyUser;
+import com.lakeel.profile.notification.presentation.firebase.MyUser;
 import com.lakeel.profile.notification.data.entity.ItemsEntity;
 import com.lakeel.profile.notification.data.entity.RecentlyEntity;
 import com.lakeel.profile.notification.data.execption.DataStoreException;

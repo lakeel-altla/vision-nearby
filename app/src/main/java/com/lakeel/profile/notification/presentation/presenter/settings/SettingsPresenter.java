@@ -1,7 +1,7 @@
 package com.lakeel.profile.notification.presentation.presenter.settings;
 
 import com.lakeel.profile.notification.R;
-import com.lakeel.profile.notification.data.MyUser;
+import com.lakeel.profile.notification.presentation.firebase.MyUser;
 import com.lakeel.profile.notification.data.entity.CMLinksEntity;
 import com.lakeel.profile.notification.data.entity.ConfigsEntity;
 import com.lakeel.profile.notification.domain.usecase.FindBeaconIdUseCase;
