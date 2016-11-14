@@ -7,11 +7,11 @@ import com.google.android.gms.nearby.Nearby;
 import com.lakeel.altla.library.AttachmentListener;
 import com.lakeel.altla.library.ResolutionResultCallback;
 import com.lakeel.profile.notification.R;
-import com.lakeel.profile.notification.presentation.firebase.MyUser;
 import com.lakeel.profile.notification.domain.usecase.FindConfigsUseCase;
 import com.lakeel.profile.notification.domain.usecase.FindItemUseCase;
 import com.lakeel.profile.notification.domain.usecase.SaveUsersToCmFavoritesUseCase;
 import com.lakeel.profile.notification.presentation.constants.AttachmentType;
+import com.lakeel.profile.notification.presentation.firebase.MyUser;
 import com.lakeel.profile.notification.presentation.presenter.BaseItemPresenter;
 import com.lakeel.profile.notification.presentation.presenter.BasePresenter;
 import com.lakeel.profile.notification.presentation.presenter.mapper.NearbyItemsModelMapper;
@@ -39,7 +39,7 @@ import rx.schedulers.Schedulers;
 
 public final class NearbyPresenter extends BasePresenter<NearbyView> {
 
-    private class NearbyMessagesListner extends AttachmentListener {
+    private class NearbyMessagesListener extends AttachmentListener {
 
         @Override
         protected void onFound(String type, String value) {
@@ -88,7 +88,7 @@ public final class NearbyPresenter extends BasePresenter<NearbyView> {
 
     private final List<NearbyItemsModel> mCheckedModels = new LinkedList<>();
 
-    private NearbyMessagesListner mNearbyMessagesListner = new NearbyMessagesListner();
+    private NearbyMessagesListener mNearbyMessagesListener = new NearbyMessagesListener();
 
     private boolean mScanning;
 
@@ -119,7 +119,7 @@ public final class NearbyPresenter extends BasePresenter<NearbyView> {
 
     @Override
     public void onPause() {
-        Nearby.Messages.unsubscribe(mNearbyClient, mNearbyMessagesListner);
+        Nearby.Messages.unsubscribe(mNearbyClient, mNearbyMessagesListener);
     }
 
     @Override
@@ -180,7 +180,7 @@ public final class NearbyPresenter extends BasePresenter<NearbyView> {
     }
 
     private void startSubscribe() {
-        Nearby.Messages.subscribe(mNearbyClient, mNearbyMessagesListner)
+        Nearby.Messages.subscribe(mNearbyClient, mNearbyMessagesListener)
                 .setResultCallback(new ResolutionResultCallback() {
                     @Override
                     protected void onResolution(Status status) {
@@ -193,7 +193,7 @@ public final class NearbyPresenter extends BasePresenter<NearbyView> {
         ScheduledThreadPoolExecutor executor = new ScheduledThreadPoolExecutor(1);
         executor.schedule(() -> {
             // Stop to scanning after 3 seconds.
-            Nearby.Messages.unsubscribe(mNearbyClient, mNearbyMessagesListner);
+            Nearby.Messages.unsubscribe(mNearbyClient, mNearbyMessagesListener);
             mScanning = false;
 
             getView().hideIndicator();
