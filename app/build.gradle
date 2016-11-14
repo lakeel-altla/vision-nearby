@@ -14,13 +14,17 @@ android {
         versionName "1.0"
         multiDexEnabled true
 
-        buildConfigField("String", "GEO_CODING_API_KEY", GEO_CODING_API_KEY)
+        try {
+            buildConfigField("String", "GEO_CODING_API_KEY", GEO_CODING_API_KEY)
 
-        manifestPlaceholders = [
-                NEARBY_MESSAGES_API_KEY : project.property("NEARBY_MESSAGES_API_KEY"),
-                GOOGLE_MAPS_API_KEY : project.property("GOOGLE_MAPS_API_KEY"),
-                GOOGLE_AWARENESS_API_KEY : project.property("GOOGLE_AWARENESS_API_KEY")
-        ]
+            manifestPlaceholders = [
+                    NEARBY_MESSAGES_API_KEY : project.property("NEARBY_MESSAGES_API_KEY"),
+                    GOOGLE_MAPS_API_KEY     : project.property("GOOGLE_MAPS_API_KEY"),
+                    GOOGLE_AWARENESS_API_KEY: project.property("GOOGLE_AWARENESS_API_KEY")
+            ]
+        } catch (e) {
+            throw new RuntimeException("You should cretae gradle.properties and define enviroment values. Please see README file.")
+        }
     }
     dexOptions {
         preDexLibraries false
