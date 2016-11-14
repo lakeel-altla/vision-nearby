@@ -9,7 +9,6 @@ import com.lakeel.profile.notification.presentation.service.PublishService;
 import com.lakeel.profile.notification.presentation.view.SettingsView;
 import com.lakeel.profile.notification.presentation.view.activity.MainActivity;
 
-import android.app.ActivityManager;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.StringRes;
@@ -21,11 +20,7 @@ import android.support.v7.preference.PreferenceScreen;
 import android.support.v7.preference.SwitchPreferenceCompat;
 import android.view.View;
 
-import java.util.List;
-
 import javax.inject.Inject;
-
-import static android.content.Context.ACTIVITY_SERVICE;
 
 public final class SettingsFragment extends PreferenceFragmentCompat implements SettingsView {
 
@@ -79,17 +74,9 @@ public final class SettingsFragment extends PreferenceFragmentCompat implements 
         mPublishPreference.setOnPreferenceChangeListener((preference, newValue) -> {
             Boolean booleanValue = (Boolean) newValue;
             if (booleanValue) {
-                mPresenter.onPublish();
+                mPresenter.onStartToPublish();
             } else {
-                // Stop background service
-                ActivityManager am = (ActivityManager) getContext().getSystemService(ACTIVITY_SERVICE);
-                List<ActivityManager.RunningServiceInfo> listServiceInfo = am.getRunningServices(Integer.MAX_VALUE);
-                for (ActivityManager.RunningServiceInfo runningServiceInfo : listServiceInfo) {
-                    if (runningServiceInfo.service.getClassName().equals(PublishService.class.getName())) {
-                        Intent intent = new Intent(getContext(), PublishService.class);
-                        getContext().stopService(intent);
-                    }
-                }
+                mPresenter.onStopToPublish();
             }
             return true;
         });
