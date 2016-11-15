@@ -326,4 +326,19 @@ public class MainActivity extends AppCompatActivity
         FragmentController fragmentController = new FragmentController(getSupportFragmentManager());
         fragmentController.showDeviceListFragment();
     }
+
+    public void showBleSettingsFragment() {
+        FragmentController fragmentController = new FragmentController(getSupportFragmentManager());
+        fragmentController.showBleSettingsFragment();
+    }
+
+    public void showLineSettingsFragment() {
+        FragmentController fragmentController = new FragmentController(getSupportFragmentManager());
+        fragmentController.showLineSettingsFragment();
+    }
+
+    public void showCmSettingsFragment() {
+        FragmentController fragmentController = new FragmentController(getSupportFragmentManager());
+        fragmentController.showCmSettingsFragment();
+    }
 }

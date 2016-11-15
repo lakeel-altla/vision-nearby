@@ -8,8 +8,11 @@ import com.lakeel.profile.notification.presentation.di.module.RepositoryModule;
 import com.lakeel.profile.notification.presentation.view.activity.FavoritesUserActivity;
 import com.lakeel.profile.notification.presentation.view.activity.MainActivity;
 import com.lakeel.profile.notification.presentation.view.activity.RecentlyUserUserActivity;
+import com.lakeel.profile.notification.presentation.view.fragment.bluetooth.BleSettingsFragment;
+import com.lakeel.profile.notification.presentation.view.fragment.cm.CmSettingsFragment;
 import com.lakeel.profile.notification.presentation.view.fragment.device.DeviceListFragment;
 import com.lakeel.profile.notification.presentation.view.fragment.favorites.FavoritesListFragment;
+import com.lakeel.profile.notification.presentation.view.fragment.line.LineSettingsFragment;
 import com.lakeel.profile.notification.presentation.view.fragment.nearby.NearbyListFragment;
 import com.lakeel.profile.notification.presentation.view.fragment.recently.RecentlyFragment;
 import com.lakeel.profile.notification.presentation.view.fragment.search.SearchFragment;
@@ -38,6 +41,12 @@ public interface UserComponent {
     void inject(RecentlyFragment fragment);
 
     void inject(SettingsFragment fragment);
+
+    void inject(BleSettingsFragment fragment);
+
+    void inject(LineSettingsFragment fragment);
+
+    void inject(CmSettingsFragment fragment);
 
     void inject(SearchFragment fragment);
 

@@ -95,7 +95,7 @@ public final class TrackingFragment extends Fragment implements TrackingView, On
         String beaconId = (String) bundle.get(BUNDLE_KEY_BEACON_ID);
         mPresenter.setBeaconId(beaconId);
 
-        getActivity().setTitle(R.string.title_tracking);
+        getActivity().setTitle(R.string.title_cloud_tracking);
 
         mPresenter.onActivityCreated();
     }

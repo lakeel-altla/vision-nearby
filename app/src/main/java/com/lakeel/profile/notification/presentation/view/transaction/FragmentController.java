@@ -1,8 +1,11 @@
 package com.lakeel.profile.notification.presentation.view.transaction;
 
 import com.lakeel.profile.notification.R;
+import com.lakeel.profile.notification.presentation.view.fragment.bluetooth.BleSettingsFragment;
+import com.lakeel.profile.notification.presentation.view.fragment.cm.CmSettingsFragment;
 import com.lakeel.profile.notification.presentation.view.fragment.device.DeviceListFragment;
 import com.lakeel.profile.notification.presentation.view.fragment.favorites.FavoritesListFragment;
+import com.lakeel.profile.notification.presentation.view.fragment.line.LineSettingsFragment;
 import com.lakeel.profile.notification.presentation.view.fragment.nearby.NearbyListFragment;
 import com.lakeel.profile.notification.presentation.view.fragment.recently.RecentlyFragment;
 import com.lakeel.profile.notification.presentation.view.fragment.settings.SettingsFragment;
@@ -27,6 +30,12 @@ public final class FragmentController {
     private final String DEVICE_LIST_FRAGMENT_TAG = DeviceListFragment.class.getSimpleName();
 
     private final String SETTINGS_FRAGMENT_TAG = SettingsFragment.class.getSimpleName();
+
+    private final String SETTINGS_BLE_FRAGMENT_TAG = BleSettingsFragment.class.getSimpleName();
+
+    private final String SETTINGS_LINE_FRAGMENT_TAG = LineSettingsFragment.class.getSimpleName();
+
+    private final String SETTINGS_CM_FRAGMENT_TAG = CmSettingsFragment.class.getSimpleName();
 
     private FragmentManager mFragmentManager;
 
@@ -62,6 +71,21 @@ public final class FragmentController {
     public void showDeviceListFragment() {
         DeviceListFragment fragment = DeviceListFragment.newInstance();
         replaceFragment(R.id.fragmentPlaceholder, fragment, DEVICE_LIST_FRAGMENT_TAG);
+    }
+
+    public void showBleSettingsFragment() {
+        BleSettingsFragment fragment = BleSettingsFragment.newInstance();
+        replaceFragment(R.id.fragmentPlaceholder, fragment, SETTINGS_BLE_FRAGMENT_TAG);
+    }
+
+    public void showLineSettingsFragment() {
+        LineSettingsFragment fragment = LineSettingsFragment.newInstance();
+        replaceFragment(R.id.fragmentPlaceholder, fragment, SETTINGS_LINE_FRAGMENT_TAG);
+    }
+
+    public void showCmSettingsFragment() {
+        CmSettingsFragment fragment = CmSettingsFragment.newInstance();
+        replaceFragment(R.id.fragmentPlaceholder, fragment, SETTINGS_CM_FRAGMENT_TAG);
     }
 
     public void showSettingsFragment() {

@@ -1,60 +1,35 @@
 package com.lakeel.profile.notification.presentation.view.fragment.settings;
 
 import com.lakeel.profile.notification.R;
-import com.lakeel.profile.notification.presentation.intent.IntentKey;
-import com.lakeel.profile.notification.presentation.presenter.model.BeaconIdModel;
-import com.lakeel.profile.notification.presentation.presenter.model.CMLinksModel;
 import com.lakeel.profile.notification.presentation.presenter.settings.SettingsPresenter;
-import com.lakeel.profile.notification.presentation.service.PublishService;
 import com.lakeel.profile.notification.presentation.view.SettingsView;
 import com.lakeel.profile.notification.presentation.view.activity.MainActivity;
 
-import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.StringRes;
 import android.support.design.widget.Snackbar;
-import android.support.v7.preference.EditTextPreference;
 import android.support.v7.preference.PreferenceCategory;
 import android.support.v7.preference.PreferenceFragmentCompat;
 import android.support.v7.preference.PreferenceScreen;
-import android.support.v7.preference.SwitchPreferenceCompat;
 import android.view.View;
 
 import javax.inject.Inject;
 
 public final class SettingsFragment extends PreferenceFragmentCompat implements SettingsView {
 
-    private static final String KEY_PREFERENCE_SCREEN = "preferenceScreen";
+    private static final String KEY_SNS_CATEGORY = "snsCategory";
 
-    private static final String KEY_PUBLISH_IN_BACKGROUND = "publishInBackground";
+    private static final String KEY_BLUETOOTH_SCREEN = "bluetoothScreen";
 
-    private static final String KEY_SUBSCRIBE_IN_BACKGROUND = "subscribeInBackground";
+    private static final String KEY_LINE_SCREEN = "lineScreen";
 
-    private static final String KEY_LINE_URL = "lineUrl";
+    private static final String KEY_CM_SCREEN = "cmScreen";
 
-    private static final String KEY_CM_CATEGORY = "cmCategory";
+    private static final String KEY_TRACKING_SCREEN = "trackingScreen";
 
-    private static final String KEY_CM_API_KEY = "cmApiKey";
+    private PreferenceCategory mSnsCategory;
 
-    private static final String KEY_CM_SECRET_KEY = "cmSecretKey";
-
-    private static final String KEY_CM_JID = "cmJid";
-
-    private static final String KEY_DEVICES = "devices";
-
-    private PreferenceScreen mPreferenceScreen;
-
-    private SwitchPreferenceCompat mPublishPreference;
-
-    private EditTextPreference mLINEUrlPreference;
-
-    private PreferenceCategory mCMPreferenceCategory;
-
-    private EditTextPreference mCMApiPreference;
-
-    private EditTextPreference mCMSecretPreference;
-
-    private EditTextPreference mCMJidPreference;
+    private PreferenceScreen mCmScreen;
 
     @Inject
     SettingsPresenter mPresenter;
@@ -72,96 +47,49 @@ public final class SettingsFragment extends PreferenceFragmentCompat implements 
 
         mPresenter.onCreateView(this);
 
-        //
         // BLE
-        //
-        mPublishPreference = (SwitchPreferenceCompat) findPreference(KEY_PUBLISH_IN_BACKGROUND);
-        mPublishPreference.setOnPreferenceChangeListener((preference, newValue) -> {
-            Boolean booleanValue = (Boolean) newValue;
-            if (booleanValue) {
-                mPresenter.onStartToPublish();
-            } else {
-                mPresenter.onStopToPublish();
-            }
-            return true;
-        });
-
-        SwitchPreferenceCompat subscribePreference = (SwitchPreferenceCompat) findPreference(KEY_SUBSCRIBE_IN_BACKGROUND);
-        subscribePreference.setOnPreferenceChangeListener((preference, newValue) -> {
-            Boolean booleanValue = (Boolean) newValue;
-            if (booleanValue) {
-                ((MainActivity) getActivity()).onSubscribe();
-            } else {
-                ((MainActivity) getActivity()).onUnSubscribe();
-            }
-            return true;
-        });
-
-        //
-        // Tracking
-        //
-        PreferenceScreen screen = (PreferenceScreen) findPreference(KEY_DEVICES);
-        screen.setOnPreferenceClickListener(preference -> {
-            ((MainActivity) getActivity()).showDeviceListFragment();
+        PreferenceScreen bleScreen = (PreferenceScreen) findPreference(KEY_BLUETOOTH_SCREEN);
+        bleScreen.setOnPreferenceClickListener(preference -> {
+            ((MainActivity) getActivity()).showBleSettingsFragment();
             return false;
         });
 
-
-        //
         // LINE
-        //
-        mLINEUrlPreference = (EditTextPreference) findPreference(KEY_LINE_URL);
-        mLINEUrlPreference.setOnPreferenceChangeListener((preference, newValue) -> {
-            String lineUrl = (String) newValue;
-            mPresenter.onSaveLineUrl(lineUrl);
+        PreferenceScreen lineScreen = (PreferenceScreen) findPreference(KEY_LINE_SCREEN);
+        lineScreen.setOnPreferenceClickListener(preference -> {
+            ((MainActivity) getActivity()).showLineSettingsFragment();
             return false;
         });
 
-
-        //
         // COMPANY Messenger
-        //
-        mCMApiPreference = (EditTextPreference) findPreference(KEY_CM_API_KEY);
-        mCMApiPreference.setOnPreferenceChangeListener((preference, newValue) -> {
-            String apiKey = (String) newValue;
-            mPresenter.onSaveCMApiKey(apiKey);
-            return false;
-        });
-
-        mCMSecretPreference = (EditTextPreference) findPreference(KEY_CM_SECRET_KEY);
-        mCMSecretPreference.setOnPreferenceChangeListener((preference, newValue) -> {
-            String secretKey = (String) newValue;
-            mPresenter.onSaveCMSecretKey(secretKey);
-            return false;
-        });
-
-        mCMJidPreference = (EditTextPreference) findPreference(KEY_CM_JID);
-        mCMJidPreference.setOnPreferenceChangeListener((preference, newValue) -> {
-            String jid = (String) newValue;
-            mPresenter.onSaveCMJid(jid);
+        mCmScreen = (PreferenceScreen) findPreference(KEY_CM_SCREEN);
+        mCmScreen.setOnPreferenceClickListener(preference -> {
+            ((MainActivity) getActivity()).showCmSettingsFragment();
             return false;
         });
 
         // Once, hide the menu of COMPANY Messenger.
-        mCMPreferenceCategory = (PreferenceCategory) findPreference(KEY_CM_CATEGORY);
-        mCMPreferenceCategory.removeAll();
+        mSnsCategory = (PreferenceCategory) findPreference(KEY_SNS_CATEGORY);
+        mSnsCategory.removePreference(mCmScreen);
 
-        mPreferenceScreen = (PreferenceScreen) findPreference(KEY_PREFERENCE_SCREEN);
-        mPreferenceScreen.removePreference(mCMPreferenceCategory);
+        // Tracking
+        PreferenceScreen trackingScreen = (PreferenceScreen) findPreference(KEY_TRACKING_SCREEN);
+        trackingScreen.setOnPreferenceClickListener(preference -> {
+            ((MainActivity) getActivity()).showDeviceListFragment();
+            return false;
+        });
     }
 
     @Override
     public void onActivityCreated(Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
 
+        getActivity().setTitle(R.string.title_settings);
+
         MainActivity activity = (MainActivity) getActivity();
         activity.setDrawerIndicatorEnabled(true);
-    }
 
-    @Override
-    public void onResume() {
-        super.onResume();
-        mPresenter.onResume();
+        mPresenter.onActivityCreated();
     }
 
     @Override
@@ -171,64 +99,8 @@ public final class SettingsFragment extends PreferenceFragmentCompat implements 
     }
 
     @Override
-    public void showTitle(@StringRes int resId) {
-        getActivity().setTitle(resId);
-    }
-
-    @Override
-    public void disablePublishSettings() {
-        mPublishPreference.setEnabled(false);
-    }
-
-    @Override
-    public void startPublishInService(BeaconIdModel model) {
-        // Start publish service in background.
-        Intent intent = new Intent(getContext(), PublishService.class);
-        intent.putExtra(IntentKey.NAMESPACE_ID.name(), model.mNamespaceId);
-        intent.putExtra(IntentKey.INSTANCE_ID.name(), model.mInstanceId);
-        getContext().startService(intent);
-    }
-
-    @Override
-    public void showLINEUrl(String url) {
-        mLINEUrlPreference.setText(url);
-        mLINEUrlPreference.setSummary(url);
-    }
-
-    @Override
-    public void showCMPreferences(CMLinksModel model) {
-        mCMApiPreference.setSummary(model.mApiKey);
-        mCMApiPreference.setText(model.mApiKey);
-
-        mCMSecretPreference.setSummary(model.mSecretKey);
-        mCMSecretPreference.setText(model.mSecretKey);
-
-        mCMJidPreference.setSummary(model.mJid);
-        mCMJidPreference.setText(model.mJid);
-
-        mCMPreferenceCategory.addPreference(mCMApiPreference);
-        mCMPreferenceCategory.addPreference(mCMSecretPreference);
-        mCMPreferenceCategory.addPreference(mCMJidPreference);
-
-        mPreferenceScreen.addPreference(mCMPreferenceCategory);
-    }
-
-    @Override
-    public void updateCMApiKeyPreference(String apiKey) {
-        mCMApiPreference.setSummary(apiKey);
-        mCMApiPreference.setText(apiKey);
-    }
-
-    @Override
-    public void updateCMSecretKeyPreference(String secretKey) {
-        mCMSecretPreference.setSummary(secretKey);
-        mCMSecretPreference.setText(secretKey);
-    }
-
-    @Override
-    public void updateCMJidPreference(String jid) {
-        mCMJidPreference.setSummary(jid);
-        mCMJidPreference.setText(jid);
+    public void showCMPreferences() {
+        mSnsCategory.addPreference(mCmScreen);
     }
 
     @Override

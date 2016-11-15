@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="utf-8"?>
+<PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android">
+
+
+    <SwitchPreferenceCompat
+            android:key="publishInBackground"
+            android:title="@string/title_publish_in_background"
+            android:summary="@string/preference_summary_publish_in_background"
+            android:switchTextOff="OFF"
+            android:switchTextOn="ON"
+            android:defaultValue="true"/>
+
+    <SwitchPreferenceCompat
+            android:key="subscribeInBackground"
+            android:title="@string/title_subscribe_in_background"
+            android:summary="@string/preference_summary_subscribe_in_background"
+            android:switchTextOff="OFF"
+            android:switchTextOn="ON"
+            android:defaultValue="true"/>
+
+</PreferenceScreen>

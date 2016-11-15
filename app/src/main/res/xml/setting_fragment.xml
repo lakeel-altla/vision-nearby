@@ -4,63 +4,35 @@
         android:key="preferenceScreen">
 
     <PreferenceCategory
-            android:title="@string/title_bluetooth">
-
-        <SwitchPreferenceCompat
-                android:key="publishInBackground"
-                android:title="@string/title_publish_in_background"
-                android:summary="@string/preference_summary_publish_in_background"
-                android:switchTextOff="OFF"
-                android:switchTextOn="ON"
-                android:defaultValue="true"/>
-
-        <SwitchPreferenceCompat
-                android:key="subscribeInBackground"
-                android:title="@string/title_subscribe_in_background"
-                android:summary="@string/preference_summary_subscribe_in_background"
-                android:switchTextOff="OFF"
-                android:switchTextOn="ON"
-                android:defaultValue="true"/>
-    </PreferenceCategory>
-
-    <PreferenceCategory
-            android:title="@string/title_tracking">
+            android:title="@string/title_wireless_networks">
 
         <PreferenceScreen
-                android:key="devices"
+                android:key="bluetoothScreen"
+                android:title="@string/title_bluetooth"/>
+
+    </PreferenceCategory>
+
+    <PreferenceCategory
+            android:key="snsCategory"
+            android:title="@string/title_sns">
+
+        <PreferenceScreen
+                android:key="lineScreen"
+                android:title="@string/title_line"/>
+
+        <PreferenceScreen
+                android:key="cmScreen"
+                android:title="@string/title_cm"/>
+
+    </PreferenceCategory>
+
+    <PreferenceCategory
+            android:title="@string/title_cloud_tracking">
+
+        <PreferenceScreen
+                android:key="trackingScreen"
                 android:title="@string/title_devices"
-                android:dialogTitle="@string/title_line_url"/>
-
-    </PreferenceCategory>
-
-    <PreferenceCategory
-            android:title="@string/title_line">
-
-        <EditTextPreference
-                android:key="lineUrl"
-                android:title="@string/title_line_url"
-                android:dialogTitle="@string/title_line_url"/>
-
-    </PreferenceCategory>
-
-    <PreferenceCategory
-            android:key="cmCategory"
-            android:title="@string/title_cm">
-
-        <EditTextPreference
-                android:key="cmApiKey"
-                android:title="@string/title_cm_api_key"
-                android:dialogTitle="@string/title_cm_api_key"/>
-
-        <EditTextPreference
-                android:key="cmSecretKey"
-                android:title="@string/title_cm_secret_key"
-                android:dialogTitle="@string/title_cm_secret_key"/>
-
-        <EditTextPreference
-                android:key="cmJid"
-                android:title="@string/title_cm_jid"
-                android:dialogTitle="@string/title_cm_jid"/>
+                android:dialogTitle="@string/title_user_url"/>
 
     </PreferenceCategory>
 
