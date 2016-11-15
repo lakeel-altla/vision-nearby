@@ -61,6 +61,13 @@ public final class SignInFragment extends Fragment implements SignInView {
     }
 
     @Override
+    public void onActivityCreated(@Nullable Bundle savedInstanceState) {
+        super.onActivityCreated(savedInstanceState);
+
+        getActivity().setTitle(R.string.title_sign_in);
+    }
+
+    @Override
     public void onResume() {
         super.onResume();
     }
@@ -90,11 +97,6 @@ public final class SignInFragment extends Fragment implements SignInView {
     @Override
     public void showSignInActivity(Intent intent) {
         startActivityForResult(intent, SIGN_IN_REQUEST_CODE);
-    }
-
-    @Override
-    public void showTitle(String title) {
-        getActivity().setTitle(title);
     }
 
     @Override

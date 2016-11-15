@@ -105,8 +105,6 @@ public final class NearbyPresenter extends BasePresenter<NearbyView> {
 
     @Override
     public void onResume() {
-        getView().showTitle(R.string.title_nearby);
-
         if (mNearbyClient.isConnected()) {
             getView().showIndicator();
             startSubscribe();

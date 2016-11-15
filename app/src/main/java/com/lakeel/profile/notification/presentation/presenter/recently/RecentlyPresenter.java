@@ -61,8 +61,6 @@ public final class RecentlyPresenter extends BasePresenter<RecentlyView> {
 
     @Override
     public void onResume() {
-        getView().showTitle();
-
         Subscription subscription = mFindRecentlyUseCase
                 .execute()
                 .toList()

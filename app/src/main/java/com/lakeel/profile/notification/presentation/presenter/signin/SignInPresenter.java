@@ -17,7 +17,6 @@ import javax.inject.Inject;
 import rx.Subscription;
 import rx.android.schedulers.AndroidSchedulers;
 import rx.schedulers.Schedulers;
-import rx.subscriptions.CompositeSubscription;
 
 public final class SignInPresenter extends BasePresenter<SignInView> {
 
@@ -33,21 +32,12 @@ public final class SignInPresenter extends BasePresenter<SignInView> {
     public SignInPresenter() {
     }
 
-    private final CompositeSubscription subscriptions = new CompositeSubscription();
-
-    private static final String TITLE = "SignInFragment";
-
     // サービス利用規約の URL
     private static final String GOOGLE_TOS_URL =
             "https://www.google.com/policies/terms/";
 
     private static final String FIREBASE_TOS_URL =
             "https://www.firebase.com/terms/terms-of-service.html";
-
-    @Override
-    public void onResume() {
-        getView().showTitle(TITLE);
-    }
 
     public void onSignIn() {
         // FirebaseUI を利用。各種プロバイダを設定。
@@ -76,7 +66,7 @@ public final class SignInPresenter extends BasePresenter<SignInView> {
                             onSignOut();
                         }
                 );
-        subscriptions.add(subscription);
+        mCompositeSubscription.add(subscription);
     }
 
     private void onSignOut() {
@@ -86,6 +76,6 @@ public final class SignInPresenter extends BasePresenter<SignInView> {
                 .subscribe(throwable -> getView().showSnackBar(R.string.error_not_signed_in),
                         () -> {
                         });
-        subscriptions.add(subscription);
+        mCompositeSubscription.add(subscription);
     }
 }

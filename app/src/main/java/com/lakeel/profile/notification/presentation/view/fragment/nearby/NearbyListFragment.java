@@ -79,6 +79,8 @@ public final class NearbyListFragment extends Fragment implements NearbyView {
     public void onActivityCreated(Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
 
+        getActivity().setTitle(R.string.title_nearby);
+
         mSwipeRefreshLayout.setColorSchemeResources(R.color.colorPrimary, R.color.colorPrimary, R.color.colorPrimary, R.color.colorPrimary);
         mSwipeRefreshLayout.setOnRefreshListener(() -> {
             new Handler().postDelayed(() -> mSwipeRefreshLayout.setRefreshing(false), 500);
@@ -121,11 +123,6 @@ public final class NearbyListFragment extends Fragment implements NearbyView {
     public void onStop() {
         super.onStop();
         mPresenter.onStop();
-    }
-
-    @Override
-    public void showTitle(int resId) {
-        getActivity().setTitle(resId);
     }
 
     @Override

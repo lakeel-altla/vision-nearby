@@ -8,8 +8,6 @@ public interface SignInView extends BaseView {
 
     void showSignInActivity(Intent intent);
 
-    void showTitle(String title);
-
     void onSignedIn();
 
     void showSnackBar(@StringRes int resId);

@@ -47,8 +47,6 @@ public final class FavoritesListPresenter extends BasePresenter<FavoriteListView
 
     @Override
     public void onResume() {
-        getView().showTitle();
-
         Subscription subscription = mFindFavoritesUseCase
                 .execute()
                 .toList()

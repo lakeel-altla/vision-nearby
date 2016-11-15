@@ -9,8 +9,6 @@ import java.util.List;
 
 public interface FavoriteListView extends BaseView {
 
-    void showTitle();
-
     void updateItems(List<FavoriteModel> models);
 
     void removeAll(@IntRange(from = 0) int size);

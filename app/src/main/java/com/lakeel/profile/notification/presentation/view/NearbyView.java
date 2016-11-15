@@ -4,8 +4,6 @@ import com.google.android.gms.common.api.Status;
 
 public interface NearbyView extends BaseView {
 
-    void showTitle(int resId);
-
     void updateItems();
 
     void showSnackBar(int resId);

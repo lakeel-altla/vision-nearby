@@ -62,6 +62,8 @@ public final class RecentlyFragment extends Fragment implements RecentlyView {
     public void onActivityCreated(Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
 
+        getActivity().setTitle(R.string.title_recently);
+
         RecyclerView.LayoutManager mLayoutManager = new ScrollSmoothLineaerLayoutManager(getContext(), LinearLayoutManager.VERTICAL, false, 500);
         mUltimateRecyclerView.setLayoutManager(mLayoutManager);
 
@@ -83,11 +85,6 @@ public final class RecentlyFragment extends Fragment implements RecentlyView {
     public void onStop() {
         super.onStop();
         mPresenter.onStop();
-    }
-
-    @Override
-    public void showTitle() {
-        getActivity().setTitle(R.string.title_recently);
     }
 
     @Override

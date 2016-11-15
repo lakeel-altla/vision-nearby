@@ -7,8 +7,6 @@ import android.support.annotation.StringRes;
 
 public interface RecentlyView extends BaseView {
 
-    void showTitle();
-
     void updateItems();
 
     void showSnackBar(@StringRes int resId);

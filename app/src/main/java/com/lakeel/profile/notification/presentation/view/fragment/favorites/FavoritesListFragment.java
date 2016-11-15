@@ -62,6 +62,8 @@ public final class FavoritesListFragment extends Fragment implements FavoriteLis
     public void onActivityCreated(Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
 
+        getActivity().setTitle(R.string.title_favorites);
+
         MainActivity activity = (MainActivity) getActivity();
         activity.setDrawerIndicatorEnabled(true);
 
@@ -84,11 +86,6 @@ public final class FavoritesListFragment extends Fragment implements FavoriteLis
     public void onStop() {
         super.onStop();
         mPresenter.onStop();
-    }
-
-    @Override
-    public void showTitle() {
-        getActivity().setTitle(R.string.title_favorites);
     }
 
     @Override
