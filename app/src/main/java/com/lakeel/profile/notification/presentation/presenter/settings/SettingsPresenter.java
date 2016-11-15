@@ -150,7 +150,10 @@ public final class SettingsPresenter extends BasePresenter<SettingsView> {
                 .execute(url)
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
-                .subscribe(s -> getView().showSnackBar(R.string.message_added),
+                .subscribe(s -> {
+                            getView().showLINEUrl(url);
+                            getView().showSnackBar(R.string.message_added);
+                        },
                         e -> {
                             LOGGER.error("Failed to save line URL.", e);
                             getView().showSnackBar(R.string.error_not_added);
@@ -165,7 +168,7 @@ public final class SettingsPresenter extends BasePresenter<SettingsView> {
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribe(s -> {
                     getView().showSnackBar(R.string.message_saved);
-                    getView().updateCMApiKeyPreference(s);
+                    getView().updateCMApiKeyPreference(apiKey);
                 }, e -> {
                     LOGGER.error("Failed to save CM api key.", e);
                     getView().showSnackBar(R.string.error_not_saved);
@@ -180,7 +183,7 @@ public final class SettingsPresenter extends BasePresenter<SettingsView> {
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribe(s -> {
                     getView().showSnackBar(R.string.message_saved);
-                    getView().updateCMSecretKeyPreference(s);
+                    getView().updateCMSecretKeyPreference(secretKey);
                 }, e -> {
                     LOGGER.error("Failed to save CM secret key.", e);
                     getView().showSnackBar(R.string.error_not_saved);
@@ -195,7 +198,7 @@ public final class SettingsPresenter extends BasePresenter<SettingsView> {
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribe(s -> {
                     getView().showSnackBar(R.string.message_saved);
-                    getView().updateCMJidPreference(s);
+                    getView().updateCMJidPreference(jid);
                 }, e -> {
                     LOGGER.error("Failed to save CM JID.", e);
                     getView().showSnackBar(R.string.error_not_saved);
