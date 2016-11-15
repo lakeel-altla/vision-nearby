@@ -2,7 +2,7 @@ package com.lakeel.profile.notification.presentation.view.fragment.settings;
 
 import com.lakeel.profile.notification.R;
 import com.lakeel.profile.notification.presentation.intent.IntentKey;
-import com.lakeel.profile.notification.presentation.presenter.model.BeaconModel;
+import com.lakeel.profile.notification.presentation.presenter.model.BeaconIdModel;
 import com.lakeel.profile.notification.presentation.presenter.model.CMLinksModel;
 import com.lakeel.profile.notification.presentation.presenter.settings.SettingsPresenter;
 import com.lakeel.profile.notification.presentation.service.PublishService;
@@ -14,7 +14,6 @@ import android.os.Bundle;
 import android.support.annotation.StringRes;
 import android.support.design.widget.Snackbar;
 import android.support.v7.preference.EditTextPreference;
-import android.support.v7.preference.Preference;
 import android.support.v7.preference.PreferenceCategory;
 import android.support.v7.preference.PreferenceFragmentCompat;
 import android.support.v7.preference.PreferenceScreen;
@@ -49,7 +48,7 @@ public final class SettingsFragment extends PreferenceFragmentCompat implements 
 
     private EditTextPreference mLINEUrlPreference;
 
-    private PreferenceCategory mCMPrefernceCategory;
+    private PreferenceCategory mCMPreferenceCategory;
 
     private EditTextPreference mCMApiPreference;
 
@@ -73,6 +72,9 @@ public final class SettingsFragment extends PreferenceFragmentCompat implements 
 
         mPresenter.onCreateView(this);
 
+        //
+        // BLE
+        //
         mPublishPreference = (SwitchPreferenceCompat) findPreference(KEY_PUBLISH_IN_BACKGROUND);
         mPublishPreference.setOnPreferenceChangeListener((preference, newValue) -> {
             Boolean booleanValue = (Boolean) newValue;
@@ -95,16 +97,19 @@ public final class SettingsFragment extends PreferenceFragmentCompat implements 
             return true;
         });
 
+        //
+        // Tracking
+        //
         PreferenceScreen screen = (PreferenceScreen) findPreference(KEY_DEVICES);
-        screen.setOnPreferenceClickListener(new Preference.OnPreferenceClickListener() {
-            @Override
-            public boolean onPreferenceClick(Preference preference) {
-                ((MainActivity) getActivity()).showBleEnabledActivity();
-
-                return false;
-            }
+        screen.setOnPreferenceClickListener(preference -> {
+            ((MainActivity) getActivity()).showDeviceListFragment();
+            return false;
         });
 
+
+        //
+        // LINE
+        //
         mLINEUrlPreference = (EditTextPreference) findPreference(KEY_LINE_URL);
         mLINEUrlPreference.setOnPreferenceChangeListener((preference, newValue) -> {
             String lineUrl = (String) newValue;
@@ -112,6 +117,10 @@ public final class SettingsFragment extends PreferenceFragmentCompat implements 
             return false;
         });
 
+
+        //
+        // COMPANY Messenger
+        //
         mCMApiPreference = (EditTextPreference) findPreference(KEY_CM_API_KEY);
         mCMApiPreference.setOnPreferenceChangeListener((preference, newValue) -> {
             String apiKey = (String) newValue;
@@ -134,16 +143,19 @@ public final class SettingsFragment extends PreferenceFragmentCompat implements 
         });
 
         // Once, hide the menu of COMPANY Messenger.
-        mCMPrefernceCategory = (PreferenceCategory) findPreference(KEY_CM_CATEGORY);
-        mCMPrefernceCategory.removeAll();
+        mCMPreferenceCategory = (PreferenceCategory) findPreference(KEY_CM_CATEGORY);
+        mCMPreferenceCategory.removeAll();
 
         mPreferenceScreen = (PreferenceScreen) findPreference(KEY_PREFERENCE_SCREEN);
-        mPreferenceScreen.removePreference(mCMPrefernceCategory);
+        mPreferenceScreen.removePreference(mCMPreferenceCategory);
     }
 
     @Override
     public void onActivityCreated(Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
+
+        MainActivity activity = (MainActivity) getActivity();
+        activity.setDrawerIndicatorEnabled(true);
     }
 
     @Override
@@ -169,7 +181,7 @@ public final class SettingsFragment extends PreferenceFragmentCompat implements 
     }
 
     @Override
-    public void startPublishInService(BeaconModel model) {
+    public void startPublishInService(BeaconIdModel model) {
         // Start publish service in background.
         Intent intent = new Intent(getContext(), PublishService.class);
         intent.putExtra(IntentKey.NAMESPACE_ID.name(), model.mNamespaceId);
@@ -194,11 +206,11 @@ public final class SettingsFragment extends PreferenceFragmentCompat implements 
         mCMJidPreference.setSummary(model.mJid);
         mCMJidPreference.setText(model.mJid);
 
-        mCMPrefernceCategory.addPreference(mCMApiPreference);
-        mCMPrefernceCategory.addPreference(mCMSecretPreference);
-        mCMPrefernceCategory.addPreference(mCMJidPreference);
+        mCMPreferenceCategory.addPreference(mCMApiPreference);
+        mCMPreferenceCategory.addPreference(mCMSecretPreference);
+        mCMPreferenceCategory.addPreference(mCMJidPreference);
 
-        mPreferenceScreen.addPreference(mCMPrefernceCategory);
+        mPreferenceScreen.addPreference(mCMPreferenceCategory);
     }
 
     @Override

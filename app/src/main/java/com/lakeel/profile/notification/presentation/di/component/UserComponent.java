@@ -8,6 +8,7 @@ import com.lakeel.profile.notification.presentation.di.module.RepositoryModule;
 import com.lakeel.profile.notification.presentation.view.activity.FavoritesUserActivity;
 import com.lakeel.profile.notification.presentation.view.activity.MainActivity;
 import com.lakeel.profile.notification.presentation.view.activity.RecentlyUserUserActivity;
+import com.lakeel.profile.notification.presentation.view.fragment.device.DeviceListFragment;
 import com.lakeel.profile.notification.presentation.view.fragment.favorites.FavoritesListFragment;
 import com.lakeel.profile.notification.presentation.view.fragment.nearby.NearbyListFragment;
 import com.lakeel.profile.notification.presentation.view.fragment.recently.RecentlyFragment;
@@ -41,4 +42,6 @@ public interface UserComponent {
     void inject(SearchFragment fragment);
 
     void inject(TrackingFragment fragment);
+
+    void inject(DeviceListFragment fragment);
 }

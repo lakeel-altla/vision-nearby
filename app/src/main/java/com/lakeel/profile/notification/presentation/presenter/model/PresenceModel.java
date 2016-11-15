@@ -1,6 +1,6 @@
 package com.lakeel.profile.notification.presentation.presenter.model;
 
-public final class PresencesModel {
+public final class PresenceModel {
 
     public boolean mConnected;
 

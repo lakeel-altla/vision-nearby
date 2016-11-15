@@ -6,7 +6,7 @@ import com.lakeel.profile.notification.presentation.service.LINEService;
 import android.content.Context;
 import android.content.Intent;
 
-public class LineUrlAttachment implements AttachmentState {
+public class LineUrlAttachmentState implements AttachmentState {
 
     @Override
     public void startService(Context context, String value) {

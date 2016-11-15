@@ -10,17 +10,11 @@ import com.lakeel.profile.notification.presentation.di.component.UserComponent;
 import com.lakeel.profile.notification.presentation.di.module.ActivityModule;
 import com.lakeel.profile.notification.presentation.intent.IntentKey;
 import com.lakeel.profile.notification.presentation.presenter.activity.ActivityPresenter;
-import com.lakeel.profile.notification.presentation.presenter.model.PreferencesModel;
+import com.lakeel.profile.notification.presentation.presenter.model.PreferenceModel;
 import com.lakeel.profile.notification.presentation.service.PublishService;
 import com.lakeel.profile.notification.presentation.view.ActivityView;
-import com.lakeel.profile.notification.presentation.view.fragment.favorites.FavoritesListFragment;
-import com.lakeel.profile.notification.presentation.view.fragment.nearby.NearbyListFragment;
-import com.lakeel.profile.notification.presentation.view.fragment.recently.RecentlyFragment;
-import com.lakeel.profile.notification.presentation.view.fragment.search.SearchFragment;
-import com.lakeel.profile.notification.presentation.view.fragment.settings.SettingsFragment;
-import com.lakeel.profile.notification.presentation.view.fragment.signin.SignInFragment;
-import com.lakeel.profile.notification.presentation.view.fragment.tracking.TrackingFragment;
 import com.lakeel.profile.notification.presentation.view.layout.HeaderLayout;
+import com.lakeel.profile.notification.presentation.view.transaction.FragmentController;
 import com.nostra13.universalimageloader.core.ImageLoader;
 
 import org.slf4j.Logger;
@@ -34,13 +28,10 @@ import android.content.IntentSender;
 import android.content.pm.PackageManager;
 import android.os.Build;
 import android.os.Bundle;
-import android.support.annotation.IdRes;
 import android.support.annotation.NonNull;
 import android.support.design.widget.NavigationView;
 import android.support.design.widget.Snackbar;
 import android.support.v4.app.Fragment;
-import android.support.v4.app.FragmentManager;
-import android.support.v4.app.FragmentTransaction;
 import android.support.v4.view.GravityCompat;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBar;
@@ -188,21 +179,26 @@ public class MainActivity extends AppCompatActivity
         int id = item.getItemId();
 
         switch (id) {
-            case R.id.nav_favorites:
-                new FragmentController(getSupportFragmentManager()).showFavoritesListFragment();
+            case R.id.nav_favorites: {
+                FragmentController controller = new FragmentController(getSupportFragmentManager());
+                controller.showFavoritesListFragment();
                 break;
-            case R.id.nav_recently:
-                new FragmentController(getSupportFragmentManager()).showRecentlyFragment();
+            }
+            case R.id.nav_recently: {
+                FragmentController controller = new FragmentController(getSupportFragmentManager());
+                controller.showRecentlyFragment();
                 break;
-            case R.id.nav_nearby:
-                new FragmentController(getSupportFragmentManager()).showNearbyListFragment();
+            }
+            case R.id.nav_nearby: {
+                FragmentController controller = new FragmentController(getSupportFragmentManager());
+                controller.showNearbyListFragment();
                 break;
-            case R.id.nav_tracking:
-                new FragmentController(getSupportFragmentManager()).showSearchFragment();
+            }
+            case R.id.nav_settings: {
+                FragmentController controller = new FragmentController(getSupportFragmentManager());
+                controller.showSettingsFragment();
                 break;
-            case R.id.nav_settings:
-                new FragmentController(getSupportFragmentManager()).showSettingsFragment();
-                break;
+            }
             case R.id.nav_sign_out:
                 mPresenter.onSignOut(this);
                 break;
@@ -253,8 +249,7 @@ public class MainActivity extends AppCompatActivity
 
     @Override
     public void showPublishDisableDialog() {
-        ConfirmDialog dialog = new ConfirmDialog(MainActivity.this);
-        dialog.setContent(R.string.message_advertise_disable);
+        ConfirmDialog dialog = new ConfirmDialog(MainActivity.this, R.string.message_advertise_disable);
         dialog.show();
     }
 
@@ -265,7 +260,7 @@ public class MainActivity extends AppCompatActivity
     }
 
     @Override
-    public void startPublishInService(PreferencesModel model) {
+    public void startPublishInService(PreferenceModel model) {
         // Start publish service in background.
         Intent intent = new Intent(getApplicationContext(), PublishService.class);
         intent.putExtra(IntentKey.NAMESPACE_ID.name(), model.mNamespaceId);
@@ -327,67 +322,8 @@ public class MainActivity extends AppCompatActivity
         fragmentController.showTrackingFragment(id);
     }
 
-    private final class FragmentController {
-
-        private final String SIGN_IN_FRAGMENT_TAG = SignInFragment.class.getSimpleName();
-
-        private final String USER_LIST_FRAGMENT_TAG = FavoritesListFragment.class.getSimpleName();
-
-        private final String RECENTLY_FRAGMENT_TAG = RecentlyFragment.class.getSimpleName();
-
-        private final String SEARCH_FRAGMENT_TAG = SearchFragment.class.getSimpleName();
-
-        private final String TRACKING_FRAGMENT_TAG = TrackingFragment.class.getSimpleName();
-
-        private final String SETTINGS_FRAGMENT_TAG = SettingsFragment.class.getSimpleName();
-
-        private FragmentManager mFragmentManager;
-
-        public FragmentController(FragmentManager fragmentManager) {
-            mFragmentManager = fragmentManager;
-        }
-
-        private void showSignInFragment() {
-            SignInFragment fragment = SignInFragment.newInstance();
-            replaceFragment(R.id.fragmentPlaceholder, fragment, SIGN_IN_FRAGMENT_TAG);
-        }
-
-        private void showFavoritesListFragment() {
-            FavoritesListFragment fragment = FavoritesListFragment.newInstance();
-            replaceFragment(R.id.fragmentPlaceholder, fragment, USER_LIST_FRAGMENT_TAG);
-        }
-
-        private void showNearbyListFragment() {
-            NearbyListFragment fragment = NearbyListFragment.newInstance();
-            replaceFragment(R.id.fragmentPlaceholder, fragment, USER_LIST_FRAGMENT_TAG);
-        }
-
-        private void showRecentlyFragment() {
-            RecentlyFragment fragment = RecentlyFragment.newInstance();
-            replaceFragment(R.id.fragmentPlaceholder, fragment, RECENTLY_FRAGMENT_TAG);
-        }
-
-        private void showSearchFragment() {
-            SearchFragment fragment = SearchFragment.newInstance();
-            replaceFragment(R.id.fragmentPlaceholder, fragment, SEARCH_FRAGMENT_TAG);
-        }
-
-        private void showTrackingFragment(String id) {
-            TrackingFragment fragment = TrackingFragment.newInstance(id);
-            replaceFragment(R.id.fragmentPlaceholder, fragment, TRACKING_FRAGMENT_TAG);
-        }
-
-        private void showSettingsFragment() {
-            SettingsFragment fragment = SettingsFragment.newInstance();
-            replaceFragment(R.id.fragmentPlaceholder, fragment, SETTINGS_FRAGMENT_TAG);
-        }
-
-        private void replaceFragment(@IdRes int containerViewId, Fragment fragment, String tag) {
-            FragmentTransaction fragmentTransaction = mFragmentManager.beginTransaction();
-            fragmentTransaction.addToBackStack(tag);
-            fragmentTransaction.replace(containerViewId, fragment, tag);
-//            fragmentTransaction.commitNowAllowingStateLoss();
-            fragmentTransaction.commit();
-        }
+    public void showDeviceListFragment() {
+        FragmentController fragmentController = new FragmentController(getSupportFragmentManager());
+        fragmentController.showDeviceListFragment();
     }
 }

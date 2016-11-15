@@ -25,7 +25,6 @@ import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.RelativeLayout;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -43,9 +42,6 @@ public final class SearchFragment extends Fragment implements SearchView {
         return new SearchFragment();
     }
 
-    @BindView(R.id.layout)
-    RelativeLayout mRelativeLayout;
-
     @BindView(R.id.recycler_view)
     RecyclerView mRecyclerView;
 
@@ -57,7 +53,7 @@ public final class SearchFragment extends Fragment implements SearchView {
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
-        View view = inflater.inflate(R.layout.fragment_search, container, false);
+        View view = inflater.inflate(R.layout.fragment_list, container, false);
 
         setHasOptionsMenu(true);
 
@@ -107,6 +103,12 @@ public final class SearchFragment extends Fragment implements SearchView {
     @Override
     public void onResume() {
         super.onResume();
+    }
+
+    @Override
+    public void onStop() {
+        super.onStop();
+        mPresenter.onStop();
     }
 
     @Override

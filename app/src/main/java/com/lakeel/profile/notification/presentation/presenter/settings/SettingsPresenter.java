@@ -15,7 +15,7 @@ import com.lakeel.profile.notification.presentation.checker.BleState;
 import com.lakeel.profile.notification.presentation.checker.BluetoothChecker;
 import com.lakeel.profile.notification.presentation.firebase.MyUser;
 import com.lakeel.profile.notification.presentation.presenter.BasePresenter;
-import com.lakeel.profile.notification.presentation.presenter.mapper.BeaconModelMapper;
+import com.lakeel.profile.notification.presentation.presenter.mapper.BeaconIdModelMapper;
 import com.lakeel.profile.notification.presentation.presenter.mapper.CMLinksModelMapper;
 import com.lakeel.profile.notification.presentation.service.PublishService;
 import com.lakeel.profile.notification.presentation.view.SettingsView;
@@ -69,7 +69,7 @@ public final class SettingsPresenter extends BasePresenter<SettingsView> {
 
     private Context mContext;
 
-    private BeaconModelMapper mBeaconModelMapper = new BeaconModelMapper();
+    private BeaconIdModelMapper mBeaconIdModelMapper = new BeaconIdModelMapper();
 
     private CMLinksModelMapper mCMLinksModelMapper = new CMLinksModelMapper();
 
@@ -90,6 +90,8 @@ public final class SettingsPresenter extends BasePresenter<SettingsView> {
 
         Subscription subscription = mFindLINEUrlUseCase
                 .execute(MyUser.getUid())
+                .toObservable()
+                .filter(entity -> entity != null)
                 .map(entity -> entity.url)
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
@@ -124,7 +126,7 @@ public final class SettingsPresenter extends BasePresenter<SettingsView> {
     public void onStartToPublish() {
         Subscription subscription = mFindBeaconIdUseCase
                 .execute()
-                .map(entity -> mBeaconModelMapper.map(entity))
+                .map(entity -> mBeaconIdModelMapper.map(entity))
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribe(model -> getView().startPublishInService(model),

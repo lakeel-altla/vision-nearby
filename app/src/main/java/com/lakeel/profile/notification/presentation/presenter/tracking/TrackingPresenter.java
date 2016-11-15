@@ -1,10 +1,12 @@
 package com.lakeel.profile.notification.presentation.presenter.tracking;
 
 import com.firebase.geofire.GeoLocation;
+import com.lakeel.profile.notification.R;
 import com.lakeel.profile.notification.data.entity.LocationsDataEntity;
 import com.lakeel.profile.notification.domain.usecase.FindLocationDataUseCase;
 import com.lakeel.profile.notification.domain.usecase.FindLocationUseCase;
 import com.lakeel.profile.notification.presentation.presenter.BasePresenter;
+import com.lakeel.profile.notification.presentation.view.DateFormatter;
 import com.lakeel.profile.notification.presentation.view.TrackingView;
 
 import org.slf4j.Logger;
@@ -28,44 +30,61 @@ public final class TrackingPresenter extends BasePresenter<TrackingView> {
 
     private static final Logger LOGGER = LoggerFactory.getLogger(TrackingPresenter.class);
 
-    private String mId;
+    private String mBeaconId;
 
     private GeoLocation mGeoLocation;
 
-    private boolean isMapReady;
+    private boolean mMapReady;
+
+    private long mDetectedTime;
 
     @Inject
     TrackingPresenter() {
     }
 
     @Override
-    public void onResume() {
-        Subscription subscription = mFindLocationDataUseCase
-                .execute(mId)
+    public void onActivityCreated() {
+        Subscription subscription1 = mFindLocationDataUseCase
+                .execute(mBeaconId)
                 .flatMap(new Func1<LocationsDataEntity, Single<GeoLocation>>() {
                     @Override
                     public Single<GeoLocation> call(LocationsDataEntity entity) {
-                        return mFindLocationUseCase.execute(entity.key).observeOn(Schedulers.io());
+                        if (entity == null) {
+                            return Single.just(null);
+                        }
+                        mDetectedTime = entity.passingTime;
+                        return mFindLocationUseCase
+                                .execute(entity.key)
+                                .observeOn(Schedulers.io());
                     }
                 })
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribe(location -> {
+                    if (location == null) {
+                        getView().showSnackBar(R.string.error_not_found);
+                        return;
+                    }
+
+                    DateFormatter formatter = new DateFormatter(mDetectedTime);
+                    String formattedDate = formatter.format();
+                    getView().showDetectedTime(formattedDate);
+
                     mGeoLocation = location;
-                    if (isMapReady) {
+                    if (mMapReady) {
                         getView().showLocationMap(location);
                     }
                 }, e -> LOGGER.error("Failed to find location.", e));
-        mCompositeSubscription.add(subscription);
+
+        mCompositeSubscription.add(subscription1);
     }
 
-    public void setId(String id) {
-        mId = id;
+    public void setBeaconId(String beaconId) {
+        mBeaconId = beaconId;
     }
-
 
     public void onMapReady() {
-        isMapReady = true;
+        mMapReady = true;
         if (mGeoLocation != null) {
             getView().showLocationMap(mGeoLocation);
         }

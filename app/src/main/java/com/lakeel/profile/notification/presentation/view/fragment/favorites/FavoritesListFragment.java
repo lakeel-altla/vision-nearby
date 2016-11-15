@@ -48,7 +48,7 @@ public final class FavoritesListFragment extends Fragment implements FavoriteLis
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
-        View view = inflater.inflate(R.layout.fragment_list, container, false);
+        View view = inflater.inflate(R.layout.fragment_swipe_list, container, false);
         ButterKnife.bind(this, view);
 
         MainActivity.getUserComponent(this).inject(this);
@@ -61,6 +61,9 @@ public final class FavoritesListFragment extends Fragment implements FavoriteLis
     @Override
     public void onActivityCreated(Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
+
+        MainActivity activity = (MainActivity) getActivity();
+        activity.setDrawerIndicatorEnabled(true);
 
         RecyclerView.LayoutManager mLayoutManager = new ScrollSmoothLineaerLayoutManager(getContext(), LinearLayoutManager.VERTICAL, false, 500);
         mUltimateRecyclerView.setLayoutManager(mLayoutManager);

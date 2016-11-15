@@ -94,12 +94,6 @@ public final class NearbyListFragment extends Fragment implements NearbyView {
     }
 
     @Override
-    public void onStart() {
-        super.onStart();
-        mPresenter.onStart();
-    }
-
-    @Override
     public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
         inflater.inflate(R.menu.menu_profile, menu);
     }

@@ -7,11 +7,14 @@ import com.google.android.gms.maps.OnMapReadyCallback;
 import com.google.android.gms.maps.SupportMapFragment;
 import com.google.android.gms.maps.model.CircleOptions;
 import com.google.android.gms.maps.model.LatLng;
+import com.google.android.gms.maps.model.MarkerOptions;
 
 import com.flipboard.bottomsheet.BottomSheetLayout;
 import com.lakeel.profile.notification.R;
 import com.lakeel.profile.notification.presentation.application.App;
 import com.lakeel.profile.notification.presentation.constants.ActivityType;
+import com.lakeel.profile.notification.presentation.constants.Colors;
+import com.lakeel.profile.notification.presentation.constants.Radius;
 import com.lakeel.profile.notification.presentation.constants.WeatherType;
 import com.lakeel.profile.notification.presentation.di.component.UserComponent;
 import com.lakeel.profile.notification.presentation.di.module.ActivityModule;
@@ -20,7 +23,7 @@ import com.lakeel.profile.notification.presentation.intent.RecentlyIntentData;
 import com.lakeel.profile.notification.presentation.intent.RecentlyIntentData.Weather;
 import com.lakeel.profile.notification.presentation.presenter.activity.RecentlyUserActivityPresenter;
 import com.lakeel.profile.notification.presentation.presenter.model.ItemModel;
-import com.lakeel.profile.notification.presentation.presenter.model.PresencesModel;
+import com.lakeel.profile.notification.presentation.presenter.model.PresenceModel;
 import com.lakeel.profile.notification.presentation.view.DateFormatter;
 import com.lakeel.profile.notification.presentation.view.GridShareSheet;
 import com.lakeel.profile.notification.presentation.view.RecentlyUserActivityView;
@@ -275,7 +278,7 @@ public final class RecentlyUserUserActivity extends AppCompatActivity implements
     }
 
     @Override
-    public void showPresence(PresencesModel model) {
+    public void showPresence(PresenceModel model) {
         if (model.mConnected) {
             mPresenceLayout.mBody.setText(R.string.textView_connected);
         } else {
@@ -291,11 +294,13 @@ public final class RecentlyUserUserActivity extends AppCompatActivity implements
         LatLng latLng = new LatLng(Double.valueOf(latitude), Double.valueOf(longitude));
         CircleOptions circleOptions = new CircleOptions()
                 .center(latLng)
-                .strokeColor(Color.argb(100, 255, 193, 7))
-                .radius(500);
+                .strokeColor(Colors.PRIMARY)
+                .radius(Radius.GOOGLE_MAP);
 
-        mMap.moveCamera(CameraUpdateFactory.newLatLng(latLng));
+        mMap.addMarker(new MarkerOptions()
+                .position(latLng));
         mMap.addCircle(circleOptions);
+        mMap.moveCamera(CameraUpdateFactory.newLatLng(latLng));
     }
 
     @Override

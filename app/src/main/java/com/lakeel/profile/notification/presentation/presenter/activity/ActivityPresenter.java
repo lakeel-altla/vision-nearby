@@ -11,7 +11,6 @@ import com.lakeel.altla.cm.CMApplication;
 import com.lakeel.altla.cm.config.AccessConfig;
 import com.lakeel.altla.library.ResolutionResultCallback;
 import com.lakeel.profile.notification.R;
-import com.lakeel.profile.notification.presentation.firebase.MyUser;
 import com.lakeel.profile.notification.data.entity.BeaconIdEntity;
 import com.lakeel.profile.notification.data.entity.CMLinksEntity;
 import com.lakeel.profile.notification.data.entity.PreferencesEntity;
@@ -20,12 +19,15 @@ import com.lakeel.profile.notification.domain.usecase.FindCMLinksUseCase;
 import com.lakeel.profile.notification.domain.usecase.FindPreferencesUseCase;
 import com.lakeel.profile.notification.domain.usecase.ObserveConnectionUseCase;
 import com.lakeel.profile.notification.domain.usecase.SaveBeaconIdUseCase;
+import com.lakeel.profile.notification.domain.usecase.SaveBeaconUseCase;
+import com.lakeel.profile.notification.domain.usecase.SaveUserBeaconUseCase;
 import com.lakeel.profile.notification.presentation.checker.BleState;
 import com.lakeel.profile.notification.presentation.checker.BluetoothChecker;
+import com.lakeel.profile.notification.presentation.firebase.MyUser;
 import com.lakeel.profile.notification.presentation.presenter.BasePresenter;
 import com.lakeel.profile.notification.presentation.presenter.mapper.CMAuthConfigMapper;
 import com.lakeel.profile.notification.presentation.presenter.mapper.PreferencesModelMapper;
-import com.lakeel.profile.notification.presentation.presenter.model.PreferencesModel;
+import com.lakeel.profile.notification.presentation.presenter.model.PreferenceModel;
 import com.lakeel.profile.notification.presentation.receiver.NearbyReceiver;
 import com.lakeel.profile.notification.presentation.view.ActivityView;
 
@@ -80,11 +82,17 @@ public final class ActivityPresenter extends BasePresenter<ActivityView> impleme
     @Inject
     FindPreferencesUseCase mFindPreferencesUseCase;
 
+    @Inject
+    SaveUserBeaconUseCase mSaveUserBeaconUseCase;
+
+    @Inject
+    SaveBeaconUseCase mSaveBeaconUseCase;
+
     private static final Logger LOGGER = LoggerFactory.getLogger(ActivityPresenter.class);
 
     private Context mContext;
 
-    private PreferencesModel mPreferencesModel;
+    private PreferenceModel mPreferenceModel;
 
     private boolean mAccessLocationGranted;
 
@@ -171,6 +179,8 @@ public final class ActivityPresenter extends BasePresenter<ActivityView> impleme
     }
 
     public void onSignedIn() {
+        getView().showFavoritesListFragment();
+
         mObserveConnectionUseCase.execute();
 
         MyUser.UserData userData = MyUser.getUserData();
@@ -196,34 +206,59 @@ public final class ActivityPresenter extends BasePresenter<ActivityView> impleme
                 .flatMap(new Func1<BeaconIdEntity, Single<String>>() {
                     @Override
                     public Single<String> call(BeaconIdEntity entity) {
-                        if (entity == null) return mSaveBeaconIdUseCase.execute();
-
+                        if (entity == null) {
+                            return mSaveBeaconIdUseCase
+                                    .execute()
+                                    .subscribeOn(Schedulers.io());
+                        }
                         String beaconId = entity.namespaceId + entity.instanceId;
                         return Single.just(beaconId);
                     }
-                }).flatMap(new Func1<String, Single<PreferencesEntity>>() {
+                })
+                .flatMap(new Func1<String, Single<String>>() {
+                    @Override
+                    public Single<String> call(String beaconId) {
+                        return mSaveBeaconUseCase
+                                .execute(beaconId)
+                                .subscribeOn(Schedulers.io());
+                    }
+                })
+                .flatMap(new Func1<String, Single<String>>() {
+                    @Override
+                    public Single<String> call(String beaconId) {
+                        return mSaveUserBeaconUseCase
+                                .execute(beaconId)
+                                .subscribeOn(Schedulers.io());
+                    }
+                })
+                .flatMap(new Func1<String, Single<PreferencesEntity>>() {
                     @Override
                     public Single<PreferencesEntity> call(String o) {
-                        return mFindPreferencesUseCase.execute();
+                        return mFindPreferencesUseCase
+                                .execute()
+                                .subscribeOn(Schedulers.io());
                     }
-                }).flatMap(new Func1<PreferencesEntity, Single<CMLinksEntity>>() {
+                })
+                .flatMap(new Func1<PreferencesEntity, Single<CMLinksEntity>>() {
                     @Override
                     public Single<CMLinksEntity> call(PreferencesEntity entity) {
-                        mPreferencesModel = mPreferencesModelMapper.map(entity);
-                        return mFindCMLinksUseCase.execute();
+                        mPreferenceModel = mPreferencesModelMapper.map(entity);
+                        return mFindCMLinksUseCase
+                                .execute()
+                                .subscribeOn(Schedulers.io());
                     }
-                }).map(entity -> mCMAuthConfigMapper.map(entity))
+                })
+                .map(entity -> mCMAuthConfigMapper.map(entity))
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribe(authConfig -> {
                     CMApplication.initialize(authConfig, new AccessConfig(CMHost, CMPort));
 
-                    if (mPreferencesModel.mPublishInBackground && mPublishAvailability) {
-                        getView().startPublishInService(mPreferencesModel);
+                    if (mPreferenceModel.mPublishInBackground && mPublishAvailability) {
+                        getView().startPublishInService(mPreferenceModel);
                     }
-
-                    getView().showFavoritesListFragment();
                 }, e -> LOGGER.error("Failed to process.", e));
+
         mCompositeSubscription.add(subscription);
     }
 

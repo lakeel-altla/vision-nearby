@@ -1,6 +1,6 @@
 package com.lakeel.profile.notification.presentation.presenter.model;
 
-public final class NearbyItemsModel {
+public final class NearbyItemModel {
 
     public String mId;
 

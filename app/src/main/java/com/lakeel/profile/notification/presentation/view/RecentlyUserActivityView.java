@@ -1,9 +1,8 @@
 package com.lakeel.profile.notification.presentation.view;
 
 import com.lakeel.profile.notification.presentation.presenter.model.ItemModel;
-import com.lakeel.profile.notification.presentation.presenter.model.PresencesModel;
+import com.lakeel.profile.notification.presentation.presenter.model.PresenceModel;
 
-import android.content.Intent;
 import android.support.annotation.StringRes;
 
 public interface RecentlyUserActivityView {
@@ -12,7 +11,7 @@ public interface RecentlyUserActivityView {
 
     void showSnackBar(@StringRes int resId);
 
-    void showPresence(PresencesModel model);
+    void showPresence(PresenceModel model);
 
     void showLocationMap(String latitude, String longitude);
 

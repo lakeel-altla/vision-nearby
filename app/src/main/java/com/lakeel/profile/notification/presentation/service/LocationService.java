@@ -60,7 +60,7 @@ public final class LocationService extends IntentService {
     protected void onHandleIntent(Intent intent) {
         LOGGER.debug("Location Service");
 
-        final String id = intent.getStringExtra(IntentKey.USER_ID.name());
+        final String beaconId = intent.getStringExtra(IntentKey.BECON_ID.name());
 
         final Context context = getApplicationContext();
         mGoogleApiClient = new GoogleApiClient.Builder(context)
@@ -71,11 +71,11 @@ public final class LocationService extends IntentService {
                         final String uniqueId = mLocationReference.push().getKey();
 
                         getUserCurrentLocation(context)
-                                .flatMap(location -> saveGeoFence(uniqueId, location))
+                                .flatMap(location -> saveLocation(uniqueId, location))
                                 .flatMap(new Func1<Location, Single<Void>>() {
                                     @Override
                                     public Single<Void> call(Location location) {
-                                        return saveLocation(uniqueId, id);
+                                        return saveLocationData(uniqueId, beaconId);
                                     }
                                 })
                                 .subscribeOn(Schedulers.io())
@@ -111,9 +111,9 @@ public final class LocationService extends IntentService {
         });
     }
 
-    Single<Void> saveLocation(String uniqueId, String id) {
+    Single<Void> saveLocationData(String uniqueId, String beaconId) {
         return Single.create(subscriber -> {
-            LocationsDataEntity entity = mLocationsDataEntityMapper.map(id);
+            LocationsDataEntity entity = mLocationsDataEntityMapper.map(beaconId);
             Task task = mLocationReference
                     .child(uniqueId)
                     .setValue(entity.toMap())
@@ -127,7 +127,7 @@ public final class LocationService extends IntentService {
         });
     }
 
-    Single<Location> saveGeoFence(String uniqueId, Location location) {
+    Single<Location> saveLocation(String uniqueId, Location location) {
         return Single.create(subscriber ->
                 geoFire.setLocation(uniqueId, new GeoLocation(location.getLatitude(), location.getLongitude()), (key, error) -> {
                     if (error == null) {

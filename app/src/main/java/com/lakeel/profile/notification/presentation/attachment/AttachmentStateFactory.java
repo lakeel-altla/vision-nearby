@@ -12,9 +12,11 @@ public final class AttachmentStateFactory {
         AttachmentType type = AttachmentType.toType(attachmentType);
         switch (type) {
             case USER_ID:
-                return new UserIdAttachment();
+                return new UserIdAttachmentState();
             case LINE_URL:
-                return new LineUrlAttachment();
+                return new LineUrlAttachmentState();
+            case BEACON_ID:
+                return new BeaconIdAttachmentState();
             default:
                 return null;
         }

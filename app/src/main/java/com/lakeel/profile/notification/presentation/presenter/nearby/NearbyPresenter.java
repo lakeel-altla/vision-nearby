@@ -15,7 +15,7 @@ import com.lakeel.profile.notification.presentation.firebase.MyUser;
 import com.lakeel.profile.notification.presentation.presenter.BaseItemPresenter;
 import com.lakeel.profile.notification.presentation.presenter.BasePresenter;
 import com.lakeel.profile.notification.presentation.presenter.mapper.NearbyItemsModelMapper;
-import com.lakeel.profile.notification.presentation.presenter.model.NearbyItemsModel;
+import com.lakeel.profile.notification.presentation.presenter.model.NearbyItemModel;
 import com.lakeel.profile.notification.presentation.view.NearbyItemView;
 import com.lakeel.profile.notification.presentation.view.NearbyView;
 
@@ -52,18 +52,21 @@ public final class NearbyPresenter extends BasePresenter<NearbyView> {
 
             Subscription subscription = mFindItemUseCase
                     .execute(value)
+                    .toObservable()
+                    .filter(entity -> entity != null)
                     .subscribeOn(Schedulers.io())
                     .map(itemsEntity -> mMapper.map(itemsEntity))
                     .observeOn(AndroidSchedulers.mainThread())
                     .subscribe(scannedModel -> {
-                        for (NearbyItemsModel model : mNearbyItemsModels) {
+                        for (NearbyItemModel model : mNearbyItemModels) {
                             if (model.mId.equals(scannedModel.mId)) {
                                 return;
                             }
                         }
-                        mNearbyItemsModels.add(scannedModel);
+                        mNearbyItemModels.add(scannedModel);
                         getView().updateItems();
                     }, e -> LOGGER.error("Failed to find nearby item.", e));
+
             mCompositeSubscription.add(subscription);
         }
     }
@@ -84,11 +87,13 @@ public final class NearbyPresenter extends BasePresenter<NearbyView> {
 
     private NearbyItemsModelMapper mMapper = new NearbyItemsModelMapper();
 
-    private final List<NearbyItemsModel> mNearbyItemsModels = new ArrayList<>();
+    private final List<NearbyItemModel> mNearbyItemModels = new ArrayList<>();
 
-    private final List<NearbyItemsModel> mCheckedModels = new LinkedList<>();
+    private final List<NearbyItemModel> mCheckedModels = new LinkedList<>();
 
     private NearbyMessagesListener mNearbyMessagesListener = new NearbyMessagesListener();
+
+    private ScheduledThreadPoolExecutor mExecutor = new ScheduledThreadPoolExecutor(1);
 
     private boolean mScanning;
 
@@ -144,7 +149,7 @@ public final class NearbyPresenter extends BasePresenter<NearbyView> {
     }
 
     public int getItemCount() {
-        return mNearbyItemsModels.size();
+        return mNearbyItemModels.size();
     }
 
     public void onShare() {
@@ -154,7 +159,7 @@ public final class NearbyPresenter extends BasePresenter<NearbyView> {
     public void onAddToCmFavorite() {
         List<String> nearbyIds = new ArrayList<>(mCheckedModels.size());
 
-        for (NearbyItemsModel model : mCheckedModels) {
+        for (NearbyItemModel model : mCheckedModels) {
             nearbyIds.add(model.mId);
         }
 
@@ -163,9 +168,10 @@ public final class NearbyPresenter extends BasePresenter<NearbyView> {
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribe(timestamp -> {
-                    for (NearbyItemsModel model : mCheckedModels) {
+                    for (NearbyItemModel model : mCheckedModels) {
                         model.mChecked = false;
                     }
+
                     mCheckedModels.clear();
 
                     getView().hideOptionMenu();
@@ -176,6 +182,7 @@ public final class NearbyPresenter extends BasePresenter<NearbyView> {
                     LOGGER.error("Failed to add nearby items to CM.", e);
                     getView().showSnackBar(R.string.error_not_added);
                 });
+
         mCompositeSubscription.add(subscription);
     }
 
@@ -190,18 +197,21 @@ public final class NearbyPresenter extends BasePresenter<NearbyView> {
 
         mScanning = true;
 
-        ScheduledThreadPoolExecutor executor = new ScheduledThreadPoolExecutor(1);
-        executor.schedule(() -> {
-            // Stop to scanning after 3 seconds.
+        mExecutor.schedule(() -> {
+
+            // Stop to scanning after 10 seconds.
+
             Nearby.Messages.unsubscribe(mNearbyClient, mNearbyMessagesListener);
             mScanning = false;
 
             getView().hideIndicator();
 
-            if (mNearbyItemsModels.size() == 0) {
+            if (mNearbyItemModels.size() == 0) {
                 getView().showSnackBar(R.string.message_not_found);
             }
-        }, 5, TimeUnit.SECONDS);
+
+            mCompositeSubscription.unsubscribe();
+        }, 10, TimeUnit.SECONDS);
     }
 
     public boolean isCmLinkEnabled() {
@@ -212,15 +222,15 @@ public final class NearbyPresenter extends BasePresenter<NearbyView> {
 
         @Override
         public void onBind(@IntRange(from = 0) int position) {
-            getItemView().showItem(mNearbyItemsModels.get(position));
+            getItemView().showItem(mNearbyItemModels.get(position));
         }
 
-        public void onCheck(NearbyItemsModel model) {
+        public void onCheck(NearbyItemModel model) {
             if (model.mChecked) {
-                Iterator<NearbyItemsModel> iterator = mCheckedModels.iterator();
+                Iterator<NearbyItemModel> iterator = mCheckedModels.iterator();
                 while (iterator.hasNext()) {
-                    NearbyItemsModel nearbyItemsModel = iterator.next();
-                    if (nearbyItemsModel.mId.equals(model.mId)) {
+                    NearbyItemModel nearbyItemModel = iterator.next();
+                    if (nearbyItemModel.mId.equals(model.mId)) {
                         iterator.remove();
                     }
                 }

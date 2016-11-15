@@ -2,7 +2,7 @@ package com.lakeel.profile.notification.presentation.constants;
 
 public enum AttachmentType {
 
-    UNKNOWN("unknown"), USER_ID("userId"), LINE_URL("lineUrl");
+    UNKNOWN("unknown"), USER_ID("userId"), BEACON_ID("beaconId"), LINE_URL("lineUrl");
 
     private String mValue;
 

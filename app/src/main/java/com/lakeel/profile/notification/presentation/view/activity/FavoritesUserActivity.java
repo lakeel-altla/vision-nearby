@@ -8,7 +8,7 @@ import com.lakeel.profile.notification.presentation.di.module.ActivityModule;
 import com.lakeel.profile.notification.presentation.intent.IntentExtra;
 import com.lakeel.profile.notification.presentation.presenter.activity.FavoritesUserActivityPresenter;
 import com.lakeel.profile.notification.presentation.presenter.model.ItemModel;
-import com.lakeel.profile.notification.presentation.presenter.model.PresencesModel;
+import com.lakeel.profile.notification.presentation.presenter.model.PresenceModel;
 import com.lakeel.profile.notification.presentation.view.DateFormatter;
 import com.lakeel.profile.notification.presentation.view.FavoritesUserActivityView;
 import com.lakeel.profile.notification.presentation.view.GridShareSheet;
@@ -172,7 +172,7 @@ public final class FavoritesUserActivity extends AppCompatActivity implements Fa
     }
 
     @Override
-    public void showPresence(PresencesModel model) {
+    public void showPresence(PresenceModel model) {
         if (model.mConnected) {
             mPresenceLayout.mBody.setText(R.string.textView_connected);
         } else {

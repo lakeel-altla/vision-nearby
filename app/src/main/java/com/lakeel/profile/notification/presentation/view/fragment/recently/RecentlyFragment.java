@@ -47,7 +47,7 @@ public final class RecentlyFragment extends Fragment implements RecentlyView {
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
-        View view = inflater.inflate(R.layout.fragment_list, container, false);
+        View view = inflater.inflate(R.layout.fragment_swipe_list, container, false);
         ButterKnife.bind(this, view);
 
         // Dagger

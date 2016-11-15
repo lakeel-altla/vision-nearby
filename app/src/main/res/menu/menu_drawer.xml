@@ -12,9 +12,6 @@
                 android:id="@+id/nav_nearby"
                 android:title="@string/title_nearby"/>
         <item
-                android:id="@+id/nav_tracking"
-                android:title="@string/title_tracking"/>
-        <item
                 android:id="@+id/nav_settings"
                 android:title="@string/title_settings"/>
         <item

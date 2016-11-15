@@ -3,7 +3,7 @@ package com.lakeel.profile.notification.presentation.view;
 import com.google.android.gms.common.ConnectionResult;
 import com.google.android.gms.common.api.Status;
 
-import com.lakeel.profile.notification.presentation.presenter.model.PreferencesModel;
+import com.lakeel.profile.notification.presentation.presenter.model.PreferenceModel;
 
 import android.support.annotation.StringRes;
 
@@ -23,7 +23,7 @@ public interface ActivityView extends BaseView {
 
     void showBleEnabledActivity();
 
-    void startPublishInService(PreferencesModel model);
+    void startPublishInService(PreferenceModel model);
 
     void showAccessFineLocationPermissionSystemDialog();
 

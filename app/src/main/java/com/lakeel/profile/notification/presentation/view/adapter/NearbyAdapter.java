@@ -3,7 +3,7 @@ package com.lakeel.profile.notification.presentation.view.adapter;
 import com.amulyakhare.textdrawable.TextDrawable;
 import com.lakeel.profile.notification.R;
 import com.lakeel.profile.notification.core.StringUtils;
-import com.lakeel.profile.notification.presentation.presenter.model.NearbyItemsModel;
+import com.lakeel.profile.notification.presentation.presenter.model.NearbyItemModel;
 import com.lakeel.profile.notification.presentation.presenter.nearby.NearbyPresenter;
 import com.lakeel.profile.notification.presentation.view.NearbyItemView;
 import com.nostra13.universalimageloader.core.ImageLoader;
@@ -76,7 +76,7 @@ public final class NearbyAdapter extends RecyclerView.Adapter<NearbyAdapter.Near
         }
 
         @Override
-        public void showItem(NearbyItemsModel model) {
+        public void showItem(NearbyItemModel model) {
             String displayName = model.mName;
             mUserName.setText(displayName);
 

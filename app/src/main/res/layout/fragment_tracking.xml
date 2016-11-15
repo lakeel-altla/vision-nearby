@@ -1,8 +1,18 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-              android:orientation="vertical"
-              android:layout_width="match_parent"
-              android:layout_height="match_parent">
+<LinearLayout
+        xmlns:android="http://schemas.android.com/apk/res/android"
+        android:id="@+id/layout"
+        android:orientation="vertical"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+
+    <TextView
+            android:id="@+id/textView_detected_time"
+            android:layout_width="wrap_content"
+            android:layout_height="50dp"
+            android:paddingStart="16dp"
+            android:paddingEnd="0dp"
+            android:gravity="center_vertical"/>
 
     <fragment
             android:id="@+id/tracking_map"

@@ -9,15 +9,12 @@ import android.support.annotation.StringRes;
 
 public final class ConfirmDialog {
 
-    private MaterialDialog.Builder mBuilder;
+    private final MaterialDialog.Builder mBuilder;
 
-    public ConfirmDialog(@NonNull Context context) {
+    public ConfirmDialog(@NonNull Context context, @StringRes int resId) {
         mBuilder = new MaterialDialog.Builder(context);
         mBuilder.title(R.string.title_confirm);
         mBuilder.positiveText(R.string.dialog_button_positive);
-    }
-
-    public void setContent(@StringRes int resId) {
         mBuilder.content(resId);
     }
 

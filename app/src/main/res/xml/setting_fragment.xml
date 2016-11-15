@@ -24,6 +24,16 @@
     </PreferenceCategory>
 
     <PreferenceCategory
+            android:title="@string/title_tracking">
+
+        <PreferenceScreen
+                android:key="devices"
+                android:title="@string/title_devices"
+                android:dialogTitle="@string/title_line_url"/>
+
+    </PreferenceCategory>
+
+    <PreferenceCategory
             android:title="@string/title_line">
 
         <EditTextPreference

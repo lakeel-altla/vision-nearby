@@ -59,6 +59,11 @@ public class PreferenceRepositoryImpl implements PreferenceRepository {
                 String namespaceId = mPreferences.getString(KEY_NAMESPACE_ID, StringUtils.EMPTY);
                 String instanceId = mPreferences.getString(KEY_INSTANCE_ID, StringUtils.EMPTY);
 
+                if (StringUtils.isEmpty(namespaceId) || StringUtils.isEmpty(instanceId)) {
+                    subscriber.onSuccess(null);
+                    return;
+                }
+
                 BeaconIdEntity entity = new BeaconIdEntity();
                 entity.namespaceId = namespaceId;
                 entity.instanceId = instanceId;
@@ -79,7 +84,7 @@ public class PreferenceRepositoryImpl implements PreferenceRepository {
                 String replacedString = uuid.replace("-", "");
                 // Remove 5 - 10 bytes.
                 String namespaceId = replacedString.substring(0, 8) + replacedString.substring(20, 32);
-                String instanceId = "1";
+                String instanceId = "000000000001";
 
                 editor.putString(KEY_NAMESPACE_ID, namespaceId);
                 editor.putString(KEY_INSTANCE_ID, instanceId);

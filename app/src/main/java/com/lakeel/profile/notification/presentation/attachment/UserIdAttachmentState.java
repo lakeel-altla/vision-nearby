@@ -8,7 +8,7 @@ import com.lakeel.profile.notification.presentation.service.RecentlyService;
 import android.content.Context;
 import android.content.Intent;
 
-public class UserIdAttachment implements AttachmentState {
+public class UserIdAttachmentState implements AttachmentState {
 
     @Override
     public void startService(Context context, String value) {
@@ -19,9 +19,5 @@ public class UserIdAttachment implements AttachmentState {
         Intent recentlyServiceIntent = new Intent(context, RecentlyService.class);
         recentlyServiceIntent.putExtra(IntentKey.USER_ID.name(), value);
         context.startService(recentlyServiceIntent);
-
-        Intent locationServiceIntent = new Intent(context, LocationService.class);
-        locationServiceIntent.putExtra(IntentKey.USER_ID.name(), value);
-        context.startService(locationServiceIntent);
     }
 }

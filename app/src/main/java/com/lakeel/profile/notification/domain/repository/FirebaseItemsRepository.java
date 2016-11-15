@@ -11,4 +11,6 @@ public interface FirebaseItemsRepository {
     Single<ItemsEntity> findItemsByName(String name);
 
     Single<ItemsEntity> saveItem();
+
+    Single<String> saveBeaconId(String beaconId);
 }

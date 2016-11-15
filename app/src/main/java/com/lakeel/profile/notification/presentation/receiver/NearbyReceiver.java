@@ -42,7 +42,7 @@ public final class NearbyReceiver extends BroadcastReceiver {
 
                     @Override
                     public void onDistanceChanged(Message message, Distance distance) {
-                        LOGGER.debug("Beacon distance is changed:distance=" + distance.getMeters());
+                        LOGGER.debug("UserBeaconEntity distance is changed:distance=" + distance.getMeters());
                     }
 
                     @Override

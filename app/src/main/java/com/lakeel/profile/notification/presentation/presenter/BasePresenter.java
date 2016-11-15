@@ -8,13 +8,16 @@ public class BasePresenter<V> {
 
     protected V mV;
 
+    protected V getView() {
+        return mV;
+    }
+
     @CallSuper
     public void onCreateView(V v) {
         mV = v;
     }
 
-    protected V getView() {
-        return mV;
+    public void onActivityCreated() {
     }
 
     public void onResume() {

@@ -33,6 +33,13 @@ public final class ConfigModule {
 
     @ActivityScope
     @Provides
+    @Named("beaconsUrl")
+    String provideBeaconsUrl() {
+        return "https://profile-notification-95441.firebaseio.com/beacons";
+    }
+
+    @ActivityScope
+    @Provides
     @Named("presencesUrl")
     String providePresencesUrl() {
         return "https://profile-notification-95441.firebaseio.com/presences";

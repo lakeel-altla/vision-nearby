@@ -1,6 +1,7 @@
 package com.lakeel.profile.notification.presentation.di.module;
 
 import com.lakeel.profile.notification.data.repository.FirebaseAuthRepositoryImpl;
+import com.lakeel.profile.notification.data.repository.FirebaseBeaconsRepositoryImpl;
 import com.lakeel.profile.notification.data.repository.FirebaseCMLinksRepositoryImpl;
 import com.lakeel.profile.notification.data.repository.FirebaseConfigsRepositoryImpl;
 import com.lakeel.profile.notification.data.repository.FirebaseConnectionRepositoryImpl;
@@ -15,6 +16,7 @@ import com.lakeel.profile.notification.data.repository.PreferenceRepositoryImpl;
 import com.lakeel.profile.notification.data.repository.RestCmRepositoryImpl;
 import com.lakeel.profile.notification.data.repository.RestGeocodeRepositoryImpl;
 import com.lakeel.profile.notification.domain.repository.FirebaseAuthRepository;
+import com.lakeel.profile.notification.domain.repository.FirebaseBeaconsRepository;
 import com.lakeel.profile.notification.domain.repository.FirebaseCMLinksRepository;
 import com.lakeel.profile.notification.domain.repository.FirebaseConfigsRepository;
 import com.lakeel.profile.notification.domain.repository.FirebaseConnectionRepository;
@@ -44,13 +46,13 @@ public class RepositoryModule {
 
     @ActivityScope
     @Provides
-    FirebaseFavoriteRepository provideFavoriteRepository(@Named("favoritesUrl") String url) {
+    FirebaseFavoriteRepository provideFavoritesRepository(@Named("favoritesUrl") String url) {
         return new FirebaseFavoriteRepositoryImpl(url);
     }
 
     @ActivityScope
     @Provides
-    FirebaseRecentlyRepository provideRecentNearbyUsersRepository(@Named("recentlyUrl") String url) {
+    FirebaseRecentlyRepository provideRecentlyRepository(@Named("recentlyUrl") String url) {
         return new FirebaseRecentlyRepositoryImpl(url);
     }
 
@@ -62,8 +64,14 @@ public class RepositoryModule {
 
     @ActivityScope
     @Provides
-    FirebaseItemsRepository provideNearbyItemsRepository(@Named("itemsUrl") String url) {
+    FirebaseItemsRepository provideItemsRepository(@Named("itemsUrl") String url) {
         return new FirebaseItemsRepositoryImpl(url);
+    }
+
+    @ActivityScope
+    @Provides
+    FirebaseBeaconsRepository provideBeaconsRepository(@Named("beaconsUrl") String url) {
+        return new FirebaseBeaconsRepositoryImpl(url);
     }
 
     @ActivityScope
