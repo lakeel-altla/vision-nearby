@@ -68,7 +68,7 @@ public final class TrackingPresenter extends BasePresenter<TrackingView> {
 
                     DateFormatter formatter = new DateFormatter(mDetectedTime);
                     String formattedDate = formatter.format();
-                    getView().showDetectedTime(formattedDate);
+                    getView().showDetectedDate(formattedDate);
 
                     mGeoLocation = location;
                     if (mMapReady) {

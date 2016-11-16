@@ -70,7 +70,7 @@
     <string name="message_line_user_found">LINE user is found.</string>
     <string name="message_user_using_line">%1$s uses LINE App.</string>
     <string name="message_user_found">User found.</string>
-    <string name="message_detected_time_format">Detected Time: %1$s</string>
+    <string name="message_detected_date_format">Detected Date: %1$s</string>
     <string name="message_device_not_detected">This device has not been detected by others.</string>
 
     <string name="button_add">Add</string>

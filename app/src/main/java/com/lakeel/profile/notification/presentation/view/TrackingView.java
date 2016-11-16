@@ -10,5 +10,5 @@ public interface TrackingView {
 
     void showSnackBar(@StringRes int resId);
 
-    void showDetectedTime(String detectedTime);
+    void showDetectedDate(String detectedTime);
 }

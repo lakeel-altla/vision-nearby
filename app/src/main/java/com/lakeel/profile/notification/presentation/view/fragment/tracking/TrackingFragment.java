@@ -53,8 +53,8 @@ public final class TrackingFragment extends Fragment implements TrackingView, On
     @BindView(R.id.layout)
     LinearLayout mLayout;
 
-    @BindView(R.id.textView_detected_time)
-    TextView mDetectedTimeText;
+    @BindView(R.id.textView_detected_date)
+    TextView mDetectedDateText;
 
     private View mMapView;
 
@@ -166,8 +166,8 @@ public final class TrackingFragment extends Fragment implements TrackingView, On
     }
 
     @Override
-    public void showDetectedTime(String detectedTime) {
-        String time = getContext().getResources().getString(R.string.message_detected_time_format, detectedTime);
-        mDetectedTimeText.setText(time);
+    public void showDetectedDate(String detectedDate) {
+        String time = getContext().getResources().getString(R.string.message_detected_date_format, detectedDate);
+        mDetectedDateText.setText(time);
     }
 }
