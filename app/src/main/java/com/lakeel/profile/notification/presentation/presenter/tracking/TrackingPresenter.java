@@ -1,7 +1,6 @@
 package com.lakeel.profile.notification.presentation.presenter.tracking;
 
 import com.firebase.geofire.GeoLocation;
-import com.lakeel.profile.notification.R;
 import com.lakeel.profile.notification.data.entity.LocationsDataEntity;
 import com.lakeel.profile.notification.domain.usecase.FindLocationDataUseCase;
 import com.lakeel.profile.notification.domain.usecase.FindLocationUseCase;
@@ -62,7 +61,7 @@ public final class TrackingPresenter extends BasePresenter<TrackingView> {
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribe(location -> {
                     if (location == null) {
-                        getView().showSnackBar(R.string.error_not_found);
+                        getView().showEmptyView();
                         return;
                     }
 

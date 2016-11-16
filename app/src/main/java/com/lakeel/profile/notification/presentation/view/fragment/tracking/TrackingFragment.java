@@ -18,7 +18,6 @@ import com.lakeel.profile.notification.presentation.view.TrackingView;
 import com.lakeel.profile.notification.presentation.view.activity.MainActivity;
 
 import android.os.Bundle;
-import android.support.annotation.StringRes;
 import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
 import android.view.Menu;
@@ -156,7 +155,7 @@ public final class TrackingFragment extends Fragment implements TrackingView, On
     }
 
     @Override
-    public void showSnackBar(@StringRes int resId) {
+    public void showEmptyView() {
         mLayout.removeAllViews();
 
         LayoutInflater inflater = getActivity().getLayoutInflater();

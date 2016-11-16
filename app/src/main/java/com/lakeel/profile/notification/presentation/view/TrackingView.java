@@ -8,7 +8,7 @@ public interface TrackingView {
 
     void showLocationMap(GeoLocation location);
 
-    void showSnackBar(@StringRes int resId);
+    void showEmptyView();
 
     void showDetectedDate(String detectedTime);
 }
