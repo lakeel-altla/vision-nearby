@@ -4,7 +4,7 @@ import com.lakeel.profile.notification.presentation.presenter.model.BeaconIdMode
 
 public interface BleSettingsView {
 
-    void startPublishInService(BeaconIdModel model);
+    void startPublish(BeaconIdModel model);
 
     void disablePublishSettings();
 }

@@ -50,9 +50,9 @@ public final class BleSettingsFragment extends PreferenceFragmentCompat implemen
         mPublishPreference.setOnPreferenceChangeListener((preference, newValue) -> {
             Boolean booleanValue = (Boolean) newValue;
             if (booleanValue) {
-                mPresenter.onStartToPublish();
+                mPresenter.onStartPublish();
             } else {
-                mPresenter.onStopToPublish();
+                mPresenter.onStopPublishing();
             }
             return true;
         });
@@ -94,8 +94,7 @@ public final class BleSettingsFragment extends PreferenceFragmentCompat implemen
     }
 
     @Override
-    public void startPublishInService(BeaconIdModel model) {
-        // Start publish service in background.
+    public void startPublish(BeaconIdModel model) {
         Intent intent = new Intent(getContext(), PublishService.class);
         intent.putExtra(IntentKey.NAMESPACE_ID.name(), model.mNamespaceId);
         intent.putExtra(IntentKey.INSTANCE_ID.name(), model.mInstanceId);

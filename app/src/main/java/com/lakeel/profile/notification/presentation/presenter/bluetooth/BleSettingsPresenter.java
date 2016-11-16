@@ -6,24 +6,19 @@ import com.lakeel.profile.notification.presentation.checker.BluetoothChecker;
 import com.lakeel.profile.notification.presentation.presenter.BasePresenter;
 import com.lakeel.profile.notification.presentation.presenter.mapper.BeaconIdModelMapper;
 import com.lakeel.profile.notification.presentation.service.PublishService;
+import com.lakeel.profile.notification.presentation.service.ServiceManager;
 import com.lakeel.profile.notification.presentation.view.BleSettingsView;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import android.app.ActivityManager;
 import android.content.Context;
-import android.content.Intent;
-
-import java.util.List;
 
 import javax.inject.Inject;
 
 import rx.Subscription;
 import rx.android.schedulers.AndroidSchedulers;
 import rx.schedulers.Schedulers;
-
-import static android.content.Context.ACTIVITY_SERVICE;
 
 public final class BleSettingsPresenter extends BasePresenter<BleSettingsView> {
 
@@ -50,25 +45,20 @@ public final class BleSettingsPresenter extends BasePresenter<BleSettingsView> {
         }
     }
 
-    public void onStartToPublish() {
+    public void onStartPublish() {
         Subscription subscription = mFindBeaconIdUseCase
                 .execute()
                 .map(entity -> mBeaconIdModelMapper.map(entity))
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
-                .subscribe(model -> getView().startPublishInService(model),
+                .subscribe(model -> getView().startPublish(model),
                         e -> LOGGER.error("Failed to find beacon id", e));
+
         mCompositeSubscription.add(subscription);
     }
 
-    public void onStopToPublish() {
-        ActivityManager am = (ActivityManager) mContext.getSystemService(ACTIVITY_SERVICE);
-        List<ActivityManager.RunningServiceInfo> listServiceInfo = am.getRunningServices(Integer.MAX_VALUE);
-        for (ActivityManager.RunningServiceInfo runningServiceInfo : listServiceInfo) {
-            if (runningServiceInfo.service.getClassName().equals(PublishService.class.getName())) {
-                Intent intent = new Intent(mContext, PublishService.class);
-                mContext.stopService(intent);
-            }
-        }
+    public void onStopPublishing() {
+        ServiceManager manager = new ServiceManager(mContext, PublishService.class);
+        manager.stopService();
     }
 }
