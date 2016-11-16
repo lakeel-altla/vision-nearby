@@ -29,6 +29,8 @@ import com.lakeel.profile.notification.presentation.presenter.mapper.CMAuthConfi
 import com.lakeel.profile.notification.presentation.presenter.mapper.PreferencesModelMapper;
 import com.lakeel.profile.notification.presentation.presenter.model.PreferenceModel;
 import com.lakeel.profile.notification.presentation.receiver.NearbyReceiver;
+import com.lakeel.profile.notification.presentation.service.PublishService;
+import com.lakeel.profile.notification.presentation.service.ServiceManager;
 import com.lakeel.profile.notification.presentation.view.ActivityView;
 
 import org.slf4j.Logger;
@@ -318,6 +320,11 @@ public final class ActivityPresenter extends BasePresenter<ActivityView> impleme
         Task<Void> task = AuthUI.getInstance().signOut(activity);
         task.addOnCompleteListener(task1 -> {
             if (task1.isSuccessful()) {
+                onUnSubscribe();
+
+                ServiceManager manager = new ServiceManager(mContext, PublishService.class);
+                manager.stopService();
+
                 getView().showSignInFragment();
             } else {
                 LOGGER.error("Failed to sign out", task1.getException());

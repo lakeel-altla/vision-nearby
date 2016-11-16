@@ -2,7 +2,6 @@ package com.lakeel.profile.notification.presentation.attachment;
 
 import com.lakeel.profile.notification.presentation.firebase.MyUser;
 import com.lakeel.profile.notification.presentation.intent.IntentKey;
-import com.lakeel.profile.notification.presentation.service.LocationService;
 import com.lakeel.profile.notification.presentation.service.RecentlyService;
 
 import android.content.Context;
@@ -12,6 +11,12 @@ public class UserIdAttachmentState implements AttachmentState {
 
     @Override
     public void startService(Context context, String value) {
+
+        // Note:
+        // Check user authentication, because this method may be performed at the time of signing out.
+        if (!MyUser.isAuthenticated()) {
+            return;
+        }
         if (MyUser.getUid().equals(value)) {
             return;
         }
