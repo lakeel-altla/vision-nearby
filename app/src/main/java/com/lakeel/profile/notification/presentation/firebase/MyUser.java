@@ -3,7 +3,7 @@ package com.lakeel.profile.notification.presentation.firebase;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 
-import com.lakeel.profile.notification.data.execption.UserNotFoundException;
+import com.lakeel.profile.notification.data.execption.UserNotAuthorizedException;
 
 import android.net.Uri;
 
@@ -51,7 +51,7 @@ public final class MyUser {
     private static FirebaseUser getMyUser() {
         FirebaseUser myUser = FirebaseAuth.getInstance().getCurrentUser();
         if (myUser == null) {
-            throw new UserNotFoundException("Not found signed in user");
+            throw new UserNotAuthorizedException("Not found signed in user");
         }
 
         return myUser;
