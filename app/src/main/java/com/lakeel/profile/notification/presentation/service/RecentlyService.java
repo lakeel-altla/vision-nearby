@@ -15,6 +15,7 @@ import com.google.firebase.database.ValueEventListener;
 import com.lakeel.profile.notification.data.entity.ItemsEntity;
 import com.lakeel.profile.notification.data.entity.RecentlyEntity;
 import com.lakeel.profile.notification.data.execption.DataStoreException;
+import com.lakeel.profile.notification.data.execption.UserNotFoundException;
 import com.lakeel.profile.notification.data.mapper.RecentlyEntityMapper;
 import com.lakeel.profile.notification.presentation.firebase.MyUser;
 import com.lakeel.profile.notification.presentation.intent.IntentKey;
@@ -32,10 +33,8 @@ import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.content.ContextCompat;
 
-import rx.Observable;
 import rx.Single;
 import rx.SingleSubscriber;
-import rx.functions.Func1;
 import rx.schedulers.Schedulers;
 
 public class RecentlyService extends IntentService {
@@ -69,6 +68,7 @@ public class RecentlyService extends IntentService {
         LOGGER.info("User was found:userId = " + userId);
 
         final Context context = getApplicationContext();
+
         mGoogleApiClient = new GoogleApiClient.Builder(context)
                 .addApi(Awareness.API)
                 .addConnectionCallbacks(new GoogleApiClient.ConnectionCallbacks() {
@@ -77,17 +77,10 @@ public class RecentlyService extends IntentService {
                         final String uniqueKey = mRecentlyReference.child(MyUser.getUid()).push().getKey();
 
                         findItemById(userId)
-                                .toObservable()
-                                .filter(entity -> entity != null)
                                 .map(entity -> mRecentlyEntityMapper.map(entity))
-                                .flatMap(new Func1<RecentlyEntity, Observable<RecentlyEntity>>() {
-                                    @Override
-                                    public Observable<RecentlyEntity> call(RecentlyEntity entity) {
-                                        return saveRecently(uniqueKey, entity)
-                                                .subscribeOn(Schedulers.io())
-                                                .toObservable();
-                                    }
-                                })
+                                .flatMap(itemEntity -> saveRecently(uniqueKey, itemEntity)
+                                        .subscribeOn(Schedulers.io()))
+                                .subscribeOn(Schedulers.io())
                                 .subscribe(recentlyEntity -> {
                                     getUserCurrentActivity()
                                             .map(detectedActivity -> mRecentlyEntityMapper.map(detectedActivity))
@@ -103,17 +96,15 @@ public class RecentlyService extends IntentService {
                                             .map(weather -> mRecentlyEntityMapper.map(weather))
                                             .flatMap(entity -> saveWeather(uniqueKey, entity))
                                             .subscribe();
-                                }, e -> {
-                                    LOGGER.error("Failed to save to recently.", e);
-                                });
+                                }, e -> LOGGER.error("Failed to save to recently.", e));
                     }
 
                     @Override
                     public void onConnectionSuspended(int i) {
+
                     }
                 })
                 .build();
-
         mGoogleApiClient.connect();
     }
 
@@ -124,7 +115,7 @@ public class RecentlyService extends IntentService {
                 Awareness.SnapshotApi.getDetectedActivity(mGoogleApiClient)
                         .setResultCallback(detectedActivityResult -> {
                             if (!detectedActivityResult.getStatus().isSuccess()) {
-                                subscriber.onSuccess(null);
+                                subscriber.onError(new RuntimeException("Could not get user activity."));
                                 return;
                             }
 
@@ -142,8 +133,7 @@ public class RecentlyService extends IntentService {
                 Awareness.SnapshotApi.getLocation(mGoogleApiClient)
                         .setResultCallback(locationResult -> {
                             if (!locationResult.getStatus().isSuccess()) {
-                                LOGGER.error("Could not get user location. User may be turning off the location.");
-                                subscriber.onSuccess(null);
+                                subscriber.onError(new RuntimeException("Could not get user location. User may be turning off the location."));
                                 return;
                             }
                             Location location = locationResult.getLocation();
@@ -162,7 +152,7 @@ public class RecentlyService extends IntentService {
                 Awareness.SnapshotApi.getWeather(mGoogleApiClient)
                         .setResultCallback(weatherResult -> {
                             if (!weatherResult.getStatus().isSuccess()) {
-                                LOGGER.error("Could not get weather data. User may be turning off the location.");
+                                subscriber.onError(new RuntimeException("Could not get weather data. User may be turning off the location."));
                                 return;
                             }
                             Weather weather = weatherResult.getWeather();
@@ -187,6 +177,9 @@ public class RecentlyService extends IntentService {
                             @Override
                             public void onDataChange(DataSnapshot dataSnapshot) {
                                 ItemsEntity entity = dataSnapshot.getValue(ItemsEntity.class);
+                                if (entity == null) {
+                                    throw new UserNotFoundException();
+                                }
                                 entity.key = dataSnapshot.getKey();
                                 subscriber.onSuccess(entity);
                             }
