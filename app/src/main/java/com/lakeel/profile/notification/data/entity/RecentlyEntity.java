@@ -28,6 +28,24 @@ public final class RecentlyEntity extends BaseEntity {
         return map;
     }
 
+    public Map<String, Object> toUserActivityMap() {
+        Map<String, Object> map = new HashMap<>();
+        map.put("userActivity", userActivity);
+        return map;
+    }
+
+    public Map<String, Object> toLocationMap() {
+        Map<String, Object> map = new HashMap<>();
+        map.put("location", location);
+        return map;
+    }
+
+    public Map<String, Object> toWeatherMap() {
+        Map<String, Object> map = new HashMap<>();
+        map.put("weather", weather);
+        return map;
+    }
+
     public static class LocationEntity {
 
         public String latitude;

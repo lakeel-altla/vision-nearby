@@ -12,11 +12,11 @@ import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
 
-import com.lakeel.profile.notification.presentation.firebase.MyUser;
 import com.lakeel.profile.notification.data.entity.ItemsEntity;
 import com.lakeel.profile.notification.data.entity.RecentlyEntity;
 import com.lakeel.profile.notification.data.execption.DataStoreException;
 import com.lakeel.profile.notification.data.mapper.RecentlyEntityMapper;
+import com.lakeel.profile.notification.presentation.firebase.MyUser;
 import com.lakeel.profile.notification.presentation.intent.IntentKey;
 
 import org.slf4j.Logger;
@@ -32,8 +32,10 @@ import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.content.ContextCompat;
 
+import rx.Observable;
 import rx.Single;
 import rx.SingleSubscriber;
+import rx.functions.Func1;
 import rx.schedulers.Schedulers;
 
 public class RecentlyService extends IntentService {
@@ -44,9 +46,13 @@ public class RecentlyService extends IntentService {
 
     private static final String RECENTLY_REFERENCE = "recently";
 
-    private GoogleApiClient mGoogleApiClient;
+    DatabaseReference mRecentlyReference = FirebaseDatabase.getInstance().getReference(RECENTLY_REFERENCE);
+
+    DatabaseReference mItemReference = FirebaseDatabase.getInstance().getReference(ITEMS_REFERENCE);
 
     private RecentlyEntityMapper mRecentlyEntityMapper = new RecentlyEntityMapper();
+
+    private GoogleApiClient mGoogleApiClient;
 
     public RecentlyService() {
         super(RecentlyService.class.getSimpleName());
@@ -60,7 +66,7 @@ public class RecentlyService extends IntentService {
     protected void onHandleIntent(Intent intent) {
         String userId = intent.getStringExtra(IntentKey.USER_ID.name());
 
-        LOGGER.info("Nearby user was found:userId = " + userId);
+        LOGGER.info("User was found:userId = " + userId);
 
         final Context context = getApplicationContext();
         mGoogleApiClient = new GoogleApiClient.Builder(context)
@@ -68,17 +74,38 @@ public class RecentlyService extends IntentService {
                 .addConnectionCallbacks(new GoogleApiClient.ConnectionCallbacks() {
                     @Override
                     public void onConnected(@Nullable Bundle bundle) {
-                        Single<DetectedActivity> single1 = getUserCurrentActivity();
-                        Single<Location> single2 = getUserCurrentLocation(context);
-                        Single<Weather> single3 = getWeather(context);
-                        Single<ItemsEntity> single4 = findItemById(userId);
+                        final String uniqueKey = mRecentlyReference.child(MyUser.getUid()).push().getKey();
 
-                        // Save history.
-                        Single.zip(single1, single2, single3, single4, (detectedActivity, location, weather, entity) ->
-                                mRecentlyEntityMapper.map(entity.key, detectedActivity, location, weather))
-                                .flatMap(entity -> saveRecently(entity).subscribeOn(Schedulers.io()))
-                                .subscribe(usersEntity -> LOGGER.debug("Succeeded to save to recently."),
-                                        e -> LOGGER.error("Failed to save to recently.", e));
+                        findItemById(userId)
+                                .toObservable()
+                                .filter(entity -> entity != null)
+                                .map(entity -> mRecentlyEntityMapper.map(entity))
+                                .flatMap(new Func1<RecentlyEntity, Observable<RecentlyEntity>>() {
+                                    @Override
+                                    public Observable<RecentlyEntity> call(RecentlyEntity entity) {
+                                        return saveRecently(uniqueKey, entity)
+                                                .subscribeOn(Schedulers.io())
+                                                .toObservable();
+                                    }
+                                })
+                                .subscribe(recentlyEntity -> {
+                                    getUserCurrentActivity()
+                                            .map(detectedActivity -> mRecentlyEntityMapper.map(detectedActivity))
+                                            .flatMap(entity -> saveUserActivity(uniqueKey, entity))
+                                            .subscribe();
+
+                                    getUserCurrentLocation(context)
+                                            .map(location -> mRecentlyEntityMapper.map(location))
+                                            .flatMap(entity -> saveLocation(uniqueKey, entity))
+                                            .subscribe();
+
+                                    getWeather(context)
+                                            .map(weather -> mRecentlyEntityMapper.map(weather))
+                                            .flatMap(entity -> saveWeather(uniqueKey, entity))
+                                            .subscribe();
+                                }, e -> {
+                                    LOGGER.error("Failed to save to recently.", e);
+                                });
                     }
 
                     @Override
@@ -94,7 +121,6 @@ public class RecentlyService extends IntentService {
         return Single.create(new Single.OnSubscribe<DetectedActivity>() {
             @Override
             public void call(SingleSubscriber<? super DetectedActivity> subscriber) {
-                // Get user activity.
                 Awareness.SnapshotApi.getDetectedActivity(mGoogleApiClient)
                         .setResultCallback(detectedActivityResult -> {
                             if (!detectedActivityResult.getStatus().isSuccess()) {
@@ -112,7 +138,6 @@ public class RecentlyService extends IntentService {
 
     Single<Location> getUserCurrentLocation(Context context) {
         return Single.create(subscriber -> {
-            // Get user location.
             if (ContextCompat.checkSelfPermission(context, Manifest.permission.ACCESS_FINE_LOCATION) == PackageManager.PERMISSION_GRANTED) {
                 Awareness.SnapshotApi.getLocation(mGoogleApiClient)
                         .setResultCallback(locationResult -> {
@@ -133,7 +158,6 @@ public class RecentlyService extends IntentService {
 
     Single<Weather> getWeather(Context context) {
         return Single.create(subscriber -> {
-            // Get weather data.
             if (ContextCompat.checkSelfPermission(context, Manifest.permission.ACCESS_FINE_LOCATION) == PackageManager.PERMISSION_GRANTED) {
                 Awareness.SnapshotApi.getWeather(mGoogleApiClient)
                         .setResultCallback(weatherResult -> {
@@ -157,8 +181,7 @@ public class RecentlyService extends IntentService {
 
             @Override
             public void call(SingleSubscriber<? super ItemsEntity> subscriber) {
-                DatabaseReference databaseReference = FirebaseDatabase.getInstance().getReference(ITEMS_REFERENCE);
-                databaseReference.child(id)
+                mItemReference.child(id)
                         .addListenerForSingleValueEvent(new ValueEventListener() {
 
                             @Override
@@ -177,12 +200,54 @@ public class RecentlyService extends IntentService {
         });
     }
 
-    Single<RecentlyEntity> saveRecently(RecentlyEntity entity) {
+    Single<RecentlyEntity> saveRecently(String uniqueKey, RecentlyEntity entity) {
         return Single.create(subscriber -> {
-            DatabaseReference databaseReference = FirebaseDatabase.getInstance().getReference(RECENTLY_REFERENCE);
-            DatabaseReference postReference = databaseReference.child(MyUser.getUid()).push();
+            DatabaseReference reference = mRecentlyReference.child(MyUser.getUid()).child(uniqueKey);
 
-            Task<Void> task = postReference.setValue(entity.toMap())
+            Task<Void> task = reference.setValue(entity.toMap())
+                    .addOnSuccessListener(aVoid -> subscriber.onSuccess(entity))
+                    .addOnFailureListener(subscriber::onError);
+
+            Exception exception = task.getException();
+            if (exception != null) {
+                throw new DataStoreException(exception);
+            }
+        });
+    }
+
+    Single<RecentlyEntity> saveUserActivity(String uniqueKey, RecentlyEntity entity) {
+        return Single.create(subscriber -> {
+            DatabaseReference reference = mRecentlyReference.child(MyUser.getUid()).child(uniqueKey);
+
+            Task<Void> task = reference.updateChildren(entity.toUserActivityMap())
+                    .addOnSuccessListener(aVoid -> subscriber.onSuccess(entity))
+                    .addOnFailureListener(subscriber::onError);
+
+            Exception exception = task.getException();
+            if (exception != null) {
+                throw new DataStoreException(exception);
+            }
+        });
+    }
+
+    Single<RecentlyEntity> saveLocation(String uniqueKey, RecentlyEntity entity) {
+        return Single.create(subscriber -> {
+            DatabaseReference reference = mRecentlyReference.child(MyUser.getUid()).child(uniqueKey);
+            Task<Void> task = reference.updateChildren(entity.toLocationMap())
+                    .addOnSuccessListener(aVoid -> subscriber.onSuccess(entity))
+                    .addOnFailureListener(subscriber::onError);
+
+            Exception exception = task.getException();
+            if (exception != null) {
+                throw new DataStoreException(exception);
+            }
+        });
+    }
+
+    Single<RecentlyEntity> saveWeather(String uniqueKey, RecentlyEntity entity) {
+        return Single.create(subscriber -> {
+            DatabaseReference reference = mRecentlyReference.child(MyUser.getUid()).child(uniqueKey);
+            Task<Void> task = reference.updateChildren(entity.toWeatherMap())
                     .addOnSuccessListener(aVoid -> subscriber.onSuccess(entity))
                     .addOnFailureListener(subscriber::onError);
 
