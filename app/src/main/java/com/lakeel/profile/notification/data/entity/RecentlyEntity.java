@@ -18,6 +18,24 @@ public final class RecentlyEntity extends BaseEntity {
 
     public long passingTime;
 
+    public static class LocationEntity {
+
+        public String latitude;
+
+        public String longitude;
+
+        public HashMap<String, String> text;
+    }
+
+    public static class WeatherEntity {
+
+        public List<Integer> conditions;
+
+        public int humidity;
+
+        public float temperature;
+    }
+
     public Map<String, Object> toMap() {
         Map<String, Object> map = new HashMap<>();
         map.put("id", id);
@@ -44,23 +62,5 @@ public final class RecentlyEntity extends BaseEntity {
         Map<String, Object> map = new HashMap<>();
         map.put("weather", weather);
         return map;
-    }
-
-    public static class LocationEntity {
-
-        public String latitude;
-
-        public String longitude;
-
-        public HashMap<String, String> text;
-    }
-
-    public static class WeatherEntity {
-
-        public List<Integer> conditions;
-
-        public int humidity;
-
-        public float temperature;
     }
 }
