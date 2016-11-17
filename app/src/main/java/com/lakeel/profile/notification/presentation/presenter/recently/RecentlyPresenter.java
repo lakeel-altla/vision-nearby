@@ -113,13 +113,17 @@ public final class RecentlyPresenter extends BasePresenter<RecentlyView> {
                 }
             }
 
-            data.mUserActivity = model.mUserActivity;
+            if (model.mUserActivity != null) {
+                data.mUserActivity = model.mUserActivity;
+            }
 
-            RecentlyIntentData.Weather weather = new RecentlyIntentData.Weather();
-            weather.mConditions = model.mWeather.mConditions;
-            weather.mHumidity = model.mWeather.humidity;
-            weather.mTemperature = model.mWeather.temparature;
-            data.mWeather = weather;
+            if (model.mWeather != null) {
+                RecentlyIntentData.Weather weather = new RecentlyIntentData.Weather();
+                weather.mConditions = model.mWeather.mConditions;
+                weather.mHumidity = model.mWeather.humidity;
+                weather.mTemperature = model.mWeather.temparature;
+                data.mWeather = weather;
+            }
 
             data.mTimestamp = model.mPassingTime;
 
