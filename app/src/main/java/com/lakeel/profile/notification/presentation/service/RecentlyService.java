@@ -101,7 +101,6 @@ public class RecentlyService extends IntentService {
 
                     @Override
                     public void onConnectionSuspended(int i) {
-
                     }
                 })
                 .build();
@@ -118,7 +117,6 @@ public class RecentlyService extends IntentService {
                                 subscriber.onError(new RuntimeException("Could not get user activity."));
                                 return;
                             }
-
                             ActivityRecognitionResult ar = detectedActivityResult.getActivityRecognitionResult();
                             DetectedActivity probableActivity = ar.getMostProbableActivity();
                             subscriber.onSuccess(probableActivity);
