@@ -20,6 +20,7 @@ import java.util.Map;
 
 import javax.inject.Inject;
 
+import rx.Completable;
 import rx.Single;
 import rx.SingleSubscriber;
 
@@ -41,19 +42,16 @@ public final class FirebaseItemsRepositoryImpl implements FirebaseItemsRepositor
     }
 
     @Override
-    public Single<ItemsEntity> saveItem() {
-        return Single.create(new Single.OnSubscribe<ItemsEntity>() {
-            @Override
-            public void call(SingleSubscriber<? super ItemsEntity> subscriber) {
-                ItemsEntity entity = mItemsEntityMapper.map();
-                Task task = mReference.child(MyUser.getUid()).setValue(entity)
-                        .addOnSuccessListener(aVoid -> subscriber.onSuccess(entity))
-                        .addOnFailureListener(subscriber::onError);
+    public Completable saveItem() {
+        return Completable.create(subscriber -> {
+            Map<String, Object> map = mItemsEntityMapper.map();
+            Task task = mReference.child(MyUser.getUid()).updateChildren(map)
+                    .addOnSuccessListener(aVoid -> subscriber.onCompleted())
+                    .addOnFailureListener(subscriber::onError);
 
-                Exception e = task.getException();
-                if (e != null) {
-                    throw new DataStoreException(e);
-                }
+            Exception e = task.getException();
+            if (e != null) {
+                throw new DataStoreException(e);
             }
         });
     }

@@ -5,6 +5,7 @@ import com.lakeel.profile.notification.data.entity.ItemsEntity;
 
 import javax.inject.Inject;
 
+import rx.Completable;
 import rx.Single;
 import rx.schedulers.Schedulers;
 
@@ -18,7 +19,7 @@ public final class SaveItemUseCase {
     public SaveItemUseCase() {
     }
 
-    public Single<ItemsEntity> execute() {
+    public Completable execute() {
         return mFirebaseItemsRepository.saveItem();
     }
 }

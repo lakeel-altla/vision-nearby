@@ -59,13 +59,12 @@ public final class SignInPresenter extends BasePresenter<SignInView> {
                 .execute()
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
-                .subscribe(entity -> getView().onSignedIn()
-                        , e -> {
-                            LOGGER.error("Failed to sign in", e);
-                            getView().showSnackBar(R.string.error_not_signed_in);
-                            onSignOut();
-                        }
-                );
+                .subscribe(e -> {
+                    LOGGER.error("Failed to sign in", e);
+                    getView().showSnackBar(R.string.error_not_signed_in);
+                    onSignOut();
+                }, () -> getView().onSignedIn());
+
         mCompositeSubscription.add(subscription);
     }
 
@@ -76,6 +75,7 @@ public final class SignInPresenter extends BasePresenter<SignInView> {
                 .subscribe(throwable -> getView().showSnackBar(R.string.error_not_signed_in),
                         () -> {
                         });
+
         mCompositeSubscription.add(subscription);
     }
 }
