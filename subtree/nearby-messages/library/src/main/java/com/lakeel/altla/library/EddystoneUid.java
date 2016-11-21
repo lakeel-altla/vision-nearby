@@ -1,10 +1,11 @@
-package com.lakeel.profile.notification.presentation.parser;
+package com.lakeel.altla.library;
 
 public final class EddystoneUID {
 
     private final String mBeaconId;
 
     public EddystoneUID(String beaconId) {
+        if (beaconId == null) throw new IllegalNullException("beaconId");
         mBeaconId = beaconId;
     }
 

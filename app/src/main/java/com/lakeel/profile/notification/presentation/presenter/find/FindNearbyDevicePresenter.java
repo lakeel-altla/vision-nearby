@@ -8,8 +8,8 @@ import com.google.android.gms.nearby.messages.MessageFilter;
 import com.google.android.gms.nearby.messages.MessageListener;
 import com.google.android.gms.nearby.messages.SubscribeOptions;
 
+import com.lakeel.altla.library.EddystoneUID;
 import com.lakeel.profile.notification.domain.usecase.FindBeaconUseCase;
-import com.lakeel.profile.notification.presentation.parser.EddystoneUID;
 import com.lakeel.profile.notification.presentation.presenter.BasePresenter;
 import com.lakeel.profile.notification.presentation.view.FindNearbyDeviceView;
 
