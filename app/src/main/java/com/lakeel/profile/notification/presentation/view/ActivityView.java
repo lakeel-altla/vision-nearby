@@ -23,7 +23,7 @@ public interface ActivityView extends BaseView {
 
     void showBleEnabledActivity();
 
-    void startPublishInService(PreferenceModel model);
+    void startPublishService(PreferenceModel model);
 
     void showAccessFineLocationPermissionSystemDialog();
 

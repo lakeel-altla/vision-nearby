@@ -67,7 +67,7 @@ public final class ActivityPresenter extends BasePresenter<ActivityView> impleme
     int CMPort;
 
     @Inject
-    GoogleApiClient mNearbyClient;
+    GoogleApiClient mGoogleApiClient;
 
     @Inject
     SaveBeaconIdUseCase mSaveBeaconIdUseCase;
@@ -124,23 +124,21 @@ public final class ActivityPresenter extends BasePresenter<ActivityView> impleme
 
     @Override
     public void onStart() {
-        if (MyUser.isAuthenticated()) {
-            if (isAccessLocationGranted()) {
-                onConnect();
-            }
+        if (MyUser.isAuthenticated() && isAccessLocationGranted()) {
+            onConnect();
         }
     }
 
     @Override
     public void onResume() {
-        mNearbyClient.registerConnectionCallbacks(this);
-        mNearbyClient.registerConnectionFailedListener(this);
+        mGoogleApiClient.registerConnectionCallbacks(this);
+        mGoogleApiClient.registerConnectionFailedListener(this);
     }
 
     @Override
     public void onPause() {
-        mNearbyClient.unregisterConnectionCallbacks(this);
-        mNearbyClient.unregisterConnectionFailedListener(this);
+        mGoogleApiClient.unregisterConnectionCallbacks(this);
+        mGoogleApiClient.unregisterConnectionFailedListener(this);
     }
 
     @Override
@@ -148,7 +146,7 @@ public final class ActivityPresenter extends BasePresenter<ActivityView> impleme
         super.onStop();
 
         if (MyUser.isAuthenticated()) {
-            mNearbyClient.disconnect();
+            mGoogleApiClient.disconnect();
         }
     }
 
@@ -168,6 +166,7 @@ public final class ActivityPresenter extends BasePresenter<ActivityView> impleme
                         onUnSubscribe();
                     }
                 }, e -> LOGGER.error("Failed to find preference settings.", e));
+
         mCompositeSubscription.add(subscription);
     }
 
@@ -241,10 +240,10 @@ public final class ActivityPresenter extends BasePresenter<ActivityView> impleme
                                 .subscribeOn(Schedulers.io());
                     }
                 })
+                .doOnSuccess(entity -> mPreferenceModel = mPreferencesModelMapper.map(entity))
                 .flatMap(new Func1<PreferencesEntity, Single<CMLinksEntity>>() {
                     @Override
                     public Single<CMLinksEntity> call(PreferencesEntity entity) {
-                        mPreferenceModel = mPreferencesModelMapper.map(entity);
                         return mFindCMLinksUseCase
                                 .execute()
                                 .subscribeOn(Schedulers.io());
@@ -257,7 +256,7 @@ public final class ActivityPresenter extends BasePresenter<ActivityView> impleme
                     CMApplication.initialize(authConfig, new AccessConfig(CMHost, CMPort));
 
                     if (mPreferenceModel.mPublishInBackground && mPublishAvailability) {
-                        getView().startPublishInService(mPreferenceModel);
+                        getView().startPublishService(mPreferenceModel);
                     }
                 }, e -> LOGGER.error("Failed to process.", e));
 
@@ -274,7 +273,7 @@ public final class ActivityPresenter extends BasePresenter<ActivityView> impleme
     }
 
     public void onConnect() {
-        mNearbyClient.connect();
+        mGoogleApiClient.connect();
     }
 
     public void onSubscribe() {
@@ -285,7 +284,7 @@ public final class ActivityPresenter extends BasePresenter<ActivityView> impleme
         PendingIntent intent = PendingIntent.getBroadcast(mContext, 0, new Intent(mContext, NearbyReceiver.class),
                 PendingIntent.FLAG_UPDATE_CURRENT);
 
-        Nearby.Messages.subscribe(mNearbyClient, intent)
+        Nearby.Messages.subscribe(mGoogleApiClient, intent)
                 .setResultCallback(new ResolutionResultCallback() {
                     @Override
                     protected void onResolution(Status status) {
@@ -301,7 +300,7 @@ public final class ActivityPresenter extends BasePresenter<ActivityView> impleme
         PendingIntent intent = PendingIntent.getBroadcast(mContext, 0, new Intent(mContext, NearbyReceiver.class),
                 PendingIntent.FLAG_UPDATE_CURRENT);
 
-        Nearby.Messages.unsubscribe(mNearbyClient, intent)
+        Nearby.Messages.unsubscribe(mGoogleApiClient, intent)
                 .setResultCallback(new ResolutionResultCallback() {
                     @Override
                     protected void onResolution(Status status) {
