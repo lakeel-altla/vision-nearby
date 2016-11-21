@@ -10,14 +10,11 @@ import com.nostra13.universalimageloader.core.ImageLoader;
 
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
-import android.support.v4.content.res.ResourcesCompat;
 import android.view.LayoutInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
-import android.view.animation.Animation;
 import android.view.animation.AnimationUtils;
-import android.view.animation.ScaleAnimation;
 import android.widget.ImageView;
 import android.widget.TextView;
 
@@ -25,8 +22,6 @@ import javax.inject.Inject;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
-
-import static android.view.animation.Animation.INFINITE;
 
 public final class FindNearbyDeviceFragment extends Fragment implements FindNearbyDeviceView {
 
@@ -96,12 +91,6 @@ public final class FindNearbyDeviceFragment extends Fragment implements FindNear
     public void onResume() {
         super.onResume();
         mPresenter.onResume();
-
-        mCircleImage.setImageDrawable(ResourcesCompat.getDrawable(getResources(), R.drawable.circle, null));
-        ScaleAnimation animation = new ScaleAnimation(1, 3.0f, 1, 3.0f, Animation.RELATIVE_TO_SELF, 0.5f, Animation.RELATIVE_TO_SELF, 0.5f);
-        animation.setDuration(2000);
-        animation.setRepeatCount(INFINITE);
-        mCircleImage.startAnimation(animation);
     }
 
     @Override
@@ -122,10 +111,11 @@ public final class FindNearbyDeviceFragment extends Fragment implements FindNear
         return false;
     }
 
-
     @Override
     public void showDistance(String meters) {
-        String message = getResources().getString(R.string.message_device_distance_format, meters);
-        mDistanceText.setText(message);
+        if (isResumed()) {
+            String message = getResources().getString(R.string.message_device_distance_format, meters);
+            mDistanceText.setText(message);
+        }
     }
 }
