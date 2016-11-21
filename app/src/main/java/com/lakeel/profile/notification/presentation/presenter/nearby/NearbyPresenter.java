@@ -22,7 +22,10 @@ import com.lakeel.profile.notification.presentation.view.NearbyView;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import android.app.Activity;
+import android.os.Bundle;
 import android.support.annotation.IntRange;
+import android.support.annotation.Nullable;
 
 import java.util.ArrayList;
 import java.util.Iterator;
@@ -37,7 +40,7 @@ import rx.Subscription;
 import rx.android.schedulers.AndroidSchedulers;
 import rx.schedulers.Schedulers;
 
-public final class NearbyPresenter extends BasePresenter<NearbyView> {
+public final class NearbyPresenter extends BasePresenter<NearbyView> implements GoogleApiClient.ConnectionCallbacks {
 
     private class NearbyMessagesListener extends AttachmentListener {
 
@@ -72,9 +75,6 @@ public final class NearbyPresenter extends BasePresenter<NearbyView> {
     }
 
     @Inject
-    GoogleApiClient mNearbyClient;
-
-    @Inject
     FindItemUseCase mFindItemUseCase;
 
     @Inject
@@ -95,19 +95,28 @@ public final class NearbyPresenter extends BasePresenter<NearbyView> {
 
     private ScheduledThreadPoolExecutor mExecutor = new ScheduledThreadPoolExecutor(1);
 
+    private GoogleApiClient mGoogleApiClient;
+
     private boolean mScanning;
 
     private boolean mCmLinkEnabled;
 
     @Inject
-    NearbyPresenter() {
+    NearbyPresenter(Activity activity) {
+        mGoogleApiClient = new GoogleApiClient.Builder(activity)
+                .addApi(Nearby.MESSAGES_API)
+                .build();
     }
 
     @Override
     public void onResume() {
-        if (mNearbyClient.isConnected()) {
+        mGoogleApiClient.registerConnectionCallbacks(this);
+
+        if (mGoogleApiClient.isConnected()) {
             getView().showIndicator();
-            startSubscribe();
+            onSubscribe();
+        } else {
+            mGoogleApiClient.connect();
         }
 
         Subscription subscription = mFindConfigsUseCase
@@ -117,27 +126,40 @@ public final class NearbyPresenter extends BasePresenter<NearbyView> {
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribe(bool -> mCmLinkEnabled = bool,
                         e -> LOGGER.error("Failed to find config settings.", e));
+
         mCompositeSubscription.add(subscription);
     }
 
     @Override
     public void onPause() {
-        Nearby.Messages.unsubscribe(mNearbyClient, mNearbyMessagesListener);
+        mGoogleApiClient.unregisterConnectionCallbacks(this);
     }
 
     @Override
     public void onStop() {
         super.onStop();
+
+        Nearby.Messages.unsubscribe(mGoogleApiClient, mNearbyMessagesListener);
+
         getView().hideIndicator();
         getView().drawNormalActionBarColor();
+    }
+
+    @Override
+    public void onConnected(@Nullable Bundle bundle) {
+        getView().showIndicator();
+        onSubscribe();
+    }
+
+    @Override
+    public void onConnectionSuspended(int i) {
     }
 
     public void onRefresh() {
         if (mScanning) {
             return;
         }
-
-        startSubscribe();
+        onSubscribe();
     }
 
     public void onCreateItemView(NearbyItemView nearbyItemView) {
@@ -150,7 +172,7 @@ public final class NearbyPresenter extends BasePresenter<NearbyView> {
         return mNearbyItemModels.size();
     }
 
-    public void onShare() {
+    public void onShareSelected() {
         getView().showShareSheet();
     }
 
@@ -184,8 +206,8 @@ public final class NearbyPresenter extends BasePresenter<NearbyView> {
         mCompositeSubscription.add(subscription);
     }
 
-    private void startSubscribe() {
-        Nearby.Messages.subscribe(mNearbyClient, mNearbyMessagesListener)
+    private void onSubscribe() {
+        Nearby.Messages.subscribe(mGoogleApiClient, mNearbyMessagesListener)
                 .setResultCallback(new ResolutionResultCallback() {
                     @Override
                     protected void onResolution(Status status) {
@@ -199,7 +221,7 @@ public final class NearbyPresenter extends BasePresenter<NearbyView> {
 
             // Stop to scanning after 10 seconds.
 
-            Nearby.Messages.unsubscribe(mNearbyClient, mNearbyMessagesListener);
+            Nearby.Messages.unsubscribe(mGoogleApiClient, mNearbyMessagesListener);
             mScanning = false;
 
             getView().hideIndicator();

@@ -83,7 +83,7 @@ public final class NearbyListFragment extends Fragment implements NearbyView {
 
         mSwipeRefreshLayout.setColorSchemeResources(R.color.colorPrimary, R.color.colorPrimary, R.color.colorPrimary, R.color.colorPrimary);
         mSwipeRefreshLayout.setOnRefreshListener(() -> {
-            new Handler().postDelayed(() -> mSwipeRefreshLayout.setRefreshing(false), 500);
+            new Handler().postDelayed(() -> mSwipeRefreshLayout.setRefreshing(false), 1000);
             mPresenter.onRefresh();
         });
 
@@ -104,7 +104,7 @@ public final class NearbyListFragment extends Fragment implements NearbyView {
     public boolean onOptionsItemSelected(MenuItem item) {
         switch (item.getItemId()) {
             case share:
-                mPresenter.onShare();
+                mPresenter.onShareSelected();
                 break;
             default:
                 break;

@@ -3,18 +3,21 @@ package com.lakeel.profile.notification.presentation.view.fragment.estimation;
 import com.lakeel.profile.notification.R;
 import com.lakeel.profile.notification.presentation.constants.BundleKey;
 import com.lakeel.profile.notification.presentation.firebase.MyUser;
-import com.lakeel.profile.notification.presentation.presenter.estimation.FindNearbyDevicePresenter;
+import com.lakeel.profile.notification.presentation.presenter.find.FindNearbyDevicePresenter;
 import com.lakeel.profile.notification.presentation.view.FindNearbyDeviceView;
 import com.lakeel.profile.notification.presentation.view.activity.MainActivity;
 import com.nostra13.universalimageloader.core.ImageLoader;
 
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
+import android.support.v4.content.res.ResourcesCompat;
 import android.view.LayoutInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.animation.Animation;
 import android.view.animation.AnimationUtils;
+import android.view.animation.ScaleAnimation;
 import android.widget.ImageView;
 import android.widget.TextView;
 
@@ -22,6 +25,8 @@ import javax.inject.Inject;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
+
+import static android.view.animation.Animation.INFINITE;
 
 public final class FindNearbyDeviceFragment extends Fragment implements FindNearbyDeviceView {
 
@@ -71,6 +76,8 @@ public final class FindNearbyDeviceFragment extends Fragment implements FindNear
     public void onActivityCreated(Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
 
+        mPresenter.onActivityCreated();
+
         getActivity().setTitle(R.string.title_find_nearby_device);
 
         ImageLoader imageLoader = ImageLoader.getInstance();
@@ -91,6 +98,12 @@ public final class FindNearbyDeviceFragment extends Fragment implements FindNear
     public void onResume() {
         super.onResume();
         mPresenter.onResume();
+
+        mCircleImage.setImageDrawable(ResourcesCompat.getDrawable(getResources(), R.drawable.circle, null));
+        ScaleAnimation animation = new ScaleAnimation(1, 3.0f, 1, 3.0f, Animation.RELATIVE_TO_SELF, 0.5f, Animation.RELATIVE_TO_SELF, 0.5f);
+        animation.setDuration(2000);
+        animation.setRepeatCount(INFINITE);
+        mCircleImage.startAnimation(animation);
     }
 
     @Override

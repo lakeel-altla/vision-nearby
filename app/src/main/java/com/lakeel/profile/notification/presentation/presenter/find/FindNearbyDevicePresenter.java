@@ -1,4 +1,4 @@
-package com.lakeel.profile.notification.presentation.presenter.estimation;
+package com.lakeel.profile.notification.presentation.presenter.find;
 
 import com.google.android.gms.common.api.GoogleApiClient;
 import com.google.android.gms.nearby.Nearby;
@@ -13,6 +13,7 @@ import com.lakeel.profile.notification.presentation.parser.EddystoneUID;
 import com.lakeel.profile.notification.presentation.presenter.BasePresenter;
 import com.lakeel.profile.notification.presentation.view.FindNearbyDeviceView;
 
+import android.app.Activity;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 
@@ -25,8 +26,9 @@ public final class FindNearbyDevicePresenter extends BasePresenter<FindNearbyDev
     @Inject
     FindBeaconUseCase mFindBeaconUseCase;
 
-    @Inject
-    GoogleApiClient mGoogleApiClient;
+    private GoogleApiClient mGoogleApiClient;
+
+    private String mBeaconId;
 
     private MessageListener mMessageListener = new MessageListener() {
         @Override
@@ -42,18 +44,19 @@ public final class FindNearbyDevicePresenter extends BasePresenter<FindNearbyDev
         }
     };
 
-    private String mBeaconId;
-
     @Inject
-    FindNearbyDevicePresenter() {
+    FindNearbyDevicePresenter(Activity activity) {
+        mGoogleApiClient = new GoogleApiClient.Builder(activity)
+                .addApi(Nearby.MESSAGES_API)
+                .build();
     }
 
     @Override
     public void onResume() {
+        mGoogleApiClient.registerConnectionCallbacks(this);
         if (mGoogleApiClient.isConnected()) {
             onSubscribe();
         } else {
-            mGoogleApiClient.registerConnectionCallbacks(this);
             mGoogleApiClient.connect();
         }
     }
@@ -66,7 +69,10 @@ public final class FindNearbyDevicePresenter extends BasePresenter<FindNearbyDev
     @Override
     public void onStop() {
         super.onStop();
+
         Nearby.Messages.unsubscribe(mGoogleApiClient, mMessageListener);
+
+        mGoogleApiClient.disconnect();
     }
 
     @Override
