@@ -13,16 +13,9 @@ import com.lakeel.profile.notification.presentation.parser.EddystoneUID;
 import com.lakeel.profile.notification.presentation.presenter.BasePresenter;
 import com.lakeel.profile.notification.presentation.view.FindNearbyDeviceView;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-
 import java.util.Locale;
 
 import javax.inject.Inject;
-
-import rx.Subscription;
-import rx.android.schedulers.AndroidSchedulers;
-import rx.schedulers.Schedulers;
 
 public final class FindNearbyDevicePresenter extends BasePresenter<FindNearbyDeviceView> {
 
@@ -46,11 +39,7 @@ public final class FindNearbyDevicePresenter extends BasePresenter<FindNearbyDev
     @Inject
     FindBeaconUseCase mFindBeaconUseCase;
 
-    private static final Logger LOGGER = LoggerFactory.getLogger(FindNearbyDevicePresenter.class);
-
     private String mBeaconId;
-
-    private SubscribeOptions mOptions;
 
     @Inject
     FindNearbyDevicePresenter() {
@@ -61,7 +50,18 @@ public final class FindNearbyDevicePresenter extends BasePresenter<FindNearbyDev
         super.onResume();
 
         if (mGoogleApiClient.isConnected()) {
-            Nearby.Messages.subscribe(mGoogleApiClient, mMessageListener, mOptions);
+            EddystoneUID eddystoneUID = new EddystoneUID(mBeaconId);
+            String namespaceId = eddystoneUID.getNamespaceId();
+            String instanceId = eddystoneUID.getInstanceId();
+
+            MessageFilter filter = new MessageFilter.Builder()
+                    .includeEddystoneUids(namespaceId, instanceId)
+                    .build();
+            SubscribeOptions options = new SubscribeOptions.Builder()
+                    .setFilter(filter)
+                    .build();
+
+            Nearby.Messages.subscribe(mGoogleApiClient, mMessageListener, options);
         }
     }
 
@@ -71,18 +71,7 @@ public final class FindNearbyDevicePresenter extends BasePresenter<FindNearbyDev
         Nearby.Messages.unsubscribe(mGoogleApiClient, mMessageListener);
     }
 
-    public void setSubscribeOptions(String beaconId) {
+    public void setBeaconId(String beaconId) {
         mBeaconId = beaconId;
-
-        EddystoneUID eddystoneUID = new EddystoneUID(beaconId);
-        String namespaceId = eddystoneUID.getNamespaceId();
-        String instanceId = eddystoneUID.getInstanceId();
-
-        MessageFilter filter = new MessageFilter.Builder()
-                .includeEddystoneUids(namespaceId, instanceId)
-                .build();
-        mOptions = new SubscribeOptions.Builder()
-                .setFilter(filter)
-                .build();
     }
 }

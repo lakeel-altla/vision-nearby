@@ -89,7 +89,7 @@ public final class FindNearbyDeviceFragment extends Fragment implements FindNear
         String message = getResources().getString(R.string.message_finding_for_your_device_format, beaconName);
         mDistanceDescriptionText.setText(message);
 
-        mPresenter.setSubscribeOptions(beaconId);
+        mPresenter.setBeaconId(beaconId);
     }
 
     @Override
