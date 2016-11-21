@@ -1,12 +1,12 @@
 package com.lakeel.profile.notification.presentation.view.transaction;
 
 import com.lakeel.profile.notification.R;
-import com.lakeel.profile.notification.presentation.view.fragment.bluetooth.BleSettingsFragment;
-import com.lakeel.profile.notification.presentation.view.fragment.cm.CmSettingsFragment;
-import com.lakeel.profile.notification.presentation.view.fragment.device.DeviceListFragment;
+import com.lakeel.profile.notification.presentation.view.fragment.settings.bluetooth.BleSettingsFragment;
+import com.lakeel.profile.notification.presentation.view.fragment.settings.cm.CmSettingsFragment;
+import com.lakeel.profile.notification.presentation.view.fragment.settings.device.DeviceListFragment;
 import com.lakeel.profile.notification.presentation.view.fragment.estimation.FindNearbyDeviceFragment;
 import com.lakeel.profile.notification.presentation.view.fragment.favorites.FavoritesListFragment;
-import com.lakeel.profile.notification.presentation.view.fragment.line.LineSettingsFragment;
+import com.lakeel.profile.notification.presentation.view.fragment.settings.line.LineSettingsFragment;
 import com.lakeel.profile.notification.presentation.view.fragment.nearby.NearbyListFragment;
 import com.lakeel.profile.notification.presentation.view.fragment.recently.RecentlyFragment;
 import com.lakeel.profile.notification.presentation.view.fragment.settings.SettingsFragment;

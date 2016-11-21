@@ -1,4 +1,4 @@
-package com.lakeel.profile.notification.presentation.view.fragment.cm;
+package com.lakeel.profile.notification.presentation.view.fragment.settings.cm;
 
 import com.lakeel.profile.notification.R;
 import com.lakeel.profile.notification.presentation.presenter.cm.CmSettingsPresenter;

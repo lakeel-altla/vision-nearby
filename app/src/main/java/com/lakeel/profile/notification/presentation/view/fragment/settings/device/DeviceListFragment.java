@@ -1,4 +1,4 @@
-package com.lakeel.profile.notification.presentation.view.fragment.device;
+package com.lakeel.profile.notification.presentation.view.fragment.settings.device;
 
 import com.lakeel.profile.notification.R;
 import com.lakeel.profile.notification.presentation.presenter.device.DeviceListPresenter;

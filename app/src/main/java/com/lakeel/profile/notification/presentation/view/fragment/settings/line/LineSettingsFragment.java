@@ -1,4 +1,4 @@
-package com.lakeel.profile.notification.presentation.view.fragment.line;
+package com.lakeel.profile.notification.presentation.view.fragment.settings.line;
 
 import com.lakeel.profile.notification.R;
 import com.lakeel.profile.notification.presentation.presenter.line.LineSettingsPresenter;

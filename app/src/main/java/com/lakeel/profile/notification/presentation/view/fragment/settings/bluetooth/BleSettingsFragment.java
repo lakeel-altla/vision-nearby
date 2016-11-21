@@ -1,4 +1,4 @@
-package com.lakeel.profile.notification.presentation.view.fragment.bluetooth;
+package com.lakeel.profile.notification.presentation.view.fragment.settings.bluetooth;
 
 import com.lakeel.profile.notification.R;
 import com.lakeel.profile.notification.presentation.intent.IntentKey;
