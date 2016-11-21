@@ -111,13 +111,7 @@ public final class NearbyPresenter extends BasePresenter<NearbyView> implements 
     @Override
     public void onResume() {
         mGoogleApiClient.registerConnectionCallbacks(this);
-
-        if (mGoogleApiClient.isConnected()) {
-            getView().showIndicator();
-            onSubscribe();
-        } else {
-            mGoogleApiClient.connect();
-        }
+        mGoogleApiClient.connect();
 
         Subscription subscription = mFindConfigsUseCase
                 .execute()

@@ -54,11 +54,7 @@ public final class FindNearbyDevicePresenter extends BasePresenter<FindNearbyDev
     @Override
     public void onResume() {
         mGoogleApiClient.registerConnectionCallbacks(this);
-        if (mGoogleApiClient.isConnected()) {
-            onSubscribe();
-        } else {
-            mGoogleApiClient.connect();
-        }
+        mGoogleApiClient.connect();
     }
 
     @Override
