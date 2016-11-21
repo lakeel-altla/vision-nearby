@@ -57,7 +57,7 @@ public final class TrackingPresenter extends BasePresenter<TrackingView> {
                         mDetectedTime = entity.passingTime;
                         return mFindLocationUseCase
                                 .execute(entity.key)
-                                .observeOn(Schedulers.io());
+                                .subscribeOn(Schedulers.io());
                     }
                 })
                 .subscribeOn(Schedulers.io())
