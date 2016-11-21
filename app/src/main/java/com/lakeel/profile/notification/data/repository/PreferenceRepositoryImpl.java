@@ -42,8 +42,8 @@ public class PreferenceRepositoryImpl implements PreferenceRepository {
             String instanceId = mPreferences.getString(KEY_INSTANCE_ID, StringUtils.EMPTY);
 
             PreferencesEntity entity = new PreferencesEntity();
-            entity.isPublishInBackground = isPublishInBackground;
-            entity.isSubscribeInBackground = isSubscribeInBackground;
+            entity.isPublishInBackgroundEnabled = isPublishInBackground;
+            entity.isSubscribeInBackgroundEnabled = isSubscribeInBackground;
             entity.namespaceId = namespaceId;
             entity.instanceId = instanceId;
 

@@ -9,8 +9,8 @@ public final class PreferencesModelMapper {
         PreferenceModel model = new PreferenceModel();
         model.mNamespaceId = entity.namespaceId;
         model.mInstanceId = entity.instanceId;
-        model.mPublishInBackground = entity.isPublishInBackground;
-        model.mSubscribeInBackground = entity.isSubscribeInBackground;
+        model.mPublishInBackgroundEnabled = entity.isPublishInBackgroundEnabled;
+        model.mSubscribeInBackgroundEnabled = entity.isSubscribeInBackgroundEnabled;
         return model;
     }
 }

@@ -6,7 +6,7 @@ public final class PreferenceModel {
 
     public String mInstanceId;
 
-    public boolean mPublishInBackground;
+    public boolean mPublishInBackgroundEnabled;
 
-    public boolean mSubscribeInBackground;
+    public boolean mSubscribeInBackgroundEnabled;
 }

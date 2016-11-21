@@ -141,7 +141,7 @@ public class MainActivity extends AppCompatActivity
                 LOGGER.warn("Can not connect to nearby. Not granted for location permission.");
             }
         } else if (REQUEST_CODE_SUBSCRIBE_RESULT == requestCode && resultCode == RESULT_OK) {
-            mPresenter.onSubscribe();
+            mPresenter.onSubscribeInBackground();
         } else {
             super.onActivityResult(requestCode, resultCode, data);
         }
@@ -302,7 +302,7 @@ public class MainActivity extends AppCompatActivity
     }
 
     public void onSubscribe() {
-        mPresenter.onSubscribe();
+        mPresenter.onSubscribeInBackground();
     }
 
     public void onUnSubscribe() {

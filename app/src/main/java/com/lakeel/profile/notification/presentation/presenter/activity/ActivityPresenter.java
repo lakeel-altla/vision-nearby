@@ -125,20 +125,11 @@ public final class ActivityPresenter extends BasePresenter<ActivityView> impleme
     @Override
     public void onStart() {
         if (MyUser.isAuthenticated() && isAccessLocationGranted()) {
+            mGoogleApiClient.registerConnectionCallbacks(this);
+            mGoogleApiClient.registerConnectionFailedListener(this);
+
             onConnect();
         }
-    }
-
-    @Override
-    public void onResume() {
-        mGoogleApiClient.registerConnectionCallbacks(this);
-        mGoogleApiClient.registerConnectionFailedListener(this);
-    }
-
-    @Override
-    public void onPause() {
-        mGoogleApiClient.unregisterConnectionCallbacks(this);
-        mGoogleApiClient.unregisterConnectionFailedListener(this);
     }
 
     @Override
@@ -146,6 +137,9 @@ public final class ActivityPresenter extends BasePresenter<ActivityView> impleme
         super.onStop();
 
         if (MyUser.isAuthenticated()) {
+            mGoogleApiClient.unregisterConnectionCallbacks(this);
+            mGoogleApiClient.unregisterConnectionFailedListener(this);
+
             mGoogleApiClient.disconnect();
         }
     }
@@ -160,8 +154,8 @@ public final class ActivityPresenter extends BasePresenter<ActivityView> impleme
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribe(model -> {
-                    if (model.mSubscribeInBackground) {
-                        onSubscribe();
+                    if (model.mSubscribeInBackgroundEnabled) {
+                        onSubscribeInBackground();
                     } else {
                         onUnSubscribe();
                     }
@@ -255,7 +249,7 @@ public final class ActivityPresenter extends BasePresenter<ActivityView> impleme
                 .subscribe(authConfig -> {
                     CMApplication.initialize(authConfig, new AccessConfig(CMHost, CMPort));
 
-                    if (mPreferenceModel.mPublishInBackground && mPublishAvailability) {
+                    if (mPreferenceModel.mPublishInBackgroundEnabled && mPublishAvailability) {
                         getView().startPublishService(mPreferenceModel);
                     }
                 }, e -> LOGGER.error("Failed to process.", e));
@@ -276,7 +270,7 @@ public final class ActivityPresenter extends BasePresenter<ActivityView> impleme
         mGoogleApiClient.connect();
     }
 
-    public void onSubscribe() {
+    public void onSubscribeInBackground() {
         if (mAlreadySubscribed) {
             return;
         }
