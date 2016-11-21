@@ -317,9 +317,14 @@ public class MainActivity extends AppCompatActivity
         mPresenter.onSignedIn();
     }
 
-    public void showTrackingFragment(String id) {
+    public void showTrackingFragment(String id, String beaconName) {
         FragmentController fragmentController = new FragmentController(getSupportFragmentManager());
-        fragmentController.showTrackingFragment(id);
+        fragmentController.showTrackingFragment(id, beaconName);
+    }
+
+    public void showFindNearbyDeviceFragment(String beaconId, String beaconName) {
+        FragmentController fragmentController = new FragmentController(getSupportFragmentManager());
+        fragmentController.showDistanceEstimationFragment(beaconId, beaconName);
     }
 
     public void showDeviceListFragment() {

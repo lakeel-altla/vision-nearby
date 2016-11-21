@@ -94,7 +94,7 @@ public class DeviceListPresenter extends BasePresenter<DeviceView> {
         }
 
         public void onClick(DeviceModel model) {
-            getView().showTrackingFragment(model.mBeaconId);
+            getView().showTrackingFragment(model.mBeaconId, model.mName);
         }
     }
 }

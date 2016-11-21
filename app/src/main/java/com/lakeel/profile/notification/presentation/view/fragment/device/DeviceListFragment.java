@@ -96,7 +96,7 @@ public final class DeviceListFragment extends Fragment implements DeviceView {
     }
 
     @Override
-    public void showTrackingFragment(String beaconId) {
-        ((MainActivity) getActivity()).showTrackingFragment(beaconId);
+    public void showTrackingFragment(String beaconId, String beaconName) {
+        ((MainActivity) getActivity()).showTrackingFragment(beaconId, beaconName);
     }
 }

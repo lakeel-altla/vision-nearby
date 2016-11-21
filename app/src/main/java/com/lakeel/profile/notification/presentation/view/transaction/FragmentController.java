@@ -4,6 +4,7 @@ import com.lakeel.profile.notification.R;
 import com.lakeel.profile.notification.presentation.view.fragment.bluetooth.BleSettingsFragment;
 import com.lakeel.profile.notification.presentation.view.fragment.cm.CmSettingsFragment;
 import com.lakeel.profile.notification.presentation.view.fragment.device.DeviceListFragment;
+import com.lakeel.profile.notification.presentation.view.fragment.estimation.FindNearbyDeviceFragment;
 import com.lakeel.profile.notification.presentation.view.fragment.favorites.FavoritesListFragment;
 import com.lakeel.profile.notification.presentation.view.fragment.line.LineSettingsFragment;
 import com.lakeel.profile.notification.presentation.view.fragment.nearby.NearbyListFragment;
@@ -28,6 +29,8 @@ public final class FragmentController {
     private final String TRACKING_FRAGMENT_TAG = TrackingFragment.class.getSimpleName();
 
     private final String DEVICE_LIST_FRAGMENT_TAG = DeviceListFragment.class.getSimpleName();
+
+    private final String DISTANCE_ESTIMATION_FRAGMENT_TAG = FindNearbyDeviceFragment.class.getSimpleName();
 
     private final String SETTINGS_FRAGMENT_TAG = SettingsFragment.class.getSimpleName();
 
@@ -63,14 +66,19 @@ public final class FragmentController {
         replaceFragment(R.id.fragmentPlaceholder, fragment, RECENTLY_FRAGMENT_TAG);
     }
 
-    public void showTrackingFragment(String id) {
-        TrackingFragment fragment = TrackingFragment.newInstance(id);
+    public void showTrackingFragment(String id, String beaconName) {
+        TrackingFragment fragment = TrackingFragment.newInstance(id, beaconName);
         replaceFragment(R.id.fragmentPlaceholder, fragment, TRACKING_FRAGMENT_TAG);
     }
 
     public void showDeviceListFragment() {
         DeviceListFragment fragment = DeviceListFragment.newInstance();
         replaceFragment(R.id.fragmentPlaceholder, fragment, DEVICE_LIST_FRAGMENT_TAG);
+    }
+
+    public void showDistanceEstimationFragment(String beaconId, String beaconName) {
+        FindNearbyDeviceFragment fragment = FindNearbyDeviceFragment.newInstance(beaconId, beaconName);
+        replaceFragment(R.id.fragmentPlaceholder, fragment, DISTANCE_ESTIMATION_FRAGMENT_TAG);
     }
 
     public void showBleSettingsFragment() {

@@ -16,6 +16,11 @@ public final class ConfirmDialog {
         mBuilder.title(R.string.title_confirm);
         mBuilder.positiveText(R.string.dialog_button_positive);
         mBuilder.content(resId);
+        mBuilder.build();
+    }
+
+    public void setOnPositiveListener(MaterialDialog.SingleButtonCallback callback) {
+        mBuilder.onPositive(callback);
     }
 
     public void show() {

@@ -4,5 +4,5 @@ public interface DeviceView {
 
     void updateItems();
 
-    void showTrackingFragment(String beaconId);
+    void showTrackingFragment(String beaconId, String beaconName);
 }

@@ -31,6 +31,8 @@ public final class TrackingPresenter extends BasePresenter<TrackingView> {
 
     private String mBeaconId;
 
+    private String mBeaconName;
+
     private GeoLocation mGeoLocation;
 
     private boolean mMapReady;
@@ -43,7 +45,7 @@ public final class TrackingPresenter extends BasePresenter<TrackingView> {
 
     @Override
     public void onActivityCreated() {
-        Subscription subscription1 = mFindLocationDataUseCase
+        Subscription subscription = mFindLocationDataUseCase
                 .execute(mBeaconId)
                 .flatMap(new Func1<LocationsDataEntity, Single<GeoLocation>>() {
                     @Override
@@ -51,7 +53,9 @@ public final class TrackingPresenter extends BasePresenter<TrackingView> {
                         if (entity == null) {
                             return Single.just(null);
                         }
+
                         mDetectedTime = entity.passingTime;
+
                         return mFindLocationUseCase
                                 .execute(entity.key)
                                 .observeOn(Schedulers.io());
@@ -75,11 +79,12 @@ public final class TrackingPresenter extends BasePresenter<TrackingView> {
                     }
                 }, e -> LOGGER.error("Failed to find location.", e));
 
-        mCompositeSubscription.add(subscription1);
+        mCompositeSubscription.add(subscription);
     }
 
-    public void setBeaconId(String beaconId) {
+    public void setBeaconData(String beaconId, String beaconName) {
         mBeaconId = beaconId;
+        mBeaconName = beaconName;
     }
 
     public void onMapReady() {
@@ -88,4 +93,13 @@ public final class TrackingPresenter extends BasePresenter<TrackingView> {
             getView().showLocationMap(mGeoLocation);
         }
     }
+
+    public void onMarkerClick() {
+        getView().showFindNearbyDeviceConfirmDialog();
+    }
+
+    public void onFindNearbyDeviceDialogClicked() {
+        getView().showFindNearbyDeviceFragment(mBeaconId,mBeaconName);
+    }
+
 }

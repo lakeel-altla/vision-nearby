@@ -11,6 +11,7 @@ import com.lakeel.profile.notification.presentation.view.activity.RecentlyUserUs
 import com.lakeel.profile.notification.presentation.view.fragment.bluetooth.BleSettingsFragment;
 import com.lakeel.profile.notification.presentation.view.fragment.cm.CmSettingsFragment;
 import com.lakeel.profile.notification.presentation.view.fragment.device.DeviceListFragment;
+import com.lakeel.profile.notification.presentation.view.fragment.estimation.FindNearbyDeviceFragment;
 import com.lakeel.profile.notification.presentation.view.fragment.favorites.FavoritesListFragment;
 import com.lakeel.profile.notification.presentation.view.fragment.line.LineSettingsFragment;
 import com.lakeel.profile.notification.presentation.view.fragment.nearby.NearbyListFragment;
@@ -53,4 +54,6 @@ public interface UserComponent {
     void inject(TrackingFragment fragment);
 
     void inject(DeviceListFragment fragment);
+
+    void inject(FindNearbyDeviceFragment fragment);
 }

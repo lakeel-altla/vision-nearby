@@ -11,6 +11,8 @@ import com.google.android.gms.maps.model.MarkerOptions;
 
 import com.firebase.geofire.GeoLocation;
 import com.lakeel.profile.notification.R;
+import com.lakeel.profile.notification.android.ConfirmDialog;
+import com.lakeel.profile.notification.presentation.constants.BundleKey;
 import com.lakeel.profile.notification.presentation.constants.Colors;
 import com.lakeel.profile.notification.presentation.constants.Radius;
 import com.lakeel.profile.notification.presentation.presenter.tracking.TrackingPresenter;
@@ -19,6 +21,7 @@ import com.lakeel.profile.notification.presentation.view.activity.MainActivity;
 
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
+import android.support.v4.app.FragmentManager;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuInflater;
@@ -35,11 +38,10 @@ import butterknife.ButterKnife;
 
 public final class TrackingFragment extends Fragment implements TrackingView, OnMapReadyCallback {
 
-    private static final String BUNDLE_KEY_BEACON_ID = "beaconId";
-
-    public static TrackingFragment newInstance(String id) {
+    public static TrackingFragment newInstance(String id, String name) {
         Bundle bundle = new Bundle();
-        bundle.putSerializable(BUNDLE_KEY_BEACON_ID, id);
+        bundle.putSerializable(BundleKey.BEACON_ID.getValue(), id);
+        bundle.putSerializable(BundleKey.BEACON_NAME.getValue(), name);
 
         TrackingFragment fragment = new TrackingFragment();
         fragment.setArguments(bundle);
@@ -49,7 +51,7 @@ public final class TrackingFragment extends Fragment implements TrackingView, On
     @Inject
     TrackingPresenter mPresenter;
 
-    @BindView(R.id.layout)
+    @BindView(R.id.trackingLayout)
     LinearLayout mLayout;
 
     @BindView(R.id.textView_detected_date)
@@ -58,6 +60,8 @@ public final class TrackingFragment extends Fragment implements TrackingView, On
     private View mMapView;
 
     private GoogleMap mMap;
+
+    private SupportMapFragment mSupportMapFragment;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
@@ -71,15 +75,6 @@ public final class TrackingFragment extends Fragment implements TrackingView, On
 
         setHasOptionsMenu(true);
 
-        SupportMapFragment supportMapFragment = (SupportMapFragment) getChildFragmentManager()
-                .findFragmentById(R.id.tracking_map);
-        supportMapFragment.getMapAsync(this);
-
-        mMapView = supportMapFragment.getView();
-        if (mMapView != null) {
-            mMapView.setVisibility(View.INVISIBLE);
-        }
-
         return view;
     }
 
@@ -87,12 +82,21 @@ public final class TrackingFragment extends Fragment implements TrackingView, On
     public void onActivityCreated(Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
 
+        FragmentManager fm = getChildFragmentManager();
+        mSupportMapFragment = (SupportMapFragment) fm.findFragmentById(R.id.tracking_map_layout);
+        if (mSupportMapFragment == null) {
+            mSupportMapFragment = SupportMapFragment.newInstance();
+            fm.beginTransaction().replace(R.id.tracking_map_layout, mSupportMapFragment).commit();
+        }
+        mSupportMapFragment.getMapAsync(this);
+
         MainActivity activity = (MainActivity) getActivity();
         activity.setDrawerIndicatorEnabled(false);
 
         Bundle bundle = getArguments();
-        String beaconId = (String) bundle.get(BUNDLE_KEY_BEACON_ID);
-        mPresenter.setBeaconId(beaconId);
+        String beaconId = (String) bundle.get(BundleKey.BEACON_ID.getValue());
+        String beaconName = (String) bundle.get(BundleKey.BEACON_NAME.getValue());
+        mPresenter.setBeaconData(beaconId, beaconName);
 
         getActivity().setTitle(R.string.title_cloud_tracking);
 
@@ -102,6 +106,11 @@ public final class TrackingFragment extends Fragment implements TrackingView, On
     @Override
     public void onResume() {
         super.onResume();
+
+        mMapView = mSupportMapFragment.getView();
+        if (mMapView != null) {
+            mMapView.setVisibility(View.INVISIBLE);
+        }
     }
 
     @Override
@@ -134,6 +143,11 @@ public final class TrackingFragment extends Fragment implements TrackingView, On
 
         CameraUpdate cameraUpdate = CameraUpdateFactory.zoomTo(14);
         mMap.moveCamera(cameraUpdate);
+
+        mMap.setOnMarkerClickListener(marker -> {
+            mPresenter.onMarkerClick();
+            return false;
+        });
 
         mPresenter.onMapReady();
     }
@@ -168,5 +182,17 @@ public final class TrackingFragment extends Fragment implements TrackingView, On
     public void showDetectedDate(String detectedDate) {
         String time = getContext().getResources().getString(R.string.message_detected_date_format, detectedDate);
         mDetectedDateText.setText(time);
+    }
+
+    @Override
+    public void showFindNearbyDeviceConfirmDialog() {
+        ConfirmDialog dialog = new ConfirmDialog(getActivity(), R.string.dialog_message_confirm_find_nearby_devices);
+        dialog.setOnPositiveListener((dialog1, which) -> mPresenter.onFindNearbyDeviceDialogClicked());
+        dialog.show();
+    }
+
+    @Override
+    public void showFindNearbyDeviceFragment(String beaconId, String beaconName) {
+        ((MainActivity) getActivity()).showFindNearbyDeviceFragment(beaconId, beaconName);
     }
 }

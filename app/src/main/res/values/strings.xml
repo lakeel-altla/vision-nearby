@@ -5,6 +5,7 @@
     <string name="navigation_drawer_close">Close navigation drawer</string>
 
     <string name="dialog_button_positive">Yes</string>
+    <string name="dialog_message_confirm_find_nearby_devices">Are you sure you want to find a nearby device?</string>
 
     <string name="textView_state">State</string>
     <string name="textView_presence">Presence</string>
@@ -32,6 +33,7 @@
     <string name="title_cm_settings">COMPANY Messenger Settings</string>
     <string name="title_cloud_tracking">Cloud Tracking</string>
     <string name="title_devices">Devices</string>
+    <string name="title_find_nearby_device">Find Nearby Device</string>
     <string name="title_search">Search</string>
     <string name="title_recently">Recently</string>
     <string name="title_settings">Settings</string>
@@ -50,6 +52,7 @@
     <string name="title_subscribe_in_background">Subscribe in background</string>
     <string name="title_confirm">Confirm</string>
     <string name="title_share">Share</string>
+    <string name="title_refresh">Refresh</string>
     <string name="title_add_favorites">Add to Favorites</string>
     <string name="title_add_friends">Add to Friends</string>
 
@@ -72,6 +75,8 @@
     <string name="message_user_found">User found.</string>
     <string name="message_detected_date_format">Detected Date: %1$s</string>
     <string name="message_device_not_detected">This device has not been detected by others.</string>
+    <string name="message_finding_for_your_device_format">Finding for %1$s…</string>
+    <string name="message_device_distance_format">%1$s meters away.</string>
 
     <string name="button_add">Add</string>
     <string name="button_remove">Remove</string>

@@ -28,7 +28,7 @@ public class ActivityModule {
 
     @ActivityScope
     @Provides
-    GoogleApiClient provideNearbyClient() {
+    GoogleApiClient provideGoogleApiClient() {
         return new GoogleApiClient.Builder(mActivity)
                 .addApi(Nearby.MESSAGES_API)
                 .build();

@@ -144,6 +144,6 @@ public final class SearchFragment extends Fragment implements SearchView {
 
     @Override
     public void showTrackingFragment(String id) {
-        ((MainActivity) getActivity()).showTrackingFragment(id);
+//        ((MainActivity) getActivity()).showTrackingFragment(id);
     }
 }
