@@ -82,6 +82,10 @@ public final class TrackingFragment extends Fragment implements TrackingView, On
     public void onActivityCreated(Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
 
+        getActivity().setTitle(R.string.title_cloud_tracking);
+
+        ((MainActivity) getActivity()).setDrawerIndicatorEnabled(false);
+
         FragmentManager fm = getChildFragmentManager();
         mSupportMapFragment = (SupportMapFragment) fm.findFragmentById(R.id.tracking_map_layout);
         if (mSupportMapFragment == null) {
@@ -90,15 +94,10 @@ public final class TrackingFragment extends Fragment implements TrackingView, On
         }
         mSupportMapFragment.getMapAsync(this);
 
-        MainActivity activity = (MainActivity) getActivity();
-        activity.setDrawerIndicatorEnabled(false);
-
         Bundle bundle = getArguments();
         String beaconId = (String) bundle.get(BundleKey.BEACON_ID.getValue());
         String beaconName = (String) bundle.get(BundleKey.BEACON_NAME.getValue());
         mPresenter.setBeaconData(beaconId, beaconName);
-
-        getActivity().setTitle(R.string.title_cloud_tracking);
 
         mPresenter.onActivityCreated();
     }

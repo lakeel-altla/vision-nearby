@@ -64,6 +64,8 @@ public final class FavoritesListFragment extends Fragment implements FavoriteLis
 
         getActivity().setTitle(R.string.title_favorites);
 
+        ((MainActivity) getActivity()).setDrawerIndicatorEnabled(true);
+
         MainActivity activity = (MainActivity) getActivity();
         activity.setDrawerIndicatorEnabled(true);
 

@@ -86,6 +86,8 @@ public final class SettingsFragment extends PreferenceFragmentCompat implements 
 
         getActivity().setTitle(R.string.title_settings);
 
+        ((MainActivity) getActivity()).setDrawerIndicatorEnabled(true);
+
         MainActivity activity = (MainActivity) getActivity();
         activity.setDrawerIndicatorEnabled(true);
 

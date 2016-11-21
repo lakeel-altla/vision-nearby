@@ -80,6 +80,8 @@ public final class FindNearbyDeviceFragment extends Fragment implements FindNear
 
         getActivity().setTitle(R.string.title_find_nearby_device);
 
+        ((MainActivity) getActivity()).setDrawerIndicatorEnabled(false);
+
         ImageLoader imageLoader = ImageLoader.getInstance();
         imageLoader.displayImage(MyUser.getUserData().mImageUri, mUserImageView);
         mUserImageView.startAnimation(AnimationUtils.loadAnimation(getContext(), R.anim.scale));

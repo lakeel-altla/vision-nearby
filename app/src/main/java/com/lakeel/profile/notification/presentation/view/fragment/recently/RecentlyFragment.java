@@ -64,6 +64,8 @@ public final class RecentlyFragment extends Fragment implements RecentlyView {
 
         getActivity().setTitle(R.string.title_recently);
 
+        ((MainActivity) getActivity()).setDrawerIndicatorEnabled(true);
+
         RecyclerView.LayoutManager mLayoutManager = new ScrollSmoothLineaerLayoutManager(getContext(), LinearLayoutManager.VERTICAL, false, 500);
         mUltimateRecyclerView.setLayoutManager(mLayoutManager);
 

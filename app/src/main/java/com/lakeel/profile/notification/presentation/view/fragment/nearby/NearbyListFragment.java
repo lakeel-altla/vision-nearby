@@ -81,6 +81,8 @@ public final class NearbyListFragment extends Fragment implements NearbyView {
 
         getActivity().setTitle(R.string.title_nearby);
 
+        ((MainActivity) getActivity()).setDrawerIndicatorEnabled(true);
+
         mSwipeRefreshLayout.setColorSchemeResources(R.color.colorPrimary, R.color.colorPrimary, R.color.colorPrimary, R.color.colorPrimary);
         mSwipeRefreshLayout.setOnRefreshListener(() -> {
             new Handler().postDelayed(() -> mSwipeRefreshLayout.setRefreshing(false), 1000);
