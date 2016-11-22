@@ -52,6 +52,8 @@
     <string name="title_subscribe_in_background">Subscribe in background</string>
     <string name="title_confirm">Confirm</string>
     <string name="title_share">Share</string>
+    <string name="title_find">Find</string>
+    <string name="title_directions">Directions</string>
     <string name="title_refresh">Refresh</string>
     <string name="title_add_favorites">Add to Favorites</string>
     <string name="title_add_friends">Add to Friends</string>

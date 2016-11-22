@@ -56,7 +56,7 @@ public final class NotificationNotifier {
                 .setContentTitle(builder.mTitle)
                 .setTicker(builder.mText)
                 .setContentText(builder.mText)
-                .setSmallIcon(R.mipmap.ic_nearby_white)
+                .setSmallIcon(R.mipmap.ic_nearby)
                 .setVibrate(new long[]{0, 200, 100, 200, 100, 200})
                 .setAutoCancel(true)
                 .setContentIntent(builder.mIntent)

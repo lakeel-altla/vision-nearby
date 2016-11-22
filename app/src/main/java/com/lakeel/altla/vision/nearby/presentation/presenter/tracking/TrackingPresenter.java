@@ -75,6 +75,7 @@ public final class TrackingPresenter extends BasePresenter<TrackingView> {
                     mGeoLocation = location;
                     if (mMapReady) {
                         getView().showLocationMap(location);
+                        getView().showOptionMenu();
                     }
                 }, e -> LOGGER.error("Failed to find location.", e));
 
@@ -93,12 +94,13 @@ public final class TrackingPresenter extends BasePresenter<TrackingView> {
         }
     }
 
-    public void onMarkerClick() {
-        getView().showFindNearbyDeviceConfirmDialog();
+    public void onFindNearbyDeviceMenuClicked() {
+        getView().showFindNearbyDeviceFragment(mBeaconId, mBeaconName);
     }
 
-    public void onFindNearbyDeviceDialogClicked() {
-        getView().showFindNearbyDeviceFragment(mBeaconId,mBeaconName);
+    public void onDirectionMenuClicked() {
+        String latitude = String.valueOf(mGeoLocation.latitude);
+        String longitude = String.valueOf(mGeoLocation.longitude);
+        getView().launchGoogleMapApp(latitude, longitude);
     }
-
 }

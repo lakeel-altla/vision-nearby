@@ -11,15 +11,16 @@ import com.google.android.gms.maps.model.MarkerOptions;
 
 import com.firebase.geofire.GeoLocation;
 import com.lakeel.altla.vision.nearby.R;
-import com.lakeel.altla.vision.nearby.android.ConfirmDialog;
 import com.lakeel.altla.vision.nearby.presentation.constants.BundleKey;
 import com.lakeel.altla.vision.nearby.presentation.constants.Colors;
 import com.lakeel.altla.vision.nearby.presentation.constants.Radius;
+import com.lakeel.altla.vision.nearby.presentation.intent.GoogleMapIntent;
 import com.lakeel.altla.vision.nearby.presentation.presenter.tracking.TrackingPresenter;
 import com.lakeel.altla.vision.nearby.presentation.view.TrackingView;
 import com.lakeel.altla.vision.nearby.presentation.view.activity.MainActivity;
 import com.lakeel.altla.vision.nearby.presentation.view.transaction.FragmentController;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
@@ -70,11 +71,11 @@ public final class TrackingFragment extends Fragment implements TrackingView, On
 
         ButterKnife.bind(this, view);
 
+        setHasOptionsMenu(false);
+
         MainActivity.getUserComponent(this).inject(this);
 
         mPresenter.onCreateView(this);
-
-        setHasOptionsMenu(true);
 
         return view;
     }
@@ -121,7 +122,7 @@ public final class TrackingFragment extends Fragment implements TrackingView, On
 
     @Override
     public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
-        super.onCreateOptionsMenu(menu, inflater);
+        inflater.inflate(R.menu.menu_tracking, menu);
     }
 
     @Override
@@ -130,6 +131,12 @@ public final class TrackingFragment extends Fragment implements TrackingView, On
             case android.R.id.home:
                 getActivity().getSupportFragmentManager().popBackStack();
                 return true;
+            case R.id.find:
+                mPresenter.onFindNearbyDeviceMenuClicked();
+                break;
+            case R.id.directions:
+                mPresenter.onDirectionMenuClicked();
+                break;
             default:
                 break;
         }
@@ -143,11 +150,6 @@ public final class TrackingFragment extends Fragment implements TrackingView, On
 
         CameraUpdate cameraUpdate = CameraUpdateFactory.zoomTo(14);
         mMap.moveCamera(cameraUpdate);
-
-        mMap.setOnMarkerClickListener(marker -> {
-            mPresenter.onMarkerClick();
-            return false;
-        });
 
         mPresenter.onMapReady();
     }
@@ -185,10 +187,15 @@ public final class TrackingFragment extends Fragment implements TrackingView, On
     }
 
     @Override
-    public void showFindNearbyDeviceConfirmDialog() {
-        ConfirmDialog dialog = new ConfirmDialog(getActivity(), R.string.dialog_message_confirm_find_nearby_devices);
-        dialog.setOnPositiveListener((dialog1, which) -> mPresenter.onFindNearbyDeviceDialogClicked());
-        dialog.show();
+    public void launchGoogleMapApp(String latitude, String longitude) {
+        GoogleMapIntent mapIntent = new GoogleMapIntent(latitude, longitude);
+        Intent intent = mapIntent.create();
+        startActivity(intent);
+    }
+
+    @Override
+    public void showOptionMenu() {
+        setHasOptionsMenu(true);
     }
 
     @Override
