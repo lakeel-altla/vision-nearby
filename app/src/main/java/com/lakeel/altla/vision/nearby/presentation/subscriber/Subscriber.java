@@ -1,4 +1,4 @@
-package com.lakeel.altla.vision.nearby.presentation.nearby;
+package com.lakeel.altla.vision.nearby.presentation.subscriber;
 
 import com.lakeel.altla.library.ResolutionResultCallback;
 

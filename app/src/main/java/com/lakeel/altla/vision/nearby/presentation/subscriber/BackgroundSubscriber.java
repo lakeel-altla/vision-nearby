@@ -1,4 +1,4 @@
-package com.lakeel.altla.vision.nearby.presentation.nearby;
+package com.lakeel.altla.vision.nearby.presentation.subscriber;
 
 import com.google.android.gms.common.api.GoogleApiClient;
 import com.google.android.gms.nearby.Nearby;

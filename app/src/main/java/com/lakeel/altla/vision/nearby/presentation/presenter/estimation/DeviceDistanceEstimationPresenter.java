@@ -12,8 +12,8 @@ import com.google.android.gms.nearby.messages.SubscribeOptions;
 import com.lakeel.altla.library.EddystoneUID;
 import com.lakeel.altla.library.ResolutionResultCallback;
 import com.lakeel.altla.vision.nearby.domain.usecase.FindBeaconUseCase;
-import com.lakeel.altla.vision.nearby.presentation.nearby.Subscriber;
-import com.lakeel.altla.vision.nearby.presentation.nearby.ForegroundSubscriber;
+import com.lakeel.altla.vision.nearby.presentation.subscriber.Subscriber;
+import com.lakeel.altla.vision.nearby.presentation.subscriber.ForegroundSubscriber;
 import com.lakeel.altla.vision.nearby.presentation.presenter.BasePresenter;
 import com.lakeel.altla.vision.nearby.presentation.view.DeviceDistanceEstimationView;
 
