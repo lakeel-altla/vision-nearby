@@ -322,9 +322,9 @@ public class MainActivity extends AppCompatActivity
         fragmentController.showTrackingFragment(id, beaconName);
     }
 
-    public void showFindNearbyDeviceFragment(String beaconId, String beaconName) {
+    public void showDeviceDistanceEstimationFragment(String beaconId, String beaconName) {
         FragmentController fragmentController = new FragmentController(getSupportFragmentManager());
-        fragmentController.showDistanceEstimationFragment(beaconId, beaconName);
+        fragmentController.showDeviceDistanceEstimationFragment(beaconId, beaconName);
     }
 
     public void showDeviceListFragment() {

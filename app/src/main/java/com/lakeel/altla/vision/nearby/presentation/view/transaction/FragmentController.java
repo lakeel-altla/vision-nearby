@@ -1,15 +1,15 @@
 package com.lakeel.altla.vision.nearby.presentation.view.transaction;
 
 import com.lakeel.altla.vision.nearby.R;
-import com.lakeel.altla.vision.nearby.presentation.view.fragment.settings.bluetooth.BleSettingsFragment;
-import com.lakeel.altla.vision.nearby.presentation.view.fragment.settings.cm.CmSettingsFragment;
-import com.lakeel.altla.vision.nearby.presentation.view.fragment.settings.device.DeviceListFragment;
-import com.lakeel.altla.vision.nearby.presentation.view.fragment.estimation.FindNearbyDeviceFragment;
+import com.lakeel.altla.vision.nearby.presentation.view.fragment.estimation.DeviceDistanceEstimationFragment;
 import com.lakeel.altla.vision.nearby.presentation.view.fragment.favorites.FavoritesListFragment;
-import com.lakeel.altla.vision.nearby.presentation.view.fragment.settings.line.LineSettingsFragment;
 import com.lakeel.altla.vision.nearby.presentation.view.fragment.nearby.NearbyListFragment;
 import com.lakeel.altla.vision.nearby.presentation.view.fragment.recently.RecentlyFragment;
 import com.lakeel.altla.vision.nearby.presentation.view.fragment.settings.SettingsFragment;
+import com.lakeel.altla.vision.nearby.presentation.view.fragment.settings.bluetooth.BleSettingsFragment;
+import com.lakeel.altla.vision.nearby.presentation.view.fragment.settings.cm.CmSettingsFragment;
+import com.lakeel.altla.vision.nearby.presentation.view.fragment.settings.device.DeviceListFragment;
+import com.lakeel.altla.vision.nearby.presentation.view.fragment.settings.line.LineSettingsFragment;
 import com.lakeel.altla.vision.nearby.presentation.view.fragment.signin.SignInFragment;
 import com.lakeel.altla.vision.nearby.presentation.view.fragment.tracking.TrackingFragment;
 
@@ -30,7 +30,7 @@ public final class FragmentController {
 
     private final String DEVICE_LIST_FRAGMENT_TAG = DeviceListFragment.class.getSimpleName();
 
-    private final String DISTANCE_ESTIMATION_FRAGMENT_TAG = FindNearbyDeviceFragment.class.getSimpleName();
+    private final String DISTANCE_ESTIMATION_FRAGMENT_TAG = DeviceDistanceEstimationFragment.class.getSimpleName();
 
     private final String SETTINGS_FRAGMENT_TAG = SettingsFragment.class.getSimpleName();
 
@@ -76,8 +76,8 @@ public final class FragmentController {
         replaceFragment(R.id.fragmentPlaceholder, fragment, DEVICE_LIST_FRAGMENT_TAG);
     }
 
-    public void showDistanceEstimationFragment(String beaconId, String beaconName) {
-        FindNearbyDeviceFragment fragment = FindNearbyDeviceFragment.newInstance(beaconId, beaconName);
+    public void showDeviceDistanceEstimationFragment(String beaconId, String beaconName) {
+        DeviceDistanceEstimationFragment fragment = DeviceDistanceEstimationFragment.newInstance(beaconId, beaconName);
         replaceFragment(R.id.fragmentPlaceholder, fragment, DISTANCE_ESTIMATION_FRAGMENT_TAG);
     }
 

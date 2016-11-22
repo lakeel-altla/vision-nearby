@@ -11,7 +11,7 @@ import com.lakeel.altla.vision.nearby.presentation.view.activity.RecentlyUserUse
 import com.lakeel.altla.vision.nearby.presentation.view.fragment.settings.bluetooth.BleSettingsFragment;
 import com.lakeel.altla.vision.nearby.presentation.view.fragment.settings.cm.CmSettingsFragment;
 import com.lakeel.altla.vision.nearby.presentation.view.fragment.settings.device.DeviceListFragment;
-import com.lakeel.altla.vision.nearby.presentation.view.fragment.estimation.FindNearbyDeviceFragment;
+import com.lakeel.altla.vision.nearby.presentation.view.fragment.estimation.DeviceDistanceEstimationFragment;
 import com.lakeel.altla.vision.nearby.presentation.view.fragment.favorites.FavoritesListFragment;
 import com.lakeel.altla.vision.nearby.presentation.view.fragment.settings.line.LineSettingsFragment;
 import com.lakeel.altla.vision.nearby.presentation.view.fragment.nearby.NearbyListFragment;
@@ -55,5 +55,5 @@ public interface UserComponent {
 
     void inject(DeviceListFragment fragment);
 
-    void inject(FindNearbyDeviceFragment fragment);
+    void inject(DeviceDistanceEstimationFragment fragment);
 }

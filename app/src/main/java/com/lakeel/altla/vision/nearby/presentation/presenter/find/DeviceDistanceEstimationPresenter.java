@@ -15,7 +15,7 @@ import com.lakeel.altla.vision.nearby.domain.usecase.FindBeaconUseCase;
 import com.lakeel.altla.vision.nearby.presentation.nearby.AbstractSubscriber;
 import com.lakeel.altla.vision.nearby.presentation.nearby.ForegroundSubscriber;
 import com.lakeel.altla.vision.nearby.presentation.presenter.BasePresenter;
-import com.lakeel.altla.vision.nearby.presentation.view.FindNearbyDeviceView;
+import com.lakeel.altla.vision.nearby.presentation.view.DeviceDistanceEstimationView;
 
 import android.app.Activity;
 import android.os.Bundle;
@@ -25,7 +25,7 @@ import java.util.Locale;
 
 import javax.inject.Inject;
 
-public final class FindNearbyDevicePresenter extends BasePresenter<FindNearbyDeviceView> implements GoogleApiClient.ConnectionCallbacks {
+public final class DeviceDistanceEstimationPresenter extends BasePresenter<DeviceDistanceEstimationView> implements GoogleApiClient.ConnectionCallbacks {
 
     @Inject
     FindBeaconUseCase mFindBeaconUseCase;
@@ -56,7 +56,7 @@ public final class FindNearbyDevicePresenter extends BasePresenter<FindNearbyDev
     };
 
     @Inject
-    FindNearbyDevicePresenter(Activity activity) {
+    DeviceDistanceEstimationPresenter(Activity activity) {
         mGoogleApiClient = new GoogleApiClient.Builder(activity)
                 .addApi(Nearby.MESSAGES_API)
                 .build();

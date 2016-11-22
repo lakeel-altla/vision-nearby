@@ -5,8 +5,8 @@ import com.google.android.gms.common.api.Status;
 import com.lakeel.altla.vision.nearby.R;
 import com.lakeel.altla.vision.nearby.presentation.constants.BundleKey;
 import com.lakeel.altla.vision.nearby.presentation.firebase.MyUser;
-import com.lakeel.altla.vision.nearby.presentation.presenter.find.FindNearbyDevicePresenter;
-import com.lakeel.altla.vision.nearby.presentation.view.FindNearbyDeviceView;
+import com.lakeel.altla.vision.nearby.presentation.presenter.find.DeviceDistanceEstimationPresenter;
+import com.lakeel.altla.vision.nearby.presentation.view.DeviceDistanceEstimationView;
 import com.lakeel.altla.vision.nearby.presentation.view.activity.MainActivity;
 import com.nostra13.universalimageloader.core.ImageLoader;
 
@@ -36,21 +36,21 @@ import butterknife.ButterKnife;
 import static android.app.Activity.RESULT_OK;
 import static android.view.animation.Animation.INFINITE;
 
-public final class FindNearbyDeviceFragment extends Fragment implements FindNearbyDeviceView {
+public final class DeviceDistanceEstimationFragment extends Fragment implements DeviceDistanceEstimationView {
 
-    public static FindNearbyDeviceFragment newInstance(String beaconId, String beaconName) {
+    public static DeviceDistanceEstimationFragment newInstance(String beaconId, String beaconName) {
 
         Bundle args = new Bundle();
         args.putString(BundleKey.BEACON_ID.getValue(), beaconId);
         args.putSerializable(BundleKey.BEACON_NAME.getValue(), beaconName);
 
-        FindNearbyDeviceFragment fragment = new FindNearbyDeviceFragment();
+        DeviceDistanceEstimationFragment fragment = new DeviceDistanceEstimationFragment();
         fragment.setArguments(args);
         return fragment;
     }
 
     @Inject
-    FindNearbyDevicePresenter mPresenter;
+    DeviceDistanceEstimationPresenter mPresenter;
 
     @BindView(R.id.textViewDescription)
     TextView mDistanceDescriptionText;
@@ -64,7 +64,7 @@ public final class FindNearbyDeviceFragment extends Fragment implements FindNear
     @BindView(R.id.imageViewCircle)
     ImageView mCircleImage;
 
-    private static final Logger LOGGER = LoggerFactory.getLogger(FindNearbyDeviceFragment.class);
+    private static final Logger LOGGER = LoggerFactory.getLogger(DeviceDistanceEstimationFragment.class);
 
     private static final int REQUEST_CODE_SUBSCRIBE_RESULT = 1;
 
