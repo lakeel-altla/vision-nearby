@@ -5,6 +5,4 @@ public final class DeviceModel {
     public String mBeaconId;
 
     public String mName;
-
-    public long mDetectedTime;
 }

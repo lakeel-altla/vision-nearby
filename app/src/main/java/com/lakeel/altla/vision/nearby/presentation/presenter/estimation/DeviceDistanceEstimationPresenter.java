@@ -11,7 +11,7 @@ import com.google.android.gms.nearby.messages.SubscribeOptions;
 
 import com.lakeel.altla.library.EddystoneUID;
 import com.lakeel.altla.library.ResolutionResultCallback;
-import com.lakeel.altla.vision.nearby.domain.usecase.FindBeaconUseCase;
+import com.lakeel.altla.vision.nearby.domain.usecase.FindUserBeaconsUseCase;
 import com.lakeel.altla.vision.nearby.presentation.subscriber.Subscriber;
 import com.lakeel.altla.vision.nearby.presentation.subscriber.ForegroundSubscriber;
 import com.lakeel.altla.vision.nearby.presentation.presenter.BasePresenter;
@@ -28,7 +28,7 @@ import javax.inject.Inject;
 public final class DeviceDistanceEstimationPresenter extends BasePresenter<DeviceDistanceEstimationView> implements GoogleApiClient.ConnectionCallbacks {
 
     @Inject
-    FindBeaconUseCase mFindBeaconUseCase;
+    FindUserBeaconsUseCase mFindUserBeaconsUseCase;
 
     private final GoogleApiClient mGoogleApiClient;
 

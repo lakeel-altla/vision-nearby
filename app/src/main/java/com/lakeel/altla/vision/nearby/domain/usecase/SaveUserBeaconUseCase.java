@@ -1,7 +1,8 @@
 package com.lakeel.altla.vision.nearby.domain.usecase;
 
+import com.lakeel.altla.vision.nearby.domain.repository.FirebaseBeaconsRepository;
 
-import com.lakeel.altla.vision.nearby.domain.repository.FirebaseItemsRepository;
+import android.os.Build;
 
 import javax.inject.Inject;
 
@@ -10,13 +11,13 @@ import rx.Single;
 public final class SaveUserBeaconUseCase {
 
     @Inject
-    FirebaseItemsRepository mRepository;
+    FirebaseBeaconsRepository mRepository;
 
     @Inject
     SaveUserBeaconUseCase() {
     }
 
     public Single<String> execute(String beaconId) {
-        return mRepository.saveBeaconId(beaconId);
+        return mRepository.saveUserBeacon(beaconId, Build.MODEL);
     }
 }

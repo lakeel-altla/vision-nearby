@@ -17,18 +17,17 @@ import com.lakeel.altla.vision.nearby.domain.usecase.FindCMLinksUseCase;
 import com.lakeel.altla.vision.nearby.domain.usecase.FindPreferencesUseCase;
 import com.lakeel.altla.vision.nearby.domain.usecase.ObserveConnectionUseCase;
 import com.lakeel.altla.vision.nearby.domain.usecase.SaveBeaconIdUseCase;
-import com.lakeel.altla.vision.nearby.domain.usecase.SaveBeaconUseCase;
 import com.lakeel.altla.vision.nearby.domain.usecase.SaveUserBeaconUseCase;
 import com.lakeel.altla.vision.nearby.presentation.checker.BleState;
 import com.lakeel.altla.vision.nearby.presentation.checker.BluetoothChecker;
 import com.lakeel.altla.vision.nearby.presentation.firebase.MyUser;
-import com.lakeel.altla.vision.nearby.presentation.subscriber.BackgroundSubscriber;
-import com.lakeel.altla.vision.nearby.presentation.subscriber.Subscriber;
 import com.lakeel.altla.vision.nearby.presentation.presenter.BasePresenter;
 import com.lakeel.altla.vision.nearby.presentation.presenter.mapper.CMAuthConfigMapper;
 import com.lakeel.altla.vision.nearby.presentation.presenter.mapper.PreferencesModelMapper;
 import com.lakeel.altla.vision.nearby.presentation.service.PublishService;
 import com.lakeel.altla.vision.nearby.presentation.service.ServiceManager;
+import com.lakeel.altla.vision.nearby.presentation.subscriber.BackgroundSubscriber;
+import com.lakeel.altla.vision.nearby.presentation.subscriber.Subscriber;
 import com.lakeel.altla.vision.nearby.presentation.view.ActivityView;
 
 import org.slf4j.Logger;
@@ -79,9 +78,6 @@ public final class ActivityPresenter extends BasePresenter<ActivityView> impleme
 
     @Inject
     SaveUserBeaconUseCase mSaveUserBeaconUseCase;
-
-    @Inject
-    SaveBeaconUseCase mSaveBeaconUseCase;
 
     private static final Logger LOGGER = LoggerFactory.getLogger(ActivityPresenter.class);
 
@@ -206,14 +202,6 @@ public final class ActivityPresenter extends BasePresenter<ActivityView> impleme
                         }
                         String beaconId = entity.namespaceId + entity.instanceId;
                         return Single.just(beaconId);
-                    }
-                })
-                .flatMap(new Func1<String, Single<String>>() {
-                    @Override
-                    public Single<String> call(String beaconId) {
-                        return mSaveBeaconUseCase
-                                .execute(beaconId)
-                                .subscribeOn(Schedulers.io());
                     }
                 })
                 .flatMap(new Func1<String, Single<String>>() {

@@ -12,6 +12,4 @@ public interface FirebaseItemsRepository {
     Single<ItemsEntity> findItemsByName(String name);
 
     Completable saveItem();
-
-    Single<String> saveBeaconId(String beaconId);
 }

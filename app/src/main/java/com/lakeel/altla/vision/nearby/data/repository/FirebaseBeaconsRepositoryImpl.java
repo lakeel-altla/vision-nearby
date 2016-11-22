@@ -11,9 +11,11 @@ import com.lakeel.altla.vision.nearby.data.entity.BeaconsEntity;
 import com.lakeel.altla.vision.nearby.data.execption.DataStoreException;
 import com.lakeel.altla.vision.nearby.data.mapper.BeaconsEntityMapper;
 import com.lakeel.altla.vision.nearby.domain.repository.FirebaseBeaconsRepository;
+import com.lakeel.altla.vision.nearby.presentation.firebase.MyUser;
 
 import javax.inject.Inject;
 
+import rx.Observable;
 import rx.Single;
 import rx.SingleSubscriber;
 
@@ -29,13 +31,14 @@ public class FirebaseBeaconsRepositoryImpl implements FirebaseBeaconsRepository 
     }
 
     @Override
-    public Single<String> saveBeacon(String beaconId, String name) {
+    public Single<String> saveUserBeacon(String beaconId, String name) {
         return Single.create(new Single.OnSubscribe<String>() {
             @Override
             public void call(SingleSubscriber<? super String> subscriber) {
                 BeaconsEntity entity = mMapper.map(name);
 
                 Task task = mReference
+                        .child(MyUser.getUid())
                         .child(beaconId)
                         .setValue(entity)
                         .addOnSuccessListener(aVoid -> subscriber.onSuccess(beaconId))
@@ -70,6 +73,30 @@ public class FirebaseBeaconsRepositoryImpl implements FirebaseBeaconsRepository 
                             }
                         });
             }
+        });
+    }
+
+    @Override
+    public Observable<BeaconsEntity> findBeaconsByUserId(String userId) {
+        return Observable.create(subscriber -> {
+            mReference
+                    .child(userId)
+                    .addListenerForSingleValueEvent(new ValueEventListener() {
+                        @Override
+                        public void onDataChange(DataSnapshot dataSnapshot) {
+                            for (DataSnapshot snapshot : dataSnapshot.getChildren()) {
+                                BeaconsEntity entity = snapshot.getValue(BeaconsEntity.class);
+                                entity.key = snapshot.getKey();
+                                subscriber.onNext(entity);
+                            }
+                            subscriber.onCompleted();
+                        }
+
+                        @Override
+                        public void onCancelled(DatabaseError databaseError) {
+                            subscriber.onError(databaseError.toException());
+                        }
+                    });
         });
     }
 }

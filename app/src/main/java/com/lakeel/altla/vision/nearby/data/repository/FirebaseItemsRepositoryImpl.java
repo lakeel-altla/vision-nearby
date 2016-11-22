@@ -57,30 +57,6 @@ public final class FirebaseItemsRepositoryImpl implements FirebaseItemsRepositor
     }
 
     @Override
-    public Single<String> saveBeaconId(String beaconId) {
-        return Single.create(new Single.OnSubscribe<String>() {
-            @Override
-            public void call(SingleSubscriber<? super String> subscriber) {
-                Map<String, Object> map = new HashMap<>();
-                map.put(KEY_LAST_USED_TIME, ServerValue.TIMESTAMP);
-
-                Task task = mReference
-                        .child(MyUser.getUid())
-                        .child(KEY_BEACONS)
-                        .child(beaconId)
-                        .setValue(map)
-                        .addOnSuccessListener(aVoid -> subscriber.onSuccess(beaconId))
-                        .addOnFailureListener(subscriber::onError);
-
-                Exception e = task.getException();
-                if (e != null) {
-                    throw new DataStoreException(e);
-                }
-            }
-        });
-    }
-
-    @Override
     public Single<ItemsEntity> findItemsById(String id) {
 
         return Single.create(new Single.OnSubscribe<ItemsEntity>() {

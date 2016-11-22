@@ -1,8 +1,7 @@
 package com.lakeel.altla.vision.nearby.presentation.presenter.settings.device;
 
-import com.lakeel.altla.vision.nearby.data.entity.ItemsEntity;
-import com.lakeel.altla.vision.nearby.domain.usecase.FindBeaconUseCase;
 import com.lakeel.altla.vision.nearby.domain.usecase.FindItemUseCase;
+import com.lakeel.altla.vision.nearby.domain.usecase.FindUserBeaconsUseCase;
 import com.lakeel.altla.vision.nearby.presentation.firebase.MyUser;
 import com.lakeel.altla.vision.nearby.presentation.presenter.BaseItemPresenter;
 import com.lakeel.altla.vision.nearby.presentation.presenter.BasePresenter;
@@ -19,13 +18,10 @@ import android.support.annotation.IntRange;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Map;
 
 import javax.inject.Inject;
 
-import rx.Observable;
 import rx.Subscription;
-import rx.functions.Func1;
 import rx.schedulers.Schedulers;
 
 public class DeviceListPresenter extends BasePresenter<DeviceView> {
@@ -34,7 +30,7 @@ public class DeviceListPresenter extends BasePresenter<DeviceView> {
     FindItemUseCase mFindItemUseCase;
 
     @Inject
-    FindBeaconUseCase mFindBeaconUseCase;
+    FindUserBeaconsUseCase mFindUserBeaconsUseCase;
 
     private static final Logger LOGGER = LoggerFactory.getLogger(DeviceListPresenter.class);
 
@@ -48,23 +44,13 @@ public class DeviceListPresenter extends BasePresenter<DeviceView> {
 
     @Override
     public void onResume() {
-        Subscription subscription = mFindItemUseCase
+
+        Subscription subscription = mFindUserBeaconsUseCase
                 .execute(MyUser.getUid())
-                .toObservable()
-                .filter(entity -> !entity.beacons.isEmpty())
-                .flatMap(entity -> Observable.just(entity.beacons.entrySet()))
-                .flatMapIterable(entries -> entries)
-                .flatMap(new Func1<Map.Entry<String, ItemsEntity.UserBeaconEntity>, Observable<DeviceModel>>() {
-                    @Override
-                    public Observable<DeviceModel> call(Map.Entry<String, ItemsEntity.UserBeaconEntity> entry) {
-                        return mFindBeaconUseCase
-                                .execute(entry.getKey())
-                                .map(mMapper::map)
-                                .subscribeOn(Schedulers.io())
-                                .toObservable();
-                    }
-                })
+                .filter(entity -> entity != null)
+                .map(mMapper::map)
                 .toList()
+                .subscribeOn(Schedulers.io())
                 .subscribe(models -> {
                     mModels.clear();
                     mModels.addAll(models);

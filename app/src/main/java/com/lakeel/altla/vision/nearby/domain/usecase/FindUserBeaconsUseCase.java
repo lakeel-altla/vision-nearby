@@ -5,18 +5,18 @@ import com.lakeel.altla.vision.nearby.domain.repository.FirebaseBeaconsRepositor
 
 import javax.inject.Inject;
 
-import rx.Single;
+import rx.Observable;
 
-public final class FindBeaconUseCase {
+public final class FindUserBeaconsUseCase {
 
     @Inject
     FirebaseBeaconsRepository mRepository;
 
     @Inject
-    FindBeaconUseCase() {
+    FindUserBeaconsUseCase() {
     }
 
-    public Single<BeaconsEntity> execute(String beaconId) {
-        return mRepository.findBeaconById(beaconId);
+    public Observable<BeaconsEntity> execute(String userId) {
+        return mRepository.findBeaconsByUserId(userId);
     }
 }
