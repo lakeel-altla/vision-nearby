@@ -8,6 +8,7 @@ import com.lakeel.altla.vision.nearby.presentation.presenter.nearby.NearbyPresen
 import com.lakeel.altla.vision.nearby.presentation.view.ActionBarColor;
 import com.lakeel.altla.vision.nearby.presentation.view.GridShareSheet;
 import com.lakeel.altla.vision.nearby.presentation.view.NearbyView;
+import com.lakeel.altla.vision.nearby.presentation.view.StatusBarColor;
 import com.lakeel.altla.vision.nearby.presentation.view.activity.MainActivity;
 import com.lakeel.altla.vision.nearby.presentation.view.adapter.NearbyAdapter;
 import com.lakeel.altla.vision.nearby.presentation.view.divider.DividerItemDecoration;
@@ -17,6 +18,7 @@ import org.slf4j.LoggerFactory;
 
 import android.content.Intent;
 import android.content.IntentSender;
+import android.os.Build;
 import android.os.Bundle;
 import android.os.Handler;
 import android.support.design.widget.Snackbar;
@@ -160,12 +162,20 @@ public final class NearbyListFragment extends Fragment implements NearbyView {
 
     @Override
     public void drawEditableActionBarColor() {
+        if (Build.VERSION.SDK_INT >= 21) {
+            StatusBarColor statusBarColor = new StatusBarColor(getActivity(), R.color.darkgray);
+            statusBarColor.draw();
+        }
         ActionBarColor actionBarColor = new ActionBarColor(getActivity(), R.color.darkgray);
         actionBarColor.draw();
     }
 
     @Override
     public void drawNormalActionBarColor() {
+        if (Build.VERSION.SDK_INT >= 21) {
+            StatusBarColor statusBarColor = new StatusBarColor(getActivity(), R.color.colorPrimaryDark);
+            statusBarColor.draw();
+        }
         ActionBarColor actionBarColor = new ActionBarColor(getActivity(), R.color.colorPrimary);
         actionBarColor.draw();
     }
