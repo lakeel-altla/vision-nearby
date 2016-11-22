@@ -1,4 +1,4 @@
-package com.lakeel.altla.vision.nearby.presentation.presenter.find;
+package com.lakeel.altla.vision.nearby.presentation.presenter.estimation;
 
 import com.google.android.gms.common.api.GoogleApiClient;
 import com.google.android.gms.common.api.Status;

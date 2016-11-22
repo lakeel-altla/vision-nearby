@@ -5,7 +5,7 @@ import com.google.android.gms.common.api.Status;
 import com.lakeel.altla.vision.nearby.R;
 import com.lakeel.altla.vision.nearby.presentation.constants.BundleKey;
 import com.lakeel.altla.vision.nearby.presentation.firebase.MyUser;
-import com.lakeel.altla.vision.nearby.presentation.presenter.find.DeviceDistanceEstimationPresenter;
+import com.lakeel.altla.vision.nearby.presentation.presenter.estimation.DeviceDistanceEstimationPresenter;
 import com.lakeel.altla.vision.nearby.presentation.view.DeviceDistanceEstimationView;
 import com.lakeel.altla.vision.nearby.presentation.view.activity.MainActivity;
 import com.nostra13.universalimageloader.core.ImageLoader;
