@@ -1,7 +1,7 @@
 package com.lakeel.altla.vision.nearby.presentation.view.fragment.settings.line;
 
 import com.lakeel.altla.vision.nearby.R;
-import com.lakeel.altla.vision.nearby.presentation.presenter.line.LineSettingsPresenter;
+import com.lakeel.altla.vision.nearby.presentation.presenter.settings.line.LineSettingsPresenter;
 import com.lakeel.altla.vision.nearby.presentation.view.LineSettingsView;
 import com.lakeel.altla.vision.nearby.presentation.view.activity.MainActivity;
 
