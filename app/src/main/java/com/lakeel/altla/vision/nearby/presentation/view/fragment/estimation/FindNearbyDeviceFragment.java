@@ -1,5 +1,7 @@
 package com.lakeel.altla.vision.nearby.presentation.view.fragment.estimation;
 
+import com.google.android.gms.common.api.Status;
+
 import com.lakeel.altla.vision.nearby.R;
 import com.lakeel.altla.vision.nearby.presentation.constants.BundleKey;
 import com.lakeel.altla.vision.nearby.presentation.firebase.MyUser;
@@ -8,6 +10,11 @@ import com.lakeel.altla.vision.nearby.presentation.view.FindNearbyDeviceView;
 import com.lakeel.altla.vision.nearby.presentation.view.activity.MainActivity;
 import com.nostra13.universalimageloader.core.ImageLoader;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
+import android.content.Intent;
+import android.content.IntentSender;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v4.content.res.ResourcesCompat;
@@ -26,6 +33,7 @@ import javax.inject.Inject;
 import butterknife.BindView;
 import butterknife.ButterKnife;
 
+import static android.app.Activity.RESULT_OK;
 import static android.view.animation.Animation.INFINITE;
 
 public final class FindNearbyDeviceFragment extends Fragment implements FindNearbyDeviceView {
@@ -55,6 +63,10 @@ public final class FindNearbyDeviceFragment extends Fragment implements FindNear
 
     @BindView(R.id.imageViewCircle)
     ImageView mCircleImage;
+
+    private static final Logger LOGGER = LoggerFactory.getLogger(FindNearbyDeviceFragment.class);
+
+    private static final int REQUEST_CODE_SUBSCRIBE_RESULT = 1;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -93,7 +105,7 @@ public final class FindNearbyDeviceFragment extends Fragment implements FindNear
         String message = getResources().getString(R.string.message_finding_for_your_device_format, beaconName);
         mDistanceDescriptionText.setText(message);
 
-        mPresenter.setBeaconId(beaconId);
+        mPresenter.setSubscriber(beaconId);
     }
 
     @Override
@@ -127,10 +139,28 @@ public final class FindNearbyDeviceFragment extends Fragment implements FindNear
     }
 
     @Override
+    public void onActivityResult(int requestCode, int resultCode, Intent data) {
+        if (REQUEST_CODE_SUBSCRIBE_RESULT == requestCode && resultCode == RESULT_OK) {
+            mPresenter.onSubscribe();
+        } else {
+            super.onActivityResult(requestCode, resultCode, data);
+        }
+    }
+
+    @Override
     public void showDistance(String meters) {
         if (isResumed()) {
             String message = getResources().getString(R.string.message_device_distance_format, meters);
             mDistanceText.setText(message);
+        }
+    }
+
+    @Override
+    public void showResolutionSystemDialog(Status status) {
+        try {
+            status.startResolutionForResult(getActivity(), REQUEST_CODE_SUBSCRIBE_RESULT);
+        } catch (IntentSender.SendIntentException e) {
+            LOGGER.error("Failed to show resolution dialog for nearby.", e);
         }
     }
 }

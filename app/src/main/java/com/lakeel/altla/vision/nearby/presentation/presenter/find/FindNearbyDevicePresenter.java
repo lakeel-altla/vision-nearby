@@ -1,6 +1,7 @@
 package com.lakeel.altla.vision.nearby.presentation.presenter.find;
 
 import com.google.android.gms.common.api.GoogleApiClient;
+import com.google.android.gms.common.api.Status;
 import com.google.android.gms.nearby.Nearby;
 import com.google.android.gms.nearby.messages.Distance;
 import com.google.android.gms.nearby.messages.Message;
@@ -9,7 +10,10 @@ import com.google.android.gms.nearby.messages.MessageListener;
 import com.google.android.gms.nearby.messages.SubscribeOptions;
 
 import com.lakeel.altla.library.EddystoneUID;
+import com.lakeel.altla.library.ResolutionResultCallback;
 import com.lakeel.altla.vision.nearby.domain.usecase.FindBeaconUseCase;
+import com.lakeel.altla.vision.nearby.presentation.nearby.AbstractSubscriber;
+import com.lakeel.altla.vision.nearby.presentation.nearby.ForegroundSubscriber;
 import com.lakeel.altla.vision.nearby.presentation.presenter.BasePresenter;
 import com.lakeel.altla.vision.nearby.presentation.view.FindNearbyDeviceView;
 
@@ -26,9 +30,16 @@ public final class FindNearbyDevicePresenter extends BasePresenter<FindNearbyDev
     @Inject
     FindBeaconUseCase mFindBeaconUseCase;
 
-    private GoogleApiClient mGoogleApiClient;
+    private final GoogleApiClient mGoogleApiClient;
 
-    private String mBeaconId;
+    private AbstractSubscriber mSubscriber;
+
+    private ResolutionResultCallback mResultCallback = new ResolutionResultCallback() {
+        @Override
+        protected void onResolution(Status status) {
+
+        }
+    };
 
     private MessageListener mMessageListener = new MessageListener() {
         @Override
@@ -66,7 +77,12 @@ public final class FindNearbyDevicePresenter extends BasePresenter<FindNearbyDev
     public void onStop() {
         super.onStop();
 
-        Nearby.Messages.unsubscribe(mGoogleApiClient, mMessageListener);
+        mSubscriber.unSubscribe(new ResolutionResultCallback() {
+            @Override
+            protected void onResolution(Status status) {
+
+            }
+        });
 
         mGoogleApiClient.disconnect();
     }
@@ -80,12 +96,8 @@ public final class FindNearbyDevicePresenter extends BasePresenter<FindNearbyDev
     public void onConnectionSuspended(int i) {
     }
 
-    public void setBeaconId(String beaconId) {
-        mBeaconId = beaconId;
-    }
-
-    private void onSubscribe() {
-        EddystoneUID eddystoneUID = new EddystoneUID(mBeaconId);
+    public void setSubscriber(String beaconId) {
+        EddystoneUID eddystoneUID = new EddystoneUID(beaconId);
         String namespaceId = eddystoneUID.getNamespaceId();
         String instanceId = eddystoneUID.getInstanceId();
 
@@ -96,6 +108,15 @@ public final class FindNearbyDevicePresenter extends BasePresenter<FindNearbyDev
                 .setFilter(filter)
                 .build();
 
-        Nearby.Messages.subscribe(mGoogleApiClient, mMessageListener, options);
+        mSubscriber = new ForegroundSubscriber(mGoogleApiClient, mMessageListener, options);
+    }
+
+    public void onSubscribe() {
+        mSubscriber.subscribe(new ResolutionResultCallback() {
+            @Override
+            protected void onResolution(Status status) {
+
+            }
+        });
     }
 }

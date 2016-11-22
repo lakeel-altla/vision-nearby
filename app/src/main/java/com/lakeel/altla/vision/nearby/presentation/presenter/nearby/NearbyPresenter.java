@@ -12,6 +12,8 @@ import com.lakeel.altla.vision.nearby.domain.usecase.FindItemUseCase;
 import com.lakeel.altla.vision.nearby.domain.usecase.SaveUsersToCmFavoritesUseCase;
 import com.lakeel.altla.vision.nearby.presentation.constants.AttachmentType;
 import com.lakeel.altla.vision.nearby.presentation.firebase.MyUser;
+import com.lakeel.altla.vision.nearby.presentation.nearby.AbstractSubscriber;
+import com.lakeel.altla.vision.nearby.presentation.nearby.ForegroundSubscriber;
 import com.lakeel.altla.vision.nearby.presentation.presenter.BaseItemPresenter;
 import com.lakeel.altla.vision.nearby.presentation.presenter.BasePresenter;
 import com.lakeel.altla.vision.nearby.presentation.presenter.mapper.NearbyItemsModelMapper;
@@ -85,27 +87,36 @@ public final class NearbyPresenter extends BasePresenter<NearbyView> implements 
 
     private static Logger LOGGER = LoggerFactory.getLogger(NearbyPresenter.class);
 
-    private NearbyItemsModelMapper mMapper = new NearbyItemsModelMapper();
+    private final GoogleApiClient mGoogleApiClient;
+
+    private final AbstractSubscriber mSubscriber;
 
     private final List<NearbyItemModel> mNearbyItemModels = new ArrayList<>();
 
     private final List<NearbyItemModel> mCheckedModels = new LinkedList<>();
 
-    private NearbyMessagesListener mNearbyMessagesListener = new NearbyMessagesListener();
+    private NearbyItemsModelMapper mMapper = new NearbyItemsModelMapper();
 
     private ScheduledThreadPoolExecutor mExecutor = new ScheduledThreadPoolExecutor(1);
-
-    private GoogleApiClient mGoogleApiClient;
 
     private boolean mScanning;
 
     private boolean mCmLinkEnabled;
+
+    private ResolutionResultCallback mResultCallback = new ResolutionResultCallback() {
+        @Override
+        protected void onResolution(Status status) {
+            getView().showResolutionSystemDialog(status);
+        }
+    };
 
     @Inject
     NearbyPresenter(Activity activity) {
         mGoogleApiClient = new GoogleApiClient.Builder(activity)
                 .addApi(Nearby.MESSAGES_API)
                 .build();
+
+        mSubscriber = new ForegroundSubscriber(mGoogleApiClient, new NearbyMessagesListener(), null);
     }
 
     @Override
@@ -133,7 +144,7 @@ public final class NearbyPresenter extends BasePresenter<NearbyView> implements 
     public void onStop() {
         super.onStop();
 
-        Nearby.Messages.unsubscribe(mGoogleApiClient, mNearbyMessagesListener);
+        mSubscriber.unSubscribe(mResultCallback);
 
         getView().hideIndicator();
         getView().drawNormalActionBarColor();
@@ -200,22 +211,15 @@ public final class NearbyPresenter extends BasePresenter<NearbyView> implements 
         mCompositeSubscription.add(subscription);
     }
 
-    private void onSubscribe() {
-        Nearby.Messages.subscribe(mGoogleApiClient, mNearbyMessagesListener)
-                .setResultCallback(new ResolutionResultCallback() {
-                    @Override
-                    protected void onResolution(Status status) {
-                        getView().showResolutionSystemDialog(status);
-                    }
-                });
+    public void onSubscribe() {
+        mSubscriber.subscribe(mResultCallback);
 
         mScanning = true;
 
         mExecutor.schedule(() -> {
-
             // Stop to scanning after 10 seconds.
+            mSubscriber.unSubscribe(mResultCallback);
 
-            Nearby.Messages.unsubscribe(mGoogleApiClient, mNearbyMessagesListener);
             mScanning = false;
 
             getView().hideIndicator();

@@ -15,6 +15,7 @@ import com.lakeel.altla.vision.nearby.presentation.view.divider.DividerItemDecor
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import android.content.Intent;
 import android.content.IntentSender;
 import android.os.Bundle;
 import android.os.Handler;
@@ -35,6 +36,7 @@ import javax.inject.Inject;
 import butterknife.BindView;
 import butterknife.ButterKnife;
 
+import static android.app.Activity.RESULT_OK;
 import static com.lakeel.altla.vision.nearby.R.id.share;
 
 public final class NearbyListFragment extends Fragment implements NearbyView {
@@ -53,7 +55,7 @@ public final class NearbyListFragment extends Fragment implements NearbyView {
 
     private static final Logger LOGGER = LoggerFactory.getLogger(NearbyListFragment.class);
 
-    private static final int REQUEST_CODE_RESOLVE_NEARBY = 1;
+    private static final int REQUEST_CODE_SUBSCRIBE_RESULT = 1;
 
     public static NearbyListFragment newInstance() {
         return new NearbyListFragment();
@@ -128,6 +130,15 @@ public final class NearbyListFragment extends Fragment implements NearbyView {
     }
 
     @Override
+    public void onActivityResult(int requestCode, int resultCode, Intent data) {
+        if (REQUEST_CODE_SUBSCRIBE_RESULT == requestCode && resultCode == RESULT_OK) {
+            mPresenter.onSubscribe();
+        } else {
+            super.onActivityResult(requestCode, resultCode, data);
+        }
+    }
+
+    @Override
     public void updateItems() {
         mRecyclerView.getAdapter().notifyDataSetChanged();
     }
@@ -190,7 +201,7 @@ public final class NearbyListFragment extends Fragment implements NearbyView {
     @Override
     public void showResolutionSystemDialog(Status status) {
         try {
-            status.startResolutionForResult(getActivity(), REQUEST_CODE_RESOLVE_NEARBY);
+            status.startResolutionForResult(getActivity(), REQUEST_CODE_SUBSCRIBE_RESULT);
         } catch (IntentSender.SendIntentException e) {
             LOGGER.error("Failed to show resolution dialog for nearby.", e);
         }

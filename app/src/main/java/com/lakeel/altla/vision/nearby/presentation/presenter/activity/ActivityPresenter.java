@@ -22,10 +22,11 @@ import com.lakeel.altla.vision.nearby.domain.usecase.SaveUserBeaconUseCase;
 import com.lakeel.altla.vision.nearby.presentation.checker.BleState;
 import com.lakeel.altla.vision.nearby.presentation.checker.BluetoothChecker;
 import com.lakeel.altla.vision.nearby.presentation.firebase.MyUser;
+import com.lakeel.altla.vision.nearby.presentation.nearby.AbstractSubscriber;
+import com.lakeel.altla.vision.nearby.presentation.nearby.BackgroundSubscriber;
 import com.lakeel.altla.vision.nearby.presentation.presenter.BasePresenter;
 import com.lakeel.altla.vision.nearby.presentation.presenter.mapper.CMAuthConfigMapper;
 import com.lakeel.altla.vision.nearby.presentation.presenter.mapper.PreferencesModelMapper;
-import com.lakeel.altla.vision.nearby.presentation.receiver.NearbyReceiver;
 import com.lakeel.altla.vision.nearby.presentation.service.PublishService;
 import com.lakeel.altla.vision.nearby.presentation.service.ServiceManager;
 import com.lakeel.altla.vision.nearby.presentation.view.ActivityView;
@@ -35,9 +36,7 @@ import org.slf4j.LoggerFactory;
 
 import android.Manifest;
 import android.app.Activity;
-import android.app.PendingIntent;
 import android.content.Context;
-import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
@@ -64,9 +63,6 @@ public final class ActivityPresenter extends BasePresenter<ActivityView> impleme
     int CMPort;
 
     @Inject
-    GoogleApiClient mGoogleApiClient;
-
-    @Inject
     SaveBeaconIdUseCase mSaveBeaconIdUseCase;
 
     @Inject
@@ -89,7 +85,15 @@ public final class ActivityPresenter extends BasePresenter<ActivityView> impleme
 
     private static final Logger LOGGER = LoggerFactory.getLogger(ActivityPresenter.class);
 
-    private Context mContext;
+    private PreferencesModelMapper mPreferencesModelMapper = new PreferencesModelMapper();
+
+    private CMAuthConfigMapper mCMAuthConfigMapper = new CMAuthConfigMapper();
+
+    private final Context mContext;
+
+    private final GoogleApiClient mGoogleApiClient;
+
+    private final AbstractSubscriber mSubscriber;
 
     private boolean mAccessLocationGranted;
 
@@ -97,13 +101,13 @@ public final class ActivityPresenter extends BasePresenter<ActivityView> impleme
 
     private boolean mPublishAvailability = true;
 
-    private PreferencesModelMapper mPreferencesModelMapper = new PreferencesModelMapper();
-
-    private CMAuthConfigMapper mCMAuthConfigMapper = new CMAuthConfigMapper();
-
     @Inject
-    ActivityPresenter(Context context) {
-        mContext = context;
+    ActivityPresenter(Activity activity) {
+        mGoogleApiClient = new GoogleApiClient.Builder(activity)
+                .addApi(Nearby.MESSAGES_API)
+                .build();
+        mContext = activity.getApplicationContext();
+        mSubscriber = new BackgroundSubscriber(mContext, mGoogleApiClient);
     }
 
     @Override
@@ -265,32 +269,24 @@ public final class ActivityPresenter extends BasePresenter<ActivityView> impleme
             return;
         }
 
-        PendingIntent intent = PendingIntent.getBroadcast(mContext, 0, new Intent(mContext, NearbyReceiver.class),
-                PendingIntent.FLAG_UPDATE_CURRENT);
-
-        Nearby.Messages.subscribe(mGoogleApiClient, intent)
-                .setResultCallback(new ResolutionResultCallback() {
-                    @Override
-                    protected void onResolution(Status status) {
-                        mAlreadySubscribed = false;
-                        getView().showResolutionSystemDialog(status);
-                    }
-                });
+        mSubscriber.subscribe(new ResolutionResultCallback() {
+            @Override
+            protected void onResolution(Status status) {
+                mAlreadySubscribed = false;
+                getView().showResolutionSystemDialog(status);
+            }
+        });
 
         mAlreadySubscribed = true;
     }
 
     public void onUnSubscribeInBackground() {
-        PendingIntent intent = PendingIntent.getBroadcast(mContext, 0, new Intent(mContext, NearbyReceiver.class),
-                PendingIntent.FLAG_UPDATE_CURRENT);
-
-        Nearby.Messages.unsubscribe(mGoogleApiClient, intent)
-                .setResultCallback(new ResolutionResultCallback() {
-                    @Override
-                    protected void onResolution(Status status) {
-                        getView().showResolutionSystemDialog(status);
-                    }
-                });
+        mSubscriber.unSubscribe(new ResolutionResultCallback() {
+            @Override
+            protected void onResolution(Status status) {
+                getView().showResolutionSystemDialog(status);
+            }
+        });
 
         mAlreadySubscribed = false;
     }
