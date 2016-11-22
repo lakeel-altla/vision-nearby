@@ -18,6 +18,7 @@ import com.lakeel.altla.vision.nearby.presentation.constants.Radius;
 import com.lakeel.altla.vision.nearby.presentation.presenter.tracking.TrackingPresenter;
 import com.lakeel.altla.vision.nearby.presentation.view.TrackingView;
 import com.lakeel.altla.vision.nearby.presentation.view.activity.MainActivity;
+import com.lakeel.altla.vision.nearby.presentation.view.transaction.FragmentController;
 
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
@@ -192,6 +193,7 @@ public final class TrackingFragment extends Fragment implements TrackingView, On
 
     @Override
     public void showFindNearbyDeviceFragment(String beaconId, String beaconName) {
-        ((MainActivity) getActivity()).showDeviceDistanceEstimationFragment(beaconId, beaconName);
+        FragmentController controller = new FragmentController(getActivity().getSupportFragmentManager());
+        controller.showDeviceDistanceEstimationFragment(beaconId, beaconName);
     }
 }

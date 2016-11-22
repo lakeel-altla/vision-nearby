@@ -297,6 +297,10 @@ public class MainActivity extends AppCompatActivity
         fragmentController.showFavoritesListFragment();
     }
 
+    public static UserComponent getUserComponent(@NonNull Fragment fragment) {
+        return ((MainActivity) fragment.getActivity()).mUserComponent;
+    }
+
     public void setDrawerIndicatorEnabled(boolean enabled) {
         mToggle.setDrawerIndicatorEnabled(enabled);
     }
@@ -309,41 +313,7 @@ public class MainActivity extends AppCompatActivity
         mPresenter.onUnSubscribeInBackground();
     }
 
-    public static UserComponent getUserComponent(@NonNull Fragment fragment) {
-        return ((MainActivity) fragment.getActivity()).mUserComponent;
-    }
-
     public void onSignedIn() {
         mPresenter.onSignedIn();
-    }
-
-    public void showTrackingFragment(String id, String beaconName) {
-        FragmentController fragmentController = new FragmentController(getSupportFragmentManager());
-        fragmentController.showTrackingFragment(id, beaconName);
-    }
-
-    public void showDeviceDistanceEstimationFragment(String beaconId, String beaconName) {
-        FragmentController fragmentController = new FragmentController(getSupportFragmentManager());
-        fragmentController.showDeviceDistanceEstimationFragment(beaconId, beaconName);
-    }
-
-    public void showDeviceListFragment() {
-        FragmentController fragmentController = new FragmentController(getSupportFragmentManager());
-        fragmentController.showDeviceListFragment();
-    }
-
-    public void showBleSettingsFragment() {
-        FragmentController fragmentController = new FragmentController(getSupportFragmentManager());
-        fragmentController.showBleSettingsFragment();
-    }
-
-    public void showLineSettingsFragment() {
-        FragmentController fragmentController = new FragmentController(getSupportFragmentManager());
-        fragmentController.showLineSettingsFragment();
-    }
-
-    public void showCmSettingsFragment() {
-        FragmentController fragmentController = new FragmentController(getSupportFragmentManager());
-        fragmentController.showCmSettingsFragment();
     }
 }

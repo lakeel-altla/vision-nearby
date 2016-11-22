@@ -4,6 +4,7 @@ import com.lakeel.altla.vision.nearby.R;
 import com.lakeel.altla.vision.nearby.presentation.presenter.settings.SettingsPresenter;
 import com.lakeel.altla.vision.nearby.presentation.view.SettingsView;
 import com.lakeel.altla.vision.nearby.presentation.view.activity.MainActivity;
+import com.lakeel.altla.vision.nearby.presentation.view.transaction.FragmentController;
 
 import android.os.Bundle;
 import android.support.annotation.StringRes;
@@ -50,21 +51,24 @@ public final class SettingsFragment extends PreferenceFragmentCompat implements 
         // BLE
         PreferenceScreen bleScreen = (PreferenceScreen) findPreference(KEY_BLUETOOTH_SCREEN);
         bleScreen.setOnPreferenceClickListener(preference -> {
-            ((MainActivity) getActivity()).showBleSettingsFragment();
+            FragmentController controller = new FragmentController(getActivity().getSupportFragmentManager());
+            controller.showBleSettingsFragment();
             return false;
         });
 
         // LINE
         PreferenceScreen lineScreen = (PreferenceScreen) findPreference(KEY_LINE_SCREEN);
         lineScreen.setOnPreferenceClickListener(preference -> {
-            ((MainActivity) getActivity()).showLineSettingsFragment();
+            FragmentController controller = new FragmentController(getActivity().getSupportFragmentManager());
+            controller.showLineSettingsFragment();
             return false;
         });
 
         // COMPANY Messenger
         mCmScreen = (PreferenceScreen) findPreference(KEY_CM_SCREEN);
         mCmScreen.setOnPreferenceClickListener(preference -> {
-            ((MainActivity) getActivity()).showCmSettingsFragment();
+            FragmentController controller = new FragmentController(getActivity().getSupportFragmentManager());
+            controller.showCmSettingsFragment();
             return false;
         });
 
@@ -75,7 +79,8 @@ public final class SettingsFragment extends PreferenceFragmentCompat implements 
         // Tracking
         PreferenceScreen trackingScreen = (PreferenceScreen) findPreference(KEY_TRACKING_SCREEN);
         trackingScreen.setOnPreferenceClickListener(preference -> {
-            ((MainActivity) getActivity()).showDeviceListFragment();
+            FragmentController controller = new FragmentController(getActivity().getSupportFragmentManager());
+            controller.showDeviceListFragment();
             return false;
         });
     }

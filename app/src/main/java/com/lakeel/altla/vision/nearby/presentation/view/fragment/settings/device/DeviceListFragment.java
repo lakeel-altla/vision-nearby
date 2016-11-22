@@ -6,6 +6,7 @@ import com.lakeel.altla.vision.nearby.presentation.view.DeviceView;
 import com.lakeel.altla.vision.nearby.presentation.view.activity.MainActivity;
 import com.lakeel.altla.vision.nearby.presentation.view.adapter.DeviceAdapter;
 import com.lakeel.altla.vision.nearby.presentation.view.divider.DividerItemDecoration;
+import com.lakeel.altla.vision.nearby.presentation.view.transaction.FragmentController;
 
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
@@ -97,6 +98,7 @@ public final class DeviceListFragment extends Fragment implements DeviceView {
 
     @Override
     public void showTrackingFragment(String beaconId, String beaconName) {
-        ((MainActivity) getActivity()).showTrackingFragment(beaconId, beaconName);
+        FragmentController controller = new FragmentController(getActivity().getSupportFragmentManager());
+        controller.showTrackingFragment(beaconId, beaconName);
     }
 }
