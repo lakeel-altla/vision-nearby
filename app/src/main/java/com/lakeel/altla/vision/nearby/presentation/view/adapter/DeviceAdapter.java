@@ -1,9 +1,8 @@
 package com.lakeel.altla.vision.nearby.presentation.view.adapter;
 
 import com.lakeel.altla.vision.nearby.R;
-import com.lakeel.altla.vision.nearby.presentation.presenter.device.DeviceListPresenter;
+import com.lakeel.altla.vision.nearby.presentation.presenter.settings.device.DeviceListPresenter;
 import com.lakeel.altla.vision.nearby.presentation.presenter.model.DeviceModel;
-import com.lakeel.altla.vision.nearby.presentation.view.DateFormatter;
 import com.lakeel.altla.vision.nearby.presentation.view.DeviceItemView;
 
 import android.support.annotation.IntRange;

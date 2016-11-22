@@ -1,7 +1,7 @@
 package com.lakeel.altla.vision.nearby.presentation.view.fragment.settings.cm;
 
 import com.lakeel.altla.vision.nearby.R;
-import com.lakeel.altla.vision.nearby.presentation.presenter.cm.CmSettingsPresenter;
+import com.lakeel.altla.vision.nearby.presentation.presenter.settings.cm.CmSettingsPresenter;
 import com.lakeel.altla.vision.nearby.presentation.presenter.model.CMLinksModel;
 import com.lakeel.altla.vision.nearby.presentation.view.CmSettingsView;
 import com.lakeel.altla.vision.nearby.presentation.view.activity.MainActivity;

@@ -1,4 +1,4 @@
-package com.lakeel.altla.vision.nearby.presentation.presenter.device;
+package com.lakeel.altla.vision.nearby.presentation.presenter.settings.device;
 
 import com.lakeel.altla.vision.nearby.data.entity.ItemsEntity;
 import com.lakeel.altla.vision.nearby.domain.usecase.FindBeaconUseCase;

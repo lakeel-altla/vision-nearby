@@ -1,4 +1,4 @@
-package com.lakeel.altla.vision.nearby.presentation.presenter.cm;
+package com.lakeel.altla.vision.nearby.presentation.presenter.settings.cm;
 
 import com.lakeel.altla.vision.nearby.R;
 import com.lakeel.altla.vision.nearby.data.entity.CMLinksEntity;

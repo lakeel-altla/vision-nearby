@@ -2,7 +2,7 @@ package com.lakeel.altla.vision.nearby.presentation.view.fragment.settings.bluet
 
 import com.lakeel.altla.vision.nearby.R;
 import com.lakeel.altla.vision.nearby.presentation.intent.IntentKey;
-import com.lakeel.altla.vision.nearby.presentation.presenter.bluetooth.BleSettingsPresenter;
+import com.lakeel.altla.vision.nearby.presentation.presenter.settings.bluetooth.BleSettingsPresenter;
 import com.lakeel.altla.vision.nearby.presentation.presenter.model.BeaconIdModel;
 import com.lakeel.altla.vision.nearby.presentation.service.PublishService;
 import com.lakeel.altla.vision.nearby.presentation.view.BleSettingsView;

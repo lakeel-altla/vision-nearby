@@ -1,4 +1,4 @@
-package com.lakeel.altla.vision.nearby.presentation.presenter.bluetooth;
+package com.lakeel.altla.vision.nearby.presentation.presenter.settings.bluetooth;
 
 import com.lakeel.altla.vision.nearby.domain.usecase.FindBeaconIdUseCase;
 import com.lakeel.altla.vision.nearby.presentation.checker.BleState;
