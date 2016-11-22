@@ -12,8 +12,6 @@ import com.lakeel.altla.cm.config.AccessConfig;
 import com.lakeel.altla.library.ResolutionResultCallback;
 import com.lakeel.altla.vision.nearby.R;
 import com.lakeel.altla.vision.nearby.data.entity.BeaconIdEntity;
-import com.lakeel.altla.vision.nearby.data.entity.CMLinksEntity;
-import com.lakeel.altla.vision.nearby.data.entity.PreferencesEntity;
 import com.lakeel.altla.vision.nearby.domain.usecase.FindBeaconIdUseCase;
 import com.lakeel.altla.vision.nearby.domain.usecase.FindCMLinksUseCase;
 import com.lakeel.altla.vision.nearby.domain.usecase.FindPreferencesUseCase;
@@ -27,7 +25,6 @@ import com.lakeel.altla.vision.nearby.presentation.firebase.MyUser;
 import com.lakeel.altla.vision.nearby.presentation.presenter.BasePresenter;
 import com.lakeel.altla.vision.nearby.presentation.presenter.mapper.CMAuthConfigMapper;
 import com.lakeel.altla.vision.nearby.presentation.presenter.mapper.PreferencesModelMapper;
-import com.lakeel.altla.vision.nearby.presentation.presenter.model.PreferenceModel;
 import com.lakeel.altla.vision.nearby.presentation.receiver.NearbyReceiver;
 import com.lakeel.altla.vision.nearby.presentation.service.PublishService;
 import com.lakeel.altla.vision.nearby.presentation.service.ServiceManager;
@@ -94,8 +91,6 @@ public final class ActivityPresenter extends BasePresenter<ActivityView> impleme
 
     private Context mContext;
 
-    private PreferenceModel mPreferenceModel;
-
     private boolean mAccessLocationGranted;
 
     private boolean mAlreadySubscribed;
@@ -150,14 +145,13 @@ public final class ActivityPresenter extends BasePresenter<ActivityView> impleme
 
         Subscription subscription = mFindPreferencesUseCase
                 .execute()
-                .map(entity -> mPreferencesModelMapper.map(entity))
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
-                .subscribe(model -> {
-                    if (model.mSubscribeInBackgroundEnabled) {
+                .subscribe(entity -> {
+                    if (entity.isSubscribeInBackgroundEnabled) {
                         onSubscribeInBackground();
                     } else {
-                        onUnSubscribe();
+                        onUnSubscribeInBackground();
                     }
                 }, e -> LOGGER.error("Failed to find preference settings.", e));
 
@@ -196,7 +190,7 @@ public final class ActivityPresenter extends BasePresenter<ActivityView> impleme
             getView().showPublishDisableDialog();
         }
 
-        Subscription subscription = mFindBeaconIdUseCase
+        Subscription subscription1 = mFindBeaconIdUseCase
                 .execute()
                 .flatMap(new Func1<BeaconIdEntity, Single<String>>() {
                     @Override
@@ -226,35 +220,31 @@ public final class ActivityPresenter extends BasePresenter<ActivityView> impleme
                                 .subscribeOn(Schedulers.io());
                     }
                 })
-                .flatMap(new Func1<String, Single<PreferencesEntity>>() {
-                    @Override
-                    public Single<PreferencesEntity> call(String o) {
-                        return mFindPreferencesUseCase
-                                .execute()
-                                .subscribeOn(Schedulers.io());
+                .subscribeOn(Schedulers.io())
+                .doOnError(e -> LOGGER.error("Failed to save beacon data.", e))
+                .subscribe();
+        mCompositeSubscription.add(subscription1);
+
+        Subscription subscription2 = mFindPreferencesUseCase
+                .execute()
+                .map(entity -> mPreferencesModelMapper.map(entity))
+                .subscribeOn(Schedulers.io())
+                .subscribe(model -> {
+                    if (model.mPublishInBackgroundEnabled && mPublishAvailability) {
+                        getView().startPublishService(model);
                     }
-                })
-                .doOnSuccess(entity -> mPreferenceModel = mPreferencesModelMapper.map(entity))
-                .flatMap(new Func1<PreferencesEntity, Single<CMLinksEntity>>() {
-                    @Override
-                    public Single<CMLinksEntity> call(PreferencesEntity entity) {
-                        return mFindCMLinksUseCase
-                                .execute()
-                                .subscribeOn(Schedulers.io());
-                    }
-                })
+                }, e -> LOGGER.error("Failed to find preferences.", e));
+        mCompositeSubscription.add(subscription2);
+
+        Subscription subscription3 = mFindCMLinksUseCase
+                .execute()
+                .subscribeOn(Schedulers.io())
                 .map(entity -> mCMAuthConfigMapper.map(entity))
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
-                .subscribe(authConfig -> {
-                    CMApplication.initialize(authConfig, new AccessConfig(CMHost, CMPort));
-
-                    if (mPreferenceModel.mPublishInBackgroundEnabled && mPublishAvailability) {
-                        getView().startPublishService(mPreferenceModel);
-                    }
-                }, e -> LOGGER.error("Failed to process.", e));
-
-        mCompositeSubscription.add(subscription);
+                .subscribe(authConfig -> CMApplication.initialize(authConfig, new AccessConfig(CMHost, CMPort)),
+                        e -> LOGGER.error("Failed to initialize CM settings.", e));
+        mCompositeSubscription.add(subscription3);
     }
 
     public void onAccessLocationGranted() {
@@ -290,7 +280,7 @@ public final class ActivityPresenter extends BasePresenter<ActivityView> impleme
         mAlreadySubscribed = true;
     }
 
-    public void onUnSubscribe() {
+    public void onUnSubscribeInBackground() {
         PendingIntent intent = PendingIntent.getBroadcast(mContext, 0, new Intent(mContext, NearbyReceiver.class),
                 PendingIntent.FLAG_UPDATE_CURRENT);
 
@@ -313,7 +303,7 @@ public final class ActivityPresenter extends BasePresenter<ActivityView> impleme
         Task<Void> task = AuthUI.getInstance().signOut(activity);
         task.addOnCompleteListener(task1 -> {
             if (task1.isSuccessful()) {
-                onUnSubscribe();
+                onUnSubscribeInBackground();
 
                 ServiceManager manager = new ServiceManager(mContext, PublishService.class);
                 manager.stopService();

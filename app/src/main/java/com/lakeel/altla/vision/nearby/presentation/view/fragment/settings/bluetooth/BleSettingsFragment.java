@@ -61,9 +61,9 @@ public final class BleSettingsFragment extends PreferenceFragmentCompat implemen
         subscribePreference.setOnPreferenceChangeListener((preference, newValue) -> {
             Boolean booleanValue = (Boolean) newValue;
             if (booleanValue) {
-                ((MainActivity) getActivity()).onSubscribe();
+                ((MainActivity) getActivity()).onSubscribeInBackground();
             } else {
-                ((MainActivity) getActivity()).onUnSubscribe();
+                ((MainActivity) getActivity()).onUnSubscribeInBackground();
             }
             return true;
         });

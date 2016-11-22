@@ -57,7 +57,7 @@ public class MainActivity extends AppCompatActivity
 
     private static final int REQUEST_CODE_SUBSCRIBE_RESULT = 3;
 
-    private static final int REQUEST_CODE_ACCESS_LOCATION = 5;
+    private static final int REQUEST_CODE_ACCESS_LOCATION = 4;
 
     private HeaderLayout mHeaderLayout = new HeaderLayout();
 
@@ -301,12 +301,12 @@ public class MainActivity extends AppCompatActivity
         mToggle.setDrawerIndicatorEnabled(enabled);
     }
 
-    public void onSubscribe() {
+    public void onSubscribeInBackground() {
         mPresenter.onSubscribeInBackground();
     }
 
-    public void onUnSubscribe() {
-        mPresenter.onUnSubscribe();
+    public void onUnSubscribeInBackground() {
+        mPresenter.onUnSubscribeInBackground();
     }
 
     public static UserComponent getUserComponent(@NonNull Fragment fragment) {
