@@ -9,7 +9,7 @@ import com.lakeel.altla.library.ResolutionResultCallback;
 
 import android.support.annotation.NonNull;
 
-public final class ForegroundSubscriber extends AbstractSubscriber {
+public final class ForegroundSubscriber implements Subscriber {
 
     private final GoogleApiClient mGoogleApiClient;
 

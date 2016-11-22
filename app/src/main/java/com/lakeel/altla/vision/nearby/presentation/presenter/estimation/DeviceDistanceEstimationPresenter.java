@@ -12,7 +12,7 @@ import com.google.android.gms.nearby.messages.SubscribeOptions;
 import com.lakeel.altla.library.EddystoneUID;
 import com.lakeel.altla.library.ResolutionResultCallback;
 import com.lakeel.altla.vision.nearby.domain.usecase.FindBeaconUseCase;
-import com.lakeel.altla.vision.nearby.presentation.nearby.AbstractSubscriber;
+import com.lakeel.altla.vision.nearby.presentation.nearby.Subscriber;
 import com.lakeel.altla.vision.nearby.presentation.nearby.ForegroundSubscriber;
 import com.lakeel.altla.vision.nearby.presentation.presenter.BasePresenter;
 import com.lakeel.altla.vision.nearby.presentation.view.DeviceDistanceEstimationView;
@@ -32,7 +32,7 @@ public final class DeviceDistanceEstimationPresenter extends BasePresenter<Devic
 
     private final GoogleApiClient mGoogleApiClient;
 
-    private AbstractSubscriber mSubscriber;
+    private Subscriber mSubscriber;
 
     private ResolutionResultCallback mResultCallback = new ResolutionResultCallback() {
         @Override

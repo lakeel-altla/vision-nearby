@@ -12,7 +12,7 @@ import com.lakeel.altla.vision.nearby.domain.usecase.FindItemUseCase;
 import com.lakeel.altla.vision.nearby.domain.usecase.SaveUsersToCmFavoritesUseCase;
 import com.lakeel.altla.vision.nearby.presentation.constants.AttachmentType;
 import com.lakeel.altla.vision.nearby.presentation.firebase.MyUser;
-import com.lakeel.altla.vision.nearby.presentation.nearby.AbstractSubscriber;
+import com.lakeel.altla.vision.nearby.presentation.nearby.Subscriber;
 import com.lakeel.altla.vision.nearby.presentation.nearby.ForegroundSubscriber;
 import com.lakeel.altla.vision.nearby.presentation.presenter.BaseItemPresenter;
 import com.lakeel.altla.vision.nearby.presentation.presenter.BasePresenter;
@@ -89,7 +89,7 @@ public final class NearbyPresenter extends BasePresenter<NearbyView> implements 
 
     private final GoogleApiClient mGoogleApiClient;
 
-    private final AbstractSubscriber mSubscriber;
+    private final Subscriber mSubscriber;
 
     private final List<NearbyItemModel> mNearbyItemModels = new ArrayList<>();
 

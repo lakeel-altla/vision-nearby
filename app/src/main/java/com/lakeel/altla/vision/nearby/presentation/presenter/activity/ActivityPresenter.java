@@ -22,8 +22,8 @@ import com.lakeel.altla.vision.nearby.domain.usecase.SaveUserBeaconUseCase;
 import com.lakeel.altla.vision.nearby.presentation.checker.BleState;
 import com.lakeel.altla.vision.nearby.presentation.checker.BluetoothChecker;
 import com.lakeel.altla.vision.nearby.presentation.firebase.MyUser;
-import com.lakeel.altla.vision.nearby.presentation.nearby.AbstractSubscriber;
 import com.lakeel.altla.vision.nearby.presentation.nearby.BackgroundSubscriber;
+import com.lakeel.altla.vision.nearby.presentation.nearby.Subscriber;
 import com.lakeel.altla.vision.nearby.presentation.presenter.BasePresenter;
 import com.lakeel.altla.vision.nearby.presentation.presenter.mapper.CMAuthConfigMapper;
 import com.lakeel.altla.vision.nearby.presentation.presenter.mapper.PreferencesModelMapper;
@@ -93,7 +93,7 @@ public final class ActivityPresenter extends BasePresenter<ActivityView> impleme
 
     private final GoogleApiClient mGoogleApiClient;
 
-    private final AbstractSubscriber mSubscriber;
+    private final Subscriber mSubscriber;
 
     private boolean mAccessLocationGranted;
 
