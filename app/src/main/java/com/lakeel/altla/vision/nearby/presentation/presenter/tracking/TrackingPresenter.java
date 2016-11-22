@@ -44,7 +44,7 @@ public final class TrackingPresenter extends BasePresenter<TrackingView> {
     }
 
     @Override
-    public void onActivityCreated() {
+    public void onResume() {
         Subscription subscription = mFindLocationDataUseCase
                 .execute(mBeaconId)
                 .flatMap(new Func1<LocationsDataEntity, Single<GeoLocation>>() {

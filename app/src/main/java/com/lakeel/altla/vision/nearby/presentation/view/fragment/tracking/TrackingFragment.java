@@ -99,8 +99,6 @@ public final class TrackingFragment extends Fragment implements TrackingView, On
         String beaconId = (String) bundle.get(BundleKey.BEACON_ID.getValue());
         String beaconName = (String) bundle.get(BundleKey.BEACON_NAME.getValue());
         mPresenter.setBeaconData(beaconId, beaconName);
-
-        mPresenter.onActivityCreated();
     }
 
     @Override
@@ -111,6 +109,8 @@ public final class TrackingFragment extends Fragment implements TrackingView, On
         if (mMapView != null) {
             mMapView.setVisibility(View.INVISIBLE);
         }
+
+        mPresenter.onResume();
     }
 
     @Override
