@@ -7,7 +7,7 @@ android {
     buildToolsVersion "25.0.0"
 
     defaultConfig {
-        applicationId "com.lakeel.profile.notification"
+        applicationId "com.lakeel.altla.vision.nearby"
         minSdkVersion 18
         targetSdkVersion 25
         versionCode 1

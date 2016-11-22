@@ -1,4 +1,4 @@
-package com.lakeel.profile.notification;
+package com.lakeel.altla.vision.nearby;
 
 import android.app.Application;
 import android.test.ApplicationTestCase;

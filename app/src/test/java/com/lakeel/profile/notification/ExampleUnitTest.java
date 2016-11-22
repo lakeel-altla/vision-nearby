@@ -1,4 +1,4 @@
-package com.lakeel.profile.notification;
+package com.lakeel.altla.vision.nearby;
 
 import org.junit.Test;
 
