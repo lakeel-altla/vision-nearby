@@ -96,7 +96,6 @@ public final class DeviceDistanceEstimationFragment extends Fragment implements 
 
         ImageLoader imageLoader = ImageLoader.getInstance();
         imageLoader.displayImage(MyUser.getUserData().mImageUri, mUserImageView);
-        mUserImageView.startAnimation(AnimationUtils.loadAnimation(getContext(), R.anim.scale));
 
         Bundle bundle = getArguments();
         String beaconId = bundle.getString(BundleKey.BEACON_ID.getValue());
