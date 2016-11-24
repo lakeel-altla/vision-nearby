@@ -39,6 +39,8 @@ public final class TrackingPresenter extends BasePresenter<TrackingView> {
 
     private long mDetectedTime;
 
+    private boolean mMenuEnabled;
+
     @Inject
     TrackingPresenter() {
     }
@@ -74,6 +76,8 @@ public final class TrackingPresenter extends BasePresenter<TrackingView> {
 
                     mGeoLocation = location;
                     if (mMapReady) {
+                        mMenuEnabled = true;
+
                         getView().showLocationMap(location);
                         getView().showOptionMenu();
                     }
@@ -92,6 +96,10 @@ public final class TrackingPresenter extends BasePresenter<TrackingView> {
         if (mGeoLocation != null) {
             getView().showLocationMap(mGeoLocation);
         }
+    }
+
+    public boolean isMenuEnabled() {
+        return mMenuEnabled;
     }
 
     public void onFindNearbyDeviceMenuClicked() {

@@ -69,9 +69,9 @@ public final class TrackingFragment extends Fragment implements TrackingView, On
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_tracking, container, false);
 
-        ButterKnife.bind(this, view);
+        setHasOptionsMenu(true);
 
-        setHasOptionsMenu(false);
+        ButterKnife.bind(this, view);
 
         MainActivity.getUserComponent(this).inject(this);
 
@@ -118,6 +118,20 @@ public final class TrackingFragment extends Fragment implements TrackingView, On
     public void onStop() {
         super.onStop();
         mPresenter.onStop();
+    }
+
+    @Override
+    public void onPrepareOptionsMenu(Menu menu) {
+        boolean isMenuEnabled = false;
+        if (mPresenter.isMenuEnabled()) {
+            isMenuEnabled = true;
+        }
+
+        MenuItem findItem = menu.findItem(R.id.find);
+        findItem.setVisible(isMenuEnabled);
+
+        MenuItem directionsItem = menu.findItem(R.id.directions);
+        directionsItem.setVisible(isMenuEnabled);
     }
 
     @Override
@@ -195,7 +209,7 @@ public final class TrackingFragment extends Fragment implements TrackingView, On
 
     @Override
     public void showOptionMenu() {
-        setHasOptionsMenu(true);
+        getActivity().invalidateOptionsMenu();
     }
 
     @Override
