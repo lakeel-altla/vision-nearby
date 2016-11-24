@@ -21,6 +21,8 @@ import rx.SingleSubscriber;
 
 public class FirebaseBeaconsRepositoryImpl implements FirebaseBeaconsRepository {
 
+    private static final String KEY_NAME = "name";
+
     private DatabaseReference mReference;
 
     private BeaconsEntityMapper mMapper = new BeaconsEntityMapper();
@@ -57,6 +59,7 @@ public class FirebaseBeaconsRepositoryImpl implements FirebaseBeaconsRepository 
         return Observable.create(subscriber -> {
             mReference
                     .child(userId)
+                    .orderByChild(KEY_NAME)
                     .addListenerForSingleValueEvent(new ValueEventListener() {
                         @Override
                         public void onDataChange(DataSnapshot dataSnapshot) {
