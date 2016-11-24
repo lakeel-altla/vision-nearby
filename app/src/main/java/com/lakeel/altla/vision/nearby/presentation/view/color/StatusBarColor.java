@@ -1,4 +1,4 @@
-package com.lakeel.altla.vision.nearby.presentation.view.bar;
+package com.lakeel.altla.vision.nearby.presentation.view.color;
 
 import android.app.Activity;
 import android.support.annotation.ColorRes;
