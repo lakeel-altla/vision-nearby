@@ -37,8 +37,6 @@ public final class TrackingPresenter extends BasePresenter<TrackingView> {
 
     private boolean mMapReady;
 
-    private long mDetectedTime;
-
     private boolean mMenuEnabled;
 
     @Inject
@@ -49,14 +47,18 @@ public final class TrackingPresenter extends BasePresenter<TrackingView> {
     public void onResume() {
         Subscription subscription = mFindLocationDataUseCase
                 .execute(mBeaconId)
+                .doOnSuccess(entity -> {
+                    long detectedTime = entity.passingTime;
+                    DateFormatter formatter = new DateFormatter(detectedTime);
+                    String formattedDate = formatter.format();
+                    getView().showDetectedDate(formattedDate);
+                })
                 .flatMap(new Func1<LocationsDataEntity, Single<GeoLocation>>() {
                     @Override
                     public Single<GeoLocation> call(LocationsDataEntity entity) {
                         if (entity == null) {
                             return Single.just(null);
                         }
-
-                        mDetectedTime = entity.passingTime;
                         return mFindLocationUseCase
                                 .execute(entity.key)
                                 .subscribeOn(Schedulers.io());
@@ -69,10 +71,6 @@ public final class TrackingPresenter extends BasePresenter<TrackingView> {
                         getView().showEmptyView();
                         return;
                     }
-
-                    DateFormatter formatter = new DateFormatter(mDetectedTime);
-                    String formattedDate = formatter.format();
-                    getView().showDetectedDate(formattedDate);
 
                     mGeoLocation = location;
                     if (mMapReady) {
