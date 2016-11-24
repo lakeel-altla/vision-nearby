@@ -7,7 +7,7 @@ import javax.inject.Inject;
 
 import rx.schedulers.Schedulers;
 
-public final class ObserveConnectionUseCase {
+public final class ObservePresenceUseCase {
 
     @Inject
     FirebaseConnectionRepository mConnectionRepository;
@@ -16,17 +16,19 @@ public final class ObserveConnectionUseCase {
     FirebasePresenceRepository mPresenceRepository;
 
     @Inject
-    public ObserveConnectionUseCase() {
+    public ObservePresenceUseCase() {
     }
 
     public void execute() {
         mConnectionRepository
-                .observeConnectivity()
+                .observeConnected()
                 .subscribeOn(Schedulers.io())
                 .subscribe(o -> {
+                    // Called when connected to firebase. Change presence to online.
                     mPresenceRepository.savePresenceOnline();
                 });
 
+        // Change presence to offline when disconnect to firebase.
         mPresenceRepository.savePresenceOfflineOnDisconnected();
     }
 }

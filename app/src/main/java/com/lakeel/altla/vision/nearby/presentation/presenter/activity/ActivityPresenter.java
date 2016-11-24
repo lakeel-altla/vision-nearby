@@ -15,7 +15,7 @@ import com.lakeel.altla.vision.nearby.data.entity.BeaconIdEntity;
 import com.lakeel.altla.vision.nearby.domain.usecase.FindBeaconIdUseCase;
 import com.lakeel.altla.vision.nearby.domain.usecase.FindCMLinksUseCase;
 import com.lakeel.altla.vision.nearby.domain.usecase.FindPreferencesUseCase;
-import com.lakeel.altla.vision.nearby.domain.usecase.ObserveConnectionUseCase;
+import com.lakeel.altla.vision.nearby.domain.usecase.ObservePresenceUseCase;
 import com.lakeel.altla.vision.nearby.domain.usecase.SaveBeaconIdUseCase;
 import com.lakeel.altla.vision.nearby.domain.usecase.SaveUserBeaconUseCase;
 import com.lakeel.altla.vision.nearby.presentation.checker.BleState;
@@ -65,7 +65,7 @@ public final class ActivityPresenter extends BasePresenter<ActivityView> impleme
     SaveBeaconIdUseCase mSaveBeaconIdUseCase;
 
     @Inject
-    ObserveConnectionUseCase mObserveConnectionUseCase;
+    ObservePresenceUseCase mObservePresenceUseCase;
 
     @Inject
     FindCMLinksUseCase mFindCMLinksUseCase;
@@ -170,7 +170,7 @@ public final class ActivityPresenter extends BasePresenter<ActivityView> impleme
     public void onSignedIn() {
         getView().showFavoritesListFragment();
 
-        mObserveConnectionUseCase.execute();
+        mObservePresenceUseCase.execute();
 
         MyUser.UserData userData = MyUser.getUserData();
         getView().showProfile(userData.mDisplayName, userData.mEmail, userData.mImageUri);
