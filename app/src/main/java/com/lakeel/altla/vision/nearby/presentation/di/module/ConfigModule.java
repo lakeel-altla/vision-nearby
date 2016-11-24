@@ -1,5 +1,6 @@
 package com.lakeel.altla.vision.nearby.presentation.di.module;
 
+import com.lakeel.altla.cm.config.AccessConfig;
 import com.lakeel.altla.vision.nearby.presentation.di.ActivityScope;
 
 import javax.inject.Named;
@@ -114,5 +115,11 @@ public final class ConfigModule {
     @Named("CMPort")
     int provideCMPort() {
         return 9080;
+    }
+
+    @ActivityScope
+    @Provides
+    AccessConfig provideAccessConfig(@Named("CMHost") String host, @Named("CMPort") int port) {
+        return new AccessConfig(host, port);
     }
 }

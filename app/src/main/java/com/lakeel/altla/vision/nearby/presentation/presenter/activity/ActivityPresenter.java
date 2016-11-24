@@ -43,7 +43,6 @@ import android.support.annotation.Nullable;
 import android.support.v4.app.ActivityCompat;
 
 import javax.inject.Inject;
-import javax.inject.Named;
 
 import rx.Single;
 import rx.Subscription;
@@ -54,12 +53,7 @@ import rx.schedulers.Schedulers;
 public final class ActivityPresenter extends BasePresenter<ActivityView> implements GoogleApiClient.ConnectionCallbacks, GoogleApiClient.OnConnectionFailedListener {
 
     @Inject
-    @Named("CMHost")
-    String CMHost;
-
-    @Inject
-    @Named("CMPort")
-    int CMPort;
+    AccessConfig mAccessConfig;
 
     @Inject
     SaveBeaconIdUseCase mSaveBeaconIdUseCase;
@@ -190,7 +184,7 @@ public final class ActivityPresenter extends BasePresenter<ActivityView> impleme
             getView().showPublishDisableDialog();
         }
 
-        Subscription subscription1 = mFindBeaconIdUseCase
+        Subscription beaconIdSubscription = mFindBeaconIdUseCase
                 .execute()
                 .flatMap(new Func1<BeaconIdEntity, Single<String>>() {
                     @Override
@@ -215,9 +209,10 @@ public final class ActivityPresenter extends BasePresenter<ActivityView> impleme
                 .subscribeOn(Schedulers.io())
                 .doOnError(e -> LOGGER.error("Failed to save beacon data.", e))
                 .subscribe();
-        mCompositeSubscription.add(subscription1);
 
-        Subscription subscription2 = mFindPreferencesUseCase
+        mCompositeSubscription.add(beaconIdSubscription);
+
+        Subscription preferenceSubscription = mFindPreferencesUseCase
                 .execute()
                 .map(entity -> mPreferencesModelMapper.map(entity))
                 .subscribeOn(Schedulers.io())
@@ -226,17 +221,19 @@ public final class ActivityPresenter extends BasePresenter<ActivityView> impleme
                         getView().startPublishService(model);
                     }
                 }, e -> LOGGER.error("Failed to find preferences.", e));
-        mCompositeSubscription.add(subscription2);
 
-        Subscription subscription3 = mFindCMLinksUseCase
+        mCompositeSubscription.add(preferenceSubscription);
+
+        Subscription cmLinksSubscription = mFindCMLinksUseCase
                 .execute()
                 .subscribeOn(Schedulers.io())
                 .map(entity -> mCMAuthConfigMapper.map(entity))
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
-                .subscribe(authConfig -> CMApplication.initialize(authConfig, new AccessConfig(CMHost, CMPort)),
+                .subscribe(authConfig -> CMApplication.initialize(authConfig, mAccessConfig),
                         e -> LOGGER.error("Failed to initialize CM settings.", e));
-        mCompositeSubscription.add(subscription3);
+
+        mCompositeSubscription.add(cmLinksSubscription);
     }
 
     public void onAccessLocationGranted() {

@@ -1,6 +1,6 @@
 package com.lakeel.altla.vision.nearby.data.repository;
 
-import com.lakeel.altla.cm.CMApiClient;
+import com.lakeel.altla.cm.CMRestClient;
 import com.lakeel.altla.cm.CMApplication;
 import com.lakeel.altla.cm.resource.Timestamp;
 import com.lakeel.altla.vision.nearby.data.mapper.CmFavoritesPostDataMapper;
@@ -21,7 +21,7 @@ public final class RestCmRepositoryImpl implements RestCmRepository {
 
     @Override
     public Observable<Timestamp> saveFavorites(CmFavoritesData data) {
-        CMApiClient client = CMApplication.getInstance().getClient();
+        CMRestClient client = CMApplication.getInstance().getClient();
         return client.getFavoritesService().saveFavorites(mMapper.map(data));
     }
 }
