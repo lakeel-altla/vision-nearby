@@ -1,11 +1,11 @@
 package com.lakeel.altla.vision.nearby.presentation.view;
 
 import com.lakeel.altla.vision.nearby.presentation.presenter.settings.device.DeviceListPresenter;
-import com.lakeel.altla.vision.nearby.presentation.presenter.model.DeviceModel;
+import com.lakeel.altla.vision.nearby.presentation.presenter.model.BeaconModel;
 
 public interface DeviceItemView extends ItemView {
 
     void setItemPresenter(DeviceListPresenter.DeviceItemPresenter itemPresenter);
 
-    void showItem(DeviceModel model);
+    void showItem(BeaconModel model);
 }

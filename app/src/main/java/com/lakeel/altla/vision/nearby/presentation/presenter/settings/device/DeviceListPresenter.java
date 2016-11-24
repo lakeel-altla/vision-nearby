@@ -5,8 +5,8 @@ import com.lakeel.altla.vision.nearby.domain.usecase.FindUserBeaconsUseCase;
 import com.lakeel.altla.vision.nearby.presentation.firebase.MyUser;
 import com.lakeel.altla.vision.nearby.presentation.presenter.BaseItemPresenter;
 import com.lakeel.altla.vision.nearby.presentation.presenter.BasePresenter;
-import com.lakeel.altla.vision.nearby.presentation.presenter.mapper.DeviceModelMapper;
-import com.lakeel.altla.vision.nearby.presentation.presenter.model.DeviceModel;
+import com.lakeel.altla.vision.nearby.presentation.presenter.mapper.BeaconModelMapper;
+import com.lakeel.altla.vision.nearby.presentation.presenter.model.BeaconModel;
 import com.lakeel.altla.vision.nearby.presentation.view.DeviceItemView;
 import com.lakeel.altla.vision.nearby.presentation.view.DeviceView;
 import com.lakeel.altla.vision.nearby.presentation.view.adapter.DeviceAdapter;
@@ -34,9 +34,9 @@ public class DeviceListPresenter extends BasePresenter<DeviceView> {
 
     private static final Logger LOGGER = LoggerFactory.getLogger(DeviceListPresenter.class);
 
-    private final DeviceModelMapper mMapper = new DeviceModelMapper();
+    private final BeaconModelMapper mMapper = new BeaconModelMapper();
 
-    private List<DeviceModel> mModels = new ArrayList<>();
+    private List<BeaconModel> mModels = new ArrayList<>();
 
     @Inject
     DeviceListPresenter() {
@@ -79,7 +79,7 @@ public class DeviceListPresenter extends BasePresenter<DeviceView> {
             getItemView().showItem(mModels.get(position));
         }
 
-        public void onClick(DeviceModel model) {
+        public void onClick(BeaconModel model) {
             getView().showTrackingFragment(model.mBeaconId, model.mName);
         }
     }

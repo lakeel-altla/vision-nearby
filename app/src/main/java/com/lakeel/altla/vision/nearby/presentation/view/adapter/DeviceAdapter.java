@@ -2,7 +2,7 @@ package com.lakeel.altla.vision.nearby.presentation.view.adapter;
 
 import com.lakeel.altla.vision.nearby.R;
 import com.lakeel.altla.vision.nearby.presentation.presenter.settings.device.DeviceListPresenter;
-import com.lakeel.altla.vision.nearby.presentation.presenter.model.DeviceModel;
+import com.lakeel.altla.vision.nearby.presentation.presenter.model.BeaconModel;
 import com.lakeel.altla.vision.nearby.presentation.view.DeviceItemView;
 
 import android.support.annotation.IntRange;
@@ -68,7 +68,7 @@ public final class DeviceAdapter extends RecyclerView.Adapter<DeviceAdapter.Devi
         }
 
         @Override
-        public void showItem(DeviceModel model) {
+        public void showItem(BeaconModel model) {
             mBeaconName.setText(model.mName);
             mLayout.setOnClickListener(view -> mItemPresenter.onClick(model));
         }
