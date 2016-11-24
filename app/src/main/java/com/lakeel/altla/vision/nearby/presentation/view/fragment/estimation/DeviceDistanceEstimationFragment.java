@@ -23,7 +23,6 @@ import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.animation.Animation;
-import android.view.animation.AnimationUtils;
 import android.view.animation.ScaleAnimation;
 import android.widget.ImageView;
 import android.widget.TextView;
@@ -101,7 +100,7 @@ public final class DeviceDistanceEstimationFragment extends Fragment implements 
         String beaconId = bundle.getString(BundleKey.BEACON_ID.getValue());
         String beaconName = bundle.getString(BundleKey.BEACON_NAME.getValue());
 
-        String message = getResources().getString(R.string.message_finding_for_your_device_format, beaconName);
+        String message = getResources().getString(R.string.message_finding_for_nearby_device_format, beaconName);
         mDistanceDescriptionText.setText(message);
 
         mPresenter.setSubscriber(beaconId);
