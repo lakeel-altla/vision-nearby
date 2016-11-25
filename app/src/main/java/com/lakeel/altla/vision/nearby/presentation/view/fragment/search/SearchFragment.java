@@ -61,21 +61,21 @@ public final class SearchFragment extends Fragment implements SearchView {
 
         MainActivity.getUserComponent(this).inject(this);
 
-        mSearchView = (MaterialSearchView) getActivity().findViewById(R.id.search_view);
-        mSearchView.setEllipsize(true);
-        mSearchView.setVoiceSearch(true);
-        mSearchView.setOnQueryTextListener(new MaterialSearchView.OnQueryTextListener() {
-            @Override
-            public boolean onQueryTextSubmit(String query) {
-                mPresenter.onSearch(query);
-                return false;
-            }
-
-            @Override
-            public boolean onQueryTextChange(String newText) {
-                return false;
-            }
-        });
+//        mSearchView = (MaterialSearchView) getActivity().findViewById(R.id.search_view);
+//        mSearchView.setEllipsize(true);
+//        mSearchView.setVoiceSearch(true);
+//        mSearchView.setOnQueryTextListener(new MaterialSearchView.OnQueryTextListener() {
+//            @Override
+//            public boolean onQueryTextSubmit(String query) {
+//                mPresenter.onSearch(query);
+//                return false;
+//            }
+//
+//            @Override
+//            public boolean onQueryTextChange(String newText) {
+//                return false;
+//            }
+//        });
 
         mPresenter.onCreateView(this);
 

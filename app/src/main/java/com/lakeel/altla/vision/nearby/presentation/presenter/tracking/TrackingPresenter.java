@@ -11,6 +11,8 @@ import com.lakeel.altla.vision.nearby.presentation.view.TrackingView;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import java.util.ArrayList;
+
 import javax.inject.Inject;
 
 import rx.Single;
@@ -101,7 +103,9 @@ public final class TrackingPresenter extends BasePresenter<TrackingView> {
     }
 
     public void onFindNearbyDeviceMenuClicked() {
-        getView().showFindNearbyDeviceFragment(mBeaconId, mBeaconName);
+        ArrayList<String> beaconIds = new ArrayList<>();
+        beaconIds.add(mBeaconId);
+        getView().showFindNearbyDeviceFragment(beaconIds, mBeaconName);
     }
 
     public void onDirectionMenuClicked() {

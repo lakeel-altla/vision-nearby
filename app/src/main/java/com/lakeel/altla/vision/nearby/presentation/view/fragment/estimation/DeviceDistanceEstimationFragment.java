@@ -27,6 +27,9 @@ import android.view.animation.ScaleAnimation;
 import android.widget.ImageView;
 import android.widget.TextView;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import javax.inject.Inject;
 
 import butterknife.BindView;
@@ -37,11 +40,11 @@ import static android.view.animation.Animation.INFINITE;
 
 public final class DeviceDistanceEstimationFragment extends Fragment implements DeviceDistanceEstimationView {
 
-    public static DeviceDistanceEstimationFragment newInstance(String beaconId, String beaconName) {
+    public static DeviceDistanceEstimationFragment newInstance(ArrayList<String> beaconIds, String targetName) {
 
         Bundle args = new Bundle();
-        args.putString(BundleKey.BEACON_ID.getValue(), beaconId);
-        args.putSerializable(BundleKey.BEACON_NAME.getValue(), beaconName);
+        args.putStringArrayList(BundleKey.BEACON_IDS.getValue(), beaconIds);
+        args.putSerializable(BundleKey.TARGET_NAME.getValue(), targetName);
 
         DeviceDistanceEstimationFragment fragment = new DeviceDistanceEstimationFragment();
         fragment.setArguments(args);
@@ -97,13 +100,13 @@ public final class DeviceDistanceEstimationFragment extends Fragment implements 
         imageLoader.displayImage(MyUser.getUserData().mImageUri, mUserImageView);
 
         Bundle bundle = getArguments();
-        String beaconId = bundle.getString(BundleKey.BEACON_ID.getValue());
-        String beaconName = bundle.getString(BundleKey.BEACON_NAME.getValue());
+        List<String> beaconIds = bundle.getStringArrayList(BundleKey.BEACON_IDS.getValue());
+        String beaconName = bundle.getString(BundleKey.TARGET_NAME.getValue());
 
         String message = getResources().getString(R.string.message_finding_for_nearby_device_format, beaconName);
         mDistanceDescriptionText.setText(message);
 
-        mPresenter.setSubscriber(beaconId);
+        mPresenter.setSubscriber(beaconIds);
     }
 
     @Override

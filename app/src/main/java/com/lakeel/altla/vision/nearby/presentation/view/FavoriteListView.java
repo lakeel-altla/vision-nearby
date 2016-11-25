@@ -15,5 +15,5 @@ public interface FavoriteListView extends BaseView {
 
     void showSnackBar(@StringRes int resId);
 
-    void showFavoritesUserActivity(String id);
+    void showFavoritesUserActivity(String userId, String userName);
 }

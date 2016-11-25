@@ -1,18 +1,16 @@
 package com.lakeel.altla.vision.nearby.presentation.view.fragment.favorites;
 
 import com.lakeel.altla.vision.nearby.R;
-import com.lakeel.altla.vision.nearby.presentation.intent.IntentExtra;
 import com.lakeel.altla.vision.nearby.presentation.presenter.favorites.FavoritesListPresenter;
 import com.lakeel.altla.vision.nearby.presentation.presenter.model.FavoriteModel;
 import com.lakeel.altla.vision.nearby.presentation.view.FavoriteListView;
-import com.lakeel.altla.vision.nearby.presentation.view.activity.FavoritesUserActivity;
 import com.lakeel.altla.vision.nearby.presentation.view.activity.MainActivity;
 import com.lakeel.altla.vision.nearby.presentation.view.adapter.FavoritesAdapter;
 import com.lakeel.altla.vision.nearby.presentation.view.divider.DividerItemDecoration;
+import com.lakeel.altla.vision.nearby.presentation.view.transaction.FragmentController;
 import com.marshalchen.ultimaterecyclerview.UltimateRecyclerView;
 import com.marshalchen.ultimaterecyclerview.layoutmanagers.ScrollSmoothLineaerLayoutManager;
 
-import android.content.Intent;
 import android.os.Bundle;
 import android.support.design.widget.Snackbar;
 import android.support.v4.app.Fragment;
@@ -108,9 +106,12 @@ public final class FavoritesListFragment extends Fragment implements FavoriteLis
     }
 
     @Override
-    public void showFavoritesUserActivity(String id) {
-        Intent intent = new Intent(getContext(), FavoritesUserActivity.class);
-        intent.putExtra(IntentExtra.ID.name(), id);
-        getContext().startActivity(intent);
+    public void showFavoritesUserActivity(String userId, String userName) {
+        FragmentController controller = new FragmentController(getFragmentManager());
+        controller.showProfileFragment(userId, userName);
+//        Intent intent = new Intent(getContext(), FavoritesUserActivity.class);
+//        intent.putExtra(IntentExtra.USER_ID.name(), userId);
+//        intent.putExtra(IntentExtra.USER_NAME.name(), userName);
+//        getContext().startActivity(intent);
     }
 }

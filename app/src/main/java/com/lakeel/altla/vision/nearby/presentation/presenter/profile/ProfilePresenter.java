@@ -1,4 +1,4 @@
-package com.lakeel.altla.vision.nearby.presentation.presenter.activity;
+package com.lakeel.altla.vision.nearby.presentation.presenter.profile;
 
 import com.lakeel.altla.vision.nearby.R;
 import com.lakeel.altla.vision.nearby.data.entity.LINELinksEntity;
@@ -13,7 +13,7 @@ import com.lakeel.altla.vision.nearby.presentation.presenter.mapper.BeaconModelM
 import com.lakeel.altla.vision.nearby.presentation.presenter.mapper.ItemModelMapper;
 import com.lakeel.altla.vision.nearby.presentation.presenter.mapper.PresencesModelMapper;
 import com.lakeel.altla.vision.nearby.presentation.presenter.model.BeaconModel;
-import com.lakeel.altla.vision.nearby.presentation.view.FavoritesUserActivityView;
+import com.lakeel.altla.vision.nearby.presentation.view.ProfileView;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -28,16 +28,13 @@ import rx.android.schedulers.AndroidSchedulers;
 import rx.functions.Func1;
 import rx.schedulers.Schedulers;
 
-public final class FavoritesUserActivityPresenter extends BasePresenter<FavoritesUserActivityView> {
+public final class ProfilePresenter extends BasePresenter<ProfileView> {
 
     @Inject
     FindPresenceUseCase mFindPresenceUseCase;
 
     @Inject
     FindItemUseCase mFindItemUseCase;
-
-    @Inject
-    SaveUserToCmFavoritesUseCase mSaveUserToCmFavoritesUseCase;
 
     @Inject
     FindConfigsUseCase mFindConfigsUseCase;
@@ -48,7 +45,10 @@ public final class FavoritesUserActivityPresenter extends BasePresenter<Favorite
     @Inject
     FindUserBeaconsUseCase mFindUserBeaconsUseCase;
 
-    private static final Logger LOGGER = LoggerFactory.getLogger(FavoritesUserActivityPresenter.class);
+    @Inject
+    SaveUserToCmFavoritesUseCase mSaveUserToCmFavoritesUseCase;
+
+    private static final Logger LOGGER = LoggerFactory.getLogger(ProfilePresenter.class);
 
     private PresencesModelMapper mPresencesModelMapper = new PresencesModelMapper();
 
@@ -63,11 +63,11 @@ public final class FavoritesUserActivityPresenter extends BasePresenter<Favorite
     private boolean mCmLinkEnabled;
 
     @Inject
-    FavoritesUserActivityPresenter() {
+    ProfilePresenter() {
     }
 
     @Override
-    public void onResume() {
+    public void onActivityCreated() {
 
         // Show presence.
         Subscription subscription1 = mFindPresenceUseCase
@@ -85,10 +85,8 @@ public final class FavoritesUserActivityPresenter extends BasePresenter<Favorite
                 .subscribeOn(Schedulers.io())
                 .map(entity -> mItemModelMapper.map(entity))
                 .observeOn(AndroidSchedulers.mainThread())
-                .subscribe(model -> {
-                    getView().showTitle(model.mName);
-                    getView().showProfile(model);
-                }, e -> LOGGER.error("Failed to find item.", e));
+                .subscribe(model -> getView().showProfile(model),
+                        e -> LOGGER.error("Failed to find item.", e));
         mCompositeSubscription.add(subscription2);
 
         Subscription subscription3 = mFindConfigsUseCase
@@ -116,6 +114,10 @@ public final class FavoritesUserActivityPresenter extends BasePresenter<Favorite
     public void setUserData(String userId, String userName) {
         mUserId = userId;
         mUserName = userName;
+    }
+
+    public boolean isCmLinkEnabled() {
+        return mCmLinkEnabled;
     }
 
     public void onShare() {
@@ -154,7 +156,4 @@ public final class FavoritesUserActivityPresenter extends BasePresenter<Favorite
         mCompositeSubscription.add(subscription);
     }
 
-    public boolean isCmLinkEnabled() {
-        return mCmLinkEnabled;
-    }
 }

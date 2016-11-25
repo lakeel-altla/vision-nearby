@@ -33,6 +33,8 @@ import android.view.ViewGroup;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
+import java.util.ArrayList;
+
 import javax.inject.Inject;
 
 import butterknife.BindView;
@@ -43,7 +45,7 @@ public final class TrackingFragment extends Fragment implements TrackingView, On
     public static TrackingFragment newInstance(String id, String name) {
         Bundle bundle = new Bundle();
         bundle.putSerializable(BundleKey.BEACON_ID.getValue(), id);
-        bundle.putSerializable(BundleKey.BEACON_NAME.getValue(), name);
+        bundle.putSerializable(BundleKey.TARGET_NAME.getValue(), name);
 
         TrackingFragment fragment = new TrackingFragment();
         fragment.setArguments(bundle);
@@ -98,7 +100,7 @@ public final class TrackingFragment extends Fragment implements TrackingView, On
 
         Bundle bundle = getArguments();
         String beaconId = (String) bundle.get(BundleKey.BEACON_ID.getValue());
-        String beaconName = (String) bundle.get(BundleKey.BEACON_NAME.getValue());
+        String beaconName = (String) bundle.get(BundleKey.TARGET_NAME.getValue());
         mPresenter.setBeaconData(beaconId, beaconName);
     }
 
@@ -213,8 +215,8 @@ public final class TrackingFragment extends Fragment implements TrackingView, On
     }
 
     @Override
-    public void showFindNearbyDeviceFragment(String beaconId, String beaconName) {
+    public void showFindNearbyDeviceFragment(ArrayList<String> beaconIds, String beaconName) {
         FragmentController controller = new FragmentController(getActivity().getSupportFragmentManager());
-        controller.showDeviceDistanceEstimationFragment(beaconId, beaconName);
+        controller.showDeviceDistanceEstimationFragment(beaconIds, beaconName);
     }
 }

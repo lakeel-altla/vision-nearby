@@ -1,17 +1,15 @@
-package com.lakeel.altla.vision.nearby.presentation.view.activity;
+package com.lakeel.altla.vision.nearby.presentation.view.fragment.profile;
 
 import com.flipboard.bottomsheet.BottomSheetLayout;
 import com.lakeel.altla.vision.nearby.R;
-import com.lakeel.altla.vision.nearby.presentation.application.App;
-import com.lakeel.altla.vision.nearby.presentation.di.component.UserComponent;
-import com.lakeel.altla.vision.nearby.presentation.di.module.ActivityModule;
-import com.lakeel.altla.vision.nearby.presentation.intent.IntentExtra;
-import com.lakeel.altla.vision.nearby.presentation.presenter.activity.FavoritesUserActivityPresenter;
+import com.lakeel.altla.vision.nearby.presentation.constants.BundleKey;
 import com.lakeel.altla.vision.nearby.presentation.presenter.model.ItemModel;
 import com.lakeel.altla.vision.nearby.presentation.presenter.model.PresenceModel;
+import com.lakeel.altla.vision.nearby.presentation.presenter.profile.ProfilePresenter;
 import com.lakeel.altla.vision.nearby.presentation.view.DateFormatter;
-import com.lakeel.altla.vision.nearby.presentation.view.FavoritesUserActivityView;
 import com.lakeel.altla.vision.nearby.presentation.view.GridShareSheet;
+import com.lakeel.altla.vision.nearby.presentation.view.ProfileView;
+import com.lakeel.altla.vision.nearby.presentation.view.activity.MainActivity;
 import com.lakeel.altla.vision.nearby.presentation.view.layout.EmailLayout;
 import com.lakeel.altla.vision.nearby.presentation.view.layout.LastOnlineLayout;
 import com.lakeel.altla.vision.nearby.presentation.view.layout.LineUrlLayout;
@@ -23,20 +21,19 @@ import com.lakeel.altla.vision.nearby.presentation.view.layout.SNSHeaderLayout;
 import com.lakeel.altla.vision.nearby.presentation.view.transaction.FragmentController;
 import com.nostra13.universalimageloader.core.ImageLoader;
 
-import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.StringRes;
-import android.support.design.widget.CollapsingToolbarLayout;
-import android.support.design.widget.CoordinatorLayout;
 import android.support.design.widget.Snackbar;
-import android.support.v7.app.ActionBar;
-import android.support.v7.app.AppCompatActivity;
-import android.support.v7.widget.Toolbar;
+import android.support.v4.app.Fragment;
 import android.text.util.Linkify;
+import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
+import android.view.View;
+import android.view.ViewGroup;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
 
 import java.util.ArrayList;
 
@@ -48,22 +45,30 @@ import butterknife.ButterKnife;
 import static com.lakeel.altla.vision.nearby.R.id.find;
 import static com.lakeel.altla.vision.nearby.R.id.share;
 
-public final class FavoritesUserActivity extends AppCompatActivity implements FavoritesUserActivityView {
+public final class ProfileFragment extends Fragment implements ProfileView {
 
-    @BindView(R.id.main_layout)
-    CoordinatorLayout mMainLayout;
+    public static ProfileFragment newInstance(String userId, String userName) {
 
-    @BindView(R.id.collapsing_toolbar)
-    CollapsingToolbarLayout mCollapsingToolbarLayout;
+        Bundle args = new Bundle();
+        args.putString(BundleKey.USER_ID.getValue(), userId);
+        args.putString(BundleKey.USER_NAME.getValue(), userName);
 
-    @BindView(R.id.imageView_profile)
-    ImageView mImageView;
+        ProfileFragment fragment = new ProfileFragment();
+        fragment.setArguments(args);
+        return fragment;
+    }
+
+    @Inject
+    ProfilePresenter mPresenter;
+
+    @BindView(R.id.profileLayout)
+    LinearLayout mLayout;
 
     @BindView(R.id.shareSheet)
     BottomSheetLayout mShareSheet;
 
-    @Inject
-    FavoritesUserActivityPresenter mPresenter;
+    @BindView(R.id.imageViewUser)
+    ImageView mUserImageView;
 
     private PresenceHeaderLayout mPresenceHeaderLayout = new PresenceHeaderLayout();
 
@@ -82,43 +87,46 @@ public final class FavoritesUserActivity extends AppCompatActivity implements Fa
     private LineUrlLayout mLineUrlLayout = new LineUrlLayout();
 
     @Override
-    public void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_favorites_user);
+    public View onCreateView(LayoutInflater inflater, ViewGroup container,
+                             Bundle savedInstanceState) {
+        View view = inflater.inflate(R.layout.fragment_profile, container, false);
 
-        setTitle(null);
+        ButterKnife.bind(this, view);
 
-        ButterKnife.bind(this);
+        ButterKnife.bind(mPresenceHeaderLayout, view.findViewById(R.id.presence_header));
+        ButterKnife.bind(mPresenceLayout, view.findViewById(R.id.presence));
+        ButterKnife.bind(mLastOnlineLayout, view.findViewById(R.id.last_online));
+        ButterKnife.bind(mProfileHeaderLayout, view.findViewById(R.id.profile_header));
+        ButterKnife.bind(mNameLayout, view.findViewById(R.id.name));
+        ButterKnife.bind(mEmailLayout, view.findViewById(R.id.email));
+        ButterKnife.bind(mSNSHeaderLayout, view.findViewById(R.id.sns_header));
+        ButterKnife.bind(mLineUrlLayout, view.findViewById(R.id.lineUrl));
 
-        ButterKnife.bind(mPresenceHeaderLayout, findViewById(R.id.presence_header));
-        ButterKnife.bind(mPresenceLayout, findViewById(R.id.presence));
-        ButterKnife.bind(mLastOnlineLayout, findViewById(R.id.last_online));
-        ButterKnife.bind(mProfileHeaderLayout, findViewById(R.id.profile_header));
-        ButterKnife.bind(mNameLayout, findViewById(R.id.name));
-        ButterKnife.bind(mEmailLayout, findViewById(R.id.email));
-        ButterKnife.bind(mSNSHeaderLayout, findViewById(R.id.sns_header));
-        ButterKnife.bind(mLineUrlLayout, findViewById(R.id.lineUrl));
+        setHasOptionsMenu(true);
 
-        // Dagger。
-        UserComponent userComponent = App.getApplicationComponent(this)
-                .userComponent(new ActivityModule(this));
-        userComponent.inject(this);
-
-        final Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
-        setSupportActionBar(toolbar);
+        // Dagger
+        MainActivity.getUserComponent(this).inject(this);
 
         mPresenter.onCreateView(this);
 
-        ActionBar actionBar = getSupportActionBar();
-        if (actionBar != null) {
-            actionBar.setDisplayHomeAsUpEnabled(true);
-        }
+        return view;
+    }
 
-        // Handle an intent.
-        Intent intent = getIntent();
-        String userId = intent.getStringExtra(IntentExtra.USER_ID.name());
-        String userName = intent.getStringExtra(IntentExtra.USER_NAME.name());
+    @Override
+    public void onActivityCreated(Bundle savedInstanceState) {
+        super.onActivityCreated(savedInstanceState);
+
+        ((MainActivity) getActivity()).setDrawerIndicatorEnabled(false);
+
+        Bundle bundle = getArguments();
+        String userId = bundle.getString(BundleKey.USER_ID.getValue());
+        String userName = bundle.getString(BundleKey.USER_NAME.getValue());
+
+        getActivity().setTitle(userName);
+
         mPresenter.setUserData(userId, userName);
+
+        mPresenter.onActivityCreated();
 
         mPresenceHeaderLayout.mTitle.setText(R.string.textView_presence);
         mPresenceLayout.mTitle.setText(R.string.textView_state);
@@ -131,34 +139,24 @@ public final class FavoritesUserActivity extends AppCompatActivity implements Fa
     }
 
     @Override
-    public void onResume() {
-        super.onResume();
-        mPresenter.onResume();
-    }
-
-    @Override
-    public boolean onPrepareOptionsMenu(Menu menu) {
+    public void onPrepareOptionsMenu(Menu menu) {
         super.onPrepareOptionsMenu(menu);
 
         boolean isCmLinkEnabled = mPresenter.isCmLinkEnabled();
         MenuItem menuItem = menu.findItem(R.id.share);
         menuItem.setVisible(isCmLinkEnabled);
-
-        return true;
     }
 
     @Override
-    public boolean onCreateOptionsMenu(Menu menu) {
-        MenuInflater inflater = getMenuInflater();
+    public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
         inflater.inflate(R.menu.menu_profile, menu);
-        return true;
     }
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         switch (item.getItemId()) {
             case android.R.id.home:
-                super.onBackPressed();
+                getActivity().getSupportFragmentManager().popBackStack();
                 break;
             case share:
                 mPresenter.onShare();
@@ -174,7 +172,7 @@ public final class FavoritesUserActivity extends AppCompatActivity implements Fa
 
     @Override
     public void showSnackBar(@StringRes int resId) {
-        Snackbar.make(mMainLayout, resId, Snackbar.LENGTH_SHORT).show();
+        Snackbar.make(mLayout, resId, Snackbar.LENGTH_SHORT).show();
     }
 
     @Override
@@ -192,7 +190,7 @@ public final class FavoritesUserActivity extends AppCompatActivity implements Fa
     @Override
     public void showProfile(ItemModel model) {
         ImageLoader imageLoader = ImageLoader.getInstance();
-        imageLoader.displayImage(model.mImageUri, mImageView);
+        imageLoader.displayImage(model.mImageUri, mUserImageView);
 
         mNameLayout.mBody.setText(model.mName);
         mEmailLayout.mBody.setAutoLinkMask(Linkify.EMAIL_ADDRESSES);
@@ -200,13 +198,8 @@ public final class FavoritesUserActivity extends AppCompatActivity implements Fa
     }
 
     @Override
-    public void showTitle(String title) {
-        mCollapsingToolbarLayout.setTitle(title);
-    }
-
-    @Override
     public void showShareSheet() {
-        GridShareSheet shareSheet = new GridShareSheet(getApplicationContext(), mShareSheet, R.menu.menu_share);
+        GridShareSheet shareSheet = new GridShareSheet(getContext(), mShareSheet, R.menu.menu_share);
         shareSheet.setOnMenuItemClickListener(item -> {
             if (item.getItemId() == R.id.menu_cm_favorites) {
                 mPresenter.onAddToCmFavorites();
@@ -222,7 +215,7 @@ public final class FavoritesUserActivity extends AppCompatActivity implements Fa
 
     @Override
     public void initializeOptionMenu() {
-        invalidateOptionsMenu();
+        getActivity().invalidateOptionsMenu();
     }
 
     @Override
@@ -233,7 +226,7 @@ public final class FavoritesUserActivity extends AppCompatActivity implements Fa
 
     @Override
     public void showFindNearbyDeviceFragment(ArrayList<String> beaconIds, String targetName) {
-        FragmentController controller = new FragmentController(getSupportFragmentManager());
+        FragmentController controller = new FragmentController(getActivity().getSupportFragmentManager());
         controller.showDeviceDistanceEstimationFragment(beaconIds, targetName);
     }
 }

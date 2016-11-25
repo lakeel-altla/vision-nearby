@@ -12,15 +12,16 @@ import com.google.android.gms.nearby.messages.SubscribeOptions;
 import com.lakeel.altla.library.EddystoneUID;
 import com.lakeel.altla.library.ResolutionResultCallback;
 import com.lakeel.altla.vision.nearby.domain.usecase.FindUserBeaconsUseCase;
-import com.lakeel.altla.vision.nearby.presentation.subscriber.Subscriber;
-import com.lakeel.altla.vision.nearby.presentation.subscriber.ForegroundSubscriber;
 import com.lakeel.altla.vision.nearby.presentation.presenter.BasePresenter;
+import com.lakeel.altla.vision.nearby.presentation.subscriber.ForegroundSubscriber;
+import com.lakeel.altla.vision.nearby.presentation.subscriber.Subscriber;
 import com.lakeel.altla.vision.nearby.presentation.view.DeviceDistanceEstimationView;
 
 import android.app.Activity;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 
+import java.util.List;
 import java.util.Locale;
 
 import javax.inject.Inject;
@@ -37,7 +38,7 @@ public final class DeviceDistanceEstimationPresenter extends BasePresenter<Devic
     private ResolutionResultCallback mResultCallback = new ResolutionResultCallback() {
         @Override
         protected void onResolution(Status status) {
-
+            // TODO: Handle resolution
         }
     };
 
@@ -77,12 +78,7 @@ public final class DeviceDistanceEstimationPresenter extends BasePresenter<Devic
     public void onStop() {
         super.onStop();
 
-        mSubscriber.unSubscribe(new ResolutionResultCallback() {
-            @Override
-            protected void onResolution(Status status) {
-
-            }
-        });
+        mSubscriber.unSubscribe(mResultCallback);
 
         mGoogleApiClient.disconnect();
     }
@@ -96,27 +92,24 @@ public final class DeviceDistanceEstimationPresenter extends BasePresenter<Devic
     public void onConnectionSuspended(int i) {
     }
 
-    public void setSubscriber(String beaconId) {
-        EddystoneUID eddystoneUID = new EddystoneUID(beaconId);
-        String namespaceId = eddystoneUID.getNamespaceId();
-        String instanceId = eddystoneUID.getInstanceId();
+    public void setSubscriber(List<String> beaconIds) {
+        MessageFilter.Builder filterBuilder = new MessageFilter.Builder();
+        for (String beaconId : beaconIds) {
+            EddystoneUID eddystoneUID = new EddystoneUID(beaconId);
+            String namespaceId = eddystoneUID.getNamespaceId();
+            String instanceId = eddystoneUID.getInstanceId();
 
-        MessageFilter filter = new MessageFilter.Builder()
-                .includeEddystoneUids(namespaceId, instanceId)
-                .build();
+            filterBuilder.includeEddystoneUids(namespaceId, instanceId);
+        }
+
         SubscribeOptions options = new SubscribeOptions.Builder()
-                .setFilter(filter)
+                .setFilter(filterBuilder.build())
                 .build();
 
         mSubscriber = new ForegroundSubscriber(mGoogleApiClient, mMessageListener, options);
     }
 
     public void onSubscribe() {
-        mSubscriber.subscribe(new ResolutionResultCallback() {
-            @Override
-            protected void onResolution(Status status) {
-
-            }
-        });
+        mSubscriber.subscribe(mResultCallback);
     }
 }

@@ -6,17 +6,14 @@ import com.lakeel.altla.vision.nearby.presentation.presenter.model.PresenceModel
 import android.support.annotation.StringRes;
 
 import java.util.ArrayList;
-import java.util.List;
 
-public interface FavoritesUserActivityView {
+public interface ProfileView {
 
     void showSnackBar(@StringRes int resId);
 
     void showPresence(PresenceModel model);
 
     void showProfile(ItemModel model);
-
-    void showTitle(String title);
 
     void showShareSheet();
 

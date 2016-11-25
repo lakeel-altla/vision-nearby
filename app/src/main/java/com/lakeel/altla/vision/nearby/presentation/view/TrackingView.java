@@ -2,6 +2,8 @@ package com.lakeel.altla.vision.nearby.presentation.view;
 
 import com.firebase.geofire.GeoLocation;
 
+import java.util.ArrayList;
+
 public interface TrackingView {
 
     void showLocationMap(GeoLocation location);
@@ -14,5 +16,5 @@ public interface TrackingView {
 
     void showOptionMenu();
 
-    void showFindNearbyDeviceFragment(String beaconId, String beaconName);
+    void showFindNearbyDeviceFragment(ArrayList<String> beaconIds, String beaconName);
 }

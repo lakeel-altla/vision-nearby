@@ -8,16 +8,17 @@ import com.lakeel.altla.vision.nearby.presentation.di.module.RepositoryModule;
 import com.lakeel.altla.vision.nearby.presentation.view.activity.FavoritesUserActivity;
 import com.lakeel.altla.vision.nearby.presentation.view.activity.MainActivity;
 import com.lakeel.altla.vision.nearby.presentation.view.activity.RecentlyUserUserActivity;
-import com.lakeel.altla.vision.nearby.presentation.view.fragment.settings.bluetooth.BleSettingsFragment;
-import com.lakeel.altla.vision.nearby.presentation.view.fragment.settings.cm.CmSettingsFragment;
-import com.lakeel.altla.vision.nearby.presentation.view.fragment.settings.device.DeviceListFragment;
 import com.lakeel.altla.vision.nearby.presentation.view.fragment.estimation.DeviceDistanceEstimationFragment;
 import com.lakeel.altla.vision.nearby.presentation.view.fragment.favorites.FavoritesListFragment;
-import com.lakeel.altla.vision.nearby.presentation.view.fragment.settings.line.LineSettingsFragment;
 import com.lakeel.altla.vision.nearby.presentation.view.fragment.nearby.NearbyListFragment;
+import com.lakeel.altla.vision.nearby.presentation.view.fragment.profile.ProfileFragment;
 import com.lakeel.altla.vision.nearby.presentation.view.fragment.recently.RecentlyFragment;
 import com.lakeel.altla.vision.nearby.presentation.view.fragment.search.SearchFragment;
 import com.lakeel.altla.vision.nearby.presentation.view.fragment.settings.SettingsFragment;
+import com.lakeel.altla.vision.nearby.presentation.view.fragment.settings.bluetooth.BleSettingsFragment;
+import com.lakeel.altla.vision.nearby.presentation.view.fragment.settings.cm.CmSettingsFragment;
+import com.lakeel.altla.vision.nearby.presentation.view.fragment.settings.device.DeviceListFragment;
+import com.lakeel.altla.vision.nearby.presentation.view.fragment.settings.line.LineSettingsFragment;
 import com.lakeel.altla.vision.nearby.presentation.view.fragment.signin.SignInFragment;
 import com.lakeel.altla.vision.nearby.presentation.view.fragment.tracking.TrackingFragment;
 
@@ -56,4 +57,6 @@ public interface UserComponent {
     void inject(DeviceListFragment fragment);
 
     void inject(DeviceDistanceEstimationFragment fragment);
+
+    void inject(ProfileFragment fragment);
 }

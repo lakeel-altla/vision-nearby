@@ -2,5 +2,5 @@ package com.lakeel.altla.vision.nearby.presentation.intent;
 
 public enum IntentExtra {
 
-    RECENTLY, ID
+    RECENTLY, USER_ID, USER_NAME
 }

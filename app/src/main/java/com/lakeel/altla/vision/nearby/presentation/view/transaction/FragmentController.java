@@ -4,6 +4,7 @@ import com.lakeel.altla.vision.nearby.R;
 import com.lakeel.altla.vision.nearby.presentation.view.fragment.estimation.DeviceDistanceEstimationFragment;
 import com.lakeel.altla.vision.nearby.presentation.view.fragment.favorites.FavoritesListFragment;
 import com.lakeel.altla.vision.nearby.presentation.view.fragment.nearby.NearbyListFragment;
+import com.lakeel.altla.vision.nearby.presentation.view.fragment.profile.ProfileFragment;
 import com.lakeel.altla.vision.nearby.presentation.view.fragment.recently.RecentlyFragment;
 import com.lakeel.altla.vision.nearby.presentation.view.fragment.settings.SettingsFragment;
 import com.lakeel.altla.vision.nearby.presentation.view.fragment.settings.bluetooth.BleSettingsFragment;
@@ -18,6 +19,8 @@ import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentTransaction;
 
+import java.util.ArrayList;
+
 public final class FragmentController {
 
     private final String SIGN_IN_FRAGMENT_TAG = SignInFragment.class.getSimpleName();
@@ -31,6 +34,8 @@ public final class FragmentController {
     private final String DEVICE_LIST_FRAGMENT_TAG = DeviceListFragment.class.getSimpleName();
 
     private final String DISTANCE_ESTIMATION_FRAGMENT_TAG = DeviceDistanceEstimationFragment.class.getSimpleName();
+
+    private final String PROFILE_FRAGMENT_TAG = ProfileFragment.class.getSimpleName();
 
     private final String SETTINGS_FRAGMENT_TAG = SettingsFragment.class.getSimpleName();
 
@@ -76,9 +81,14 @@ public final class FragmentController {
         replaceFragment(R.id.fragmentPlaceholder, fragment, DEVICE_LIST_FRAGMENT_TAG);
     }
 
-    public void showDeviceDistanceEstimationFragment(String beaconId, String beaconName) {
-        DeviceDistanceEstimationFragment fragment = DeviceDistanceEstimationFragment.newInstance(beaconId, beaconName);
+    public void showDeviceDistanceEstimationFragment(ArrayList<String> beaconIds, String targetName) {
+        DeviceDistanceEstimationFragment fragment = DeviceDistanceEstimationFragment.newInstance(beaconIds, targetName);
         replaceFragment(R.id.fragmentPlaceholder, fragment, DISTANCE_ESTIMATION_FRAGMENT_TAG);
+    }
+
+    public void showProfileFragment(String userId, String userName) {
+        ProfileFragment fragment = ProfileFragment.newInstance(userId, userName);
+        replaceFragment(R.id.fragmentPlaceholder, fragment, PROFILE_FRAGMENT_TAG);
     }
 
     public void showBleSettingsFragment() {

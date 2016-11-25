@@ -40,6 +40,7 @@ import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.view.MenuItem;
 import android.view.View;
+import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
 
 import javax.inject.Inject;
@@ -67,7 +68,7 @@ public class MainActivity extends AppCompatActivity
 
     private DrawerLayout drawerLayout;
 
-    private RelativeLayout mFragmentLayout;
+    private LinearLayout mFragmentLayout;
 
     @Inject
     ActivityPresenter mPresenter;

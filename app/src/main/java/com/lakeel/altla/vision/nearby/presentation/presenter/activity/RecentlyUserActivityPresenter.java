@@ -180,7 +180,9 @@ public final class RecentlyUserActivityPresenter extends BasePresenter<RecentlyU
                     @Override
                     public Single<LINELinksEntity> call(Boolean bool) {
                         mCmLinkEnabled = bool;
-                        return mFindLINEUrlUseCase.execute(mItemId).subscribeOn(Schedulers.io());
+                        return mFindLINEUrlUseCase
+                                .execute(mItemId)
+                                .subscribeOn(Schedulers.io());
                     }
                 })
                 .map(lineLinksEntity -> lineLinksEntity.url)

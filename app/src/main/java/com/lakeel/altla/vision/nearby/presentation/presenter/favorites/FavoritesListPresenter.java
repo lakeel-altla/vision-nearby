@@ -7,7 +7,6 @@ import com.lakeel.altla.vision.nearby.domain.usecase.FindItemUseCase;
 import com.lakeel.altla.vision.nearby.domain.usecase.RemoveFavoriteUseCase;
 import com.lakeel.altla.vision.nearby.presentation.presenter.BaseItemPresenter;
 import com.lakeel.altla.vision.nearby.presentation.presenter.BasePresenter;
-import com.lakeel.altla.vision.nearby.presentation.presenter.mapper.FavoriteModelMapper;
 import com.lakeel.altla.vision.nearby.presentation.presenter.model.FavoriteModel;
 import com.lakeel.altla.vision.nearby.presentation.view.FavoriteItemView;
 import com.lakeel.altla.vision.nearby.presentation.view.FavoriteListView;
@@ -76,8 +75,9 @@ public final class FavoritesListPresenter extends BasePresenter<FavoriteListView
         }
 
         public void onClick(FavoriteModel model) {
-            String id = model.mId;
-            getView().showFavoritesUserActivity(id);
+            String userId = model.mId;
+            String userName = model.mName;
+            getView().showFavoritesUserActivity(userId, userName);
         }
 
         public void onRemove(FavoriteModel favoriteModel) {
