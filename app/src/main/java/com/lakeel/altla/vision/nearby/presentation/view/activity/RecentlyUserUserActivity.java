@@ -44,7 +44,6 @@ import com.lakeel.altla.vision.nearby.presentation.view.layout.WeatherLayout;
 import com.nostra13.universalimageloader.core.ImageLoader;
 
 import android.content.Intent;
-import android.graphics.Color;
 import android.os.Bundle;
 import android.support.design.widget.CollapsingToolbarLayout;
 import android.support.design.widget.CoordinatorLayout;

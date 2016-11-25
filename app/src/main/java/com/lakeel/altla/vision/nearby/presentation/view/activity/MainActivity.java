@@ -40,7 +40,6 @@ import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.view.MenuItem;
 import android.view.View;
-import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
 
 import javax.inject.Inject;
@@ -68,7 +67,7 @@ public class MainActivity extends AppCompatActivity
 
     private DrawerLayout drawerLayout;
 
-    private LinearLayout mFragmentLayout;
+    private RelativeLayout mainLayout;
 
     @Inject
     ActivityPresenter mPresenter;
@@ -90,7 +89,7 @@ public class MainActivity extends AppCompatActivity
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
-        mFragmentLayout = ButterKnife.findById(this, R.id.fragmentPlaceholder);
+        mainLayout = ButterKnife.findById(this, R.id.fragmentPlaceholder);
 
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
@@ -245,7 +244,7 @@ public class MainActivity extends AppCompatActivity
 
     @Override
     public void showSnackBar(int resId) {
-        Snackbar.make(mFragmentLayout, resId, Snackbar.LENGTH_SHORT).show();
+        Snackbar.make(mainLayout, resId, Snackbar.LENGTH_SHORT).show();
     }
 
     @Override

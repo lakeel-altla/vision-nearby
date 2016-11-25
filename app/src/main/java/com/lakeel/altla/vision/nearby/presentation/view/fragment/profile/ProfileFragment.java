@@ -10,14 +10,9 @@ import com.lakeel.altla.vision.nearby.presentation.view.DateFormatter;
 import com.lakeel.altla.vision.nearby.presentation.view.GridShareSheet;
 import com.lakeel.altla.vision.nearby.presentation.view.ProfileView;
 import com.lakeel.altla.vision.nearby.presentation.view.activity.MainActivity;
-import com.lakeel.altla.vision.nearby.presentation.view.layout.EmailLayout;
-import com.lakeel.altla.vision.nearby.presentation.view.layout.LastOnlineLayout;
-import com.lakeel.altla.vision.nearby.presentation.view.layout.LineUrlLayout;
-import com.lakeel.altla.vision.nearby.presentation.view.layout.NameLayout;
-import com.lakeel.altla.vision.nearby.presentation.view.layout.PresenceHeaderLayout;
-import com.lakeel.altla.vision.nearby.presentation.view.layout.PresenceLayout;
-import com.lakeel.altla.vision.nearby.presentation.view.layout.ProfileHeaderLayout;
-import com.lakeel.altla.vision.nearby.presentation.view.layout.SNSHeaderLayout;
+import com.lakeel.altla.vision.nearby.presentation.view.layout.PresenceLayout1;
+import com.lakeel.altla.vision.nearby.presentation.view.layout.ProfileLayout1;
+import com.lakeel.altla.vision.nearby.presentation.view.layout.SNSLayout;
 import com.lakeel.altla.vision.nearby.presentation.view.transaction.FragmentController;
 import com.nostra13.universalimageloader.core.ImageLoader;
 
@@ -60,7 +55,7 @@ public final class ProfileFragment extends Fragment implements ProfileView {
     @Inject
     ProfilePresenter mPresenter;
 
-    @BindView(R.id.profileLayout)
+    @BindView(R.id.mainLayout)
     LinearLayout mLayout;
 
     @BindView(R.id.shareSheet)
@@ -69,21 +64,11 @@ public final class ProfileFragment extends Fragment implements ProfileView {
     @BindView(R.id.imageViewUser)
     ImageView mUserImageView;
 
-    private PresenceHeaderLayout mPresenceHeaderLayout = new PresenceHeaderLayout();
+    private PresenceLayout1 presenceLayout = new PresenceLayout1();
 
-    private PresenceLayout mPresenceLayout = new PresenceLayout();
+    private ProfileLayout1 profileLayout = new ProfileLayout1();
 
-    private LastOnlineLayout mLastOnlineLayout = new LastOnlineLayout();
-
-    private ProfileHeaderLayout mProfileHeaderLayout = new ProfileHeaderLayout();
-
-    private NameLayout mNameLayout = new NameLayout();
-
-    private EmailLayout mEmailLayout = new EmailLayout();
-
-    private SNSHeaderLayout mSNSHeaderLayout = new SNSHeaderLayout();
-
-    private LineUrlLayout mLineUrlLayout = new LineUrlLayout();
+    private SNSLayout snsLayout = new SNSLayout();
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -92,14 +77,9 @@ public final class ProfileFragment extends Fragment implements ProfileView {
 
         ButterKnife.bind(this, view);
 
-        ButterKnife.bind(mPresenceHeaderLayout, view.findViewById(R.id.presence_header));
-        ButterKnife.bind(mPresenceLayout, view.findViewById(R.id.presence));
-        ButterKnife.bind(mLastOnlineLayout, view.findViewById(R.id.last_online));
-        ButterKnife.bind(mProfileHeaderLayout, view.findViewById(R.id.profile_header));
-        ButterKnife.bind(mNameLayout, view.findViewById(R.id.name));
-        ButterKnife.bind(mEmailLayout, view.findViewById(R.id.email));
-        ButterKnife.bind(mSNSHeaderLayout, view.findViewById(R.id.sns_header));
-        ButterKnife.bind(mLineUrlLayout, view.findViewById(R.id.lineUrl));
+        ButterKnife.bind(presenceLayout, view.findViewById(R.id.presenceLayout));
+        ButterKnife.bind(profileLayout, view.findViewById(R.id.profileLayout));
+        ButterKnife.bind(snsLayout, view.findViewById(R.id.snsLayout));
 
         setHasOptionsMenu(true);
 
@@ -126,15 +106,6 @@ public final class ProfileFragment extends Fragment implements ProfileView {
         mPresenter.setUserData(userId, userName);
 
         mPresenter.onActivityCreated();
-
-        mPresenceHeaderLayout.mTitle.setText(R.string.textView_presence);
-        mPresenceLayout.mTitle.setText(R.string.textView_state);
-        mLastOnlineLayout.mTitle.setText(R.string.textView_last_online);
-        mProfileHeaderLayout.mTitle.setText(R.string.textView_profile);
-        mNameLayout.mTitle.setText(R.string.textView_name);
-        mEmailLayout.mTitle.setText(R.string.textView_email);
-        mSNSHeaderLayout.mTitle.setText(R.string.textView_sns);
-        mLineUrlLayout.mTitle.setText(R.string.textView_line_url);
     }
 
     @Override
@@ -176,14 +147,16 @@ public final class ProfileFragment extends Fragment implements ProfileView {
 
     @Override
     public void showPresence(PresenceModel model) {
+        int resId;
         if (model.mConnected) {
-            mPresenceLayout.mBody.setText(R.string.textView_connected);
+            resId = R.string.textView_connected;
         } else {
-            mPresenceLayout.mBody.setText(R.string.textView_disconnected);
+            resId = R.string.textView_disconnected;
         }
+        presenceLayout.presenceText.setText(resId);
 
         DateFormatter dateFormatter = new DateFormatter(model.mLastOnline);
-        mLastOnlineLayout.mBody.setText(dateFormatter.format());
+        presenceLayout.lastOnlineText.setText(dateFormatter.format());
     }
 
     @Override
@@ -191,9 +164,9 @@ public final class ProfileFragment extends Fragment implements ProfileView {
         ImageLoader imageLoader = ImageLoader.getInstance();
         imageLoader.displayImage(model.mImageUri, mUserImageView);
 
-        mNameLayout.mBody.setText(model.mName);
-        mEmailLayout.mBody.setAutoLinkMask(Linkify.EMAIL_ADDRESSES);
-        mEmailLayout.mBody.setText(model.mEmail);
+        profileLayout.nameText.setText(model.mName);
+        profileLayout.emailText.setAutoLinkMask(Linkify.EMAIL_ADDRESSES);
+        profileLayout.emailText.setText(model.mEmail);
     }
 
     @Override
@@ -219,8 +192,8 @@ public final class ProfileFragment extends Fragment implements ProfileView {
 
     @Override
     public void showLineUrl(String url) {
-        mLineUrlLayout.mBody.setAutoLinkMask(Linkify.WEB_URLS);
-        mLineUrlLayout.mBody.setText(url);
+        snsLayout.lineUrlText.setAutoLinkMask(Linkify.WEB_URLS);
+        snsLayout.lineUrlText.setText(url);
     }
 
     @Override
