@@ -201,7 +201,7 @@ public final class ProfileFragment extends Fragment implements ProfileView {
         GridShareSheet shareSheet = new GridShareSheet(getContext(), mShareSheet, R.menu.menu_share);
         shareSheet.setOnMenuItemClickListener(item -> {
             if (item.getItemId() == R.id.menu_cm_favorites) {
-                mPresenter.onAddToCmFavorites();
+                mPresenter.onCmMenuClicked();
             }
             return true;
         });

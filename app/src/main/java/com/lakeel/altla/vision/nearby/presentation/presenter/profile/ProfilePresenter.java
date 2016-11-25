@@ -68,28 +68,27 @@ public final class ProfilePresenter extends BasePresenter<ProfileView> {
 
     @Override
     public void onActivityCreated() {
-
-        // Show presence.
-        Subscription subscription1 = mFindPresenceUseCase
+        Subscription presenceSubscription = mFindPresenceUseCase
                 .execute(mUserId)
                 .map(entity -> mPresencesModelMapper.map(entity))
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribe(model -> getView().showPresence(model),
                         e -> LOGGER.error("Failed to find presence.", e));
-        mCompositeSubscription.add(subscription1);
 
-        // Show profile.
-        Subscription subscription2 = mFindItemUseCase.
+        mCompositeSubscription.add(presenceSubscription);
+
+        Subscription itemSubscription = mFindItemUseCase.
                 execute(mUserId)
                 .subscribeOn(Schedulers.io())
                 .map(entity -> mItemModelMapper.map(entity))
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribe(model -> getView().showProfile(model),
                         e -> LOGGER.error("Failed to find item.", e));
-        mCompositeSubscription.add(subscription2);
 
-        Subscription subscription3 = mFindConfigsUseCase
+        mCompositeSubscription.add(itemSubscription);
+
+        Subscription configsSubscription = mFindConfigsUseCase
                 .execute()
                 .map(entity -> entity.isCmLinkEnabled)
                 .flatMap(new Func1<Boolean, Single<LINELinksEntity>>() {
@@ -108,7 +107,8 @@ public final class ProfilePresenter extends BasePresenter<ProfileView> {
                     getView().showLineUrl(lineUrl);
                     getView().initializeOptionMenu();
                 }, e -> LOGGER.error("Failed to find config settings.", e));
-        mCompositeSubscription.add(subscription3);
+
+        mCompositeSubscription.add(configsSubscription);
     }
 
     public void setUserData(String userId, String userName) {
@@ -143,7 +143,7 @@ public final class ProfilePresenter extends BasePresenter<ProfileView> {
         mCompositeSubscription.add(subscription);
     }
 
-    public void onAddToCmFavorites() {
+    public void onCmMenuClicked() {
         Subscription subscription = mSaveUserToCmFavoritesUseCase
                 .execute(mUserId)
                 .subscribeOn(Schedulers.io())
@@ -153,6 +153,7 @@ public final class ProfilePresenter extends BasePresenter<ProfileView> {
                             LOGGER.error("Failed to add to CM favorites.", e);
                             getView().showSnackBar(R.string.error_not_added);
                         });
+
         mCompositeSubscription.add(subscription);
     }
 
