@@ -48,7 +48,6 @@ import static com.lakeel.altla.vision.nearby.R.id.share;
 public final class ProfileFragment extends Fragment implements ProfileView {
 
     public static ProfileFragment newInstance(String userId, String userName) {
-
         Bundle args = new Bundle();
         args.putString(BundleKey.USER_ID.getValue(), userId);
         args.putString(BundleKey.USER_NAME.getValue(), userName);
