@@ -41,13 +41,6 @@
             </intent-filter>
         </activity>
 
-        <activity
-                android:name=".presentation.view.activity.RecentlyUserUserActivity"
-                android:parentActivityName=".presentation.view.activity.MainActivity">
-            <meta-data android:name="android.support.PARENT_ACTIVITY"
-                       android:value=".presentation.view.activity.MainActivity"/>
-        </activity>
-
         <service android:name=".presentation.service.LocationService"/>
         <service android:name=".presentation.service.LINEService"/>
         <service android:name=".presentation.service.RecentlyService"/>
