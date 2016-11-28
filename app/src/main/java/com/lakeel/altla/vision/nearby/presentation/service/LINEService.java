@@ -50,7 +50,7 @@ public class LINEService extends IntentService {
     protected void onHandleIntent(Intent intent) {
         String lineUrl = intent.getStringExtra(IntentKey.LINE_URL.name());
 
-        LOGGER.info("Line URL was found:URL = " + lineUrl);
+        LOGGER.info("LINE URL was found:URL = " + lineUrl);
 
         findUserIdByLINEUrl(lineUrl)
                 .flatMap(new Func1<LINELinksEntity, Single<ItemsEntity>>() {
