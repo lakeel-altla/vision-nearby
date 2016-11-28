@@ -3,7 +3,7 @@ package com.lakeel.altla.vision.nearby.presentation.intent;
 import android.content.Intent;
 import android.net.Uri;
 
-public final class GoogleMapIntent {
+public final class GoogleMapDirectionIntentCreator {
 
     private static final String GOOGLE_MAP_DIRECTION_INTENT_QUERY = "http://maps.google.com/maps?daddr=";
 
@@ -13,7 +13,7 @@ public final class GoogleMapIntent {
 
     private final String longitude;
 
-    public GoogleMapIntent(String latitude, String longitude) {
+    public GoogleMapDirectionIntentCreator(String latitude, String longitude) {
         this.latitude = latitude;
         this.longitude = longitude;
     }
