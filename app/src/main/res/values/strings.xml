@@ -4,7 +4,7 @@
     <string name="navigation_drawer_open">Open navigation drawer</string>
     <string name="navigation_drawer_close">Close navigation drawer</string>
 
-    <string name="dialog_button_positive">Yes</string>
+    <string name="dialog_button_positive">OK</string>
     <string name="dialog_message_confirm_find_nearby_devices">Are you sure you want to find the nearby device?</string>
 
     <string name="textView_state">State</string>
