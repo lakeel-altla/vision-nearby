@@ -4,10 +4,10 @@ public enum AttachmentType {
 
     UNKNOWN("unknown"), USER_ID("userId"), BEACON_ID("beaconId"), LINE_URL("lineUrl");
 
-    private String mValue;
+    private String value;
 
     AttachmentType(String value) {
-        mValue = value;
+        this.value = value;
     }
 
     public static AttachmentType toType(String value) {
@@ -20,6 +20,6 @@ public enum AttachmentType {
     }
 
     public String getValue() {
-        return mValue;
+        return value;
     }
 }

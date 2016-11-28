@@ -1,8 +1,10 @@
 package com.lakeel.altla.vision.nearby.presentation.presenter.settings.bluetooth;
 
+import android.content.Context;
+
 import com.lakeel.altla.vision.nearby.domain.usecase.FindBeaconIdUseCase;
-import com.lakeel.altla.vision.nearby.presentation.checker.BleState;
 import com.lakeel.altla.vision.nearby.presentation.checker.BluetoothChecker;
+import com.lakeel.altla.vision.nearby.presentation.checker.BluetoothChecker.BleState;
 import com.lakeel.altla.vision.nearby.presentation.presenter.BasePresenter;
 import com.lakeel.altla.vision.nearby.presentation.presenter.mapper.BeaconIdModelMapper;
 import com.lakeel.altla.vision.nearby.presentation.service.PublishService;
@@ -11,8 +13,6 @@ import com.lakeel.altla.vision.nearby.presentation.view.BleSettingsView;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-
-import android.content.Context;
 
 import javax.inject.Inject;
 

@@ -12,9 +12,9 @@ public final class ItemsEntityMapper {
 
         MyUser.UserData user = MyUser.getUserData();
 
-        map.put("name", user.mDisplayName);
-        map.put("imageUri", user.mImageUri);
-        map.put("email", user.mEmail);
+        map.put("name", user.displayName);
+        map.put("imageUri", user.imageUri);
+        map.put("email", user.email);
 
         return map;
     }

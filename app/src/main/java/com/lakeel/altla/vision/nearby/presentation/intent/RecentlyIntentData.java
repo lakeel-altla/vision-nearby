@@ -4,28 +4,28 @@ import java.io.Serializable;
 
 public final class RecentlyIntentData implements Serializable {
 
-    public String mKey;
+    public String key;
 
-    public String mId;
+    public String id;
 
-    public String mLatitude;
+    public String latitude;
 
-    public String mLongitude;
+    public String longitude;
 
-    public String mLocationText;
+    public String locationText;
 
-    public int mUserActivity;
+    public int detectedUserActivity;
 
-    public Weather mWeather;
+    public Weather weather;
 
-    public long mTimestamp;
+    public long timestamp;
 
     public static class Weather implements Serializable {
 
-        public int[] mConditions;
+        public int[] conditions;
 
-        public int mHumidity;
+        public int humidity;
 
-        public float mTemperature;
+        public float temperature;
     }
 }

@@ -4,13 +4,13 @@ public enum BundleKey {
 
     BEACON_IDS("beaconIds"), BEACON_ID("beaconId"), USER_ID("userId"), USER_NAME("userName"),TARGET_NAME("targetName");
 
-    private String mValue;
+    private String value;
 
     BundleKey(String value) {
-        mValue = value;
+        this.value = value;
     }
 
     public String getValue() {
-        return mValue;
+        return value;
     }
 }

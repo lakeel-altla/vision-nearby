@@ -1,20 +1,24 @@
 package com.lakeel.altla.vision.nearby.presentation.checker;
 
-import org.altbeacon.beacon.BeaconTransmitter;
-
 import android.bluetooth.BluetoothAdapter;
 import android.bluetooth.BluetoothManager;
 import android.content.Context;
 import android.os.Build;
 
-import static com.lakeel.altla.vision.nearby.presentation.checker.BleState.DISABLE;
-import static com.lakeel.altla.vision.nearby.presentation.checker.BleState.ENABLE;
-import static com.lakeel.altla.vision.nearby.presentation.checker.BleState.OFF;
-import static com.lakeel.altla.vision.nearby.presentation.checker.BleState.SUBSCRIBE_ONLY;
+import org.altbeacon.beacon.BeaconTransmitter;
+
+import static com.lakeel.altla.vision.nearby.presentation.checker.BluetoothChecker.BleState.DISABLE;
+import static com.lakeel.altla.vision.nearby.presentation.checker.BluetoothChecker.BleState.ENABLE;
+import static com.lakeel.altla.vision.nearby.presentation.checker.BluetoothChecker.BleState.OFF;
+import static com.lakeel.altla.vision.nearby.presentation.checker.BluetoothChecker.BleState.SUBSCRIBE_ONLY;
 import static org.altbeacon.beacon.BeaconTransmitter.NOT_SUPPORTED_CANNOT_GET_ADVERTISER;
 import static org.altbeacon.beacon.BeaconTransmitter.NOT_SUPPORTED_CANNOT_GET_ADVERTISER_MULTIPLE_ADVERTISEMENTS;
 
 public final class BluetoothChecker {
+
+    public enum BleState {
+        OFF, DISABLE, ENABLE, SUBSCRIBE_ONLY
+    }
 
     private Context mContext;
 

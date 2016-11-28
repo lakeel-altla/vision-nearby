@@ -95,37 +95,37 @@ public final class RecentlyPresenter extends BasePresenter<RecentlyView> {
 
         public void onClick(RecentlyItemModel model) {
             RecentlyIntentData data = new RecentlyIntentData();
-            data.mId = model.mId;
-            data.mKey = model.mKey;
+            data.id = model.mId;
+            data.key = model.mKey;
 
             LocationModel locationModel = model.mLocationModel;
             if (locationModel != null) {
-                data.mLatitude = locationModel.mLatitude;
-                data.mLongitude = locationModel.mLongitude;
+                data.latitude = locationModel.mLatitude;
+                data.longitude = locationModel.mLongitude;
 
                 LocationModel.LocationTextModel locationTextModel = locationModel.mLocationTextModel;
                 if (locationTextModel != null) {
                     String language = Locale.getDefault().getLanguage();
                     String locationText = locationTextModel.mTextMap.get(language);
                     if (!StringUtils.isEmpty(locationText)) {
-                        data.mLocationText = locationText;
+                        data.locationText = locationText;
                     }
                 }
             }
 
             if (model.mUserActivity != null) {
-                data.mUserActivity = model.mUserActivity;
+                data.detectedUserActivity = model.mUserActivity;
             }
 
             if (model.mWeather != null) {
                 RecentlyIntentData.Weather weather = new RecentlyIntentData.Weather();
-                weather.mConditions = model.mWeather.mConditions;
-                weather.mHumidity = model.mWeather.humidity;
-                weather.mTemperature = model.mWeather.temparature;
-                data.mWeather = weather;
+                weather.conditions = model.mWeather.mConditions;
+                weather.humidity = model.mWeather.humidity;
+                weather.temperature = model.mWeather.temparature;
+                data.weather = weather;
             }
 
-            data.mTimestamp = model.mPassingTime;
+            data.timestamp = model.mPassingTime;
 
             getView().showRecentlyUserActivity(data);
         }

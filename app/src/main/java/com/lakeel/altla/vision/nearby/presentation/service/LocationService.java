@@ -60,7 +60,7 @@ public final class LocationService extends IntentService {
     protected void onHandleIntent(Intent intent) {
         LOGGER.debug("Location Service");
 
-        final String beaconId = intent.getStringExtra(IntentKey.BECON_ID.name());
+        final String beaconId = intent.getStringExtra(IntentKey.BEACON_ID.name());
 
         final Context context = getApplicationContext();
         mGoogleApiClient = new GoogleApiClient.Builder(context)

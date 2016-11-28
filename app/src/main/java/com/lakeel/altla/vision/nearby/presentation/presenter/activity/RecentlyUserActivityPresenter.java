@@ -36,73 +36,73 @@ import rx.schedulers.Schedulers;
 public final class RecentlyUserActivityPresenter extends BasePresenter<RecentlyUserActivityView> {
 
     @Inject
-    FindItemUseCase mFindItemUseCase;
+    FindItemUseCase findItemUseCase;
 
     @Inject
-    FindTimesUseCase mFindTimesUseCase;
+    FindTimesUseCase findTimesUseCase;
 
     @Inject
-    SaveFavoriteUseCase mSaveFavoriteUseCase;
+    SaveFavoriteUseCase saveFavoriteUseCase;
 
     @Inject
-    FindPresenceUseCase mFindPresenceUseCase;
+    FindPresenceUseCase findPresenceUseCase;
 
     @Inject
-    FindLocationTextUseCase mFindLocationTextUseCase;
+    FindLocationTextUseCase findLocationTextUseCase;
 
     @Inject
-    FindFavoriteUseCase mFindFavoriteUseCase;
+    FindFavoriteUseCase findFavoriteUseCase;
 
     @Inject
-    SaveLocationTextUseCase mSaveLocationTextUseCase;
+    SaveLocationTextUseCase saveLocationTextUseCase;
 
     @Inject
-    SaveUserToCmFavoritesUseCase mSaveUserToCmFavoritesUseCase;
+    SaveUserToCmFavoritesUseCase saveUserToCmFavoritesUseCase;
 
     @Inject
-    FindConfigsUseCase mFindConfigsUseCase;
+    FindConfigsUseCase findConfigsUseCase;
 
     @Inject
-    FindLINEUrlUseCase mFindLINEUrlUseCase;
+    FindLINEUrlUseCase findLINEUrlUseCase;
 
     private static final Logger LOGGER = LoggerFactory.getLogger(RecentlyUserActivityPresenter.class);
 
-    private PresencesModelMapper mPresencesModelMapper = new PresencesModelMapper();
+    private PresencesModelMapper presencesModelMapper = new PresencesModelMapper();
 
-    private ItemModelMapper mItemModelMapper = new ItemModelMapper();
+    private ItemModelMapper itemModelMapper = new ItemModelMapper();
 
-    private LocationTextMapper mLocationTextMapper = new LocationTextMapper();
+    private LocationTextMapper locationTextMapper = new LocationTextMapper();
 
-    private String mRecentlyKey;
+    private String recentlyKey;
 
-    private String mItemId;
+    private String itemId;
 
-    private String mLatitude;
+    private String latitude;
 
-    private String mLongitude;
+    private String longitude;
 
-    private String mLocationText;
+    private String locationText;
 
-    private boolean mCmLinkEnabled;
+    private boolean isCmLinkEnabled;
 
     @Inject
     RecentlyUserActivityPresenter() {
     }
 
     public void setData(RecentlyIntentData data) {
-        mRecentlyKey = data.mKey;
-        mItemId = data.mId;
-        mLatitude = data.mLatitude;
-        mLongitude = data.mLongitude;
-        mLocationText = data.mLocationText;
+        recentlyKey = data.key;
+        itemId = data.id;
+        latitude = data.latitude;
+        longitude = data.longitude;
+        locationText = data.locationText;
     }
 
     @Override
     public void onResume() {
         // Show presence.
-        Subscription subscription1 = mFindPresenceUseCase
-                .execute(mItemId)
-                .map(entity -> mPresencesModelMapper.map(entity))
+        Subscription subscription1 = findPresenceUseCase
+                .execute(itemId)
+                .map(entity -> presencesModelMapper.map(entity))
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribe(model -> getView().showPresence(model),
@@ -110,8 +110,8 @@ public final class RecentlyUserActivityPresenter extends BasePresenter<RecentlyU
         mCompositeSubscription.add(subscription1);
 
         // Show number of times of passing.
-        Subscription subscription2 = mFindTimesUseCase
-                .execute(mItemId)
+        Subscription subscription2 = findTimesUseCase
+                .execute(itemId)
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribe(times -> getView().showTimes(times),
@@ -119,10 +119,10 @@ public final class RecentlyUserActivityPresenter extends BasePresenter<RecentlyU
         mCompositeSubscription.add(subscription2);
 
         // Show profile.
-        Subscription subscription3 = mFindItemUseCase.
-                execute(mItemId)
+        Subscription subscription3 = findItemUseCase.
+                execute(itemId)
                 .subscribeOn(Schedulers.io())
-                .map(entity -> mItemModelMapper.map(entity))
+                .map(entity -> itemModelMapper.map(entity))
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribe(model -> {
                     getView().showTitle(model.mName);
@@ -131,18 +131,18 @@ public final class RecentlyUserActivityPresenter extends BasePresenter<RecentlyU
         mCompositeSubscription.add(subscription3);
 
         // Show location text.
-        if (StringUtils.isEmpty(mLocationText)) {
+        if (StringUtils.isEmpty(locationText)) {
             String language = Locale.getDefault().getLanguage();
 
-            Subscription subscription4 = mFindLocationTextUseCase
-                    .execute(language, mLatitude, mLongitude)
-                    .map(entity -> mLocationTextMapper.map(entity))
+            Subscription subscription4 = findLocationTextUseCase
+                    .execute(language, latitude, longitude)
+                    .map(entity -> locationTextMapper.map(entity))
                     .flatMap(new Func1<String, Single<String>>() {
                         @Override
                         public Single<String> call(String locationText) {
                             // Save location text in cache.
-                            return mSaveLocationTextUseCase
-                                    .execute(mRecentlyKey, language, locationText)
+                            return saveLocationTextUseCase
+                                    .execute(recentlyKey, language, locationText)
                                     .subscribeOn(Schedulers.io());
                         }
                     })
@@ -156,12 +156,12 @@ public final class RecentlyUserActivityPresenter extends BasePresenter<RecentlyU
                             e -> LOGGER.error("Failed fetch location.", e));
             mCompositeSubscription.add(subscription4);
         } else {
-            getView().showLocationText(mLocationText);
+            getView().showLocationText(locationText);
         }
 
         // Check if already have been added to the favorite.
-        Subscription subscription5 = mFindFavoriteUseCase
-                .execute(mItemId)
+        Subscription subscription5 = findFavoriteUseCase
+                .execute(itemId)
                 .toObservable()
                 .filter(entity -> entity == null)
                 .subscribeOn(Schedulers.io())
@@ -173,15 +173,15 @@ public final class RecentlyUserActivityPresenter extends BasePresenter<RecentlyU
                 });
         mCompositeSubscription.add(subscription5);
 
-        Subscription subscription6 = mFindConfigsUseCase
+        Subscription subscription6 = findConfigsUseCase
                 .execute()
                 .map(entity -> entity.isCmLinkEnabled)
                 .flatMap(new Func1<Boolean, Single<LINELinksEntity>>() {
                     @Override
                     public Single<LINELinksEntity> call(Boolean bool) {
-                        mCmLinkEnabled = bool;
-                        return mFindLINEUrlUseCase
-                                .execute(mItemId)
+                        isCmLinkEnabled = bool;
+                        return findLINEUrlUseCase
+                                .execute(itemId)
                                 .subscribeOn(Schedulers.io());
                     }
                 })
@@ -196,20 +196,20 @@ public final class RecentlyUserActivityPresenter extends BasePresenter<RecentlyU
     }
 
     public boolean isCmLinkEnabled() {
-        return mCmLinkEnabled;
+        return isCmLinkEnabled;
     }
 
     public void onMapReady() {
-        if (mLatitude == null && mLongitude == null) {
+        if (latitude == null && longitude == null) {
             getView().hideLocation();
         } else {
-            getView().showLocationMap(mLatitude, mLongitude);
+            getView().showLocationMap(latitude, longitude);
         }
     }
 
     public void onAdd() {
-        Subscription subscription = mSaveFavoriteUseCase
-                .execute(mItemId)
+        Subscription subscription = saveFavoriteUseCase
+                .execute(itemId)
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribe(entity -> {
@@ -228,8 +228,8 @@ public final class RecentlyUserActivityPresenter extends BasePresenter<RecentlyU
     }
 
     public void onAddToCmFavorites() {
-        Subscription subscription = mSaveUserToCmFavoritesUseCase
-                .execute(mItemId)
+        Subscription subscription = saveUserToCmFavoritesUseCase
+                .execute(itemId)
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribe(o -> getView().showSnackBar(R.string.message_added),

@@ -1,23 +1,22 @@
 package com.lakeel.altla.vision.nearby.presentation.firebase;
 
+import android.net.Uri;
+
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
-
 import com.lakeel.altla.vision.nearby.data.execption.UserNotAuthorizedException;
-
-import android.net.Uri;
 
 public final class MyUser {
 
     public static final class UserData {
 
-        public String mUid;
+        public String userId;
 
-        public String mDisplayName;
+        public String displayName;
 
-        public String mEmail;
+        public String email;
 
-        public String mImageUri;
+        public String imageUri;
     }
 
     private MyUser() {
@@ -36,13 +35,13 @@ public final class MyUser {
 
         UserData userData = new UserData();
 
-        userData.mUid = myUser.getUid();
-        userData.mDisplayName = myUser.getDisplayName();
-        userData.mEmail = myUser.getEmail();
+        userData.userId = myUser.getUid();
+        userData.displayName = myUser.getDisplayName();
+        userData.email = myUser.getEmail();
 
         Uri uri = myUser.getPhotoUrl();
         if (uri != null) {
-            userData.mImageUri = uri.toString();
+            userData.imageUri = uri.toString();
         }
 
         return userData;

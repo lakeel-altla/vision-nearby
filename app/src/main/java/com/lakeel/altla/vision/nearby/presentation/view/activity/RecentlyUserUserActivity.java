@@ -125,17 +125,17 @@ public final class RecentlyUserUserActivity extends AppCompatActivity implements
         RecentlyIntentData data = (RecentlyIntentData) intent.getSerializableExtra(IntentExtra.RECENTLY.name());
         mPresenter.setData(data);
 
-        DateFormatter dateFormatter = new DateFormatter(data.mTimestamp);
+        DateFormatter dateFormatter = new DateFormatter(data.timestamp);
         passingLayout.dateText.setText(dateFormatter.format());
 
-        if (data.mWeather == null) {
+        if (data.weather == null) {
             passingLayout.weatherText.setText(WeatherCondition.UNKNOWN.getWeather());
         } else {
-            Weather weather = data.mWeather;
-            BigDecimal temperature = new BigDecimal(weather.mTemperature);
+            Weather weather = data.weather;
+            BigDecimal temperature = new BigDecimal(weather.temperature);
             BigDecimal roundUppedTemperature = temperature.setScale(0, BigDecimal.ROUND_HALF_UP);
-            int humidity = weather.mHumidity;
-            int conditions[] = weather.mConditions;
+            int humidity = weather.humidity;
+            int conditions[] = weather.conditions;
 
             StringBuilder builder = new StringBuilder();
             for (int value : conditions) {
@@ -150,7 +150,7 @@ public final class RecentlyUserUserActivity extends AppCompatActivity implements
             passingLayout.weatherText.setText(builder.toString());
         }
 
-        passingLayout.detectedActivityText.setText(DetectedActivityType.toUserActivity(data.mUserActivity).getActivity());
+        passingLayout.detectedActivityText.setText(DetectedActivityType.toUserActivity(data.detectedUserActivity).getActivity());
     }
 
     @Override

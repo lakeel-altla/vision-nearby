@@ -7,19 +7,19 @@ import android.net.Uri;
 
 public final class PendingIntentCreator {
 
-    private Context mContext;
+    private Context context;
 
-    private Intent mIntent;
+    private Intent intent;
 
     public PendingIntentCreator(Context context, Uri data) {
-        mContext = context;
+        this.context = context;
 
-        mIntent = new Intent(Intent.ACTION_VIEW);
-        mIntent.setFlags(Intent.FLAG_ACTIVITY_SINGLE_TOP | Intent.FLAG_ACTIVITY_CLEAR_TOP);
-        mIntent.setData(data);
+        intent = new Intent(Intent.ACTION_VIEW);
+        intent.setFlags(Intent.FLAG_ACTIVITY_SINGLE_TOP | Intent.FLAG_ACTIVITY_CLEAR_TOP);
+        intent.setData(data);
     }
 
     public PendingIntent create() {
-        return PendingIntent.getActivity(mContext, 0, mIntent, 0);
+        return PendingIntent.getActivity(context, 0, intent, 0);
     }
 }

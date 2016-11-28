@@ -11,7 +11,7 @@ public final class BeaconIdAttachmentState implements AttachmentState {
     @Override
     public void startService(Context context, String value) {
         Intent locationServiceIntent = new Intent(context, LocationService.class);
-        locationServiceIntent.putExtra(IntentKey.BECON_ID.name(), value);
+        locationServiceIntent.putExtra(IntentKey.BEACON_ID.name(), value);
         context.startService(locationServiceIntent);
     }
 }

@@ -39,7 +39,7 @@ public final class RecentlyEntity extends BaseEntity {
     public Map<String, Object> toMap() {
         Map<String, Object> map = new HashMap<>();
         map.put("id", id);
-        map.put("userActivity", userActivity);
+        map.put("detectedUserActivity", userActivity);
         map.put("location", location);
         map.put("weather", weather);
         map.put("passingTime", ServerValue.TIMESTAMP);
@@ -48,7 +48,7 @@ public final class RecentlyEntity extends BaseEntity {
 
     public Map<String, Object> toUserActivityMap() {
         Map<String, Object> map = new HashMap<>();
-        map.put("userActivity", userActivity);
+        map.put("detectedUserActivity", userActivity);
         return map;
     }
 

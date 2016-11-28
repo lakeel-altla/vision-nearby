@@ -20,24 +20,24 @@ import android.support.multidex.MultiDex;
 
 public class App extends Application {
 
-    private FirebaseDatabase mFirebaseDatabase;
+    private FirebaseDatabase firebaseDatabase;
 
-    private ApplicationComponent mApplicationComponent;
+    private ApplicationComponent applicationComponent;
 
     @Override
     public void onCreate() {
         super.onCreate();
 
-        if (mFirebaseDatabase == null) {
-            mFirebaseDatabase = FirebaseDatabase.getInstance();
-            mFirebaseDatabase.setPersistenceEnabled(true);
+        if (firebaseDatabase == null) {
+            firebaseDatabase = FirebaseDatabase.getInstance();
+            firebaseDatabase.setPersistenceEnabled(true);
         }
 
         MultiDex.install(this);
         JodaTimeAndroid.init(this);
         initImageLoaderInstance();
 
-        mApplicationComponent = DaggerApplicationComponent.builder()
+        applicationComponent = DaggerApplicationComponent.builder()
                 .applicationModule(new ApplicationModule(this))
                 .build();
 
@@ -47,7 +47,7 @@ public class App extends Application {
     }
 
     public static ApplicationComponent getApplicationComponent(@NonNull Activity activity) {
-        return ((App) activity.getApplication()).mApplicationComponent;
+        return ((App) activity.getApplication()).applicationComponent;
     }
 
     private void initImageLoaderInstance() {

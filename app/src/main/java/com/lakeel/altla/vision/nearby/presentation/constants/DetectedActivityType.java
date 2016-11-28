@@ -12,22 +12,22 @@ public enum DetectedActivityType {
     UNKNOWN(DetectedActivity.UNKNOWN, "Unknown"),
     WALKING(DetectedActivity.WALKING, "Walking");
 
-    private int mIntValue;
+    private int intValue;
 
-    private String mStringValue;
+    private String stringValue;
 
     DetectedActivityType(int intValue, String stringValue) {
-        mIntValue = intValue;
-        mStringValue = stringValue;
+        this.intValue = intValue;
+        this.stringValue = stringValue;
     }
 
     public String getActivity() {
-        return mStringValue;
+        return stringValue;
     }
 
     public static DetectedActivityType toUserActivity(int intValue) {
         for (DetectedActivityType currentActivity : DetectedActivityType.values()) {
-            if (currentActivity.mIntValue == intValue) {
+            if (currentActivity.intValue == intValue) {
                 return currentActivity;
             }
         }
