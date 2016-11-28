@@ -20,13 +20,13 @@ public final class BluetoothChecker {
         OFF, DISABLE, ENABLE, SUBSCRIBE_ONLY
     }
 
-    private Context mContext;
+    private Context context;
 
-    private BluetoothManager mManager;
+    private BluetoothManager manager;
 
     public BluetoothChecker(Context context) {
-        mContext = context;
-        mManager = (BluetoothManager) mContext.getSystemService(Context.BLUETOOTH_SERVICE);
+        this.context = context;
+        manager = (BluetoothManager) this.context.getSystemService(Context.BLUETOOTH_SERVICE);
     }
 
     public BleState getState() {
@@ -34,7 +34,7 @@ public final class BluetoothChecker {
         // BLE of support in Android OS is it from the API 18, advertising support will be from the API 21.
         // Because it may not support the advertisement, check the devices.
 
-        BluetoothAdapter bluetoothAdapter = mManager.getAdapter();
+        BluetoothAdapter bluetoothAdapter = manager.getAdapter();
 
         if (bluetoothAdapter == null) {
             return DISABLE;
@@ -46,7 +46,7 @@ public final class BluetoothChecker {
 
         if (Build.VERSION_CODES.LOLLIPOP <= Build.VERSION.SDK_INT) {
             // There are also devices that do not support the advertised after Lollipop.
-            int result = BeaconTransmitter.checkTransmissionSupported(mContext);
+            int result = BeaconTransmitter.checkTransmissionSupported(context);
             if ((result == NOT_SUPPORTED_CANNOT_GET_ADVERTISER_MULTIPLE_ADVERTISEMENTS) || (result == NOT_SUPPORTED_CANNOT_GET_ADVERTISER)) {
                 return SUBSCRIBE_ONLY;
             }
