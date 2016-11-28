@@ -77,7 +77,7 @@
     <string name="message_user_found">User found.</string>
     <string name="message_detected_date_format">Detected Date: %1$s</string>
     <string name="message_device_not_detected">This device has not been detected by others.</string>
-    <string name="message_finding_for_nearby_device_format">Finding for %1$s…</string>
+    <string name="message_finding_for_nearby_device_format">Finding for %1$s.</string>
     <string name="message_device_distance_format">%1$s meters away.</string>
 
     <string name="button_add">Add</string>
