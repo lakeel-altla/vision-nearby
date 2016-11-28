@@ -23,7 +23,7 @@ import rx.Subscriber;
 
 public class FirebaseRecentlyRepositoryImpl implements FirebaseRecentlyRepository {
 
-    private static final String ID_KEY = "id";
+    private static final String ID_KEY = "userId";
 
     private static final String TIMESTAMP_KEY = "passingTime";
 

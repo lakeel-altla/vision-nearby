@@ -13,7 +13,7 @@ public final class LocationsDataEntity extends BaseEntity {
 
     public Map<String, Object> toMap() {
         Map<String, Object> map = new HashMap<>();
-        map.put("id", id);
+        map.put("userId", id);
         map.put("passingTime", ServerValue.TIMESTAMP);
         return map;
     }

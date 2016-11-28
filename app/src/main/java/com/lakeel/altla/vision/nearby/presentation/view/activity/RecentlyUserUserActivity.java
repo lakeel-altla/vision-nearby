@@ -19,8 +19,8 @@ import com.lakeel.altla.vision.nearby.presentation.constants.WeatherCondition;
 import com.lakeel.altla.vision.nearby.presentation.di.component.UserComponent;
 import com.lakeel.altla.vision.nearby.presentation.di.module.ActivityModule;
 import com.lakeel.altla.vision.nearby.presentation.intent.IntentExtra;
-import com.lakeel.altla.vision.nearby.presentation.intent.RecentlyIntentData;
-import com.lakeel.altla.vision.nearby.presentation.intent.RecentlyIntentData.Weather;
+import com.lakeel.altla.vision.nearby.presentation.intent.RecentlyBundleData;
+import com.lakeel.altla.vision.nearby.presentation.intent.RecentlyBundleData.Weather;
 import com.lakeel.altla.vision.nearby.presentation.presenter.activity.RecentlyUserActivityPresenter;
 import com.lakeel.altla.vision.nearby.presentation.presenter.model.ItemModel;
 import com.lakeel.altla.vision.nearby.presentation.presenter.model.PresenceModel;
@@ -122,14 +122,14 @@ public final class RecentlyUserUserActivity extends AppCompatActivity implements
         supportMapFragment.getMapAsync(this);
 
         Intent intent = getIntent();
-        RecentlyIntentData data = (RecentlyIntentData) intent.getSerializableExtra(IntentExtra.RECENTLY.name());
+        RecentlyBundleData data = (RecentlyBundleData) intent.getSerializableExtra(IntentExtra.RECENTLY.name());
         mPresenter.setData(data);
 
         DateFormatter dateFormatter = new DateFormatter(data.timestamp);
-        passingLayout.dateText.setText(dateFormatter.format());
+        passingLayout.textViewDate.setText(dateFormatter.format());
 
         if (data.weather == null) {
-            passingLayout.weatherText.setText(WeatherCondition.UNKNOWN.getWeather());
+            passingLayout.textViewWeather.setText(WeatherCondition.UNKNOWN.getWeather());
         } else {
             Weather weather = data.weather;
             BigDecimal temperature = new BigDecimal(weather.temperature);
@@ -143,14 +143,14 @@ public final class RecentlyUserUserActivity extends AppCompatActivity implements
                 builder.append(type.getWeather());
                 builder.append("  ");
             }
-            builder.append(getString(R.string.message_temperature, String.valueOf(roundUppedTemperature)));
+            builder.append(getString(R.string.message_temperature_format, String.valueOf(roundUppedTemperature)));
             builder.append("  ");
-            builder.append(getString(R.string.message_humidity, String.valueOf(humidity)));
+            builder.append(getString(R.string.message_humidity_format, String.valueOf(humidity)));
 
-            passingLayout.weatherText.setText(builder.toString());
+            passingLayout.textViewWeather.setText(builder.toString());
         }
 
-        passingLayout.detectedActivityText.setText(DetectedActivityType.toUserActivity(data.detectedUserActivity).getActivity());
+        passingLayout.textViewDetectedActivity.setText(DetectedActivityType.toUserActivity(data.detectedActivity).getActivity());
     }
 
     @Override
@@ -229,10 +229,10 @@ public final class RecentlyUserUserActivity extends AppCompatActivity implements
         } else {
             resId = R.string.textView_disconnected;
         }
-        presenceLayout.presenceText.setText(resId);
+        presenceLayout.textViewPresence.setText(resId);
 
         DateFormatter dateFormatter = new DateFormatter(model.mLastOnline);
-        presenceLayout.lastOnlineText.setText(dateFormatter.format());
+        presenceLayout.textViewLastOnline.setText(dateFormatter.format());
     }
 
     @Override
@@ -251,7 +251,7 @@ public final class RecentlyUserUserActivity extends AppCompatActivity implements
 
     @Override
     public void showLocationText(String text) {
-        passingLayout.locationText.setText(text);
+//        passingLayout.locationText.setText(text);
     }
 
     @Override
@@ -261,7 +261,7 @@ public final class RecentlyUserUserActivity extends AppCompatActivity implements
 
     @Override
     public void showTimes(long times) {
-        passingLayout.timesText.setText(String.valueOf(times));
+        passingLayout.textViewTimes.setText(String.valueOf(times));
     }
 
     @OnClick(R.id.fab)
@@ -274,9 +274,9 @@ public final class RecentlyUserUserActivity extends AppCompatActivity implements
         ImageLoader imageLoader = ImageLoader.getInstance();
         imageLoader.displayImage(model.mImageUri, mImageView);
 
-        profileLayout.nameText.setText(model.mName);
-        profileLayout.emailText.setAutoLinkMask(Linkify.EMAIL_ADDRESSES);
-        profileLayout.emailText.setText(model.mEmail);
+        profileLayout.textViewName.setText(model.mName);
+        profileLayout.textViewEmail.setAutoLinkMask(Linkify.EMAIL_ADDRESSES);
+        profileLayout.textViewEmail.setText(model.mEmail);
     }
 
     @Override
@@ -296,8 +296,8 @@ public final class RecentlyUserUserActivity extends AppCompatActivity implements
 
     @Override
     public void showLineUrl(String url) {
-        snsLayout.lineUrlText.setAutoLinkMask(Linkify.WEB_URLS);
-        snsLayout.lineUrlText.setText(url);
+        snsLayout.textViewLineUrl.setAutoLinkMask(Linkify.WEB_URLS);
+        snsLayout.textViewLineUrl.setText(url);
     }
 
     @Override

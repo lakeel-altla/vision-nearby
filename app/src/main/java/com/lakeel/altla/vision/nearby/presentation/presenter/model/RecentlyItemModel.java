@@ -2,28 +2,26 @@ package com.lakeel.altla.vision.nearby.presentation.presenter.model;
 
 public final class RecentlyItemModel {
 
-    public String mKey;
+    public String userId;
 
-    public String mId;
+    public String imageUri;
 
-    public String mImageUri;
+    public String name;
 
-    public String mName;
+    public LocationModel locationModel;
 
-    public LocationModel mLocationModel;
+    public Weather weather;
 
-    public Weather mWeather;
+    public Integer detectedActivity;
 
-    public Integer mUserActivity;
-
-    public long mPassingTime;
+    public long passingTime;
 
     public static class Weather {
 
-        public int[] mConditions;
+        public int[] conditions;
 
         public int humidity;
 
-        public float temparature;
+        public float temperature;
     }
 }

@@ -71,7 +71,7 @@ public final class CmSettingsPresenter extends BasePresenter<CmSettingsView> {
                 }, e -> {
                     LOGGER.error("Failed to find CM links settings.", e);
                 });
-        mCompositeSubscription.add(subscription1);
+        reusableCompositeSubscription.add(subscription1);
     }
 
     public void onSaveCMApiKey(String apiKey) {
@@ -83,10 +83,10 @@ public final class CmSettingsPresenter extends BasePresenter<CmSettingsView> {
                     getView().showSnackBar(R.string.message_saved);
                     getView().updateCMApiKeyPreference(apiKey);
                 }, e -> {
-                    LOGGER.error("Failed to save CM api key.", e);
+                    LOGGER.error("Failed to save CM api recentlyKey.", e);
                     getView().showSnackBar(R.string.error_not_saved);
                 });
-        mCompositeSubscription.add(subscription);
+        reusableCompositeSubscription.add(subscription);
     }
 
     public void onSaveCMSecretKey(String secretKey) {
@@ -98,10 +98,10 @@ public final class CmSettingsPresenter extends BasePresenter<CmSettingsView> {
                     getView().showSnackBar(R.string.message_saved);
                     getView().updateCMSecretKeyPreference(secretKey);
                 }, e -> {
-                    LOGGER.error("Failed to save CM secret key.", e);
+                    LOGGER.error("Failed to save CM secret recentlyKey.", e);
                     getView().showSnackBar(R.string.error_not_saved);
                 });
-        mCompositeSubscription.add(subscription);
+        reusableCompositeSubscription.add(subscription);
     }
 
     public void onSaveCMJid(String jid) {
@@ -116,6 +116,6 @@ public final class CmSettingsPresenter extends BasePresenter<CmSettingsView> {
                     LOGGER.error("Failed to save CM JID.", e);
                     getView().showSnackBar(R.string.error_not_saved);
                 });
-        mCompositeSubscription.add(subscription);
+        reusableCompositeSubscription.add(subscription);
     }
 }

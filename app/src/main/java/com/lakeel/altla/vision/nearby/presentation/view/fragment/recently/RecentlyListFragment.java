@@ -1,6 +1,5 @@
 package com.lakeel.altla.vision.nearby.presentation.view.fragment.recently;
 
-import android.content.Intent;
 import android.os.Bundle;
 import android.support.design.widget.Snackbar;
 import android.support.v4.app.Fragment;
@@ -12,14 +11,13 @@ import android.view.ViewGroup;
 import android.widget.RelativeLayout;
 
 import com.lakeel.altla.vision.nearby.R;
-import com.lakeel.altla.vision.nearby.presentation.intent.IntentExtra;
-import com.lakeel.altla.vision.nearby.presentation.intent.RecentlyIntentData;
+import com.lakeel.altla.vision.nearby.presentation.intent.RecentlyBundleData;
 import com.lakeel.altla.vision.nearby.presentation.presenter.recently.RecentlyListPresenter;
 import com.lakeel.altla.vision.nearby.presentation.view.RecentlyListView;
 import com.lakeel.altla.vision.nearby.presentation.view.activity.MainActivity;
-import com.lakeel.altla.vision.nearby.presentation.view.activity.RecentlyUserUserActivity;
 import com.lakeel.altla.vision.nearby.presentation.view.adapter.RecentlyAdapter;
 import com.lakeel.altla.vision.nearby.presentation.view.divider.DividerItemDecoration;
+import com.lakeel.altla.vision.nearby.presentation.view.transaction.FragmentController;
 import com.marshalchen.ultimaterecyclerview.UltimateRecyclerView;
 import com.marshalchen.ultimaterecyclerview.layoutmanagers.ScrollSmoothLineaerLayoutManager;
 import com.marshalchen.ultimaterecyclerview.swipe.SwipeItemManagerInterface;
@@ -101,9 +99,8 @@ public final class RecentlyListFragment extends Fragment implements RecentlyList
     }
 
     @Override
-    public void showRecentlyUserActivity(RecentlyIntentData data) {
-        Intent intent = new Intent(getContext(), RecentlyUserUserActivity.class);
-        intent.putExtra(IntentExtra.RECENTLY.name(), data);
-        getContext().startActivity(intent);
+    public void showRecentlyUserActivity(RecentlyBundleData data) {
+        FragmentController controller = new FragmentController(getActivity().getSupportFragmentManager());
+        controller.showRecentlyFragment(data);
     }
 }

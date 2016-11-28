@@ -90,9 +90,9 @@ public final class RecentlyAdapter extends SwipeableUltimateViewAdapter<Recently
 
         @Override
         public void showItem(RecentlyItemModel model) {
-            String id = model.mId;
-            String userName = model.mName;
-            String imageUri = model.mImageUri;
+            String id = model.userId;
+            String userName = model.name;
+            String imageUri = model.imageUri;
 
             mUserName.setText(userName);
 
@@ -107,7 +107,7 @@ public final class RecentlyAdapter extends SwipeableUltimateViewAdapter<Recently
                 imageLoader.displayImage(imageUri, mImageView);
             }
 
-            DateFormatter dateFormatter = new DateFormatter(model.mPassingTime);
+            DateFormatter dateFormatter = new DateFormatter(model.passingTime);
             mTimestamp.setText(dateFormatter.format());
 
             mLinearLayout.setOnClickListener(view -> mRecentlyItemPresenter.onClick(model));

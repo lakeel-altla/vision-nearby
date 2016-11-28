@@ -153,10 +153,10 @@ public final class ProfileFragment extends Fragment implements ProfileView {
         } else {
             resId = R.string.textView_disconnected;
         }
-        presenceLayout.presenceText.setText(resId);
+        presenceLayout.textViewPresence.setText(resId);
 
         DateFormatter dateFormatter = new DateFormatter(model.mLastOnline);
-        presenceLayout.lastOnlineText.setText(dateFormatter.format());
+        presenceLayout.textViewLastOnline.setText(dateFormatter.format());
     }
 
     @Override
@@ -164,9 +164,9 @@ public final class ProfileFragment extends Fragment implements ProfileView {
         ImageLoader imageLoader = ImageLoader.getInstance();
         imageLoader.displayImage(model.mImageUri, mUserImageView);
 
-        profileLayout.nameText.setText(model.mName);
-        profileLayout.emailText.setAutoLinkMask(Linkify.EMAIL_ADDRESSES);
-        profileLayout.emailText.setText(model.mEmail);
+        profileLayout.textViewName.setText(model.mName);
+        profileLayout.textViewEmail.setAutoLinkMask(Linkify.EMAIL_ADDRESSES);
+        profileLayout.textViewEmail.setText(model.mEmail);
     }
 
     @Override
@@ -192,8 +192,8 @@ public final class ProfileFragment extends Fragment implements ProfileView {
 
     @Override
     public void showLineUrl(String url) {
-        snsLayout.lineUrlText.setAutoLinkMask(Linkify.WEB_URLS);
-        snsLayout.lineUrlText.setText(url);
+        snsLayout.textViewLineUrl.setAutoLinkMask(Linkify.WEB_URLS);
+        snsLayout.textViewLineUrl.setText(url);
     }
 
     @Override

@@ -1,148 +1,140 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-              android:orientation="vertical"
-              android:layout_width="wrap_content"
-              android:layout_height="wrap_content">
+    android:layout_width="wrap_content"
+    android:layout_height="wrap_content"
+    android:orientation="vertical">
 
     <LinearLayout
-            android:orientation="vertical"
+        android:layout_width="match_parent"
+        android:layout_height="30dp"
+        android:gravity="center_vertical"
+        android:orientation="vertical"
+        android:paddingEnd="16dp"
+        android:paddingStart="16dp"
+        android:paddingTop="8dp">
+
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
             android:gravity="center_vertical"
-            android:paddingTop="8dp"
-            android:paddingStart="16dp"
-            android:paddingEnd="16dp"
-            android:layout_width="match_parent"
-            android:layout_height="30dp">
-
-        <TextView
-                android:gravity="center_vertical"
-                android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:text="@string/textView_passing"/>
+            android:text="@string/textView_passing" />
 
     </LinearLayout>
 
     <LinearLayout
-            android:orientation="vertical"
-            android:gravity="center"
-            android:paddingStart="16dp"
-            android:paddingEnd="16dp"
+        android:layout_width="match_parent"
+        android:layout_height="72dp"
+        android:gravity="center"
+        android:orientation="vertical"
+        android:paddingEnd="16dp"
+        android:paddingStart="16dp">
+
+        <TextView
             android:layout_width="match_parent"
-            android:layout_height="72dp">
+            android:layout_height="wrap_content"
+            android:paddingBottom="4dp"
+            android:text="@string/textView_date"
+            android:textAppearance="?android:attr/textAppearanceMedium" />
 
         <TextView
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:paddingBottom="4dp"
-                android:textAppearance="?android:attr/textAppearanceMedium"
-                android:text="@string/textView_date"/>
-
-        <TextView
-                android:id="@+id/dateText"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"/>
+            android:id="@+id/dateText"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content" />
 
     </LinearLayout>
 
     <LinearLayout
-            android:orientation="vertical"
-            android:gravity="center"
-            android:paddingStart="16dp"
-            android:paddingEnd="16dp"
+        android:layout_width="match_parent"
+        android:layout_height="72dp"
+        android:gravity="center"
+        android:orientation="vertical"
+        android:paddingEnd="16dp"
+        android:paddingStart="16dp">
+
+        <TextView
             android:layout_width="match_parent"
-            android:layout_height="72dp">
+            android:layout_height="wrap_content"
+            android:paddingBottom="4dp"
+            android:text="@string/textView_weather"
+            android:textAppearance="?android:attr/textAppearanceMedium" />
 
         <TextView
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:paddingBottom="4dp"
-                android:textAppearance="?android:attr/textAppearanceMedium"
-                android:text="@string/textView_weather"/>
-
-        <TextView
-                android:id="@+id/weatherText"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"/>
+            android:id="@+id/weatherText"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content" />
 
     </LinearLayout>
 
     <LinearLayout
-            android:orientation="vertical"
-            android:gravity="center"
-            android:paddingStart="16dp"
-            android:paddingEnd="16dp"
+        android:layout_width="match_parent"
+        android:layout_height="72dp"
+        android:gravity="center"
+        android:orientation="vertical"
+        android:paddingEnd="16dp"
+        android:paddingStart="16dp">
+
+        <TextView
             android:layout_width="match_parent"
-            android:layout_height="72dp">
+            android:layout_height="wrap_content"
+            android:paddingBottom="4dp"
+            android:text="@string/textView_detected_activity"
+            android:textAppearance="?android:attr/textAppearanceMedium" />
 
         <TextView
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:paddingBottom="4dp"
-                android:textAppearance="?android:attr/textAppearanceMedium"
-                android:text="@string/textView_detected_activity"/>
-
-        <TextView
-                android:id="@+id/detectedActivityText"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"/>
+            android:id="@+id/detectedActivityText"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content" />
 
     </LinearLayout>
 
     <LinearLayout
-            android:orientation="vertical"
-            android:gravity="center"
-            android:paddingStart="16dp"
-            android:paddingEnd="16dp"
+        android:layout_width="match_parent"
+        android:layout_height="72dp"
+        android:gravity="center"
+        android:orientation="vertical"
+        android:paddingEnd="16dp"
+        android:paddingStart="16dp">
+
+        <TextView
             android:layout_width="match_parent"
-            android:layout_height="72dp">
+            android:layout_height="wrap_content"
+            android:paddingBottom="4dp"
+            android:text="@string/textView_number_of_times"
+            android:textAppearance="?android:attr/textAppearanceMedium" />
 
         <TextView
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:paddingBottom="4dp"
-                android:textAppearance="?android:attr/textAppearanceMedium"
-                android:text="@string/textView_number_of_times"/>
-
-        <TextView
-                android:id="@+id/timesText"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"/>
+            android:id="@+id/timesText"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content" />
 
     </LinearLayout>
 
     <!--location-->
-    <LinearLayout
-            xmlns:tools="http://schemas.android.com/tools"
-            android:paddingStart="16dp"
-            android:paddingEnd="16dp"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content">
+    <LinearLayout xmlns:tools="http://schemas.android.com/tools"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:paddingEnd="16dp"
+        android:paddingStart="16dp">
 
         <LinearLayout
-                android:id="@+id/locationLayout"
-                android:orientation="vertical"
+            android:id="@+id/locationLayout"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:orientation="vertical">
+
+            <TextView
                 android:layout_width="match_parent"
-                android:layout_height="match_parent">
-
-            <TextView
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:paddingBottom="4dp"
-                    android:text="@string/textView_location"
-                    android:textAppearance="?android:attr/textAppearanceMedium"/>
-
-            <TextView
-                    android:id="@+id/locationText"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:text="@string/textView_unknown"
-                    android:paddingBottom="8dp"/>
+                android:layout_height="wrap_content"
+                android:paddingBottom="8dp"
+                android:text="@string/textView_location"
+                android:textAppearance="?android:attr/textAppearanceMedium" />
 
             <fragment
-                    android:id="@+id/locationMap"
-                    android:layout_width="match_parent"
-                    android:layout_height="200dp"
-                    tools:context="com.example.google_maps.MapsActivity"
-                    android:name="com.google.android.gms.maps.SupportMapFragment"/>
+                android:id="@+id/locationMap"
+                android:name="com.google.android.gms.maps.SupportMapFragment"
+                android:layout_width="match_parent"
+                android:layout_height="200dp"
+                tools:context="com.example.google_maps.MapsActivity" />
 
         </LinearLayout>
 

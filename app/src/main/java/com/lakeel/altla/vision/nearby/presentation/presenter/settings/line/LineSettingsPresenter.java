@@ -41,7 +41,7 @@ public final class LineSettingsPresenter extends BasePresenter<LineSettingsView>
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribe(url -> getView().showLINEUrl(url),
                         e -> LOGGER.error("Failed to find LINE url.", e));
-        mCompositeSubscription.add(subscription);
+        reusableCompositeSubscription.add(subscription);
     }
 
     public void onSaveLineUrl(String url) {
@@ -58,6 +58,6 @@ public final class LineSettingsPresenter extends BasePresenter<LineSettingsView>
                             getView().showSnackBar(R.string.error_not_added);
                         });
 
-        mCompositeSubscription.add(subscription);
+        reusableCompositeSubscription.add(subscription);
     }
 }

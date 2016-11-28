@@ -58,7 +58,7 @@ public final class FavoritesListPresenter extends BasePresenter<FavoriteListView
                 }, e -> {
                     getView().showSnackBar(R.string.error_process);
                 });
-        mCompositeSubscription.add(subscription);
+        reusableCompositeSubscription.add(subscription);
     }
 
     public void onCreateItemView(FavoriteItemView favoriteItemView) {
@@ -100,7 +100,7 @@ public final class FavoritesListPresenter extends BasePresenter<FavoriteListView
 
                                 getView().showSnackBar(R.string.message_removed);
                             });
-            mCompositeSubscription.add(subscription);
+            reusableCompositeSubscription.add(subscription);
         }
     }
 }

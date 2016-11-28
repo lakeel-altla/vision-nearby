@@ -76,7 +76,7 @@ public final class ProfilePresenter extends BasePresenter<ProfileView> {
                 .subscribe(model -> getView().showPresence(model),
                         e -> LOGGER.error("Failed to find presence.", e));
 
-        mCompositeSubscription.add(presenceSubscription);
+        reusableCompositeSubscription.add(presenceSubscription);
 
         Subscription itemSubscription = mFindItemUseCase.
                 execute(mUserId)
@@ -86,7 +86,7 @@ public final class ProfilePresenter extends BasePresenter<ProfileView> {
                 .subscribe(model -> getView().showProfile(model),
                         e -> LOGGER.error("Failed to find item.", e));
 
-        mCompositeSubscription.add(itemSubscription);
+        reusableCompositeSubscription.add(itemSubscription);
 
         Subscription configsSubscription = mFindConfigsUseCase
                 .execute()
@@ -108,7 +108,7 @@ public final class ProfilePresenter extends BasePresenter<ProfileView> {
                     getView().initializeOptionMenu();
                 }, e -> LOGGER.error("Failed to find config settings.", e));
 
-        mCompositeSubscription.add(configsSubscription);
+        reusableCompositeSubscription.add(configsSubscription);
     }
 
     public void setUserData(String userId, String userName) {
@@ -140,7 +140,7 @@ public final class ProfilePresenter extends BasePresenter<ProfileView> {
                 }, e -> {
                     LOGGER.error("Failed to find user beacons.", e);
                 });
-        mCompositeSubscription.add(subscription);
+        reusableCompositeSubscription.add(subscription);
     }
 
     public void onCmMenuClicked() {
@@ -154,7 +154,7 @@ public final class ProfilePresenter extends BasePresenter<ProfileView> {
                             getView().showSnackBar(R.string.error_not_added);
                         });
 
-        mCompositeSubscription.add(subscription);
+        reusableCompositeSubscription.add(subscription);
     }
 
 }

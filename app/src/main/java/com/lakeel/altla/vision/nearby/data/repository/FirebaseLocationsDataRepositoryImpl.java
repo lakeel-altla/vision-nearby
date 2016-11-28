@@ -17,7 +17,7 @@ import rx.Single;
 
 public class FirebaseLocationsDataRepositoryImpl implements FirebaseLocationsDataRepository {
 
-    private static final String KEY_ID = "id";
+    private static final String KEY_ID = "userId";
 
     private DatabaseReference mReference;
 

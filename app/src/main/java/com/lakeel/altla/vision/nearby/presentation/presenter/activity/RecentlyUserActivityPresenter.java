@@ -13,7 +13,7 @@ import com.lakeel.altla.vision.nearby.domain.usecase.FindTimesUseCase;
 import com.lakeel.altla.vision.nearby.domain.usecase.SaveFavoriteUseCase;
 import com.lakeel.altla.vision.nearby.domain.usecase.SaveLocationTextUseCase;
 import com.lakeel.altla.vision.nearby.domain.usecase.SaveUserToCmFavoritesUseCase;
-import com.lakeel.altla.vision.nearby.presentation.intent.RecentlyIntentData;
+import com.lakeel.altla.vision.nearby.presentation.intent.RecentlyBundleData;
 import com.lakeel.altla.vision.nearby.presentation.presenter.BasePresenter;
 import com.lakeel.altla.vision.nearby.presentation.presenter.mapper.ItemModelMapper;
 import com.lakeel.altla.vision.nearby.presentation.presenter.mapper.LocationTextMapper;
@@ -89,12 +89,12 @@ public final class RecentlyUserActivityPresenter extends BasePresenter<RecentlyU
     RecentlyUserActivityPresenter() {
     }
 
-    public void setData(RecentlyIntentData data) {
-        recentlyKey = data.key;
-        itemId = data.id;
+    public void setData(RecentlyBundleData data) {
+//        recentlyKey = data.recentlyKey;
+        itemId = data.userId;
         latitude = data.latitude;
         longitude = data.longitude;
-        locationText = data.locationText;
+//        locationText = data.locationText;
     }
 
     @Override
@@ -107,7 +107,7 @@ public final class RecentlyUserActivityPresenter extends BasePresenter<RecentlyU
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribe(model -> getView().showPresence(model),
                         e -> LOGGER.error("Failed to find presence.", e));
-        mCompositeSubscription.add(subscription1);
+        reusableCompositeSubscription.add(subscription1);
 
         // Show number of times of passing.
         Subscription subscription2 = findTimesUseCase
@@ -116,7 +116,7 @@ public final class RecentlyUserActivityPresenter extends BasePresenter<RecentlyU
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribe(times -> getView().showTimes(times),
                         e -> LOGGER.error("Failed to find times", e));
-        mCompositeSubscription.add(subscription2);
+        reusableCompositeSubscription.add(subscription2);
 
         // Show profile.
         Subscription subscription3 = findItemUseCase.
@@ -128,7 +128,7 @@ public final class RecentlyUserActivityPresenter extends BasePresenter<RecentlyU
                     getView().showTitle(model.mName);
                     getView().showProfile(model);
                 }, e -> LOGGER.error("Failed to find item.", e));
-        mCompositeSubscription.add(subscription3);
+        reusableCompositeSubscription.add(subscription3);
 
         // Show location text.
         if (StringUtils.isEmpty(locationText)) {
@@ -154,7 +154,7 @@ public final class RecentlyUserActivityPresenter extends BasePresenter<RecentlyU
                                 }
                             },
                             e -> LOGGER.error("Failed fetch location.", e));
-            mCompositeSubscription.add(subscription4);
+            reusableCompositeSubscription.add(subscription4);
         } else {
             getView().showLocationText(locationText);
         }
@@ -171,7 +171,7 @@ public final class RecentlyUserActivityPresenter extends BasePresenter<RecentlyU
                 }, e -> {
                     LOGGER.error("Failed to find favorite user", e);
                 });
-        mCompositeSubscription.add(subscription5);
+        reusableCompositeSubscription.add(subscription5);
 
         Subscription subscription6 = findConfigsUseCase
                 .execute()
@@ -192,7 +192,7 @@ public final class RecentlyUserActivityPresenter extends BasePresenter<RecentlyU
                     getView().showLineUrl(lineUrl);
                     getView().initializeOptionMenu();
                 }, e -> LOGGER.error("Failed to find config settings.", e));
-        mCompositeSubscription.add(subscription6);
+        reusableCompositeSubscription.add(subscription6);
     }
 
     public boolean isCmLinkEnabled() {
@@ -220,7 +220,7 @@ public final class RecentlyUserActivityPresenter extends BasePresenter<RecentlyU
                             LOGGER.error("Failed to add favorites.", e);
                             getView().showSnackBar(R.string.error_not_added);
                         });
-        mCompositeSubscription.add(subscription);
+        reusableCompositeSubscription.add(subscription);
     }
 
     public void onShare() {
@@ -237,6 +237,6 @@ public final class RecentlyUserActivityPresenter extends BasePresenter<RecentlyU
                             LOGGER.error("Failed to add to CM favorites.", e);
                             getView().showSnackBar(R.string.error_not_added);
                         });
-        mCompositeSubscription.add(subscription);
+        reusableCompositeSubscription.add(subscription);
     }
 }

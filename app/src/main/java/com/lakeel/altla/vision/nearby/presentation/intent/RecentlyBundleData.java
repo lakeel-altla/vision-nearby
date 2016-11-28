@@ -2,19 +2,17 @@ package com.lakeel.altla.vision.nearby.presentation.intent;
 
 import java.io.Serializable;
 
-public final class RecentlyIntentData implements Serializable {
+public final class RecentlyBundleData implements Serializable {
 
-    public String key;
+    public String userId;
 
-    public String id;
+    public String userName;
 
     public String latitude;
 
     public String longitude;
 
-    public String locationText;
-
-    public int detectedUserActivity;
+    public int detectedActivity;
 
     public Weather weather;
 

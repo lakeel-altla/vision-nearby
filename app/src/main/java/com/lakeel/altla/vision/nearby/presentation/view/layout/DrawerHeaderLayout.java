@@ -10,12 +10,12 @@ import butterknife.BindView;
 public class DrawerHeaderLayout {
 
     @BindView(R.id.imageView_header_profile)
-    public ImageView mProfile;
+    public ImageView userImageView;
 
     @BindView(R.id.textView_header_userName)
-    public TextView mUserName;
+    public TextView textViewUserName;
 
     @BindView(R.id.textView_header_user_address)
-    public TextView mUserAddress;
+    public TextView textViewEmail;
 }
 

@@ -1,15 +1,15 @@
 package com.lakeel.altla.vision.nearby.presentation.presenter.recently;
 
+import android.support.annotation.IntRange;
+
 import com.lakeel.altla.vision.nearby.R;
-import com.lakeel.altla.vision.nearby.core.StringUtils;
 import com.lakeel.altla.vision.nearby.domain.usecase.FindFavoriteUseCase;
 import com.lakeel.altla.vision.nearby.domain.usecase.FindItemUseCase;
 import com.lakeel.altla.vision.nearby.domain.usecase.FindRecentlyUseCase;
 import com.lakeel.altla.vision.nearby.domain.usecase.SaveFavoriteUseCase;
-import com.lakeel.altla.vision.nearby.presentation.intent.RecentlyIntentData;
+import com.lakeel.altla.vision.nearby.presentation.intent.RecentlyBundleData;
 import com.lakeel.altla.vision.nearby.presentation.presenter.BaseItemPresenter;
 import com.lakeel.altla.vision.nearby.presentation.presenter.BasePresenter;
-import com.lakeel.altla.vision.nearby.presentation.presenter.mapper.RecentlyItemModelMapper;
 import com.lakeel.altla.vision.nearby.presentation.presenter.model.LocationModel;
 import com.lakeel.altla.vision.nearby.presentation.presenter.model.RecentlyItemModel;
 import com.lakeel.altla.vision.nearby.presentation.view.RecentlyItemView;
@@ -18,12 +18,9 @@ import com.lakeel.altla.vision.nearby.presentation.view.RecentlyListView;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import android.support.annotation.IntRange;
-
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
-import java.util.Locale;
 
 import javax.inject.Inject;
 
@@ -46,8 +43,6 @@ public final class RecentlyListPresenter extends BasePresenter<RecentlyListView>
     SaveFavoriteUseCase mSaveFavoriteUseCase;
 
     private static final Logger LOGGER = LoggerFactory.getLogger(RecentlyListPresenter.class);
-
-    private RecentlyItemModelMapper mRecentlyItemModelMapper = new RecentlyItemModelMapper();
 
     private final List<RecentlyItemModel> mRecentlyItemModels = new ArrayList<>();
 
@@ -77,7 +72,7 @@ public final class RecentlyListPresenter extends BasePresenter<RecentlyListView>
                     LOGGER.error("Failed to find recent nearby items", e);
                     getView().showSnackBar(R.string.error_process);
                 });
-        mCompositeSubscription.add(subscription);
+        reusableCompositeSubscription.add(subscription);
     }
 
     public void onCreateItemView(RecentlyItemView recentlyItemView) {
@@ -94,38 +89,29 @@ public final class RecentlyListPresenter extends BasePresenter<RecentlyListView>
         }
 
         public void onClick(RecentlyItemModel model) {
-            RecentlyIntentData data = new RecentlyIntentData();
-            data.id = model.mId;
-            data.key = model.mKey;
+            RecentlyBundleData data = new RecentlyBundleData();
+            data.userId = model.userId;
+            data.userName = model.name;
 
-            LocationModel locationModel = model.mLocationModel;
+            LocationModel locationModel = model.locationModel;
             if (locationModel != null) {
                 data.latitude = locationModel.mLatitude;
                 data.longitude = locationModel.mLongitude;
-
-                LocationModel.LocationTextModel locationTextModel = locationModel.mLocationTextModel;
-                if (locationTextModel != null) {
-                    String language = Locale.getDefault().getLanguage();
-                    String locationText = locationTextModel.mTextMap.get(language);
-                    if (!StringUtils.isEmpty(locationText)) {
-                        data.locationText = locationText;
-                    }
-                }
             }
 
-            if (model.mUserActivity != null) {
-                data.detectedUserActivity = model.mUserActivity;
+            if (model.detectedActivity != null) {
+                data.detectedActivity = model.detectedActivity;
             }
 
-            if (model.mWeather != null) {
-                RecentlyIntentData.Weather weather = new RecentlyIntentData.Weather();
-                weather.conditions = model.mWeather.mConditions;
-                weather.humidity = model.mWeather.humidity;
-                weather.temperature = model.mWeather.temparature;
+            if (model.weather != null) {
+                RecentlyBundleData.Weather weather = new RecentlyBundleData.Weather();
+                weather.conditions = model.weather.conditions;
+                weather.humidity = model.weather.humidity;
+                weather.temperature = model.weather.temperature;
                 data.weather = weather;
             }
 
-            data.timestamp = model.mPassingTime;
+            data.timestamp = model.passingTime;
 
             getView().showRecentlyUserActivity(data);
         }
@@ -142,7 +128,8 @@ public final class RecentlyListPresenter extends BasePresenter<RecentlyListView>
                         LOGGER.error("Failed to add favorite", e);
                         getView().showSnackBar(R.string.error_not_added);
                     });
-            mCompositeSubscription.add(subscription);
+
+            reusableCompositeSubscription.add(subscription);
         }
     }
 }

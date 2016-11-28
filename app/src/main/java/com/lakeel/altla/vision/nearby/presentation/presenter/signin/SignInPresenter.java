@@ -65,7 +65,7 @@ public final class SignInPresenter extends BasePresenter<SignInView> {
                     onSignOut();
                 }, () -> getView().onSignedIn());
 
-        mCompositeSubscription.add(subscription);
+        reusableCompositeSubscription.add(subscription);
     }
 
     private void onSignOut() {
@@ -76,6 +76,6 @@ public final class SignInPresenter extends BasePresenter<SignInView> {
                         () -> {
                         });
 
-        mCompositeSubscription.add(subscription);
+        reusableCompositeSubscription.add(subscription);
     }
 }

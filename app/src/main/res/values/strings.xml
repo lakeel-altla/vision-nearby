@@ -70,8 +70,8 @@
     <string name="message_advertise_disable">This device can not support bluetooth advertising.
     </string>
     <string name="message_not_found">Not found.</string>
-    <string name="message_temperature">%1$s℃</string>
-    <string name="message_humidity">%1$s%%</string>
+    <string name="message_temperature_format">%1$s℃</string>
+    <string name="message_humidity_format">%1$s%%</string>
     <string name="message_line_user_found">LINE user is found.</string>
     <string name="message_user_using_line">%1$s uses LINE App.</string>
     <string name="message_user_found">User found.</string>

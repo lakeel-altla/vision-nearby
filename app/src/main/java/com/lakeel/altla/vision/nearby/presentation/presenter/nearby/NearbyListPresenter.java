@@ -72,7 +72,7 @@ public final class NearbyListPresenter extends BasePresenter<NearbyListView> imp
                         getView().updateItems();
                     }, e -> LOGGER.error("Failed to find nearby item.", e));
 
-            mCompositeSubscription.add(subscription);
+            reusableCompositeSubscription.add(subscription);
         }
     }
 
@@ -132,7 +132,7 @@ public final class NearbyListPresenter extends BasePresenter<NearbyListView> imp
                 .subscribe(bool -> mCmLinkEnabled = bool,
                         e -> LOGGER.error("Failed to find config settings.", e));
 
-        mCompositeSubscription.add(subscription);
+        reusableCompositeSubscription.add(subscription);
     }
 
     @Override
@@ -208,7 +208,7 @@ public final class NearbyListPresenter extends BasePresenter<NearbyListView> imp
                     getView().showSnackBar(R.string.error_not_added);
                 });
 
-        mCompositeSubscription.add(subscription);
+        reusableCompositeSubscription.add(subscription);
     }
 
     public void onSubscribe() {
@@ -228,7 +228,7 @@ public final class NearbyListPresenter extends BasePresenter<NearbyListView> imp
                 getView().showSnackBar(R.string.message_not_found);
             }
 
-            mCompositeSubscription.unsubscribe();
+            reusableCompositeSubscription.unsubscribe();
         }, 10, TimeUnit.SECONDS);
     }
 

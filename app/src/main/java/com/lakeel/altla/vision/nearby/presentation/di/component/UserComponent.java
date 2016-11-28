@@ -11,6 +11,7 @@ import com.lakeel.altla.vision.nearby.presentation.view.fragment.estimation.Devi
 import com.lakeel.altla.vision.nearby.presentation.view.fragment.favorites.FavoritesListFragment;
 import com.lakeel.altla.vision.nearby.presentation.view.fragment.nearby.NearbyListListFragment;
 import com.lakeel.altla.vision.nearby.presentation.view.fragment.profile.ProfileFragment;
+import com.lakeel.altla.vision.nearby.presentation.view.fragment.recently.RecentlyFragment;
 import com.lakeel.altla.vision.nearby.presentation.view.fragment.recently.RecentlyListFragment;
 import com.lakeel.altla.vision.nearby.presentation.view.fragment.search.SearchFragment;
 import com.lakeel.altla.vision.nearby.presentation.view.fragment.settings.SettingsFragment;
@@ -38,6 +39,8 @@ public interface UserComponent {
     void inject(NearbyListListFragment fragment);
 
     void inject(RecentlyListFragment fragment);
+
+    void inject(RecentlyFragment fragment);
 
     void inject(SettingsFragment fragment);
 

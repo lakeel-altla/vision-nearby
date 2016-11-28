@@ -7,19 +7,19 @@ import rx.subscriptions.CompositeSubscription;
 
 public final class ReusableCompositeSubscription {
 
-    CompositeSubscription mCompositeSubscription;
+    private CompositeSubscription compositeSubscription;
 
     public void add(@NonNull Subscription subscription) {
-        if (mCompositeSubscription == null) {
-            mCompositeSubscription = new CompositeSubscription();
+        if (compositeSubscription == null) {
+            compositeSubscription = new CompositeSubscription();
         }
-        mCompositeSubscription.add(subscription);
+        compositeSubscription.add(subscription);
     }
 
     public void unsubscribe() {
-        if (mCompositeSubscription != null) {
-            mCompositeSubscription.unsubscribe();
-            mCompositeSubscription = null;
+        if (compositeSubscription != null) {
+            compositeSubscription.unsubscribe();
+            compositeSubscription = null;
         }
     }
 }

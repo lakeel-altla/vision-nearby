@@ -186,7 +186,7 @@ public class MainActivity extends AppCompatActivity
             }
             case R.id.nav_recently: {
                 FragmentController controller = new FragmentController(getSupportFragmentManager());
-                controller.showRecentlyFragment();
+                controller.showRecentlyListFragment();
                 break;
             }
             case R.id.nav_nearby: {
@@ -236,10 +236,10 @@ public class MainActivity extends AppCompatActivity
     @Override
     public void showProfile(String displayName, String email, String imageUri) {
         ImageLoader imageLoader = ImageLoader.getInstance();
-        imageLoader.displayImage(imageUri, mDrawerHeaderLayout.mProfile);
+        imageLoader.displayImage(imageUri, mDrawerHeaderLayout.userImageView);
 
-        mDrawerHeaderLayout.mUserName.setText(displayName);
-        mDrawerHeaderLayout.mUserAddress.setText(email);
+        mDrawerHeaderLayout.textViewUserName.setText(displayName);
+        mDrawerHeaderLayout.textViewEmail.setText(email);
     }
 
     @Override

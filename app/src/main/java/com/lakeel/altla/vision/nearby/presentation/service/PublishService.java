@@ -31,7 +31,7 @@ public final class PublishService extends Service {
             LOGGER.debug("namespaceId=" + namespaceId + " instanceId=" + instanceId);
 
             if (StringUtils.isEmpty(namespaceId) || StringUtils.isEmpty(instanceId)) {
-                LOGGER.error("Stop publish service because namespace id or instance id were empty");
+                LOGGER.error("Stop publish service because namespace userId or instance userId were empty");
                 stopSelf();
             } else {
                 BeaconParser beaconParser = new BeaconParser()

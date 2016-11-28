@@ -1,7 +1,6 @@
 package com.lakeel.altla.vision.nearby.presentation.view;
 
-import com.lakeel.altla.vision.nearby.presentation.intent.RecentlyIntentData;
-import com.lakeel.altla.vision.nearby.presentation.presenter.model.RecentlyItemModel;
+import com.lakeel.altla.vision.nearby.presentation.intent.RecentlyBundleData;
 
 import android.support.annotation.StringRes;
 
@@ -11,5 +10,5 @@ public interface RecentlyListView extends BaseView {
 
     void showSnackBar(@StringRes int resId);
 
-    void showRecentlyUserActivity(RecentlyIntentData data);
+    void showRecentlyUserActivity(RecentlyBundleData data);
 }

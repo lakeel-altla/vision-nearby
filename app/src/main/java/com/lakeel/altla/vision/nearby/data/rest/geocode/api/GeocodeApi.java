@@ -11,5 +11,5 @@ public interface GeocodeApi {
 
     @Headers({"Content-Type: application/json"})
     @GET("json")
-    Single<Geocode> find(@Query("key") String apiKey, @Query("language") String language, @Query("latlng") String latlng);
+    Single<Geocode> find(@Query("recentlyKey") String apiKey, @Query("language") String language, @Query("latlng") String latlng);
 }

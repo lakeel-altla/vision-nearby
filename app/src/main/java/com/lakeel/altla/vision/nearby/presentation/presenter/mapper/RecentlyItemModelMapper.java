@@ -1,5 +1,7 @@
 package com.lakeel.altla.vision.nearby.presentation.presenter.mapper;
 
+import android.support.annotation.NonNull;
+
 import com.lakeel.altla.vision.nearby.data.entity.ItemsEntity;
 import com.lakeel.altla.vision.nearby.data.entity.RecentlyEntity;
 import com.lakeel.altla.vision.nearby.data.entity.RecentlyEntity.LocationEntity;
@@ -7,8 +9,6 @@ import com.lakeel.altla.vision.nearby.presentation.presenter.model.LocationModel
 import com.lakeel.altla.vision.nearby.presentation.presenter.model.LocationModel.LocationTextModel;
 import com.lakeel.altla.vision.nearby.presentation.presenter.model.RecentlyItemModel;
 import com.lakeel.altla.vision.nearby.presentation.presenter.model.RecentlyItemModel.Weather;
-
-import android.support.annotation.NonNull;
 
 import java.util.List;
 import java.util.Map;
@@ -19,12 +19,11 @@ public final class RecentlyItemModelMapper {
     public RecentlyItemModel map(@NonNull ItemsEntity itemsEntity, @NonNull RecentlyEntity recentlyEntity) {
         RecentlyItemModel model = new RecentlyItemModel();
 
-        model.mKey = recentlyEntity.key;
-        model.mId = recentlyEntity.id;
-        model.mName = itemsEntity.name;
-        model.mImageUri = itemsEntity.imageUri;
-        model.mUserActivity = recentlyEntity.userActivity;
-        model.mPassingTime = recentlyEntity.passingTime;
+        model.userId = recentlyEntity.id;
+        model.name = itemsEntity.name;
+        model.imageUri = itemsEntity.imageUri;
+        model.detectedActivity = recentlyEntity.userActivity;
+        model.passingTime = recentlyEntity.passingTime;
 
         LocationEntity locationEntity = recentlyEntity.location;
         if (locationEntity != null) {
@@ -39,7 +38,7 @@ public final class RecentlyItemModelMapper {
                 locationModel.mLocationTextModel = locationTextModel;
             }
 
-            model.mLocationModel = locationModel;
+            model.locationModel = locationModel;
         }
 
         if (recentlyEntity.weather != null) {
@@ -49,10 +48,10 @@ public final class RecentlyItemModelMapper {
                 conditionArray[count] = conditionList.get(count);
             }
             Weather weather = new Weather();
-            weather.mConditions = conditionArray;
+            weather.conditions = conditionArray;
             weather.humidity = recentlyEntity.weather.humidity;
-            weather.temparature = recentlyEntity.weather.temperature;
-            model.mWeather = weather;
+            weather.temperature = recentlyEntity.weather.temperature;
+            model.weather = weather;
         }
 
         return model;

@@ -5,7 +5,6 @@ import com.lakeel.altla.vision.nearby.domain.repository.FirebaseRecentlyReposito
 import javax.inject.Inject;
 
 import rx.Single;
-import rx.schedulers.Schedulers;
 
 public final class FindTimesUseCase {
 

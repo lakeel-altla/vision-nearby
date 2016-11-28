@@ -49,7 +49,7 @@ public final class SearchPresenter extends BasePresenter<SearchView> {
                     mItemModels.add(model);
                     LOGGER.debug("Searched user is " + model.mName);
                 }, e -> LOGGER.error("Failed to search.", e));
-        mCompositeSubscription.add(subscription);
+        reusableCompositeSubscription.add(subscription);
     }
 
     public int getItemCount() {
