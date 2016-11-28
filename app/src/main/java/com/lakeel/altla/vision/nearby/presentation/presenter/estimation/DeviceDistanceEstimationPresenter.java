@@ -1,5 +1,9 @@
 package com.lakeel.altla.vision.nearby.presentation.presenter.estimation;
 
+import android.app.Activity;
+import android.os.Bundle;
+import android.support.annotation.Nullable;
+
 import com.google.android.gms.common.api.GoogleApiClient;
 import com.google.android.gms.common.api.Status;
 import com.google.android.gms.nearby.Nearby;
@@ -8,7 +12,6 @@ import com.google.android.gms.nearby.messages.Message;
 import com.google.android.gms.nearby.messages.MessageFilter;
 import com.google.android.gms.nearby.messages.MessageListener;
 import com.google.android.gms.nearby.messages.SubscribeOptions;
-
 import com.lakeel.altla.library.EddystoneUID;
 import com.lakeel.altla.library.ResolutionResultCallback;
 import com.lakeel.altla.vision.nearby.domain.usecase.FindUserBeaconsUseCase;
@@ -16,10 +19,6 @@ import com.lakeel.altla.vision.nearby.presentation.presenter.BasePresenter;
 import com.lakeel.altla.vision.nearby.presentation.subscriber.ForegroundSubscriber;
 import com.lakeel.altla.vision.nearby.presentation.subscriber.Subscriber;
 import com.lakeel.altla.vision.nearby.presentation.view.DeviceDistanceEstimationView;
-
-import android.app.Activity;
-import android.os.Bundle;
-import android.support.annotation.Nullable;
 
 import java.util.List;
 import java.util.Locale;
@@ -38,7 +37,7 @@ public final class DeviceDistanceEstimationPresenter extends BasePresenter<Devic
     private ResolutionResultCallback mResultCallback = new ResolutionResultCallback() {
         @Override
         protected void onResolution(Status status) {
-            // TODO: Handle resolution
+            getView().showResolutionSystemDialog(status);
         }
     };
 
