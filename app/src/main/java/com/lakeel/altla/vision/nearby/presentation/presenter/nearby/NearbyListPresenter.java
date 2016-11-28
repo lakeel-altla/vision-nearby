@@ -203,7 +203,7 @@ public final class NearbyListPresenter extends BasePresenter<NearbyListView> imp
                     getView().updateItems();
                     getView().showSnackBar(R.string.message_added);
                 }, e -> {
-                    LOGGER.error("Failed to add nearby items to CM.", e);
+                    LOGGER.error("Failed to add nearby users to COMPANY Messenger.", e);
                     getView().showSnackBar(R.string.error_not_added);
                 });
 
