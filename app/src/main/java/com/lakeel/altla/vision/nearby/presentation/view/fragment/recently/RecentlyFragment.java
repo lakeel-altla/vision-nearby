@@ -72,7 +72,6 @@ public final class RecentlyFragment extends Fragment implements RecentlyView {
         RecentlyAdapter adapter = new RecentlyAdapter(mPresenter);
         adapter.setMode(SwipeItemManagerInterface.Mode.Single);
 
-        // 縦方向のレイアウト。
         mUltimateRecyclerView.addItemDecoration(new DividerItemDecoration(getContext()));
         mUltimateRecyclerView.setAdapter(adapter);
     }
