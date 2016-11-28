@@ -1,18 +1,5 @@
 package com.lakeel.altla.vision.nearby.presentation.view.fragment.estimation;
 
-import com.google.android.gms.common.api.Status;
-
-import com.lakeel.altla.vision.nearby.R;
-import com.lakeel.altla.vision.nearby.presentation.constants.BundleKey;
-import com.lakeel.altla.vision.nearby.presentation.firebase.MyUser;
-import com.lakeel.altla.vision.nearby.presentation.presenter.estimation.DeviceDistanceEstimationPresenter;
-import com.lakeel.altla.vision.nearby.presentation.view.DeviceDistanceEstimationView;
-import com.lakeel.altla.vision.nearby.presentation.view.activity.MainActivity;
-import com.nostra13.universalimageloader.core.ImageLoader;
-
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-
 import android.content.Intent;
 import android.content.IntentSender;
 import android.os.Bundle;
@@ -26,6 +13,18 @@ import android.view.animation.Animation;
 import android.view.animation.ScaleAnimation;
 import android.widget.ImageView;
 import android.widget.TextView;
+
+import com.google.android.gms.common.api.Status;
+import com.lakeel.altla.vision.nearby.R;
+import com.lakeel.altla.vision.nearby.presentation.constants.BundleKey;
+import com.lakeel.altla.vision.nearby.presentation.firebase.MyUser;
+import com.lakeel.altla.vision.nearby.presentation.presenter.estimation.DeviceDistanceEstimationPresenter;
+import com.lakeel.altla.vision.nearby.presentation.view.DeviceDistanceEstimationView;
+import com.lakeel.altla.vision.nearby.presentation.view.activity.MainActivity;
+import com.nostra13.universalimageloader.core.ImageLoader;
+
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.util.ArrayList;
 import java.util.List;
