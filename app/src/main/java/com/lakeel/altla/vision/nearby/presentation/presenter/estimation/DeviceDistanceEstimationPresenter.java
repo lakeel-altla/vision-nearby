@@ -28,20 +28,21 @@ import javax.inject.Inject;
 public final class DeviceDistanceEstimationPresenter extends BasePresenter<DeviceDistanceEstimationView> implements GoogleApiClient.ConnectionCallbacks {
 
     @Inject
-    FindUserBeaconsUseCase mFindUserBeaconsUseCase;
+    FindUserBeaconsUseCase findUserBeaconsUseCase;
 
-    private final GoogleApiClient mGoogleApiClient;
+    private final GoogleApiClient googleApiClient;
 
-    private Subscriber mSubscriber;
+    private Subscriber subscriber;
 
-    private ResolutionResultCallback mResultCallback = new ResolutionResultCallback() {
+    private ResolutionResultCallback resultCallback = new ResolutionResultCallback() {
         @Override
         protected void onResolution(Status status) {
             getView().showResolutionSystemDialog(status);
         }
     };
 
-    private MessageListener mMessageListener = new MessageListener() {
+    private MessageListener messageListener = new MessageListener() {
+
         @Override
         public void onFound(Message message) {
             super.onFound(message);
@@ -57,29 +58,29 @@ public final class DeviceDistanceEstimationPresenter extends BasePresenter<Devic
 
     @Inject
     DeviceDistanceEstimationPresenter(Activity activity) {
-        mGoogleApiClient = new GoogleApiClient.Builder(activity)
+        googleApiClient = new GoogleApiClient.Builder(activity)
                 .addApi(Nearby.MESSAGES_API)
                 .build();
     }
 
     @Override
     public void onResume() {
-        mGoogleApiClient.registerConnectionCallbacks(this);
-        mGoogleApiClient.connect();
+        googleApiClient.registerConnectionCallbacks(this);
+        googleApiClient.connect();
     }
 
     @Override
     public void onPause() {
-        mGoogleApiClient.unregisterConnectionCallbacks(this);
+        googleApiClient.unregisterConnectionCallbacks(this);
     }
 
     @Override
     public void onStop() {
         super.onStop();
 
-        mSubscriber.unSubscribe(mResultCallback);
+        subscriber.unSubscribe(resultCallback);
 
-        mGoogleApiClient.disconnect();
+        googleApiClient.disconnect();
     }
 
     @Override
@@ -93,6 +94,7 @@ public final class DeviceDistanceEstimationPresenter extends BasePresenter<Devic
 
     public void setSubscriber(List<String> beaconIds) {
         MessageFilter.Builder filterBuilder = new MessageFilter.Builder();
+
         for (String beaconId : beaconIds) {
             EddystoneUID eddystoneUID = new EddystoneUID(beaconId);
             String namespaceId = eddystoneUID.getNamespaceId();
@@ -105,10 +107,10 @@ public final class DeviceDistanceEstimationPresenter extends BasePresenter<Devic
                 .setFilter(filterBuilder.build())
                 .build();
 
-        mSubscriber = new ForegroundSubscriber(mGoogleApiClient, mMessageListener, options);
+        subscriber = new ForegroundSubscriber(googleApiClient, messageListener, options);
     }
 
     public void onSubscribe() {
-        mSubscriber.subscribe(mResultCallback);
+        subscriber.subscribe(resultCallback);
     }
 }
