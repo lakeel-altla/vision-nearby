@@ -1,6 +1,7 @@
 package com.lakeel.altla.vision.nearby.presentation.presenter.profile;
 
 import com.lakeel.altla.vision.nearby.R;
+import com.lakeel.altla.vision.nearby.core.StringUtils;
 import com.lakeel.altla.vision.nearby.domain.usecase.FindConfigsUseCase;
 import com.lakeel.altla.vision.nearby.domain.usecase.FindItemUseCase;
 import com.lakeel.altla.vision.nearby.domain.usecase.FindLINEUrlUseCase;
@@ -74,15 +75,20 @@ public final class ProfilePresenter extends BasePresenter<ProfileView> {
                 .doOnSuccess(model -> getView().showProfile(model))
                 .flatMap(model -> mFindConfigsUseCase.execute().subscribeOn(Schedulers.io()))
                 .map(entity -> entity.isCmLinkEnabled)
-                .doOnSuccess(isCmLinkEnabled -> mCmLinkEnabled = isCmLinkEnabled)
+                .doOnSuccess(isCmLinkEnabled -> {
+                    mCmLinkEnabled = isCmLinkEnabled;
+                    getView().initializeOptionMenu();
+                })
                 .flatMap(aBoolean -> mFindLINEUrlUseCase.execute(mUserId).subscribeOn(Schedulers.io()))
-                .map(entity -> entity.url)
+                .map(entity -> {
+                    if (entity == null) return StringUtils.EMPTY;
+                    return entity.url;
+                })
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
-                .subscribe(lineUrl -> {
-                    getView().showLineUrl(lineUrl);
-                    getView().initializeOptionMenu();
-                }, e -> LOGGER.error("Failed to find config settings.", e));
+                .subscribe(lineUrl -> getView().showLineUrl(lineUrl),
+                        e -> LOGGER.error("Failed to find user data.", e)
+                );
 
         reusableCompositeSubscription.add(subscription);
     }
@@ -116,6 +122,7 @@ public final class ProfilePresenter extends BasePresenter<ProfileView> {
                 }, e -> {
                     LOGGER.error("Failed to find user beacons.", e);
                 });
+
         reusableCompositeSubscription.add(subscription);
     }
 
