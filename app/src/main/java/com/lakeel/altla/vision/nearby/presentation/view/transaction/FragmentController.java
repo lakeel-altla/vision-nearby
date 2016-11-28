@@ -4,7 +4,7 @@ import com.lakeel.altla.vision.nearby.R;
 import com.lakeel.altla.vision.nearby.presentation.intent.RecentlyBundleData;
 import com.lakeel.altla.vision.nearby.presentation.view.fragment.estimation.DeviceDistanceEstimationFragment;
 import com.lakeel.altla.vision.nearby.presentation.view.fragment.favorites.FavoritesListFragment;
-import com.lakeel.altla.vision.nearby.presentation.view.fragment.nearby.NearbyListListFragment;
+import com.lakeel.altla.vision.nearby.presentation.view.fragment.nearby.NearbyListFragment;
 import com.lakeel.altla.vision.nearby.presentation.view.fragment.profile.ProfileFragment;
 import com.lakeel.altla.vision.nearby.presentation.view.fragment.recently.RecentlyFragment;
 import com.lakeel.altla.vision.nearby.presentation.view.fragment.recently.RecentlyListFragment;
@@ -66,7 +66,7 @@ public final class FragmentController {
     }
 
     public void showNearbyListFragment() {
-        NearbyListListFragment fragment = NearbyListListFragment.newInstance();
+        NearbyListFragment fragment = NearbyListFragment.newInstance();
         replaceFragment(R.id.fragmentPlaceholder, fragment, USER_LIST_FRAGMENT_TAG);
     }
 

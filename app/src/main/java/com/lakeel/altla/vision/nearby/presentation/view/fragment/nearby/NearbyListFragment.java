@@ -1,21 +1,5 @@
 package com.lakeel.altla.vision.nearby.presentation.view.fragment.nearby;
 
-import com.google.android.gms.common.api.Status;
-
-import com.flipboard.bottomsheet.BottomSheetLayout;
-import com.lakeel.altla.vision.nearby.R;
-import com.lakeel.altla.vision.nearby.presentation.presenter.nearby.NearbyListPresenter;
-import com.lakeel.altla.vision.nearby.presentation.view.NearbyListView;
-import com.lakeel.altla.vision.nearby.presentation.view.color.ActionBarColor;
-import com.lakeel.altla.vision.nearby.presentation.view.GridShareSheet;
-import com.lakeel.altla.vision.nearby.presentation.view.color.StatusBarColor;
-import com.lakeel.altla.vision.nearby.presentation.view.activity.MainActivity;
-import com.lakeel.altla.vision.nearby.presentation.view.adapter.NearbyAdapter;
-import com.lakeel.altla.vision.nearby.presentation.view.divider.DividerItemDecoration;
-
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-
 import android.content.Intent;
 import android.content.IntentSender;
 import android.os.Build;
@@ -33,6 +17,21 @@ import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 
+import com.flipboard.bottomsheet.BottomSheetLayout;
+import com.google.android.gms.common.api.Status;
+import com.lakeel.altla.vision.nearby.R;
+import com.lakeel.altla.vision.nearby.presentation.presenter.nearby.NearbyListPresenter;
+import com.lakeel.altla.vision.nearby.presentation.view.GridShareSheet;
+import com.lakeel.altla.vision.nearby.presentation.view.NearbyListView;
+import com.lakeel.altla.vision.nearby.presentation.view.activity.MainActivity;
+import com.lakeel.altla.vision.nearby.presentation.view.adapter.NearbyAdapter;
+import com.lakeel.altla.vision.nearby.presentation.view.color.ActionBarColor;
+import com.lakeel.altla.vision.nearby.presentation.view.color.StatusBarColor;
+import com.lakeel.altla.vision.nearby.presentation.view.divider.DividerItemDecoration;
+
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 import javax.inject.Inject;
 
 import butterknife.BindView;
@@ -41,7 +40,7 @@ import butterknife.ButterKnife;
 import static android.app.Activity.RESULT_OK;
 import static com.lakeel.altla.vision.nearby.R.id.share;
 
-public final class NearbyListListFragment extends Fragment implements NearbyListView {
+public final class NearbyListFragment extends Fragment implements NearbyListView {
 
     @Inject
     NearbyListPresenter mPresenter;
@@ -55,12 +54,12 @@ public final class NearbyListListFragment extends Fragment implements NearbyList
     @BindView(R.id.recycler_view)
     RecyclerView mRecyclerView;
 
-    private static final Logger LOGGER = LoggerFactory.getLogger(NearbyListListFragment.class);
+    private static final Logger LOGGER = LoggerFactory.getLogger(NearbyListFragment.class);
 
     private static final int REQUEST_CODE_SUBSCRIBE_RESULT = 1;
 
-    public static NearbyListListFragment newInstance() {
-        return new NearbyListListFragment();
+    public static NearbyListFragment newInstance() {
+        return new NearbyListFragment();
     }
 
     @Override
