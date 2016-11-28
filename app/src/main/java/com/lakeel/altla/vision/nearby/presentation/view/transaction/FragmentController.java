@@ -5,7 +5,7 @@ import com.lakeel.altla.vision.nearby.presentation.view.fragment.estimation.Devi
 import com.lakeel.altla.vision.nearby.presentation.view.fragment.favorites.FavoritesListFragment;
 import com.lakeel.altla.vision.nearby.presentation.view.fragment.nearby.NearbyListListFragment;
 import com.lakeel.altla.vision.nearby.presentation.view.fragment.profile.ProfileFragment;
-import com.lakeel.altla.vision.nearby.presentation.view.fragment.recently.RecentlyListListFragment;
+import com.lakeel.altla.vision.nearby.presentation.view.fragment.recently.RecentlyListFragment;
 import com.lakeel.altla.vision.nearby.presentation.view.fragment.settings.SettingsFragment;
 import com.lakeel.altla.vision.nearby.presentation.view.fragment.settings.bluetooth.BleSettingsFragment;
 import com.lakeel.altla.vision.nearby.presentation.view.fragment.settings.cm.CmSettingsFragment;
@@ -27,7 +27,7 @@ public final class FragmentController {
 
     private final String USER_LIST_FRAGMENT_TAG = FavoritesListFragment.class.getSimpleName();
 
-    private final String RECENTLY_FRAGMENT_TAG = RecentlyListListFragment.class.getSimpleName();
+    private final String RECENTLY_FRAGMENT_TAG = RecentlyListFragment.class.getSimpleName();
 
     private final String TRACKING_FRAGMENT_TAG = TrackingFragment.class.getSimpleName();
 
@@ -67,7 +67,7 @@ public final class FragmentController {
     }
 
     public void showRecentlyFragment() {
-        RecentlyListListFragment fragment = RecentlyListListFragment.newInstance();
+        RecentlyListFragment fragment = RecentlyListFragment.newInstance();
         replaceFragment(R.id.fragmentPlaceholder, fragment, RECENTLY_FRAGMENT_TAG);
     }
 

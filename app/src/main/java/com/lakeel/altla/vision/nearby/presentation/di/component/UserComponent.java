@@ -11,7 +11,7 @@ import com.lakeel.altla.vision.nearby.presentation.view.fragment.estimation.Devi
 import com.lakeel.altla.vision.nearby.presentation.view.fragment.favorites.FavoritesListFragment;
 import com.lakeel.altla.vision.nearby.presentation.view.fragment.nearby.NearbyListListFragment;
 import com.lakeel.altla.vision.nearby.presentation.view.fragment.profile.ProfileFragment;
-import com.lakeel.altla.vision.nearby.presentation.view.fragment.recently.RecentlyListListFragment;
+import com.lakeel.altla.vision.nearby.presentation.view.fragment.recently.RecentlyListFragment;
 import com.lakeel.altla.vision.nearby.presentation.view.fragment.search.SearchFragment;
 import com.lakeel.altla.vision.nearby.presentation.view.fragment.settings.SettingsFragment;
 import com.lakeel.altla.vision.nearby.presentation.view.fragment.settings.bluetooth.BleSettingsFragment;
@@ -37,7 +37,7 @@ public interface UserComponent {
 
     void inject(NearbyListListFragment fragment);
 
-    void inject(RecentlyListListFragment fragment);
+    void inject(RecentlyListFragment fragment);
 
     void inject(SettingsFragment fragment);
 

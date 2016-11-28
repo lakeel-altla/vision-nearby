@@ -29,7 +29,7 @@ import javax.inject.Inject;
 import butterknife.BindView;
 import butterknife.ButterKnife;
 
-public final class RecentlyListListFragment extends Fragment implements RecentlyListView {
+public final class RecentlyListFragment extends Fragment implements RecentlyListView {
 
     @Inject
     RecentlyListPresenter mPresenter;
@@ -40,8 +40,8 @@ public final class RecentlyListListFragment extends Fragment implements Recently
     @BindView(R.id.recycler_view)
     UltimateRecyclerView mUltimateRecyclerView;
 
-    public static RecentlyListListFragment newInstance() {
-        return new RecentlyListListFragment();
+    public static RecentlyListFragment newInstance() {
+        return new RecentlyListFragment();
     }
 
     @Override
