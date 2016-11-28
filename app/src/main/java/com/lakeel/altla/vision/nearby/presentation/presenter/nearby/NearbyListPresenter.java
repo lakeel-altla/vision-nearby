@@ -1,9 +1,13 @@
 package com.lakeel.altla.vision.nearby.presentation.presenter.nearby;
 
+import android.app.Activity;
+import android.os.Bundle;
+import android.support.annotation.IntRange;
+import android.support.annotation.Nullable;
+
 import com.google.android.gms.common.api.GoogleApiClient;
 import com.google.android.gms.common.api.Status;
 import com.google.android.gms.nearby.Nearby;
-
 import com.lakeel.altla.library.AttachmentListener;
 import com.lakeel.altla.library.ResolutionResultCallback;
 import com.lakeel.altla.vision.nearby.R;
@@ -23,11 +27,6 @@ import com.lakeel.altla.vision.nearby.presentation.view.NearbyListView;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-
-import android.app.Activity;
-import android.os.Bundle;
-import android.support.annotation.IntRange;
-import android.support.annotation.Nullable;
 
 import java.util.ArrayList;
 import java.util.Iterator;
@@ -116,7 +115,7 @@ public final class NearbyListPresenter extends BasePresenter<NearbyListView> imp
                 .addApi(Nearby.MESSAGES_API)
                 .build();
 
-        mSubscriber = new ForegroundSubscriber(mGoogleApiClient, new NearbyMessagesListener(), null);
+        mSubscriber = new ForegroundSubscriber(mGoogleApiClient, new NearbyMessagesListener());
     }
 
     @Override

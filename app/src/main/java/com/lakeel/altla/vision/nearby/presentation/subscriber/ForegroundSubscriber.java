@@ -1,42 +1,45 @@
 package com.lakeel.altla.vision.nearby.presentation.subscriber;
 
+import android.support.annotation.NonNull;
+
 import com.google.android.gms.common.api.GoogleApiClient;
 import com.google.android.gms.nearby.Nearby;
 import com.google.android.gms.nearby.messages.MessageListener;
 import com.google.android.gms.nearby.messages.SubscribeOptions;
-
 import com.lakeel.altla.library.ResolutionResultCallback;
-
-import android.support.annotation.NonNull;
 
 public final class ForegroundSubscriber implements Subscriber {
 
-    private final GoogleApiClient mGoogleApiClient;
+    private final GoogleApiClient googleApiClient;
 
-    private final MessageListener mMessageListener;
+    private final MessageListener messageListener;
 
-    private final SubscribeOptions mOptions;
+    private SubscribeOptions options;
+
+    public ForegroundSubscriber(@NonNull GoogleApiClient googleApiClient, @NonNull MessageListener messageListener) {
+        this(googleApiClient, messageListener, null);
+    }
 
     public ForegroundSubscriber(@NonNull GoogleApiClient googleApiClient, @NonNull MessageListener messageListener, SubscribeOptions options) {
-        mGoogleApiClient = googleApiClient;
-        mMessageListener = messageListener;
-        mOptions = options;
+        this.googleApiClient = googleApiClient;
+        this.messageListener = messageListener;
+        this.options = options;
     }
 
     @Override
     public void subscribe(ResolutionResultCallback callback) {
-        if (mOptions == null) {
-            Nearby.Messages.subscribe(mGoogleApiClient, mMessageListener)
+        if (options == null) {
+            Nearby.Messages.subscribe(googleApiClient, messageListener)
                     .setResultCallback(callback);
         } else {
-            Nearby.Messages.subscribe(mGoogleApiClient, mMessageListener, mOptions)
+            Nearby.Messages.subscribe(googleApiClient, messageListener, options)
                     .setResultCallback(callback);
         }
     }
 
     @Override
     public void unSubscribe(ResolutionResultCallback callback) {
-        Nearby.Messages.unsubscribe(mGoogleApiClient, mMessageListener)
+        Nearby.Messages.unsubscribe(googleApiClient, messageListener)
                 .setResultCallback(callback);
     }
 }
