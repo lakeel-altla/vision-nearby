@@ -12,7 +12,7 @@ import com.google.android.gms.maps.model.MarkerOptions;
 import com.firebase.geofire.GeoLocation;
 import com.lakeel.altla.vision.nearby.R;
 import com.lakeel.altla.vision.nearby.presentation.constants.BundleKey;
-import com.lakeel.altla.vision.nearby.presentation.constants.Colors;
+import com.lakeel.altla.vision.nearby.presentation.constants.AppColor;
 import com.lakeel.altla.vision.nearby.presentation.constants.Radius;
 import com.lakeel.altla.vision.nearby.presentation.intent.GoogleMapIntent;
 import com.lakeel.altla.vision.nearby.presentation.presenter.tracking.TrackingPresenter;
@@ -177,7 +177,7 @@ public final class TrackingFragment extends Fragment implements TrackingView, On
         LatLng latLng = new LatLng(location.latitude, location.longitude);
         CircleOptions circleOptions = new CircleOptions()
                 .center(latLng)
-                .strokeColor(Colors.PRIMARY)
+                .strokeColor(AppColor.PRIMARY)
                 .radius(Radius.GOOGLE_MAP);
 
         mMap.addMarker(new MarkerOptions()

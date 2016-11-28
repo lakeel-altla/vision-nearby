@@ -12,10 +12,10 @@ import com.google.android.gms.maps.model.MarkerOptions;
 import com.flipboard.bottomsheet.BottomSheetLayout;
 import com.lakeel.altla.vision.nearby.R;
 import com.lakeel.altla.vision.nearby.presentation.application.App;
-import com.lakeel.altla.vision.nearby.presentation.constants.ActivityType;
-import com.lakeel.altla.vision.nearby.presentation.constants.Colors;
+import com.lakeel.altla.vision.nearby.presentation.constants.DetectedActivityType;
+import com.lakeel.altla.vision.nearby.presentation.constants.AppColor;
 import com.lakeel.altla.vision.nearby.presentation.constants.Radius;
-import com.lakeel.altla.vision.nearby.presentation.constants.WeatherType;
+import com.lakeel.altla.vision.nearby.presentation.constants.WeatherCondition;
 import com.lakeel.altla.vision.nearby.presentation.di.component.UserComponent;
 import com.lakeel.altla.vision.nearby.presentation.di.module.ActivityModule;
 import com.lakeel.altla.vision.nearby.presentation.intent.IntentExtra;
@@ -129,7 +129,7 @@ public final class RecentlyUserUserActivity extends AppCompatActivity implements
         passingLayout.dateText.setText(dateFormatter.format());
 
         if (data.mWeather == null) {
-            passingLayout.weatherText.setText(WeatherType.CONDITION_UNKNOWN.getWeather());
+            passingLayout.weatherText.setText(WeatherCondition.UNKNOWN.getWeather());
         } else {
             Weather weather = data.mWeather;
             BigDecimal temperature = new BigDecimal(weather.mTemperature);
@@ -139,7 +139,7 @@ public final class RecentlyUserUserActivity extends AppCompatActivity implements
 
             StringBuilder builder = new StringBuilder();
             for (int value : conditions) {
-                WeatherType type = WeatherType.toType(value);
+                WeatherCondition type = WeatherCondition.toType(value);
                 builder.append(type.getWeather());
                 builder.append("  ");
             }
@@ -150,7 +150,7 @@ public final class RecentlyUserUserActivity extends AppCompatActivity implements
             passingLayout.weatherText.setText(builder.toString());
         }
 
-        passingLayout.detectedActivityText.setText(ActivityType.toUserActivity(data.mUserActivity).getActivity());
+        passingLayout.detectedActivityText.setText(DetectedActivityType.toUserActivity(data.mUserActivity).getActivity());
     }
 
     @Override
@@ -240,7 +240,7 @@ public final class RecentlyUserUserActivity extends AppCompatActivity implements
         LatLng latLng = new LatLng(Double.valueOf(latitude), Double.valueOf(longitude));
         CircleOptions circleOptions = new CircleOptions()
                 .center(latLng)
-                .strokeColor(Colors.PRIMARY)
+                .strokeColor(AppColor.PRIMARY)
                 .radius(Radius.GOOGLE_MAP);
 
         mMap.addMarker(new MarkerOptions()
