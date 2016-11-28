@@ -1,11 +1,15 @@
 package com.lakeel.altla.vision.nearby.presentation.service;
 
+import android.app.IntentService;
+import android.app.PendingIntent;
+import android.content.Intent;
+import android.net.Uri;
+
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
-
 import com.lakeel.altla.vision.nearby.R;
 import com.lakeel.altla.vision.nearby.data.entity.ItemsEntity;
 import com.lakeel.altla.vision.nearby.data.entity.LINELinksEntity;
@@ -15,11 +19,6 @@ import com.lakeel.altla.vision.nearby.presentation.view.notification.Notificatio
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-
-import android.app.IntentService;
-import android.app.PendingIntent;
-import android.content.Intent;
-import android.net.Uri;
 
 import java.util.Iterator;
 
