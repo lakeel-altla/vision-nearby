@@ -95,7 +95,6 @@ public final class FavoritesAdapter extends SwipeableUltimateViewAdapter<Favorit
                         .buildRound(initial, Color.RED);
                 mImageView.post(() -> mImageView.setImageDrawable(drawable));
             } else {
-                // 非同期でプロフィール画像を表示。
                 ImageLoader imageLoader = ImageLoader.getInstance();
                 imageLoader.displayImage(model.mImageUri, mImageView);
             }
