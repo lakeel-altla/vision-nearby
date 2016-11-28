@@ -1,7 +1,6 @@
 package com.lakeel.altla.vision.nearby.presentation.presenter.profile;
 
 import com.lakeel.altla.vision.nearby.R;
-import com.lakeel.altla.vision.nearby.data.entity.LINELinksEntity;
 import com.lakeel.altla.vision.nearby.domain.usecase.FindConfigsUseCase;
 import com.lakeel.altla.vision.nearby.domain.usecase.FindItemUseCase;
 import com.lakeel.altla.vision.nearby.domain.usecase.FindLINEUrlUseCase;
@@ -22,10 +21,8 @@ import java.util.ArrayList;
 
 import javax.inject.Inject;
 
-import rx.Single;
 import rx.Subscription;
 import rx.android.schedulers.AndroidSchedulers;
-import rx.functions.Func1;
 import rx.schedulers.Schedulers;
 
 public final class ProfilePresenter extends BasePresenter<ProfileView> {
@@ -68,38 +65,17 @@ public final class ProfilePresenter extends BasePresenter<ProfileView> {
 
     @Override
     public void onActivityCreated() {
-        Subscription presenceSubscription = mFindPresenceUseCase
+        Subscription subscription = mFindPresenceUseCase
                 .execute(mUserId)
                 .map(entity -> mPresencesModelMapper.map(entity))
-                .subscribeOn(Schedulers.io())
-                .observeOn(AndroidSchedulers.mainThread())
-                .subscribe(model -> getView().showPresence(model),
-                        e -> LOGGER.error("Failed to find presence.", e));
-
-        reusableCompositeSubscription.add(presenceSubscription);
-
-        Subscription itemSubscription = mFindItemUseCase.
-                execute(mUserId)
-                .subscribeOn(Schedulers.io())
+                .doOnSuccess(model -> getView().showPresence(model))
+                .flatMap(model -> mFindItemUseCase.execute(mUserId).subscribeOn(Schedulers.io()))
                 .map(entity -> mItemModelMapper.map(entity))
-                .observeOn(AndroidSchedulers.mainThread())
-                .subscribe(model -> getView().showProfile(model),
-                        e -> LOGGER.error("Failed to find item.", e));
-
-        reusableCompositeSubscription.add(itemSubscription);
-
-        Subscription configsSubscription = mFindConfigsUseCase
-                .execute()
+                .doOnSuccess(model -> getView().showProfile(model))
+                .flatMap(model -> mFindConfigsUseCase.execute().subscribeOn(Schedulers.io()))
                 .map(entity -> entity.isCmLinkEnabled)
-                .flatMap(new Func1<Boolean, Single<LINELinksEntity>>() {
-                    @Override
-                    public Single<LINELinksEntity> call(Boolean bool) {
-                        mCmLinkEnabled = bool;
-                        return mFindLINEUrlUseCase
-                                .execute(mUserId)
-                                .subscribeOn(Schedulers.io());
-                    }
-                })
+                .doOnSuccess(isCmLinkEnabled -> mCmLinkEnabled = isCmLinkEnabled)
+                .flatMap(aBoolean -> mFindLINEUrlUseCase.execute(mUserId).subscribeOn(Schedulers.io()))
                 .map(entity -> entity.url)
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
@@ -108,7 +84,7 @@ public final class ProfilePresenter extends BasePresenter<ProfileView> {
                     getView().initializeOptionMenu();
                 }, e -> LOGGER.error("Failed to find config settings.", e));
 
-        reusableCompositeSubscription.add(configsSubscription);
+        reusableCompositeSubscription.add(subscription);
     }
 
     public void setUserData(String userId, String userName) {
