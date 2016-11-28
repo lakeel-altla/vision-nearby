@@ -3,6 +3,7 @@ package com.lakeel.altla.vision.nearby.presentation.presenter.recently;
 import android.support.annotation.IntRange;
 
 import com.lakeel.altla.vision.nearby.R;
+import com.lakeel.altla.vision.nearby.data.entity.ItemsEntity;
 import com.lakeel.altla.vision.nearby.domain.usecase.FindFavoriteUseCase;
 import com.lakeel.altla.vision.nearby.domain.usecase.FindItemUseCase;
 import com.lakeel.altla.vision.nearby.domain.usecase.FindRecentlyUseCase;
@@ -10,6 +11,7 @@ import com.lakeel.altla.vision.nearby.domain.usecase.SaveFavoriteUseCase;
 import com.lakeel.altla.vision.nearby.presentation.intent.RecentlyBundleData;
 import com.lakeel.altla.vision.nearby.presentation.presenter.BaseItemPresenter;
 import com.lakeel.altla.vision.nearby.presentation.presenter.BasePresenter;
+import com.lakeel.altla.vision.nearby.presentation.presenter.mapper.RecentlyItemModelMapper;
 import com.lakeel.altla.vision.nearby.presentation.presenter.model.LocationModel;
 import com.lakeel.altla.vision.nearby.presentation.presenter.model.RecentlyItemModel;
 import com.lakeel.altla.vision.nearby.presentation.view.RecentlyItemView;
@@ -24,6 +26,7 @@ import java.util.List;
 
 import javax.inject.Inject;
 
+import rx.Observable;
 import rx.Subscription;
 import rx.android.schedulers.AndroidSchedulers;
 import rx.schedulers.Schedulers;
@@ -44,6 +47,8 @@ public final class RecentlyListPresenter extends BasePresenter<RecentlyListView>
 
     private static final Logger LOGGER = LoggerFactory.getLogger(RecentlyListPresenter.class);
 
+    private RecentlyItemModelMapper mRecentlyItemModelMapper = new RecentlyItemModelMapper();
+
     private final List<RecentlyItemModel> mRecentlyItemModels = new ArrayList<>();
 
     public List<RecentlyItemModel> getItems() {
@@ -58,6 +63,11 @@ public final class RecentlyListPresenter extends BasePresenter<RecentlyListView>
     public void onResume() {
         Subscription subscription = mFindRecentlyUseCase
                 .execute()
+                .flatMap(entity -> {
+                    Observable<ItemsEntity> itemsObservable = mFindItemUseCase.execute(entity.id).subscribeOn(Schedulers.io()).toObservable();
+                    return Observable.zip(Observable.just(entity), itemsObservable, (recentlyEntity, itemsEntity) ->
+                            mRecentlyItemModelMapper.map(recentlyEntity, itemsEntity));
+                })
                 .toList()
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
@@ -72,6 +82,7 @@ public final class RecentlyListPresenter extends BasePresenter<RecentlyListView>
                     LOGGER.error("Failed to find recent nearby items", e);
                     getView().showSnackBar(R.string.error_process);
                 });
+
         reusableCompositeSubscription.add(subscription);
     }
 

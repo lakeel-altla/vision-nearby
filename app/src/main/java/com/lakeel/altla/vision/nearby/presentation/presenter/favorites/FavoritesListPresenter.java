@@ -1,12 +1,16 @@
 package com.lakeel.altla.vision.nearby.presentation.presenter.favorites;
 
+import android.support.annotation.IntRange;
+
 import com.lakeel.altla.vision.nearby.R;
 import com.lakeel.altla.vision.nearby.core.CollectionUtils;
+import com.lakeel.altla.vision.nearby.data.entity.ItemsEntity;
 import com.lakeel.altla.vision.nearby.domain.usecase.FindFavoritesUseCase;
 import com.lakeel.altla.vision.nearby.domain.usecase.FindItemUseCase;
 import com.lakeel.altla.vision.nearby.domain.usecase.RemoveFavoriteUseCase;
 import com.lakeel.altla.vision.nearby.presentation.presenter.BaseItemPresenter;
 import com.lakeel.altla.vision.nearby.presentation.presenter.BasePresenter;
+import com.lakeel.altla.vision.nearby.presentation.presenter.mapper.FavoriteModelMapper;
 import com.lakeel.altla.vision.nearby.presentation.presenter.model.FavoriteModel;
 import com.lakeel.altla.vision.nearby.presentation.view.FavoriteItemView;
 import com.lakeel.altla.vision.nearby.presentation.view.FavoriteListView;
@@ -14,13 +18,12 @@ import com.lakeel.altla.vision.nearby.presentation.view.FavoriteListView;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import android.support.annotation.IntRange;
-
 import java.util.ArrayList;
 import java.util.List;
 
 import javax.inject.Inject;
 
+import rx.Observable;
 import rx.Subscription;
 import rx.android.schedulers.AndroidSchedulers;
 import rx.schedulers.Schedulers;
@@ -38,6 +41,8 @@ public final class FavoritesListPresenter extends BasePresenter<FavoriteListView
 
     private static final Logger LOGGER = LoggerFactory.getLogger(FavoritesListPresenter.class);
 
+    private FavoriteModelMapper mFavoriteModelMapper = new FavoriteModelMapper();
+
     private final List<FavoriteModel> mFavoriteModels = new ArrayList<>();
 
     @Inject
@@ -48,9 +53,14 @@ public final class FavoritesListPresenter extends BasePresenter<FavoriteListView
     public void onResume() {
         Subscription subscription = mFindFavoritesUseCase
                 .execute()
+                .flatMap(entity -> {
+                    String userId = entity.key;
+                    Observable<ItemsEntity> itemsSingle = mFindItemUseCase.execute(userId).toObservable();
+
+                    return Observable.zip(Observable.just(entity), itemsSingle, (favoritesEntity, itemsEntity) ->
+                            mFavoriteModelMapper.map(favoritesEntity, itemsEntity));
+                })
                 .toList()
-                .subscribeOn(Schedulers.io())
-                .observeOn(AndroidSchedulers.mainThread())
                 .subscribe(favoritesModels -> {
                     mFavoriteModels.clear();
                     mFavoriteModels.addAll(favoritesModels);
@@ -58,6 +68,7 @@ public final class FavoritesListPresenter extends BasePresenter<FavoriteListView
                 }, e -> {
                     getView().showSnackBar(R.string.error_process);
                 });
+
         reusableCompositeSubscription.add(subscription);
     }
 

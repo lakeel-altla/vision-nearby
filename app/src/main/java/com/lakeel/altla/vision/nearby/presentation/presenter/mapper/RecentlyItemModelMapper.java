@@ -16,7 +16,7 @@ import java.util.Map;
 public final class RecentlyItemModelMapper {
 
     @NonNull
-    public RecentlyItemModel map(@NonNull ItemsEntity itemsEntity, @NonNull RecentlyEntity recentlyEntity) {
+    public RecentlyItemModel map(@NonNull RecentlyEntity recentlyEntity, @NonNull ItemsEntity itemsEntity) {
         RecentlyItemModel model = new RecentlyItemModel();
 
         model.userId = recentlyEntity.id;
