@@ -1,13 +1,13 @@
 package com.lakeel.altla.vision.nearby.presentation.view.layout;
 
-import com.lakeel.altla.vision.nearby.R;
-
 import android.widget.ImageView;
 import android.widget.TextView;
 
+import com.lakeel.altla.vision.nearby.R;
+
 import butterknife.BindView;
 
-public class HeaderLayout {
+public class DrawerHeaderLayout {
 
     @BindView(R.id.imageView_header_profile)
     public ImageView mProfile;

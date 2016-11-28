@@ -10,8 +10,8 @@ import com.lakeel.altla.vision.nearby.presentation.view.DateFormatter;
 import com.lakeel.altla.vision.nearby.presentation.view.GridShareSheet;
 import com.lakeel.altla.vision.nearby.presentation.view.ProfileView;
 import com.lakeel.altla.vision.nearby.presentation.view.activity.MainActivity;
-import com.lakeel.altla.vision.nearby.presentation.view.layout.PresenceLayout1;
-import com.lakeel.altla.vision.nearby.presentation.view.layout.ProfileLayout1;
+import com.lakeel.altla.vision.nearby.presentation.view.layout.PresenceLayout;
+import com.lakeel.altla.vision.nearby.presentation.view.layout.ProfileLayout;
 import com.lakeel.altla.vision.nearby.presentation.view.layout.SNSLayout;
 import com.lakeel.altla.vision.nearby.presentation.view.transaction.FragmentController;
 import com.nostra13.universalimageloader.core.ImageLoader;
@@ -64,9 +64,9 @@ public final class ProfileFragment extends Fragment implements ProfileView {
     @BindView(R.id.imageViewUser)
     ImageView mUserImageView;
 
-    private PresenceLayout1 presenceLayout = new PresenceLayout1();
+    private PresenceLayout presenceLayout = new PresenceLayout();
 
-    private ProfileLayout1 profileLayout = new ProfileLayout1();
+    private ProfileLayout profileLayout = new ProfileLayout();
 
     private SNSLayout snsLayout = new SNSLayout();
 

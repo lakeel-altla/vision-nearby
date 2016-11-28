@@ -13,7 +13,7 @@ import com.lakeel.altla.vision.nearby.presentation.presenter.activity.ActivityPr
 import com.lakeel.altla.vision.nearby.presentation.presenter.model.PreferenceModel;
 import com.lakeel.altla.vision.nearby.presentation.service.PublishService;
 import com.lakeel.altla.vision.nearby.presentation.view.ActivityView;
-import com.lakeel.altla.vision.nearby.presentation.view.layout.HeaderLayout;
+import com.lakeel.altla.vision.nearby.presentation.view.layout.DrawerHeaderLayout;
 import com.lakeel.altla.vision.nearby.presentation.view.transaction.FragmentController;
 import com.nostra13.universalimageloader.core.ImageLoader;
 
@@ -59,7 +59,7 @@ public class MainActivity extends AppCompatActivity
 
     private static final int REQUEST_CODE_ACCESS_LOCATION = 4;
 
-    private HeaderLayout mHeaderLayout = new HeaderLayout();
+    private DrawerHeaderLayout mDrawerHeaderLayout = new DrawerHeaderLayout();
 
     private UserComponent mUserComponent;
 
@@ -103,7 +103,7 @@ public class MainActivity extends AppCompatActivity
         NavigationView navigationView = (NavigationView) findViewById(R.id.nav_view);
         navigationView.setNavigationItemSelectedListener(this);
         View headerView = navigationView.inflateHeaderView(R.layout.nav_header_main);
-        ButterKnife.bind(mHeaderLayout, headerView);
+        ButterKnife.bind(mDrawerHeaderLayout, headerView);
 
         mPresenter.onCreateView(this);
     }
@@ -236,10 +236,10 @@ public class MainActivity extends AppCompatActivity
     @Override
     public void showProfile(String displayName, String email, String imageUri) {
         ImageLoader imageLoader = ImageLoader.getInstance();
-        imageLoader.displayImage(imageUri, mHeaderLayout.mProfile);
+        imageLoader.displayImage(imageUri, mDrawerHeaderLayout.mProfile);
 
-        mHeaderLayout.mUserName.setText(displayName);
-        mHeaderLayout.mUserAddress.setText(email);
+        mDrawerHeaderLayout.mUserName.setText(displayName);
+        mDrawerHeaderLayout.mUserAddress.setText(email);
     }
 
     @Override

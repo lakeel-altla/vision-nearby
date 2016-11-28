@@ -60,33 +60,22 @@
                     android:layout_height="match_parent">
 
                 <!-- Presence -->
-                <include layout="@layout/header_item" android:id="@+id/presence_header"/>
-                <include layout="@layout/two_line_string_items" android:id="@+id/presence"/>
-                <include layout="@layout/two_line_string_items" android:id="@+id/last_online"/>
+                <include layout="@layout/layout_presence" android:id="@+id/presenceLayout"/>
 
                 <include layout="@layout/item_divider"/>
 
                 <!-- Passing by -->
-                <include layout="@layout/header_item" android:id="@+id/passing_header"/>
-                <include layout="@layout/two_line_string_items" android:id="@+id/date"/>
-                <include layout="@layout/two_line_string_items" android:id="@+id/weather"/>
-                <include layout="@layout/two_line_string_items"
-                         android:id="@+id/detected_activity"/>
-                <include layout="@layout/two_line_string_items" android:id="@+id/times"/>
-                <include layout="@layout/location_item" android:id="@+id/location"/>
+                <include layout="@layout/layout_passing" android:id="@+id/passingLayout"/>
 
                 <include layout="@layout/item_divider"/>
 
                 <!-- Profile -->
-                <include layout="@layout/header_item" android:id="@+id/profile_header"/>
-                <include layout="@layout/two_line_string_items" android:id="@+id/name"/>
-                <include layout="@layout/two_line_string_items" android:id="@+id/email"/>
+                <include layout="@layout/layout_profile" android:id="@+id/profileLayout"/>
 
                 <include layout="@layout/item_divider"/>
 
                 <!-- SNS -->
-                <include layout="@layout/header_item" android:id="@+id/sns_header"/>
-                <include layout="@layout/two_line_string_items" android:id="@+id/lineUrl"/>
+                <include layout="@layout/layout_sns" android:id="@+id/snsLayout"/>
 
             </LinearLayout>
 

@@ -27,20 +27,10 @@ import com.lakeel.altla.vision.nearby.presentation.presenter.model.PresenceModel
 import com.lakeel.altla.vision.nearby.presentation.view.DateFormatter;
 import com.lakeel.altla.vision.nearby.presentation.view.GridShareSheet;
 import com.lakeel.altla.vision.nearby.presentation.view.RecentlyUserActivityView;
-import com.lakeel.altla.vision.nearby.presentation.view.layout.DateLayout;
-import com.lakeel.altla.vision.nearby.presentation.view.layout.EmailLayout;
-import com.lakeel.altla.vision.nearby.presentation.view.layout.LastOnlineLayout;
-import com.lakeel.altla.vision.nearby.presentation.view.layout.LineUrlLayout;
-import com.lakeel.altla.vision.nearby.presentation.view.layout.LocationLayout;
-import com.lakeel.altla.vision.nearby.presentation.view.layout.NameLayout;
-import com.lakeel.altla.vision.nearby.presentation.view.layout.PassingHeaderLayout;
-import com.lakeel.altla.vision.nearby.presentation.view.layout.PresenceHeaderLayout;
+import com.lakeel.altla.vision.nearby.presentation.view.layout.PassingLayout;
 import com.lakeel.altla.vision.nearby.presentation.view.layout.PresenceLayout;
-import com.lakeel.altla.vision.nearby.presentation.view.layout.ProfileHeaderLayout;
-import com.lakeel.altla.vision.nearby.presentation.view.layout.SNSHeaderLayout;
-import com.lakeel.altla.vision.nearby.presentation.view.layout.TimesLayout;
-import com.lakeel.altla.vision.nearby.presentation.view.layout.UserActivityLayout;
-import com.lakeel.altla.vision.nearby.presentation.view.layout.WeatherLayout;
+import com.lakeel.altla.vision.nearby.presentation.view.layout.ProfileLayout;
+import com.lakeel.altla.vision.nearby.presentation.view.layout.SNSLayout;
 import com.nostra13.universalimageloader.core.ImageLoader;
 
 import android.content.Intent;
@@ -91,33 +81,13 @@ public final class RecentlyUserUserActivity extends AppCompatActivity implements
 
     private GoogleMap mMap;
 
-    private PresenceHeaderLayout mPresenceHeaderLayout = new PresenceHeaderLayout();
+    private PresenceLayout presenceLayout = new PresenceLayout();
 
-    private PresenceLayout mPresenceLayout = new PresenceLayout();
+    private PassingLayout passingLayout = new PassingLayout();
 
-    private LastOnlineLayout mLastOnlineLayout = new LastOnlineLayout();
+    private ProfileLayout profileLayout = new ProfileLayout();
 
-    private PassingHeaderLayout mPassingHeaderLayout = new PassingHeaderLayout();
-
-    private WeatherLayout mWeatherLayout = new WeatherLayout();
-
-    private DateLayout mDateLayout = new DateLayout();
-
-    private UserActivityLayout mUserActivityLayout = new UserActivityLayout();
-
-    private TimesLayout mTimesLayout = new TimesLayout();
-
-    private LocationLayout mLocationLayout = new LocationLayout();
-
-    private ProfileHeaderLayout mProfileHeaderLayout = new ProfileHeaderLayout();
-
-    private NameLayout mNameLayout = new NameLayout();
-
-    private EmailLayout mEmailLayout = new EmailLayout();
-
-    private SNSHeaderLayout mSNSHeaderLayout = new SNSHeaderLayout();
-
-    private LineUrlLayout mLineUrlLayout = new LineUrlLayout();
+    private SNSLayout snsLayout = new SNSLayout();
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -127,20 +97,10 @@ public final class RecentlyUserUserActivity extends AppCompatActivity implements
         setTitle(null);
 
         ButterKnife.bind(this);
-        ButterKnife.bind(mPresenceHeaderLayout, findViewById(R.id.presence_header));
-        ButterKnife.bind(mPresenceLayout, findViewById(R.id.presence));
-        ButterKnife.bind(mLastOnlineLayout, findViewById(R.id.last_online));
-        ButterKnife.bind(mPassingHeaderLayout, findViewById(R.id.passing_header));
-        ButterKnife.bind(mDateLayout, findViewById(R.id.date));
-        ButterKnife.bind(mWeatherLayout, findViewById(R.id.weather));
-        ButterKnife.bind(mUserActivityLayout, findViewById(R.id.detected_activity));
-        ButterKnife.bind(mTimesLayout, findViewById(R.id.times));
-        ButterKnife.bind(mLocationLayout, findViewById(R.id.location));
-        ButterKnife.bind(mProfileHeaderLayout, findViewById(R.id.profile_header));
-        ButterKnife.bind(mNameLayout, findViewById(R.id.name));
-        ButterKnife.bind(mEmailLayout, findViewById(R.id.email));
-        ButterKnife.bind(mSNSHeaderLayout, findViewById(R.id.sns_header));
-        ButterKnife.bind(mLineUrlLayout, findViewById(R.id.lineUrl));
+        ButterKnife.bind(presenceLayout, findViewById(R.id.presenceLayout));
+        ButterKnife.bind(passingLayout, findViewById(R.id.passingLayout));
+        ButterKnife.bind(profileLayout, findViewById(R.id.profileLayout));
+        ButterKnife.bind(snsLayout, findViewById(R.id.snsLayout));
 
         // Dagger。
         UserComponent userComponent = App.getApplicationComponent(this)
@@ -158,33 +118,18 @@ public final class RecentlyUserUserActivity extends AppCompatActivity implements
         }
 
         SupportMapFragment supportMapFragment = (SupportMapFragment) getSupportFragmentManager()
-                .findFragmentById(R.id.map);
+                .findFragmentById(R.id.locationMap);
         supportMapFragment.getMapAsync(this);
 
-        // Handle an intent.
         Intent intent = getIntent();
         RecentlyIntentData data = (RecentlyIntentData) intent.getSerializableExtra(IntentExtra.RECENTLY.name());
         mPresenter.setData(data);
 
-        mPresenceHeaderLayout.mTitle.setText(R.string.textView_presence);
-        mPresenceLayout.mTitle.setText(R.string.textView_state);
-        mLastOnlineLayout.mTitle.setText(R.string.textView_last_online);
-        mPassingHeaderLayout.mTitle.setText(R.string.textView_passing);
-        mDateLayout.mTitle.setText(R.string.textView_date);
-        mWeatherLayout.mTitle.setText(R.string.textView_weather);
-        mUserActivityLayout.mTitle.setText(R.string.textView_detected_activity);
-        mTimesLayout.mTitle.setText(R.string.textView_number_of_times);
-        mProfileHeaderLayout.mTitle.setText(R.string.textView_profile);
-        mNameLayout.mTitle.setText(R.string.textView_name);
-        mEmailLayout.mTitle.setText(R.string.textView_email);
-        mSNSHeaderLayout.mTitle.setText(R.string.textView_sns);
-        mLineUrlLayout.mTitle.setText(R.string.textView_line_url);
-
         DateFormatter dateFormatter = new DateFormatter(data.mTimestamp);
-        mDateLayout.mBody.setText(dateFormatter.format());
+        passingLayout.dateText.setText(dateFormatter.format());
 
         if (data.mWeather == null) {
-            mWeatherLayout.mBody.setText(WeatherType.CONDITION_UNKNOWN.getWeather());
+            passingLayout.weatherText.setText(WeatherType.CONDITION_UNKNOWN.getWeather());
         } else {
             Weather weather = data.mWeather;
             BigDecimal temperature = new BigDecimal(weather.mTemperature);
@@ -202,10 +147,10 @@ public final class RecentlyUserUserActivity extends AppCompatActivity implements
             builder.append("  ");
             builder.append(getString(R.string.message_humidity, String.valueOf(humidity)));
 
-            mWeatherLayout.mBody.setText(builder.toString());
+            passingLayout.weatherText.setText(builder.toString());
         }
 
-        mUserActivityLayout.mBody.setText(ActivityType.toUserActivity(data.mUserActivity).getActivity());
+        passingLayout.detectedActivityText.setText(ActivityType.toUserActivity(data.mUserActivity).getActivity());
     }
 
     @Override
@@ -278,14 +223,16 @@ public final class RecentlyUserUserActivity extends AppCompatActivity implements
 
     @Override
     public void showPresence(PresenceModel model) {
+        int resId;
         if (model.mConnected) {
-            mPresenceLayout.mBody.setText(R.string.textView_connected);
+            resId = R.string.textView_connected;
         } else {
-            mPresenceLayout.mBody.setText(R.string.textView_disconnected);
+            resId = R.string.textView_disconnected;
         }
+        presenceLayout.presenceText.setText(resId);
 
         DateFormatter dateFormatter = new DateFormatter(model.mLastOnline);
-        mLastOnlineLayout.mBody.setText(dateFormatter.format());
+        presenceLayout.lastOnlineText.setText(dateFormatter.format());
     }
 
     @Override
@@ -304,17 +251,17 @@ public final class RecentlyUserUserActivity extends AppCompatActivity implements
 
     @Override
     public void showLocationText(String text) {
-        mLocationLayout.mLocation.setText(text);
+        passingLayout.locationText.setText(text);
     }
 
     @Override
     public void hideLocation() {
-        mLocationLayout.mLayout.setVisibility(View.GONE);
+        passingLayout.locationLayout.setVisibility(View.GONE);
     }
 
     @Override
     public void showTimes(long times) {
-        mTimesLayout.mBody.setText(String.valueOf(times));
+        passingLayout.timesText.setText(String.valueOf(times));
     }
 
     @OnClick(R.id.fab)
@@ -327,9 +274,9 @@ public final class RecentlyUserUserActivity extends AppCompatActivity implements
         ImageLoader imageLoader = ImageLoader.getInstance();
         imageLoader.displayImage(model.mImageUri, mImageView);
 
-        mNameLayout.mBody.setText(model.mName);
-        mEmailLayout.mBody.setAutoLinkMask(Linkify.EMAIL_ADDRESSES);
-        mEmailLayout.mBody.setText(model.mEmail);
+        profileLayout.nameText.setText(model.mName);
+        profileLayout.emailText.setAutoLinkMask(Linkify.EMAIL_ADDRESSES);
+        profileLayout.emailText.setText(model.mEmail);
     }
 
     @Override
@@ -349,8 +296,8 @@ public final class RecentlyUserUserActivity extends AppCompatActivity implements
 
     @Override
     public void showLineUrl(String url) {
-        mLineUrlLayout.mBody.setAutoLinkMask(Linkify.WEB_URLS);
-        mLineUrlLayout.mBody.setText(url);
+        snsLayout.lineUrlText.setAutoLinkMask(Linkify.WEB_URLS);
+        snsLayout.lineUrlText.setText(url);
     }
 
     @Override

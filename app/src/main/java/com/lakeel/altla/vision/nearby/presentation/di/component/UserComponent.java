@@ -5,7 +5,6 @@ import com.lakeel.altla.vision.nearby.presentation.di.module.ActivityModule;
 import com.lakeel.altla.vision.nearby.presentation.di.module.ConfigModule;
 import com.lakeel.altla.vision.nearby.presentation.di.module.PresenterModule;
 import com.lakeel.altla.vision.nearby.presentation.di.module.RepositoryModule;
-import com.lakeel.altla.vision.nearby.presentation.view.activity.FavoritesUserActivity;
 import com.lakeel.altla.vision.nearby.presentation.view.activity.MainActivity;
 import com.lakeel.altla.vision.nearby.presentation.view.activity.RecentlyUserUserActivity;
 import com.lakeel.altla.vision.nearby.presentation.view.fragment.estimation.DeviceDistanceEstimationFragment;
@@ -31,8 +30,6 @@ public interface UserComponent {
     void inject(MainActivity activity);
 
     void inject(RecentlyUserUserActivity activity);
-
-    void inject(FavoritesUserActivity activity);
 
     void inject(SignInFragment fragment);
 

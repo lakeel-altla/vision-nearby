@@ -6,8 +6,11 @@ import android.widget.TextView;
 
 import butterknife.BindView;
 
-public final class PassingHeaderLayout {
+public final class ProfileLayout {
 
-    @BindView(R.id.title)
-    public TextView mTitle;
+    @BindView(R.id.nameText)
+    public TextView nameText;
+
+    @BindView(R.id.emailText)
+    public TextView emailText;
 }

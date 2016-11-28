@@ -1,5 +1,15 @@
 package com.lakeel.altla.vision.nearby.presentation.view.fragment.favorites;
 
+import android.os.Bundle;
+import android.support.design.widget.Snackbar;
+import android.support.v4.app.Fragment;
+import android.support.v7.widget.LinearLayoutManager;
+import android.support.v7.widget.RecyclerView;
+import android.view.LayoutInflater;
+import android.view.View;
+import android.view.ViewGroup;
+import android.widget.RelativeLayout;
+
 import com.lakeel.altla.vision.nearby.R;
 import com.lakeel.altla.vision.nearby.presentation.presenter.favorites.FavoritesListPresenter;
 import com.lakeel.altla.vision.nearby.presentation.presenter.model.FavoriteModel;
@@ -10,16 +20,6 @@ import com.lakeel.altla.vision.nearby.presentation.view.divider.DividerItemDecor
 import com.lakeel.altla.vision.nearby.presentation.view.transaction.FragmentController;
 import com.marshalchen.ultimaterecyclerview.UltimateRecyclerView;
 import com.marshalchen.ultimaterecyclerview.layoutmanagers.ScrollSmoothLineaerLayoutManager;
-
-import android.os.Bundle;
-import android.support.design.widget.Snackbar;
-import android.support.v4.app.Fragment;
-import android.support.v7.widget.LinearLayoutManager;
-import android.support.v7.widget.RecyclerView;
-import android.view.LayoutInflater;
-import android.view.View;
-import android.view.ViewGroup;
-import android.widget.RelativeLayout;
 
 import java.util.List;
 
@@ -109,9 +109,5 @@ public final class FavoritesListFragment extends Fragment implements FavoriteLis
     public void showFavoritesUserActivity(String userId, String userName) {
         FragmentController controller = new FragmentController(getFragmentManager());
         controller.showProfileFragment(userId, userName);
-//        Intent intent = new Intent(getContext(), FavoritesUserActivity.class);
-//        intent.putExtra(IntentExtra.USER_ID.name(), userId);
-//        intent.putExtra(IntentExtra.USER_NAME.name(), userName);
-//        getContext().startActivity(intent);
     }
 }
