@@ -9,9 +9,9 @@ import com.lakeel.altla.vision.nearby.presentation.view.activity.MainActivity;
 import com.lakeel.altla.vision.nearby.presentation.view.activity.RecentlyUserUserActivity;
 import com.lakeel.altla.vision.nearby.presentation.view.fragment.estimation.DeviceDistanceEstimationFragment;
 import com.lakeel.altla.vision.nearby.presentation.view.fragment.favorites.FavoritesListFragment;
-import com.lakeel.altla.vision.nearby.presentation.view.fragment.nearby.NearbyListFragment;
+import com.lakeel.altla.vision.nearby.presentation.view.fragment.nearby.NearbyListListFragment;
 import com.lakeel.altla.vision.nearby.presentation.view.fragment.profile.ProfileFragment;
-import com.lakeel.altla.vision.nearby.presentation.view.fragment.recently.RecentlyFragment;
+import com.lakeel.altla.vision.nearby.presentation.view.fragment.recently.RecentlyListListFragment;
 import com.lakeel.altla.vision.nearby.presentation.view.fragment.search.SearchFragment;
 import com.lakeel.altla.vision.nearby.presentation.view.fragment.settings.SettingsFragment;
 import com.lakeel.altla.vision.nearby.presentation.view.fragment.settings.bluetooth.BleSettingsFragment;
@@ -35,9 +35,9 @@ public interface UserComponent {
 
     void inject(FavoritesListFragment fragment);
 
-    void inject(NearbyListFragment fragment);
+    void inject(NearbyListListFragment fragment);
 
-    void inject(RecentlyFragment fragment);
+    void inject(RecentlyListListFragment fragment);
 
     void inject(SettingsFragment fragment);
 

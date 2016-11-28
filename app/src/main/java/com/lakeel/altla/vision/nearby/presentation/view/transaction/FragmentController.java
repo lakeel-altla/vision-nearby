@@ -3,9 +3,9 @@ package com.lakeel.altla.vision.nearby.presentation.view.transaction;
 import com.lakeel.altla.vision.nearby.R;
 import com.lakeel.altla.vision.nearby.presentation.view.fragment.estimation.DeviceDistanceEstimationFragment;
 import com.lakeel.altla.vision.nearby.presentation.view.fragment.favorites.FavoritesListFragment;
-import com.lakeel.altla.vision.nearby.presentation.view.fragment.nearby.NearbyListFragment;
+import com.lakeel.altla.vision.nearby.presentation.view.fragment.nearby.NearbyListListFragment;
 import com.lakeel.altla.vision.nearby.presentation.view.fragment.profile.ProfileFragment;
-import com.lakeel.altla.vision.nearby.presentation.view.fragment.recently.RecentlyFragment;
+import com.lakeel.altla.vision.nearby.presentation.view.fragment.recently.RecentlyListListFragment;
 import com.lakeel.altla.vision.nearby.presentation.view.fragment.settings.SettingsFragment;
 import com.lakeel.altla.vision.nearby.presentation.view.fragment.settings.bluetooth.BleSettingsFragment;
 import com.lakeel.altla.vision.nearby.presentation.view.fragment.settings.cm.CmSettingsFragment;
@@ -27,7 +27,7 @@ public final class FragmentController {
 
     private final String USER_LIST_FRAGMENT_TAG = FavoritesListFragment.class.getSimpleName();
 
-    private final String RECENTLY_FRAGMENT_TAG = RecentlyFragment.class.getSimpleName();
+    private final String RECENTLY_FRAGMENT_TAG = RecentlyListListFragment.class.getSimpleName();
 
     private final String TRACKING_FRAGMENT_TAG = TrackingFragment.class.getSimpleName();
 
@@ -62,12 +62,12 @@ public final class FragmentController {
     }
 
     public void showNearbyListFragment() {
-        NearbyListFragment fragment = NearbyListFragment.newInstance();
+        NearbyListListFragment fragment = NearbyListListFragment.newInstance();
         replaceFragment(R.id.fragmentPlaceholder, fragment, USER_LIST_FRAGMENT_TAG);
     }
 
     public void showRecentlyFragment() {
-        RecentlyFragment fragment = RecentlyFragment.newInstance();
+        RecentlyListListFragment fragment = RecentlyListListFragment.newInstance();
         replaceFragment(R.id.fragmentPlaceholder, fragment, RECENTLY_FRAGMENT_TAG);
     }
 

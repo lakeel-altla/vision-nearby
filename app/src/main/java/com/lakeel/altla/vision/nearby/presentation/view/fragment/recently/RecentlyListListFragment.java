@@ -14,8 +14,8 @@ import android.widget.RelativeLayout;
 import com.lakeel.altla.vision.nearby.R;
 import com.lakeel.altla.vision.nearby.presentation.intent.IntentExtra;
 import com.lakeel.altla.vision.nearby.presentation.intent.RecentlyIntentData;
-import com.lakeel.altla.vision.nearby.presentation.presenter.recently.RecentlyPresenter;
-import com.lakeel.altla.vision.nearby.presentation.view.RecentlyView;
+import com.lakeel.altla.vision.nearby.presentation.presenter.recently.RecentlyListPresenter;
+import com.lakeel.altla.vision.nearby.presentation.view.RecentlyListView;
 import com.lakeel.altla.vision.nearby.presentation.view.activity.MainActivity;
 import com.lakeel.altla.vision.nearby.presentation.view.activity.RecentlyUserUserActivity;
 import com.lakeel.altla.vision.nearby.presentation.view.adapter.RecentlyAdapter;
@@ -29,10 +29,10 @@ import javax.inject.Inject;
 import butterknife.BindView;
 import butterknife.ButterKnife;
 
-public final class RecentlyFragment extends Fragment implements RecentlyView {
+public final class RecentlyListListFragment extends Fragment implements RecentlyListView {
 
     @Inject
-    RecentlyPresenter mPresenter;
+    RecentlyListPresenter mPresenter;
 
     @BindView(R.id.layout)
     RelativeLayout mRelativeLayout;
@@ -40,8 +40,8 @@ public final class RecentlyFragment extends Fragment implements RecentlyView {
     @BindView(R.id.recycler_view)
     UltimateRecyclerView mUltimateRecyclerView;
 
-    public static RecentlyFragment newInstance() {
-        return new RecentlyFragment();
+    public static RecentlyListListFragment newInstance() {
+        return new RecentlyListListFragment();
     }
 
     @Override

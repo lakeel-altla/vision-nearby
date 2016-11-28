@@ -5,7 +5,7 @@ import com.lakeel.altla.vision.nearby.presentation.presenter.model.RecentlyItemM
 
 import android.support.annotation.StringRes;
 
-public interface RecentlyView extends BaseView {
+public interface RecentlyListView extends BaseView {
 
     void updateItems();
 

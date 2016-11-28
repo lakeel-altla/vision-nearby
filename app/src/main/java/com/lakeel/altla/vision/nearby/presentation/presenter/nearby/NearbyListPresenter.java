@@ -19,7 +19,7 @@ import com.lakeel.altla.vision.nearby.presentation.presenter.model.NearbyItemMod
 import com.lakeel.altla.vision.nearby.presentation.subscriber.ForegroundSubscriber;
 import com.lakeel.altla.vision.nearby.presentation.subscriber.Subscriber;
 import com.lakeel.altla.vision.nearby.presentation.view.NearbyItemView;
-import com.lakeel.altla.vision.nearby.presentation.view.NearbyView;
+import com.lakeel.altla.vision.nearby.presentation.view.NearbyListView;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -42,7 +42,7 @@ import rx.Subscription;
 import rx.android.schedulers.AndroidSchedulers;
 import rx.schedulers.Schedulers;
 
-public final class NearbyPresenter extends BasePresenter<NearbyView> implements GoogleApiClient.ConnectionCallbacks {
+public final class NearbyListPresenter extends BasePresenter<NearbyListView> implements GoogleApiClient.ConnectionCallbacks {
 
     private class NearbyMessagesListener extends AttachmentListener {
 
@@ -85,7 +85,7 @@ public final class NearbyPresenter extends BasePresenter<NearbyView> implements 
     @Inject
     FindConfigsUseCase mFindConfigsUseCase;
 
-    private static Logger LOGGER = LoggerFactory.getLogger(NearbyPresenter.class);
+    private static Logger LOGGER = LoggerFactory.getLogger(NearbyListPresenter.class);
 
     private final GoogleApiClient mGoogleApiClient;
 
@@ -111,7 +111,7 @@ public final class NearbyPresenter extends BasePresenter<NearbyView> implements 
     };
 
     @Inject
-    NearbyPresenter(Activity activity) {
+    NearbyListPresenter(Activity activity) {
         mGoogleApiClient = new GoogleApiClient.Builder(activity)
                 .addApi(Nearby.MESSAGES_API)
                 .build();

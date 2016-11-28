@@ -13,7 +13,7 @@ import com.lakeel.altla.vision.nearby.presentation.presenter.mapper.RecentlyItem
 import com.lakeel.altla.vision.nearby.presentation.presenter.model.LocationModel;
 import com.lakeel.altla.vision.nearby.presentation.presenter.model.RecentlyItemModel;
 import com.lakeel.altla.vision.nearby.presentation.view.RecentlyItemView;
-import com.lakeel.altla.vision.nearby.presentation.view.RecentlyView;
+import com.lakeel.altla.vision.nearby.presentation.view.RecentlyListView;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -31,7 +31,7 @@ import rx.Subscription;
 import rx.android.schedulers.AndroidSchedulers;
 import rx.schedulers.Schedulers;
 
-public final class RecentlyPresenter extends BasePresenter<RecentlyView> {
+public final class RecentlyListPresenter extends BasePresenter<RecentlyListView> {
 
     @Inject
     FindItemUseCase mFindItemUseCase;
@@ -45,7 +45,7 @@ public final class RecentlyPresenter extends BasePresenter<RecentlyView> {
     @Inject
     SaveFavoriteUseCase mSaveFavoriteUseCase;
 
-    private static final Logger LOGGER = LoggerFactory.getLogger(RecentlyPresenter.class);
+    private static final Logger LOGGER = LoggerFactory.getLogger(RecentlyListPresenter.class);
 
     private RecentlyItemModelMapper mRecentlyItemModelMapper = new RecentlyItemModelMapper();
 
@@ -56,7 +56,7 @@ public final class RecentlyPresenter extends BasePresenter<RecentlyView> {
     }
 
     @Inject
-    RecentlyPresenter() {
+    RecentlyListPresenter() {
     }
 
     @Override

@@ -4,7 +4,7 @@ import com.amulyakhare.textdrawable.TextDrawable;
 import com.lakeel.altla.vision.nearby.R;
 import com.lakeel.altla.vision.nearby.core.StringUtils;
 import com.lakeel.altla.vision.nearby.presentation.presenter.model.RecentlyItemModel;
-import com.lakeel.altla.vision.nearby.presentation.presenter.recently.RecentlyPresenter;
+import com.lakeel.altla.vision.nearby.presentation.presenter.recently.RecentlyListPresenter;
 import com.lakeel.altla.vision.nearby.presentation.view.DateFormatter;
 import com.lakeel.altla.vision.nearby.presentation.view.RecentlyItemView;
 import com.marshalchen.ultimaterecyclerview.SwipeableUltimateViewAdapter;
@@ -27,11 +27,11 @@ import butterknife.ButterKnife;
 
 public final class RecentlyAdapter extends SwipeableUltimateViewAdapter<RecentlyItemModel> {
 
-    private RecentlyPresenter mRecentlyPresenter;
+    private RecentlyListPresenter mRecentlyListPresenter;
 
-    public RecentlyAdapter(RecentlyPresenter recentlyPresenter) {
+    public RecentlyAdapter(RecentlyListPresenter recentlyListPresenter) {
         super(new ArrayList<>());
-        mRecentlyPresenter = recentlyPresenter;
+        mRecentlyListPresenter = recentlyListPresenter;
     }
 
     @Override
@@ -42,7 +42,7 @@ public final class RecentlyAdapter extends SwipeableUltimateViewAdapter<Recently
     @Override
     protected UltimateRecyclerviewViewHolder newViewHolder(View view) {
         RecentlyItemsViewHolder viewHolder = new RecentlyItemsViewHolder(view, true);
-        mRecentlyPresenter.onCreateItemView(viewHolder);
+        mRecentlyListPresenter.onCreateItemView(viewHolder);
         return viewHolder;
     }
 
@@ -72,7 +72,7 @@ public final class RecentlyAdapter extends SwipeableUltimateViewAdapter<Recently
         @BindView(R.id.swipe_layout)
         SwipeLayout mSwipeLayout;
 
-        private RecentlyPresenter.RecentlyItemPresenter mRecentlyItemPresenter;
+        private RecentlyListPresenter.RecentlyItemPresenter mRecentlyItemPresenter;
 
         public RecentlyItemsViewHolder(View itemView, boolean bind) {
             super(itemView);
@@ -84,7 +84,7 @@ public final class RecentlyAdapter extends SwipeableUltimateViewAdapter<Recently
         }
 
         @Override
-        public void setItemPresenter(RecentlyPresenter.RecentlyItemPresenter itemPresenter) {
+        public void setItemPresenter(RecentlyListPresenter.RecentlyItemPresenter itemPresenter) {
             mRecentlyItemPresenter = itemPresenter;
         }
 

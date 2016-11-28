@@ -2,7 +2,7 @@ package com.lakeel.altla.vision.nearby.presentation.view;
 
 import com.google.android.gms.common.api.Status;
 
-public interface NearbyView extends BaseView {
+public interface NearbyListView extends BaseView {
 
     void updateItems();
 
