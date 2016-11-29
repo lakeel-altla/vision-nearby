@@ -31,6 +31,6 @@ public class BasePresenter<V> {
 
     @CallSuper
     public void onStop() {
-        reusableCompositeSubscription.unsubscribe();
+        reusableCompositeSubscription.unSubscribe();
     }
 }

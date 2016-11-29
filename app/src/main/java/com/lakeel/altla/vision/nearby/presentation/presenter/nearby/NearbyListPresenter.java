@@ -227,7 +227,7 @@ public final class NearbyListPresenter extends BasePresenter<NearbyListView> imp
                 getView().showSnackBar(R.string.message_not_found);
             }
 
-            reusableCompositeSubscription.unsubscribe();
+            reusableCompositeSubscription.unSubscribe();
         }, 10, TimeUnit.SECONDS);
     }
 

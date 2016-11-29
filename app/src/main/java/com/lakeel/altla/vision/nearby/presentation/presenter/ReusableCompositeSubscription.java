@@ -16,7 +16,7 @@ public final class ReusableCompositeSubscription {
         compositeSubscription.add(subscription);
     }
 
-    public void unsubscribe() {
+    public void unSubscribe() {
         if (compositeSubscription != null) {
             compositeSubscription.unsubscribe();
             compositeSubscription = null;
