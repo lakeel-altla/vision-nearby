@@ -16,7 +16,6 @@ public final class RestGeocodeRepositoryImpl implements RestGeocodeRepository {
     private String apiKey = BuildConfig.GEO_CODING_API_KEY;
 
     @Inject
-    @Named("geocodeRetrofit")
     public Retrofit mRetrofit;
 
     @Inject

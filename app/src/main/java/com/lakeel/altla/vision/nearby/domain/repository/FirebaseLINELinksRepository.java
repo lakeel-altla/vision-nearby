@@ -9,4 +9,6 @@ public interface FirebaseLINELinksRepository {
     Single<String> saveUrl(String url);
 
     Single<LINELinksEntity> findByUserId(String userId);
+
+    Single<LINELinksEntity> findUserIdByLINEUrl(String url);
 }

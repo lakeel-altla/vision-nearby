@@ -8,7 +8,7 @@ import java.util.Map;
 
 public final class RecentlyEntity extends BaseEntity {
 
-    public String id;
+    public String userId;
 
     public Integer userActivity;
 
@@ -38,10 +38,7 @@ public final class RecentlyEntity extends BaseEntity {
 
     public Map<String, Object> toMap() {
         Map<String, Object> map = new HashMap<>();
-        map.put("userId", id);
-        map.put("detectedActivity", userActivity);
-        map.put("location", location);
-        map.put("weather", weather);
+        map.put("userId", userId);
         map.put("passingTime", ServerValue.TIMESTAMP);
         return map;
     }

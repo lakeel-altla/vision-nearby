@@ -19,7 +19,7 @@ public final class RecentlyItemModelMapper {
     public RecentlyItemModel map(@NonNull RecentlyEntity recentlyEntity, @NonNull ItemsEntity itemsEntity) {
         RecentlyItemModel model = new RecentlyItemModel();
 
-        model.userId = recentlyEntity.id;
+        model.userId = recentlyEntity.userId;
         model.name = itemsEntity.name;
         model.imageUri = itemsEntity.imageUri;
         model.detectedActivity = recentlyEntity.userActivity;

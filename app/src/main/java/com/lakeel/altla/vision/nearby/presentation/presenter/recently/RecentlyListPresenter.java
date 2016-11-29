@@ -64,7 +64,7 @@ public final class RecentlyListPresenter extends BasePresenter<RecentlyListView>
         Subscription subscription = mFindRecentlyUseCase
                 .execute()
                 .flatMap(entity -> {
-                    Observable<ItemsEntity> itemsObservable = mFindItemUseCase.execute(entity.id).subscribeOn(Schedulers.io()).toObservable();
+                    Observable<ItemsEntity> itemsObservable = mFindItemUseCase.execute(entity.userId).subscribeOn(Schedulers.io()).toObservable();
                     return Observable.zip(Observable.just(entity), itemsObservable, (recentlyEntity, itemsEntity) ->
                             mRecentlyItemModelMapper.map(recentlyEntity, itemsEntity));
                 })

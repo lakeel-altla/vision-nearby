@@ -58,7 +58,6 @@ public final class FirebaseItemsRepositoryImpl implements FirebaseItemsRepositor
 
     @Override
     public Single<ItemsEntity> findItemsById(String id) {
-
         return Single.create(new Single.OnSubscribe<ItemsEntity>() {
 
             @Override

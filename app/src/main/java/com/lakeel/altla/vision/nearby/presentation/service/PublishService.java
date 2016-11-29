@@ -1,5 +1,15 @@
 package com.lakeel.altla.vision.nearby.presentation.service;
 
+import android.app.Service;
+import android.bluetooth.le.AdvertiseCallback;
+import android.bluetooth.le.AdvertiseSettings;
+import android.content.Intent;
+import android.os.Bundle;
+import android.os.IBinder;
+import android.support.annotation.Nullable;
+import android.support.v4.app.NotificationCompat;
+
+import com.lakeel.altla.vision.nearby.R;
 import com.lakeel.altla.vision.nearby.core.StringUtils;
 import com.lakeel.altla.vision.nearby.presentation.intent.IntentKey;
 
@@ -9,13 +19,7 @@ import org.altbeacon.beacon.BeaconTransmitter;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import android.app.Service;
-import android.bluetooth.le.AdvertiseCallback;
-import android.bluetooth.le.AdvertiseSettings;
-import android.content.Intent;
-import android.os.Bundle;
-import android.os.IBinder;
-import android.support.annotation.Nullable;
+import java.util.UUID;
 
 public final class PublishService extends Service {
 
@@ -31,7 +35,7 @@ public final class PublishService extends Service {
             LOGGER.debug("namespaceId=" + namespaceId + " instanceId=" + instanceId);
 
             if (StringUtils.isEmpty(namespaceId) || StringUtils.isEmpty(instanceId)) {
-                LOGGER.error("Stop publish service because namespace userId or instance userId were empty");
+                LOGGER.error("Stop publish service because namespace id or instance id was empty.");
                 stopSelf();
             } else {
                 BeaconParser beaconParser = new BeaconParser()
@@ -42,7 +46,7 @@ public final class PublishService extends Service {
                 if (beaconTransmitter.isStarted()) {
                     LOGGER.debug("Already started");
                 } else {
-                    // Transmit as a Eddystone UID.
+                    // Transmit as a Eddystone-UID.
                     Beacon beacon = new Beacon.Builder()
                             .setId1(namespaceId)
                             .setId2(instanceId)
@@ -52,7 +56,16 @@ public final class PublishService extends Service {
                         @Override
                         public void onStartSuccess(AdvertiseSettings settingsInEffect) {
                             super.onStartSuccess(settingsInEffect);
+
                             LOGGER.debug("Succeeded to start advertising.");
+
+                            // Show a local notification.
+                            NotificationCompat.Builder builder = new NotificationCompat.Builder(getApplicationContext());
+                            builder.setContentTitle(getApplicationContext().getResources().getString(R.string.notification_title_advertise_ble));
+                            builder.setContentText(getApplicationContext().getResources().getString(R.string.notification_message_advertise_ble));
+                            builder.setSmallIcon(android.R.drawable.ic_lock_idle_alarm);
+
+                            startForeground(UUID.randomUUID().variant(), builder.build());
                         }
 
                         @Override

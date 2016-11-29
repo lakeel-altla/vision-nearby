@@ -1,21 +1,5 @@
 package com.lakeel.altla.vision.nearby.presentation.service;
 
-import com.google.android.gms.awareness.Awareness;
-import com.google.android.gms.common.api.GoogleApiClient;
-import com.google.android.gms.tasks.Task;
-import com.google.firebase.database.DatabaseReference;
-import com.google.firebase.database.FirebaseDatabase;
-
-import com.firebase.geofire.GeoFire;
-import com.firebase.geofire.GeoLocation;
-import com.lakeel.altla.vision.nearby.data.entity.LocationsDataEntity;
-import com.lakeel.altla.vision.nearby.data.execption.DataStoreException;
-import com.lakeel.altla.vision.nearby.data.mapper.LocationsDataEntityMapper;
-import com.lakeel.altla.vision.nearby.presentation.intent.IntentKey;
-
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-
 import android.Manifest;
 import android.app.IntentService;
 import android.content.Context;
@@ -26,27 +10,33 @@ import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.content.ContextCompat;
 
+import com.google.android.gms.awareness.Awareness;
+import com.google.android.gms.common.api.GoogleApiClient;
+import com.lakeel.altla.vision.nearby.domain.usecase.SaveLocationDataUseCase;
+import com.lakeel.altla.vision.nearby.domain.usecase.SaveLocationUseCase;
+import com.lakeel.altla.vision.nearby.presentation.di.component.DaggerServiceComponent;
+import com.lakeel.altla.vision.nearby.presentation.di.component.ServiceComponent;
+import com.lakeel.altla.vision.nearby.presentation.intent.IntentKey;
+
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
+import javax.inject.Inject;
+
 import rx.Single;
-import rx.functions.Func1;
 import rx.schedulers.Schedulers;
 
 public final class LocationService extends IntentService {
 
+    @Inject
+    SaveLocationUseCase saveLocationUseCase;
+
+    @Inject
+    SaveLocationDataUseCase saveLocationDataUseCase;
+
     private static final Logger LOGGER = LoggerFactory.getLogger(LocationService.class);
 
-    private static final String REFERENCE_GEOFENCES = "locations";
-
-    private static final String REFERENCE_LOCATIONS = "locations-data";
-
-    private final DatabaseReference mGeoReference = FirebaseDatabase.getInstance().getReference(REFERENCE_GEOFENCES);
-
-    private final DatabaseReference mLocationReference = FirebaseDatabase.getInstance().getReference(REFERENCE_LOCATIONS);
-
-    private final GeoFire geoFire = new GeoFire(mGeoReference);
-
-    private final LocationsDataEntityMapper mLocationsDataEntityMapper = new LocationsDataEntityMapper();
-
-    private GoogleApiClient mGoogleApiClient;
+    private GoogleApiClient googleApiClient;
 
     public LocationService() {
         super(LocationService.class.getSimpleName());
@@ -58,29 +48,24 @@ public final class LocationService extends IntentService {
 
     @Override
     protected void onHandleIntent(Intent intent) {
-        LOGGER.debug("Location Service");
+        ServiceComponent component = DaggerServiceComponent.builder().build();
+        component.inject(this);
 
-        final String beaconId = intent.getStringExtra(IntentKey.BEACON_ID.name());
+        String beaconId = intent.getStringExtra(IntentKey.BEACON_ID.name());
+        Context context = getApplicationContext();
 
-        final Context context = getApplicationContext();
-        mGoogleApiClient = new GoogleApiClient.Builder(context)
+        googleApiClient = new GoogleApiClient.Builder(context)
                 .addApi(Awareness.API)
                 .addConnectionCallbacks(new GoogleApiClient.ConnectionCallbacks() {
+
                     @Override
                     public void onConnected(@Nullable Bundle bundle) {
-                        final String uniqueId = mLocationReference.push().getKey();
-
                         getUserCurrentLocation(context)
-                                .flatMap(location -> saveLocation(uniqueId, location))
-                                .flatMap(new Func1<Location, Single<Void>>() {
-                                    @Override
-                                    public Single<Void> call(Location location) {
-                                        return saveLocationData(uniqueId, beaconId);
-                                    }
-                                })
+                                .flatMap(location -> saveLocationUseCase.execute(location))
+                                .flatMap(uniqueId -> saveLocationDataUseCase.execute(uniqueId, beaconId).subscribeOn(Schedulers.io()))
                                 .subscribeOn(Schedulers.io())
-                                .subscribe(aVoid -> LOGGER.debug("Succeeded to save to locations."),
-                                        e -> LOGGER.error("Failed to save to locations.", e));
+                                .subscribe(aVoid -> LOGGER.debug("Succeeded to save location data."),
+                                        e -> LOGGER.error("Failed to save location data.", e));
                     }
 
                     @Override
@@ -88,20 +73,21 @@ public final class LocationService extends IntentService {
                     }
                 })
                 .build();
-        mGoogleApiClient.connect();
+
+        googleApiClient.connect();
     }
 
     Single<Location> getUserCurrentLocation(Context context) {
         return Single.create(subscriber -> {
             if (ContextCompat.checkSelfPermission(context, Manifest.permission.ACCESS_FINE_LOCATION) == PackageManager.PERMISSION_GRANTED) {
-                Awareness.SnapshotApi.getLocation(mGoogleApiClient)
-                        .setResultCallback(locationResult -> {
-                            if (!locationResult.getStatus().isSuccess()) {
-                                LOGGER.error("Could not get user location. User may be turning off the location.");
+                Awareness.SnapshotApi.getLocation(googleApiClient)
+                        .setResultCallback(result -> {
+                            if (!result.getStatus().isSuccess()) {
+                                LOGGER.error("Could not get user location. User may be turning off the gps.");
                                 subscriber.onSuccess(null);
                                 return;
                             }
-                            Location location = locationResult.getLocation();
+                            Location location = result.getLocation();
                             subscriber.onSuccess(location);
                         });
             } else {
@@ -109,32 +95,5 @@ public final class LocationService extends IntentService {
                 subscriber.onSuccess(null);
             }
         });
-    }
-
-    Single<Void> saveLocationData(String uniqueId, String beaconId) {
-        return Single.create(subscriber -> {
-            LocationsDataEntity entity = mLocationsDataEntityMapper.map(beaconId);
-            Task task = mLocationReference
-                    .child(uniqueId)
-                    .setValue(entity.toMap())
-                    .addOnSuccessListener(subscriber::onSuccess)
-                    .addOnFailureListener(e -> LOGGER.error("Failed to save user current location.", e));
-
-            Exception exception = task.getException();
-            if (exception != null) {
-                subscriber.onError(new DataStoreException(exception));
-            }
-        });
-    }
-
-    Single<Location> saveLocation(String uniqueId, Location location) {
-        return Single.create(subscriber ->
-                geoFire.setLocation(uniqueId, new GeoLocation(location.getLatitude(), location.getLongitude()), (key, error) -> {
-                    if (error == null) {
-                        subscriber.onSuccess(location);
-                    } else {
-                        subscriber.onError(error.toException());
-                    }
-                }));
     }
 }

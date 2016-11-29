@@ -1,35 +1,40 @@
 package com.lakeel.altla.vision.nearby.data.repository;
 
+import com.google.android.gms.tasks.Task;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
-
 import com.lakeel.altla.vision.nearby.data.entity.LocationsDataEntity;
+import com.lakeel.altla.vision.nearby.data.execption.DataStoreException;
+import com.lakeel.altla.vision.nearby.data.mapper.LocationsDataEntityMapper;
 import com.lakeel.altla.vision.nearby.domain.repository.FirebaseLocationsDataRepository;
 
 import java.util.Iterator;
 
 import javax.inject.Inject;
 
+import rx.Completable;
 import rx.Single;
 
-public class FirebaseLocationsDataRepositoryImpl implements FirebaseLocationsDataRepository {
+public final class FirebaseLocationsDataRepositoryImpl implements FirebaseLocationsDataRepository {
 
     private static final String KEY_ID = "userId";
 
-    private DatabaseReference mReference;
+    private DatabaseReference databaseReference;
+
+    private final LocationsDataEntityMapper locationsDataEntityMapper = new LocationsDataEntityMapper();
 
     @Inject
     public FirebaseLocationsDataRepositoryImpl(String url) {
-        mReference = FirebaseDatabase.getInstance().getReferenceFromUrl(url);
+        databaseReference = FirebaseDatabase.getInstance().getReferenceFromUrl(url);
     }
 
     @Override
     public Single<LocationsDataEntity> findLocationsDataById(String id) {
         return Single.create(subscriber ->
-                mReference
+                databaseReference
                         .orderByChild(KEY_ID)
                         .equalTo(id)
                         .limitToFirst(1)
@@ -56,5 +61,22 @@ public class FirebaseLocationsDataRepositoryImpl implements FirebaseLocationsDat
                                 subscriber.onError(databaseError.toException());
                             }
                         }));
+    }
+
+    @Override
+    public Single<LocationsDataEntity> saveLocationData(String uniqueId, String beaconId) {
+        return Single.create(subscriber -> {
+            LocationsDataEntity entity = locationsDataEntityMapper.map(beaconId);
+            Task task = databaseReference
+                    .child(uniqueId)
+                    .setValue(entity.toMap())
+                    .addOnSuccessListener(aVoid -> subscriber.onSuccess(entity))
+                    .addOnFailureListener(subscriber::onError);
+
+            Exception exception = task.getException();
+            if (exception != null) {
+                subscriber.onError(new DataStoreException(exception));
+            }
+        });
     }
 }

@@ -30,7 +30,7 @@ import com.lakeel.altla.vision.nearby.domain.repository.FirebaseRecentlyReposito
 import com.lakeel.altla.vision.nearby.domain.repository.PreferenceRepository;
 import com.lakeel.altla.vision.nearby.domain.repository.RestCmRepository;
 import com.lakeel.altla.vision.nearby.domain.repository.RestGeocodeRepository;
-import com.lakeel.altla.vision.nearby.presentation.di.ActivityScope;
+import com.lakeel.altla.vision.nearby.presentation.di.CustomScope;
 
 import javax.inject.Named;
 
@@ -44,97 +44,97 @@ import retrofit2.converter.gson.GsonConverterFactory;
 @Module
 public class RepositoryModule {
 
-    @ActivityScope
+    @CustomScope
     @Provides
     FirebaseFavoriteRepository provideFavoritesRepository(@Named("favoritesUrl") String url) {
         return new FirebaseFavoriteRepositoryImpl(url);
     }
 
-    @ActivityScope
+    @CustomScope
     @Provides
     FirebaseRecentlyRepository provideRecentlyRepository(@Named("recentlyUrl") String url) {
         return new FirebaseRecentlyRepositoryImpl(url);
     }
 
-    @ActivityScope
+    @CustomScope
     @Provides
     FirebaseAuthRepository provideAuthRepository(FirebaseAuthRepositoryImpl repository) {
         return repository;
     }
 
-    @ActivityScope
+    @CustomScope
     @Provides
     FirebaseItemsRepository provideItemsRepository(@Named("itemsUrl") String url) {
         return new FirebaseItemsRepositoryImpl(url);
     }
 
-    @ActivityScope
+    @CustomScope
     @Provides
     FirebaseBeaconsRepository provideBeaconsRepository(@Named("beaconsUrl") String url) {
         return new FirebaseBeaconsRepositoryImpl(url);
     }
 
-    @ActivityScope
+    @CustomScope
     @Provides
     FirebasePresenceRepository providePresenceRepository(@Named("presencesUrl") String url) {
         return new FirebasePresenceRepositoryImpl(url);
     }
 
-    @ActivityScope
+    @CustomScope
     @Provides
     FirebaseConfigsRepository provideConfigsRepository(@Named("configsUrl") String url) {
         return new FirebaseConfigsRepositoryImpl(url);
     }
 
-    @ActivityScope
+    @CustomScope
     @Provides
     FirebaseConnectionRepository provideConnectionRepository(@Named("connectionUrl") String url) {
         return new FirebaseConnectionRepositoryImpl(url);
     }
 
-    @ActivityScope
+    @CustomScope
     @Provides
     RestGeocodeRepository provideLocationRepository(RestGeocodeRepositoryImpl repository) {
         return repository;
     }
 
-    @ActivityScope
+    @CustomScope
     @Provides
     PreferenceRepository providePreferenceRepository(PreferenceRepositoryImpl repository) {
         return repository;
     }
 
-    @ActivityScope
+    @CustomScope
     @Provides
     FirebaseCMLinksRepository provideCMLinksRepository(@Named("CMLinksUrl") String url) {
         return new FirebaseCMLinksRepositoryImpl(url);
     }
 
-    @ActivityScope
+    @CustomScope
     @Provides
     FirebaseLINELinksRepository provideLINELinksRepository(@Named("LINELinksUrl") String url) {
         return new FirebaseLINELinksRepositoryImpl(url);
     }
 
-    @ActivityScope
+    @CustomScope
     @Provides
     FirebaseLocationsRepository provideFirebaseLocationsRepository(@Named("locationsUrl") String url) {
         return new FirebaseLocationsRepositoryImpl(url);
     }
 
-    @ActivityScope
+    @CustomScope
     @Provides
     FirebaseLocationsDataRepository provideFirebaseLocationsDataRepository(@Named("locationsDataUrl") String url) {
         return new FirebaseLocationsDataRepositoryImpl(url);
     }
 
-    @ActivityScope
+    @CustomScope
     @Provides
     RestCmRepository provideCmApiRepository(RestCmRepositoryImpl repository) {
         return repository;
     }
 
-    @ActivityScope
+    @CustomScope
     @Provides
     OkHttpClient provideOkHttpClient() {
         return new OkHttpClient()
@@ -142,9 +142,8 @@ public class RepositoryModule {
                 .build();
     }
 
-    @ActivityScope
+    @CustomScope
     @Provides
-    @Named("geocodeRetrofit")
     Retrofit provideGeocodeRetrofit(@Named("geocodeBaseUrl") String baseUrl, OkHttpClient okHttpClient) {
         return new Retrofit.Builder()
                 .baseUrl(baseUrl)

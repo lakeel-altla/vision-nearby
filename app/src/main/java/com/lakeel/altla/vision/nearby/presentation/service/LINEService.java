@@ -5,14 +5,13 @@ import android.app.PendingIntent;
 import android.content.Intent;
 import android.net.Uri;
 
-import com.google.firebase.database.DataSnapshot;
-import com.google.firebase.database.DatabaseError;
-import com.google.firebase.database.DatabaseReference;
-import com.google.firebase.database.FirebaseDatabase;
-import com.google.firebase.database.ValueEventListener;
 import com.lakeel.altla.vision.nearby.R;
 import com.lakeel.altla.vision.nearby.data.entity.ItemsEntity;
 import com.lakeel.altla.vision.nearby.data.entity.LINELinksEntity;
+import com.lakeel.altla.vision.nearby.domain.usecase.FindItemUseCase;
+import com.lakeel.altla.vision.nearby.domain.usecase.FindUserIdUseCase;
+import com.lakeel.altla.vision.nearby.presentation.di.component.DaggerServiceComponent;
+import com.lakeel.altla.vision.nearby.presentation.di.component.ServiceComponent;
 import com.lakeel.altla.vision.nearby.presentation.intent.IntentKey;
 import com.lakeel.altla.vision.nearby.presentation.intent.PendingIntentCreator;
 import com.lakeel.altla.vision.nearby.presentation.view.notification.NotificationNotifier;
@@ -20,26 +19,25 @@ import com.lakeel.altla.vision.nearby.presentation.view.notification.Notificatio
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import java.util.Iterator;
+import javax.inject.Inject;
 
 import rx.Single;
-import rx.SingleSubscriber;
 import rx.android.schedulers.AndroidSchedulers;
 import rx.functions.Func1;
 import rx.schedulers.Schedulers;
 
 public class LINEService extends IntentService {
 
+    @Inject
+    FindUserIdUseCase findUserIdUseCase;
+
+    @Inject
+    FindItemUseCase findItemUseCase;
+
     private static final Logger LOGGER = LoggerFactory.getLogger(LINEService.class);
 
-    private static final String ITEMS_REFERENCE = "items";
-
-    private static final String LINE_REFERENCE = "links/line";
-
-    private static final String URL_KEY = "url";
-
     public LINEService() {
-        super(LINEService.class.getSimpleName());
+        this(LINEService.class.getSimpleName());
     }
 
     public LINEService(String name) {
@@ -48,15 +46,20 @@ public class LINEService extends IntentService {
 
     @Override
     protected void onHandleIntent(Intent intent) {
+        // Dagger
+        ServiceComponent component = DaggerServiceComponent.builder().build();
+        component.inject(this);
+
         String lineUrl = intent.getStringExtra(IntentKey.LINE_URL.name());
 
-        LOGGER.info("LINE URL was found:URL = " + lineUrl);
+        LOGGER.info("LINE URL was found:URL=" + lineUrl);
 
-        findUserIdByLINEUrl(lineUrl)
+        findUserIdUseCase
+                .execute(lineUrl)
                 .flatMap(new Func1<LINELinksEntity, Single<ItemsEntity>>() {
                     @Override
                     public Single<ItemsEntity> call(LINELinksEntity lineLinksEntity) {
-                        return findItemById(lineLinksEntity.key).subscribeOn(Schedulers.io());
+                        return findItemUseCase.execute(lineLinksEntity.key).subscribeOn(Schedulers.io());
                     }
                 }).subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
@@ -74,54 +77,5 @@ public class LINEService extends IntentService {
                     notifier.notifyNotification();
 
                 }, e -> LOGGER.error("Failed to notify a LINE notification.", e));
-    }
-
-    Single<LINELinksEntity> findUserIdByLINEUrl(String url) {
-        return Single.create(new Single.OnSubscribe<LINELinksEntity>() {
-            @Override
-            public void call(SingleSubscriber<? super LINELinksEntity> subscriber) {
-                DatabaseReference reference = FirebaseDatabase.getInstance().getReference(LINE_REFERENCE);
-                reference.orderByChild(URL_KEY).equalTo(url).addListenerForSingleValueEvent(new ValueEventListener() {
-                    @Override
-                    public void onDataChange(DataSnapshot dataSnapshot) {
-                        Iterable<DataSnapshot> iterable = dataSnapshot.getChildren();
-                        Iterator<DataSnapshot> iterator = iterable.iterator();
-
-                        while (iterator.hasNext()) {
-                            DataSnapshot snapshot = iterator.next();
-                            LINELinksEntity entity = snapshot.getValue(LINELinksEntity.class);
-                            entity.key = snapshot.getKey();
-                            subscriber.onSuccess(entity);
-                        }
-                    }
-
-                    @Override
-                    public void onCancelled(DatabaseError databaseError) {
-                        subscriber.onError(databaseError.toException());
-                    }
-                });
-            }
-        });
-    }
-
-    Single<ItemsEntity> findItemById(String id) {
-        return Single.create(new Single.OnSubscribe<ItemsEntity>() {
-            @Override
-            public void call(SingleSubscriber<? super ItemsEntity> subscriber) {
-                DatabaseReference reference = FirebaseDatabase.getInstance().getReference(ITEMS_REFERENCE);
-                reference.child(id).addListenerForSingleValueEvent(new ValueEventListener() {
-                    @Override
-                    public void onDataChange(DataSnapshot dataSnapshot) {
-                        ItemsEntity entity = dataSnapshot.getValue(ItemsEntity.class);
-                        subscriber.onSuccess(entity);
-                    }
-
-                    @Override
-                    public void onCancelled(DatabaseError databaseError) {
-                        subscriber.onError(databaseError.toException());
-                    }
-                });
-            }
-        });
     }
 }

@@ -6,18 +6,22 @@ import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
-
-import com.lakeel.altla.vision.nearby.presentation.firebase.MyUser;
 import com.lakeel.altla.vision.nearby.data.entity.LINELinksEntity;
 import com.lakeel.altla.vision.nearby.data.execption.DataStoreException;
 import com.lakeel.altla.vision.nearby.domain.repository.FirebaseLINELinksRepository;
+import com.lakeel.altla.vision.nearby.presentation.firebase.MyUser;
+
+import java.util.Iterator;
 
 import javax.inject.Inject;
 
 import rx.Single;
+import rx.SingleSubscriber;
 
 
 public class FirebaseLINELinksRepositoryImpl implements FirebaseLINELinksRepository {
+
+    private static final String URL_KEY = "url";
 
     private DatabaseReference mReference;
 
@@ -62,5 +66,33 @@ public class FirebaseLINELinksRepositoryImpl implements FirebaseLINELinksReposit
                                 subscriber.onError(databaseError.toException());
                             }
                         }));
+    }
+
+    @Override
+    public Single<LINELinksEntity> findUserIdByLINEUrl(String url) {
+        return Single.create(new Single.OnSubscribe<LINELinksEntity>() {
+            @Override
+            public void call(SingleSubscriber<? super LINELinksEntity> subscriber) {
+                mReference.orderByChild(URL_KEY).equalTo(url).addListenerForSingleValueEvent(new ValueEventListener() {
+                    @Override
+                    public void onDataChange(DataSnapshot dataSnapshot) {
+                        Iterable<DataSnapshot> iterable = dataSnapshot.getChildren();
+                        Iterator<DataSnapshot> iterator = iterable.iterator();
+
+                        while (iterator.hasNext()) {
+                            DataSnapshot snapshot = iterator.next();
+                            LINELinksEntity entity = snapshot.getValue(LINELinksEntity.class);
+                            entity.key = snapshot.getKey();
+                            subscriber.onSuccess(entity);
+                        }
+                    }
+
+                    @Override
+                    public void onCancelled(DatabaseError databaseError) {
+                        subscriber.onError(databaseError.toException());
+                    }
+                });
+            }
+        });
     }
 }

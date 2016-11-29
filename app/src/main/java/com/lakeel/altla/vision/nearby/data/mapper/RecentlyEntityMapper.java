@@ -16,9 +16,9 @@ import static com.lakeel.altla.vision.nearby.data.entity.RecentlyEntity.WeatherE
 
 public final class RecentlyEntityMapper {
 
-    public RecentlyEntity map(ItemsEntity itemsEntity) {
+    public RecentlyEntity map(String userId) {
         RecentlyEntity entity = new RecentlyEntity();
-        entity.id = itemsEntity.key;
+        entity.userId = userId;
         return entity;
     }
 

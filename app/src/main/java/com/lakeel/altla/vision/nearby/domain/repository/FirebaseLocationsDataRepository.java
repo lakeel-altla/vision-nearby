@@ -7,4 +7,6 @@ import rx.Single;
 public interface FirebaseLocationsDataRepository {
 
     Single<LocationsDataEntity> findLocationsDataById(String id);
+
+    Single<LocationsDataEntity> saveLocationData(String uniqueId, String beaconId);
 }

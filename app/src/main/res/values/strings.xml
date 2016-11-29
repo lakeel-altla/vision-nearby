@@ -58,6 +58,8 @@
     <string name="title_add_favorites">Add to Favorites</string>
     <string name="title_add_friends">Add to Friends</string>
 
+    <string name="notification_title_advertise_ble">Advertising as a beacon.</string>
+
     <string name="preference_summary_publish_in_background">Allow advertise data when the app becomes
         inactive.
     </string>
@@ -79,6 +81,8 @@
     <string name="message_device_not_detected">This device has not been detected by others.</string>
     <string name="message_finding_for_nearby_device_format">Finding for %1$s.</string>
     <string name="message_device_distance_format">%1$s meters away.</string>
+
+    <string name="notification_message_advertise_ble">BLE Advertise.</string>
 
     <string name="button_add">Add</string>
     <string name="button_remove">Remove</string>

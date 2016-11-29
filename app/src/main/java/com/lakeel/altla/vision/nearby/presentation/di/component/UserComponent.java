@@ -1,10 +1,11 @@
 package com.lakeel.altla.vision.nearby.presentation.di.component;
 
-import com.lakeel.altla.vision.nearby.presentation.di.ActivityScope;
+import com.lakeel.altla.vision.nearby.presentation.di.CustomScope;
 import com.lakeel.altla.vision.nearby.presentation.di.module.ActivityModule;
 import com.lakeel.altla.vision.nearby.presentation.di.module.ConfigModule;
 import com.lakeel.altla.vision.nearby.presentation.di.module.PresenterModule;
 import com.lakeel.altla.vision.nearby.presentation.di.module.RepositoryModule;
+import com.lakeel.altla.vision.nearby.presentation.service.LINEService;
 import com.lakeel.altla.vision.nearby.presentation.view.activity.MainActivity;
 import com.lakeel.altla.vision.nearby.presentation.view.fragment.estimation.DeviceDistanceEstimationFragment;
 import com.lakeel.altla.vision.nearby.presentation.view.fragment.favorites.FavoritesListFragment;
@@ -23,7 +24,7 @@ import com.lakeel.altla.vision.nearby.presentation.view.fragment.tracking.Tracki
 
 import dagger.Subcomponent;
 
-@ActivityScope
+@CustomScope
 @Subcomponent(modules = {ActivityModule.class, PresenterModule.class, RepositoryModule.class, ConfigModule.class})
 public interface UserComponent {
 
@@ -56,4 +57,6 @@ public interface UserComponent {
     void inject(DeviceDistanceEstimationFragment fragment);
 
     void inject(ProfileFragment fragment);
+
+    void inject(LINEService service);
 }
