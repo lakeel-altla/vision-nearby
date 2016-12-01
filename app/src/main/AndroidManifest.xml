@@ -1,58 +1,74 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
-          package="com.lakeel.altla.vision.nearby">
+    package="com.lakeel.altla.vision.nearby">
 
-    <uses-permission android:name="com.google.android.gms.permission.ACTIVITY_RECOGNITION"/>
-    <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION"/>
-    <uses-permission android:name="android.permission.BLUETOOTH"/>
-    <uses-permission android:name="android.permission.RECEIVE_BOOT_COMPLETED"/>
+    <uses-permission android:name="com.google.android.gms.permission.ACTIVITY_RECOGNITION" />
+    <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION" />
+    <uses-permission android:name="android.permission.BLUETOOTH" />
+    <uses-permission android:name="android.permission.RECEIVE_BOOT_COMPLETED" />
 
     <!-- Nearby API Key -->
     <meta-data
-            android:name="com.google.android.nearby.messages.API_KEY"
-            android:value="${NEARBY_MESSAGES_API_KEY}"/>
+        android:name="com.google.android.nearby.messages.API_KEY"
+        android:value="${NEARBY_MESSAGES_API_KEY}" />
 
     <application
-            android:name=".presentation.application.App"
-            android:allowBackup="true"
-            android:icon="@mipmap/ic_launcher"
-            android:label="@string/app_name"
-            android:theme="@style/AppTheme">
+        android:name=".presentation.application.App"
+        android:allowBackup="true"
+        android:icon="@mipmap/ic_launcher"
+        android:label="@string/app_name"
+        android:theme="@style/AppTheme">
 
         <!-- Awareness API -->
         <meta-data
-                android:name="com.google.android.awareness.API_KEY"
-                android:value="${GOOGLE_AWARENESS_API_KEY}"/>
+            android:name="com.google.android.awareness.API_KEY"
+            android:value="${GOOGLE_AWARENESS_API_KEY}" />
 
         <!-- Google Map API -->
         <meta-data
-                android:name="com.google.android.geo.API_KEY"
-                android:value="${GOOGLE_MAPS_API_KEY}"/>
+            android:name="com.google.android.geo.API_KEY"
+            android:value="${GOOGLE_MAPS_API_KEY}" />
 
         <activity
-                android:name=".presentation.view.activity.MainActivity"
-                android:label="@string/app_name"
-                android:launchMode="standard"
-                android:theme="@style/AppTheme.NoActionBar">
+            android:name=".presentation.view.activity.MainActivity"
+            android:label="@string/app_name"
+            android:launchMode="standard"
+            android:theme="@style/AppTheme.NoActionBar">
             <intent-filter>
-                <action android:name="android.intent.action.MAIN"/>
+                <action android:name="android.intent.action.MAIN" />
 
-                <category android:name="android.intent.category.LAUNCHER"/>
+                <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
 
-        <service android:name=".presentation.service.LocationService"/>
-        <service android:name=".presentation.service.LINEService"/>
-        <service android:name=".presentation.service.RecentlyService"/>
+        <service android:name=".presentation.service.LocationService" />
+        <service android:name=".presentation.service.LINEService" />
+        <service android:name=".presentation.service.RecentlyService" />
 
         <service
-                android:enabled="true"
-                android:exported="false"
-                android:isolatedProcess="false"
-                android:label="publishService"
-                android:name=".presentation.service.PublishService"/>
+            android:name=".presentation.service.PublishService"
+            android:enabled="true"
+            android:exported="false"
+            android:isolatedProcess="false"
+            android:label="publishService" />
 
-        <receiver android:name=".presentation.receiver.NearbyReceiver"/>
+        <service
+            android:name=".presentation.fcm.NotificationMessagingService"
+            android:exported="false">
+            <intent-filter>
+                <action android:name="com.google.firebase.MESSAGING_EVENT" />
+            </intent-filter>
+        </service>
+
+        <service
+            android:name=".presentation.fcm.InstanceIDService"
+            android:exported="false">
+            <intent-filter>
+                <action android:name="com.google.firebase.INSTANCE_ID_EVENT" />
+            </intent-filter>
+        </service>
+
+        <receiver android:name=".presentation.receiver.NearbyReceiver" />
 
     </application>
 

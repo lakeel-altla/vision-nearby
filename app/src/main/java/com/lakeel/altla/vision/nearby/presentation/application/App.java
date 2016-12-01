@@ -40,10 +40,6 @@ public class App extends Application {
         applicationComponent = DaggerApplicationComponent.builder()
                 .applicationModule(new ApplicationModule(this))
                 .build();
-
-        // 注意:
-        // 別アプリがインストールされるため、リリース時にはコメントアウトすること。
-//        LeakCanary.install(this);
     }
 
     public static ApplicationComponent getApplicationComponent(@NonNull Activity activity) {

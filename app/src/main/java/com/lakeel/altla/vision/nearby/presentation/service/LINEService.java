@@ -13,7 +13,7 @@ import com.lakeel.altla.vision.nearby.domain.usecase.FindUserIdUseCase;
 import com.lakeel.altla.vision.nearby.presentation.di.component.DaggerServiceComponent;
 import com.lakeel.altla.vision.nearby.presentation.di.component.ServiceComponent;
 import com.lakeel.altla.vision.nearby.presentation.intent.IntentKey;
-import com.lakeel.altla.vision.nearby.presentation.intent.PendingIntentCreator;
+import com.lakeel.altla.vision.nearby.presentation.intent.UriPendingIntent;
 import com.lakeel.altla.vision.nearby.presentation.view.notification.NotificationNotifier;
 
 import org.slf4j.Logger;
@@ -66,7 +66,7 @@ public class LINEService extends IntentService {
                 .subscribe(entity -> {
 
                     // Notify a notification.
-                    PendingIntentCreator creator = new PendingIntentCreator(getApplicationContext(), Uri.parse(lineUrl));
+                    UriPendingIntent creator = new UriPendingIntent(getApplicationContext(), Uri.parse(lineUrl));
                     PendingIntent pendingIntent = creator.create();
 
                     NotificationNotifier notifier = new NotificationNotifier.Builder(getApplicationContext())

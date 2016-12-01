@@ -61,7 +61,7 @@ public final class LocationService extends IntentService {
                     @Override
                     public void onConnected(@Nullable Bundle bundle) {
                         getUserCurrentLocation(context)
-                                .flatMap(location -> saveLocationUseCase.execute(location))
+                                .flatMap(location -> saveLocationUseCase.execute(location).subscribeOn(Schedulers.io()))
                                 .flatMap(uniqueId -> saveLocationDataUseCase.execute(uniqueId, beaconId).subscribeOn(Schedulers.io()))
                                 .subscribeOn(Schedulers.io())
                                 .subscribe(aVoid -> LOGGER.debug("Succeeded to save location data."),

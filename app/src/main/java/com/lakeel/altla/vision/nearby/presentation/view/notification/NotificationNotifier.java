@@ -36,6 +36,16 @@ public final class NotificationNotifier {
             return this;
         }
 
+        public Builder title(String title) {
+            mTitle = title;
+            return this;
+        }
+
+        public Builder text(String text) {
+            mText = text;
+            return this;
+        }
+
         public Builder text(@StringRes int resId, Object... formatArgs) {
             mText = mContext.getResources().getString(resId, formatArgs);
             return this;
