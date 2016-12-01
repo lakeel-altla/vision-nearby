@@ -12,6 +12,7 @@ import com.lakeel.altla.vision.nearby.data.repository.FirebaseLocationsDataRepos
 import com.lakeel.altla.vision.nearby.data.repository.FirebaseLocationsRepositoryImpl;
 import com.lakeel.altla.vision.nearby.data.repository.FirebasePresenceRepositoryImpl;
 import com.lakeel.altla.vision.nearby.data.repository.FirebaseRecentlyRepositoryImpl;
+import com.lakeel.altla.vision.nearby.data.repository.FirebaseTokensRepositoryImpl;
 import com.lakeel.altla.vision.nearby.data.repository.PreferenceRepositoryImpl;
 import com.lakeel.altla.vision.nearby.data.repository.RestCmRepositoryImpl;
 import com.lakeel.altla.vision.nearby.data.repository.RestGeocodeRepositoryImpl;
@@ -27,6 +28,7 @@ import com.lakeel.altla.vision.nearby.domain.repository.FirebaseLocationsDataRep
 import com.lakeel.altla.vision.nearby.domain.repository.FirebaseLocationsRepository;
 import com.lakeel.altla.vision.nearby.domain.repository.FirebasePresenceRepository;
 import com.lakeel.altla.vision.nearby.domain.repository.FirebaseRecentlyRepository;
+import com.lakeel.altla.vision.nearby.domain.repository.FirebaseTokensRepository;
 import com.lakeel.altla.vision.nearby.domain.repository.PreferenceRepository;
 import com.lakeel.altla.vision.nearby.domain.repository.RestCmRepository;
 import com.lakeel.altla.vision.nearby.domain.repository.RestGeocodeRepository;
@@ -126,6 +128,12 @@ public class RepositoryModule {
     @Provides
     FirebaseLocationsDataRepository provideFirebaseLocationsDataRepository(@Named("locationsDataUrl") String url) {
         return new FirebaseLocationsDataRepositoryImpl(url);
+    }
+
+    @CustomScope
+    @Provides
+    FirebaseTokensRepository provideFirebaseTokensRepository(@Named("tokensUrl") String url) {
+        return new FirebaseTokensRepositoryImpl(url);
     }
 
     @CustomScope

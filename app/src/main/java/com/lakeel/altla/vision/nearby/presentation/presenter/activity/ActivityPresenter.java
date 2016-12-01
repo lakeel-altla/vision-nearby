@@ -15,6 +15,7 @@ import com.google.android.gms.common.api.GoogleApiClient;
 import com.google.android.gms.common.api.Status;
 import com.google.android.gms.nearby.Nearby;
 import com.google.android.gms.tasks.Task;
+import com.google.firebase.iid.FirebaseInstanceId;
 import com.lakeel.altla.cm.CMApplication;
 import com.lakeel.altla.cm.config.AccessConfig;
 import com.lakeel.altla.library.ResolutionResultCallback;
@@ -25,6 +26,7 @@ import com.lakeel.altla.vision.nearby.domain.usecase.FindCMLinksUseCase;
 import com.lakeel.altla.vision.nearby.domain.usecase.FindPreferencesUseCase;
 import com.lakeel.altla.vision.nearby.domain.usecase.ObservePresenceUseCase;
 import com.lakeel.altla.vision.nearby.domain.usecase.SaveBeaconIdUseCase;
+import com.lakeel.altla.vision.nearby.domain.usecase.SaveTokensUseCase;
 import com.lakeel.altla.vision.nearby.domain.usecase.SaveUserBeaconUseCase;
 import com.lakeel.altla.vision.nearby.presentation.checker.BluetoothChecker;
 import com.lakeel.altla.vision.nearby.presentation.checker.BluetoothChecker.BleState;
@@ -72,7 +74,12 @@ public final class ActivityPresenter extends BasePresenter<ActivityView> impleme
     @Inject
     SaveUserBeaconUseCase saveUserBeaconUseCase;
 
+    @Inject
+    SaveTokensUseCase saveTokensUseCase;
+
     private static final Logger LOGGER = LoggerFactory.getLogger(ActivityPresenter.class);
+
+    private FirebaseInstanceId instanceId = FirebaseInstanceId.getInstance();
 
     private PreferencesModelMapper preferencesModelMapper = new PreferencesModelMapper();
 
@@ -208,7 +215,6 @@ public final class ActivityPresenter extends BasePresenter<ActivityView> impleme
                 .subscribeOn(Schedulers.io())
                 .doOnError(e -> LOGGER.error("Failed to save beacon data.", e))
                 .subscribe();
-
         reusableCompositeSubscription.add(beaconIdSubscription);
 
         Subscription preferenceSubscription = findPreferencesUseCase
@@ -220,7 +226,6 @@ public final class ActivityPresenter extends BasePresenter<ActivityView> impleme
                         getView().startPublishService(model);
                     }
                 }, e -> LOGGER.error("Failed to find preferences.", e));
-
         reusableCompositeSubscription.add(preferenceSubscription);
 
         Subscription cmLinksSubscription = findCMLinksUseCase
@@ -231,8 +236,18 @@ public final class ActivityPresenter extends BasePresenter<ActivityView> impleme
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribe(authConfig -> CMApplication.initialize(authConfig, accessConfig),
                         e -> LOGGER.error("Failed to initialize CM settings.", e));
-
         reusableCompositeSubscription.add(cmLinksSubscription);
+
+        // まずは毎回保存。
+        // その後、既存 token チェック。
+        String token = instanceId.getToken();
+        Subscription tokenSubscription = saveTokensUseCase
+                .execute(token)
+                .subscribeOn(Schedulers.io())
+                .observeOn(AndroidSchedulers.mainThread())
+                .doOnError(e -> LOGGER.error("Failed to save token.", e))
+                .subscribe();
+        reusableCompositeSubscription.add(tokenSubscription);
     }
 
     public void onAccessLocationGranted() {

@@ -1,13 +1,13 @@
 package com.lakeel.altla.vision.nearby.data.repository;
 
+import android.content.Context;
+import android.content.SharedPreferences;
+import android.preference.PreferenceManager;
+
 import com.lakeel.altla.vision.nearby.core.StringUtils;
 import com.lakeel.altla.vision.nearby.data.entity.BeaconIdEntity;
 import com.lakeel.altla.vision.nearby.data.entity.PreferencesEntity;
 import com.lakeel.altla.vision.nearby.domain.repository.PreferenceRepository;
-
-import android.content.Context;
-import android.content.SharedPreferences;
-import android.preference.PreferenceManager;
 
 import java.util.UUID;
 
@@ -26,20 +26,20 @@ public class PreferenceRepositoryImpl implements PreferenceRepository {
 
     private static final String KEY_SUBSCRIBE_IN_BACKGROUND = "subscribeInBackground";
 
-    private SharedPreferences mPreferences;
+    private SharedPreferences preference;
 
     @Inject
     PreferenceRepositoryImpl(Context context) {
-        mPreferences = PreferenceManager.getDefaultSharedPreferences(context);
+        preference = PreferenceManager.getDefaultSharedPreferences(context);
     }
 
     @Override
     public Single<PreferencesEntity> findPreferences() {
         return Single.create(subscriber -> {
-            boolean isPublishInBackground = mPreferences.getBoolean(KEY_PUBLISH_IN_BACKGROUND, true);
-            boolean isSubscribeInBackground = mPreferences.getBoolean(KEY_SUBSCRIBE_IN_BACKGROUND, true);
-            String namespaceId = mPreferences.getString(KEY_NAMESPACE_ID, StringUtils.EMPTY);
-            String instanceId = mPreferences.getString(KEY_INSTANCE_ID, StringUtils.EMPTY);
+            String namespaceId = preference.getString(KEY_NAMESPACE_ID, StringUtils.EMPTY);
+            String instanceId = preference.getString(KEY_INSTANCE_ID, StringUtils.EMPTY);
+            boolean isPublishInBackground = preference.getBoolean(KEY_PUBLISH_IN_BACKGROUND, true);
+            boolean isSubscribeInBackground = preference.getBoolean(KEY_SUBSCRIBE_IN_BACKGROUND, true);
 
             PreferencesEntity entity = new PreferencesEntity();
             entity.isPublishInBackgroundEnabled = isPublishInBackground;
@@ -56,8 +56,8 @@ public class PreferenceRepositoryImpl implements PreferenceRepository {
         return Single.create(new Single.OnSubscribe<BeaconIdEntity>() {
             @Override
             public void call(SingleSubscriber<? super BeaconIdEntity> subscriber) {
-                String namespaceId = mPreferences.getString(KEY_NAMESPACE_ID, StringUtils.EMPTY);
-                String instanceId = mPreferences.getString(KEY_INSTANCE_ID, StringUtils.EMPTY);
+                String namespaceId = preference.getString(KEY_NAMESPACE_ID, StringUtils.EMPTY);
+                String instanceId = preference.getString(KEY_INSTANCE_ID, StringUtils.EMPTY);
 
                 if (StringUtils.isEmpty(namespaceId) || StringUtils.isEmpty(instanceId)) {
                     subscriber.onSuccess(null);
@@ -78,7 +78,7 @@ public class PreferenceRepositoryImpl implements PreferenceRepository {
         return Single.create(new Single.OnSubscribe<String>() {
             @Override
             public void call(SingleSubscriber<? super String> subscriber) {
-                SharedPreferences.Editor editor = mPreferences.edit();
+                SharedPreferences.Editor editor = preference.edit();
 
                 String uuid = UUID.randomUUID().toString();
                 String replacedString = uuid.replace("-", "");

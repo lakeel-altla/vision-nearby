@@ -61,7 +61,7 @@
         </service>
 
         <service
-            android:name=".presentation.fcm.InstanceIDService"
+            android:name=".presentation.fcm.RefreshTokenService"
             android:exported="false">
             <intent-filter>
                 <action android:name="com.google.firebase.INSTANCE_ID_EVENT" />

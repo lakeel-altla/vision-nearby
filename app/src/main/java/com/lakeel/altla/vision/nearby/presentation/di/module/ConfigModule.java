@@ -98,6 +98,13 @@ public final class ConfigModule {
 
     @CustomScope
     @Provides
+    @Named("tokensUrl")
+    String provideTokensUrl() {
+        return "https://profile-notification-95441.firebaseio.com/tokens";
+    }
+
+    @CustomScope
+    @Provides
     @Named("geocodeBaseUrl")
     String provideGeoCodeBaseUrl() {
         return "https://maps.googleapis.com/maps/api/geocode/";
