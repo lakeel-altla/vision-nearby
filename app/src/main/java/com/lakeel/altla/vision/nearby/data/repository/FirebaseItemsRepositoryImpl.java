@@ -5,16 +5,13 @@ import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
-import com.google.firebase.database.ServerValue;
 import com.google.firebase.database.ValueEventListener;
-
 import com.lakeel.altla.vision.nearby.data.entity.ItemsEntity;
 import com.lakeel.altla.vision.nearby.data.execption.DataStoreException;
 import com.lakeel.altla.vision.nearby.data.mapper.ItemsEntityMapper;
 import com.lakeel.altla.vision.nearby.domain.repository.FirebaseItemsRepository;
 import com.lakeel.altla.vision.nearby.presentation.firebase.MyUser;
 
-import java.util.HashMap;
 import java.util.Iterator;
 import java.util.Map;
 
@@ -27,10 +24,6 @@ import rx.SingleSubscriber;
 public final class FirebaseItemsRepositoryImpl implements FirebaseItemsRepository {
 
     private static final String KEY_NAME = "name";
-
-    private static final String KEY_BEACONS = "beacons";
-
-    private static final String KEY_LAST_USED_TIME = "lastUsedTime";
 
     private DatabaseReference mReference;
 
