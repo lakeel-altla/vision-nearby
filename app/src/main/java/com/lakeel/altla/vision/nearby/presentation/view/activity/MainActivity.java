@@ -261,7 +261,6 @@ public class MainActivity extends AppCompatActivity
 
     @Override
     public void startPublishService(PreferenceModel model) {
-        // Start publish service in background.
         Intent intent = new Intent(getApplicationContext(), PublishService.class);
         intent.putExtra(IntentKey.NAMESPACE_ID.name(), model.mNamespaceId);
         intent.putExtra(IntentKey.INSTANCE_ID.name(), model.mInstanceId);
