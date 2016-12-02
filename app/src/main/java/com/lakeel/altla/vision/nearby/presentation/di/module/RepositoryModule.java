@@ -1,6 +1,5 @@
 package com.lakeel.altla.vision.nearby.presentation.di.module;
 
-import com.lakeel.altla.vision.nearby.data.repository.FirebaseAuthRepositoryImpl;
 import com.lakeel.altla.vision.nearby.data.repository.FirebaseBeaconsRepositoryImpl;
 import com.lakeel.altla.vision.nearby.data.repository.FirebaseCMLinksRepositoryImpl;
 import com.lakeel.altla.vision.nearby.data.repository.FirebaseConfigsRepositoryImpl;
@@ -17,7 +16,6 @@ import com.lakeel.altla.vision.nearby.data.repository.FirebaseUsersRepositoryImp
 import com.lakeel.altla.vision.nearby.data.repository.PreferenceRepositoryImpl;
 import com.lakeel.altla.vision.nearby.data.repository.RestCmRepositoryImpl;
 import com.lakeel.altla.vision.nearby.data.repository.RestGeocodeRepositoryImpl;
-import com.lakeel.altla.vision.nearby.domain.repository.FirebaseAuthRepository;
 import com.lakeel.altla.vision.nearby.domain.repository.FirebaseBeaconsRepository;
 import com.lakeel.altla.vision.nearby.domain.repository.FirebaseCMLinksRepository;
 import com.lakeel.altla.vision.nearby.domain.repository.FirebaseConfigsRepository;
@@ -58,12 +56,6 @@ public class RepositoryModule {
     @Provides
     FirebaseRecentlyRepository provideRecentlyRepository(@Named("recentlyUrl") String url) {
         return new FirebaseRecentlyRepositoryImpl(url);
-    }
-
-    @CustomScope
-    @Provides
-    FirebaseAuthRepository provideAuthRepository(FirebaseAuthRepositoryImpl repository) {
-        return repository;
     }
 
     @CustomScope

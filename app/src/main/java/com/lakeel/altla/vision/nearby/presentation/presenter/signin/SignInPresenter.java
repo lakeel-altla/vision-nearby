@@ -1,16 +1,16 @@
 package com.lakeel.altla.vision.nearby.presentation.presenter.signin;
 
+import android.content.Intent;
+
 import com.firebase.ui.auth.AuthUI;
+import com.google.firebase.auth.FirebaseAuth;
 import com.lakeel.altla.vision.nearby.R;
 import com.lakeel.altla.vision.nearby.domain.usecase.SaveItemUseCase;
-import com.lakeel.altla.vision.nearby.domain.usecase.SignOutUseCase;
 import com.lakeel.altla.vision.nearby.presentation.presenter.BasePresenter;
 import com.lakeel.altla.vision.nearby.presentation.view.SignInView;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-
-import android.content.Intent;
 
 import javax.inject.Inject;
 
@@ -22,9 +22,6 @@ public final class SignInPresenter extends BasePresenter<SignInView> {
 
     @Inject
     SaveItemUseCase mSaveItemUseCase;
-
-    @Inject
-    SignOutUseCase mSignOutUseCase;
 
     private static final Logger LOGGER = LoggerFactory.getLogger(SignInPresenter.class);
 
@@ -61,20 +58,11 @@ public final class SignInPresenter extends BasePresenter<SignInView> {
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribe(e -> {
                     LOGGER.error("Failed to sign in", e);
+
                     getView().showSnackBar(R.string.error_not_signed_in);
-                    onSignOut();
+
+                    FirebaseAuth.getInstance().signOut();
                 }, () -> getView().onSignedIn());
-
-        reusableCompositeSubscription.add(subscription);
-    }
-
-    private void onSignOut() {
-        Subscription subscription = mSignOutUseCase
-                .execute()
-                .observeOn(AndroidSchedulers.mainThread())
-                .subscribe(throwable -> getView().showSnackBar(R.string.error_not_signed_in),
-                        () -> {
-                        });
 
         reusableCompositeSubscription.add(subscription);
     }
