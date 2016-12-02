@@ -9,7 +9,6 @@ import com.lakeel.altla.vision.nearby.domain.usecase.FindPresenceUseCase;
 import com.lakeel.altla.vision.nearby.domain.usecase.FindUserBeaconsUseCase;
 import com.lakeel.altla.vision.nearby.domain.usecase.SaveUserToCmFavoritesUseCase;
 import com.lakeel.altla.vision.nearby.presentation.presenter.BasePresenter;
-import com.lakeel.altla.vision.nearby.presentation.presenter.mapper.BeaconModelMapper;
 import com.lakeel.altla.vision.nearby.presentation.presenter.mapper.ItemModelMapper;
 import com.lakeel.altla.vision.nearby.presentation.presenter.mapper.PresencesModelMapper;
 import com.lakeel.altla.vision.nearby.presentation.view.ProfileView;
@@ -28,36 +27,34 @@ import rx.schedulers.Schedulers;
 public final class ProfilePresenter extends BasePresenter<ProfileView> {
 
     @Inject
-    FindPresenceUseCase mFindPresenceUseCase;
+    FindPresenceUseCase findPresenceUseCase;
 
     @Inject
-    FindItemUseCase mFindItemUseCase;
+    FindItemUseCase findItemUseCase;
 
     @Inject
-    FindConfigsUseCase mFindConfigsUseCase;
+    FindConfigsUseCase findConfigsUseCase;
 
     @Inject
-    FindLINEUrlUseCase mFindLINEUrlUseCase;
+    FindLINEUrlUseCase findLINEUrlUseCase;
 
     @Inject
-    FindUserBeaconsUseCase mFindUserBeaconsUseCase;
+    FindUserBeaconsUseCase findUserBeaconsUseCase;
 
     @Inject
-    SaveUserToCmFavoritesUseCase mSaveUserToCmFavoritesUseCase;
+    SaveUserToCmFavoritesUseCase saveUserToCmFavoritesUseCase;
 
     private static final Logger LOGGER = LoggerFactory.getLogger(ProfilePresenter.class);
 
-    private PresencesModelMapper mPresencesModelMapper = new PresencesModelMapper();
+    private PresencesModelMapper presencesModelMapper = new PresencesModelMapper();
 
-    private ItemModelMapper mItemModelMapper = new ItemModelMapper();
+    private ItemModelMapper itemModelMapper = new ItemModelMapper();
 
-    private BeaconModelMapper mBeaconModelMapper = new BeaconModelMapper();
+    private String userId;
 
-    private String mUserId;
+    private String userName;
 
-    private String mUserName;
-
-    private boolean mCmLinkEnabled;
+    private boolean isCmLinkClicked;
 
     @Inject
     ProfilePresenter() {
@@ -65,20 +62,20 @@ public final class ProfilePresenter extends BasePresenter<ProfileView> {
 
     @Override
     public void onActivityCreated() {
-        Subscription subscription = mFindPresenceUseCase
-                .execute(mUserId)
-                .map(entity -> mPresencesModelMapper.map(entity))
+        Subscription subscription = findPresenceUseCase
+                .execute(userId)
+                .map(entity -> presencesModelMapper.map(entity))
                 .doOnSuccess(model -> getView().showPresence(model))
-                .flatMap(model -> mFindItemUseCase.execute(mUserId).subscribeOn(Schedulers.io()))
-                .map(entity -> mItemModelMapper.map(entity))
+                .flatMap(model -> findItemUseCase.execute(userId).subscribeOn(Schedulers.io()))
+                .map(entity -> itemModelMapper.map(entity))
                 .doOnSuccess(model -> getView().showProfile(model))
-                .flatMap(model -> mFindConfigsUseCase.execute().subscribeOn(Schedulers.io()))
+                .flatMap(model -> findConfigsUseCase.execute().subscribeOn(Schedulers.io()))
                 .map(entity -> entity.isCmLinkEnabled)
                 .doOnSuccess(isCmLinkEnabled -> {
-                    mCmLinkEnabled = isCmLinkEnabled;
+                    isCmLinkClicked = isCmLinkEnabled;
                     getView().initializeOptionMenu();
                 })
-                .flatMap(aBoolean -> mFindLINEUrlUseCase.execute(mUserId).subscribeOn(Schedulers.io()))
+                .flatMap(aBoolean -> findLINEUrlUseCase.execute(userId).subscribeOn(Schedulers.io()))
                 .map(entity -> {
                     if (entity == null) return StringUtils.EMPTY;
                     return entity.url;
@@ -93,12 +90,12 @@ public final class ProfilePresenter extends BasePresenter<ProfileView> {
     }
 
     public void setUserData(String userId, String userName) {
-        mUserId = userId;
-        mUserName = userName;
+        this.userId = userId;
+        this.userName = userName;
     }
 
     public boolean isCmLinkEnabled() {
-        return mCmLinkEnabled;
+        return isCmLinkClicked;
     }
 
     public void onShare() {
@@ -106,15 +103,15 @@ public final class ProfilePresenter extends BasePresenter<ProfileView> {
     }
 
     public void onFindNearbyDeviceMenuClicked() {
-        Subscription subscription = mFindUserBeaconsUseCase
-                .execute(mUserId)
+        Subscription subscription = findUserBeaconsUseCase
+                .execute(userId)
                 .toList()
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribe(beacons -> {
                     ArrayList<String> beaconIds = new ArrayList<>(beacons.size());
                     beaconIds.addAll(beacons);
-                    getView().showFindNearbyDeviceFragment(beaconIds, mUserName);
+                    getView().showFindNearbyDeviceFragment(beaconIds, userName);
                 }, e -> {
                     LOGGER.error("Failed to find user beacons.", e);
                 });
@@ -122,8 +119,8 @@ public final class ProfilePresenter extends BasePresenter<ProfileView> {
     }
 
     public void onCmMenuClicked() {
-        Subscription subscription = mSaveUserToCmFavoritesUseCase
-                .execute(mUserId)
+        Subscription subscription = saveUserToCmFavoritesUseCase
+                .execute(userId)
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribe(o -> getView().showSnackBar(R.string.message_added),
