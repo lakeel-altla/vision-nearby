@@ -18,10 +18,6 @@ public final class ConfirmDialog {
         builder.content(resId);
     }
 
-    public void setOnPositiveListener(MaterialDialog.SingleButtonCallback callback) {
-        builder.onPositive(callback);
-    }
-
     public void show() {
         builder.show();
     }
