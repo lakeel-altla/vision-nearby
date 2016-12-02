@@ -1,23 +1,22 @@
 package com.lakeel.altla.vision.nearby.domain.usecase;
 
-import com.lakeel.altla.vision.nearby.data.entity.FavoritesEntity;
-import com.lakeel.altla.vision.nearby.domain.repository.FirebaseFavoriteRepository;
+import com.lakeel.altla.vision.nearby.data.entity.FavoriteEntity;
+import com.lakeel.altla.vision.nearby.domain.repository.FirebaseFavoritesRepository;
 
 import javax.inject.Inject;
 
 import rx.Single;
-import rx.schedulers.Schedulers;
 
 public final class SaveFavoriteUseCase {
 
     @Inject
-    FirebaseFavoriteRepository mFirebaseFavoriteRepository;
+    FirebaseFavoritesRepository mFirebaseFavoritesRepository;
 
     @Inject
     public SaveFavoriteUseCase() {
     }
 
-    public Single<FavoritesEntity> execute(String id) {
-        return mFirebaseFavoriteRepository.saveFavorite(id);
+    public Single<FavoriteEntity> execute(String id) {
+        return mFirebaseFavoritesRepository.saveFavorite(id);
     }
 }

@@ -1,6 +1,6 @@
 package com.lakeel.altla.vision.nearby.domain.usecase;
 
-import com.lakeel.altla.vision.nearby.data.entity.PreferencesEntity;
+import com.lakeel.altla.vision.nearby.data.entity.PreferenceEntity;
 import com.lakeel.altla.vision.nearby.domain.repository.PreferenceRepository;
 
 import javax.inject.Inject;
@@ -16,7 +16,7 @@ public final class FindPreferencesUseCase {
     FindPreferencesUseCase() {
     }
 
-    public Single<PreferencesEntity> execute() {
+    public Single<PreferenceEntity> execute() {
         return mPreferenceRepository.findPreferences();
     }
 

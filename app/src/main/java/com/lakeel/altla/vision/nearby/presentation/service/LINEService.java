@@ -7,7 +7,7 @@ import android.net.Uri;
 
 import com.lakeel.altla.vision.nearby.R;
 import com.lakeel.altla.vision.nearby.data.entity.UserEntity;
-import com.lakeel.altla.vision.nearby.data.entity.LINELinksEntity;
+import com.lakeel.altla.vision.nearby.data.entity.LINELinkEntity;
 import com.lakeel.altla.vision.nearby.domain.usecase.FindUserUseCase;
 import com.lakeel.altla.vision.nearby.domain.usecase.FindUserIdByLineUrlUseCase;
 import com.lakeel.altla.vision.nearby.presentation.di.component.DaggerServiceComponent;
@@ -56,10 +56,10 @@ public class LINEService extends IntentService {
 
         findUserIdByLineUrlUseCase
                 .execute(lineUrl)
-                .flatMap(new Func1<LINELinksEntity, Single<UserEntity>>() {
+                .flatMap(new Func1<LINELinkEntity, Single<UserEntity>>() {
                     @Override
-                    public Single<UserEntity> call(LINELinksEntity lineLinksEntity) {
-                        return findUserUseCase.execute(lineLinksEntity.key).subscribeOn(Schedulers.io());
+                    public Single<UserEntity> call(LINELinkEntity lineLinkEntity) {
+                        return findUserUseCase.execute(lineLinkEntity.key).subscribeOn(Schedulers.io());
                     }
                 }).subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())

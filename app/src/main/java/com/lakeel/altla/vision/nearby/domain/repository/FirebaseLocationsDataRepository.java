@@ -1,12 +1,12 @@
 package com.lakeel.altla.vision.nearby.domain.repository;
 
-import com.lakeel.altla.vision.nearby.data.entity.LocationsDataEntity;
+import com.lakeel.altla.vision.nearby.data.entity.LocationDataEntity;
 
 import rx.Single;
 
 public interface FirebaseLocationsDataRepository {
 
-    Single<LocationsDataEntity> findLocationsDataById(String id);
+    Single<LocationDataEntity> findLocationsDataById(String id);
 
-    Single<LocationsDataEntity> saveLocationData(String uniqueId, String beaconId);
+    Single<LocationDataEntity> saveLocationData(String uniqueId, String beaconId);
 }

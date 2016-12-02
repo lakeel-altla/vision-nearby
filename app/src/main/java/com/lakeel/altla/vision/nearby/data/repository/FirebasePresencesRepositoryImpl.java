@@ -8,14 +8,14 @@ import com.google.firebase.database.ServerValue;
 import com.google.firebase.database.ValueEventListener;
 
 import com.lakeel.altla.vision.nearby.presentation.firebase.MyUser;
-import com.lakeel.altla.vision.nearby.data.entity.PresencesEntity;
-import com.lakeel.altla.vision.nearby.domain.repository.FirebasePresenceRepository;
+import com.lakeel.altla.vision.nearby.data.entity.PresenceEntity;
+import com.lakeel.altla.vision.nearby.domain.repository.FirebasePresencesRepository;
 
 import javax.inject.Inject;
 
 import rx.Single;
 
-public class FirebasePresenceRepositoryImpl implements FirebasePresenceRepository {
+public class FirebasePresencesRepositoryImpl implements FirebasePresencesRepository {
 
     private static final String IS_CONNECTED_KEY = "isConnected";
 
@@ -24,7 +24,7 @@ public class FirebasePresenceRepositoryImpl implements FirebasePresenceRepositor
     private DatabaseReference mReference;
 
     @Inject
-    public FirebasePresenceRepositoryImpl(String url) {
+    public FirebasePresencesRepositoryImpl(String url) {
         mReference = FirebaseDatabase.getInstance().getReferenceFromUrl(url);
     }
 
@@ -47,12 +47,12 @@ public class FirebasePresenceRepositoryImpl implements FirebasePresenceRepositor
     }
 
     @Override
-    public Single<PresencesEntity> findPresenceById(String id) {
+    public Single<PresenceEntity> findPresenceById(String id) {
         return Single.create(subscriber ->
                 mReference.child(id).addListenerForSingleValueEvent(new ValueEventListener() {
                     @Override
                     public void onDataChange(DataSnapshot dataSnapshot) {
-                        PresencesEntity entity = dataSnapshot.getValue(PresencesEntity.class);
+                        PresenceEntity entity = dataSnapshot.getValue(PresenceEntity.class);
                         subscriber.onSuccess(entity);
                     }
 

@@ -1,6 +1,6 @@
 package com.lakeel.altla.vision.nearby.domain.usecase;
 
-import com.lakeel.altla.vision.nearby.data.entity.LocationsDataEntity;
+import com.lakeel.altla.vision.nearby.data.entity.LocationDataEntity;
 import com.lakeel.altla.vision.nearby.domain.repository.FirebaseLocationsDataRepository;
 
 import javax.inject.Inject;
@@ -16,7 +16,7 @@ public final class FindLocationDataUseCase {
     FindLocationDataUseCase() {
     }
 
-    public Single<LocationsDataEntity> execute(String id) {
+    public Single<LocationDataEntity> execute(String id) {
         return mFirebaseLocationsDataRepository.findLocationsDataById(id);
     }
 }

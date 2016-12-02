@@ -1,7 +1,7 @@
 package com.lakeel.altla.vision.nearby.domain.usecase;
 
 import com.lakeel.altla.vision.nearby.domain.repository.FirebaseConnectionRepository;
-import com.lakeel.altla.vision.nearby.domain.repository.FirebasePresenceRepository;
+import com.lakeel.altla.vision.nearby.domain.repository.FirebasePresencesRepository;
 
 import javax.inject.Inject;
 
@@ -13,7 +13,7 @@ public final class ObservePresenceUseCase {
     FirebaseConnectionRepository mConnectionRepository;
 
     @Inject
-    FirebasePresenceRepository mPresenceRepository;
+    FirebasePresencesRepository mPresenceRepository;
 
     @Inject
     public ObservePresenceUseCase() {

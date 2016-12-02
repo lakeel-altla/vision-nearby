@@ -8,7 +8,7 @@ import com.lakeel.altla.vision.nearby.domain.model.CmFavoritesData;
 import java.util.ArrayList;
 import java.util.List;
 
-public final class CmFavoritesPostDataMapper {
+public final class CmFavoritePostDataMapper {
 
     public FavoritesPostData map(CmFavoritesData apiData) {
         FavoritesPostData postData = new FavoritesPostData();

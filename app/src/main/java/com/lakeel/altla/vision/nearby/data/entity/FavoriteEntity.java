@@ -5,7 +5,7 @@ import com.google.firebase.database.ServerValue;
 import java.util.HashMap;
 import java.util.Map;
 
-public final class FavoritesEntity extends BaseEntity {
+public final class FavoriteEntity extends BaseEntity {
 
     public long addedTime;
 

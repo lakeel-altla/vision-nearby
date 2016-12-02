@@ -5,7 +5,7 @@ import com.google.firebase.database.ServerValue;
 import java.util.HashMap;
 import java.util.Map;
 
-public final class LocationsDataEntity extends BaseEntity {
+public final class LocationDataEntity extends BaseEntity {
 
     public String id;
 

@@ -1,6 +1,6 @@
 package com.lakeel.altla.vision.nearby.domain.usecase;
 
-import com.lakeel.altla.vision.nearby.data.entity.CMLinksEntity;
+import com.lakeel.altla.vision.nearby.data.entity.CMLinkEntity;
 import com.lakeel.altla.vision.nearby.domain.repository.FirebaseCMLinksRepository;
 
 import javax.inject.Inject;
@@ -16,7 +16,7 @@ public final class FindCMLinksUseCase {
     FindCMLinksUseCase() {
     }
 
-    public Single<CMLinksEntity> execute() {
+    public Single<CMLinkEntity> execute() {
         return mFirebaseCMLinksRepository.findCmLinks();
     }
 }

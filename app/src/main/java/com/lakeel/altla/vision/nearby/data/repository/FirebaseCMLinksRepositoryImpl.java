@@ -8,7 +8,7 @@ import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
 
 import com.lakeel.altla.vision.nearby.presentation.firebase.MyUser;
-import com.lakeel.altla.vision.nearby.data.entity.CMLinksEntity;
+import com.lakeel.altla.vision.nearby.data.entity.CMLinkEntity;
 import com.lakeel.altla.vision.nearby.data.execption.DataStoreException;
 import com.lakeel.altla.vision.nearby.domain.repository.FirebaseCMLinksRepository;
 
@@ -37,7 +37,7 @@ public final class FirebaseCMLinksRepositoryImpl implements FirebaseCMLinksRepos
         return Single.create(subscriber -> mReference.child(itemId).addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
-                CMLinksEntity entity = dataSnapshot.getValue(CMLinksEntity.class);
+                CMLinkEntity entity = dataSnapshot.getValue(CMLinkEntity.class);
                 subscriber.onSuccess(entity.jid);
             }
 
@@ -49,12 +49,12 @@ public final class FirebaseCMLinksRepositoryImpl implements FirebaseCMLinksRepos
     }
 
     @Override
-    public Single<CMLinksEntity> findCmLinks() {
+    public Single<CMLinkEntity> findCmLinks() {
         return Single.create(subscriber ->
                 mReference.child(MyUser.getUid()).addListenerForSingleValueEvent(new ValueEventListener() {
                     @Override
                     public void onDataChange(DataSnapshot dataSnapshot) {
-                        CMLinksEntity entity = dataSnapshot.getValue(CMLinksEntity.class);
+                        CMLinkEntity entity = dataSnapshot.getValue(CMLinkEntity.class);
                         subscriber.onSuccess(entity);
                     }
 

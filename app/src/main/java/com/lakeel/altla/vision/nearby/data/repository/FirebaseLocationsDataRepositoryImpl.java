@@ -6,16 +6,15 @@ import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
-import com.lakeel.altla.vision.nearby.data.entity.LocationsDataEntity;
+import com.lakeel.altla.vision.nearby.data.entity.LocationDataEntity;
 import com.lakeel.altla.vision.nearby.data.execption.DataStoreException;
-import com.lakeel.altla.vision.nearby.data.mapper.LocationsDataEntityMapper;
+import com.lakeel.altla.vision.nearby.data.mapper.LocationDataEntityMapper;
 import com.lakeel.altla.vision.nearby.domain.repository.FirebaseLocationsDataRepository;
 
 import java.util.Iterator;
 
 import javax.inject.Inject;
 
-import rx.Completable;
 import rx.Single;
 
 public final class FirebaseLocationsDataRepositoryImpl implements FirebaseLocationsDataRepository {
@@ -24,7 +23,7 @@ public final class FirebaseLocationsDataRepositoryImpl implements FirebaseLocati
 
     private DatabaseReference databaseReference;
 
-    private final LocationsDataEntityMapper locationsDataEntityMapper = new LocationsDataEntityMapper();
+    private final LocationDataEntityMapper locationDataEntityMapper = new LocationDataEntityMapper();
 
     @Inject
     public FirebaseLocationsDataRepositoryImpl(String url) {
@@ -32,7 +31,7 @@ public final class FirebaseLocationsDataRepositoryImpl implements FirebaseLocati
     }
 
     @Override
-    public Single<LocationsDataEntity> findLocationsDataById(String id) {
+    public Single<LocationDataEntity> findLocationsDataById(String id) {
         return Single.create(subscriber ->
                 databaseReference
                         .orderByChild(KEY_ID)
@@ -50,7 +49,7 @@ public final class FirebaseLocationsDataRepositoryImpl implements FirebaseLocati
                                 Iterator<DataSnapshot> iterator = iterable.iterator();
                                 while (iterator.hasNext()) {
                                     DataSnapshot snapshot = iterator.next();
-                                    LocationsDataEntity entity = snapshot.getValue(LocationsDataEntity.class);
+                                    LocationDataEntity entity = snapshot.getValue(LocationDataEntity.class);
                                     entity.key = snapshot.getKey();
                                     subscriber.onSuccess(entity);
                                 }
@@ -64,9 +63,9 @@ public final class FirebaseLocationsDataRepositoryImpl implements FirebaseLocati
     }
 
     @Override
-    public Single<LocationsDataEntity> saveLocationData(String uniqueId, String beaconId) {
+    public Single<LocationDataEntity> saveLocationData(String uniqueId, String beaconId) {
         return Single.create(subscriber -> {
-            LocationsDataEntity entity = locationsDataEntityMapper.map(beaconId);
+            LocationDataEntity entity = locationDataEntityMapper.map(beaconId);
             Task task = databaseReference
                     .child(uniqueId)
                     .setValue(entity.toMap())

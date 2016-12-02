@@ -6,7 +6,7 @@ import android.preference.PreferenceManager;
 
 import com.lakeel.altla.vision.nearby.core.StringUtils;
 import com.lakeel.altla.vision.nearby.data.entity.BeaconIdEntity;
-import com.lakeel.altla.vision.nearby.data.entity.PreferencesEntity;
+import com.lakeel.altla.vision.nearby.data.entity.PreferenceEntity;
 import com.lakeel.altla.vision.nearby.domain.repository.PreferenceRepository;
 
 import java.util.UUID;
@@ -34,14 +34,14 @@ public class PreferenceRepositoryImpl implements PreferenceRepository {
     }
 
     @Override
-    public Single<PreferencesEntity> findPreferences() {
+    public Single<PreferenceEntity> findPreferences() {
         return Single.create(subscriber -> {
             String namespaceId = preference.getString(KEY_NAMESPACE_ID, StringUtils.EMPTY);
             String instanceId = preference.getString(KEY_INSTANCE_ID, StringUtils.EMPTY);
             boolean isPublishInBackground = preference.getBoolean(KEY_PUBLISH_IN_BACKGROUND, true);
             boolean isSubscribeInBackground = preference.getBoolean(KEY_SUBSCRIBE_IN_BACKGROUND, true);
 
-            PreferencesEntity entity = new PreferencesEntity();
+            PreferenceEntity entity = new PreferenceEntity();
             entity.isPublishInBackgroundEnabled = isPublishInBackground;
             entity.isSubscribeInBackgroundEnabled = isSubscribeInBackground;
             entity.namespaceId = namespaceId;

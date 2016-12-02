@@ -6,11 +6,10 @@ import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
-
-import com.lakeel.altla.vision.nearby.presentation.firebase.MyUser;
-import com.lakeel.altla.vision.nearby.data.entity.FavoritesEntity;
+import com.lakeel.altla.vision.nearby.data.entity.FavoriteEntity;
 import com.lakeel.altla.vision.nearby.data.execption.DataStoreException;
-import com.lakeel.altla.vision.nearby.domain.repository.FirebaseFavoriteRepository;
+import com.lakeel.altla.vision.nearby.domain.repository.FirebaseFavoritesRepository;
+import com.lakeel.altla.vision.nearby.presentation.firebase.MyUser;
 
 import javax.inject.Inject;
 
@@ -18,18 +17,18 @@ import rx.Completable;
 import rx.Observable;
 import rx.Single;
 
-public class FirebaseFavoriteRepositoryImpl implements FirebaseFavoriteRepository {
+public class FirebaseFavoritesRepositoryImpl implements FirebaseFavoritesRepository {
 
     private DatabaseReference mReference;
 
     @Inject
-    public FirebaseFavoriteRepositoryImpl(String url) {
+    public FirebaseFavoritesRepositoryImpl(String url) {
         mReference = FirebaseDatabase.getInstance().getReferenceFromUrl(url);
     }
 
     @Override
     @SuppressWarnings("unchecked")
-    public Observable<FavoritesEntity> findFavorites() {
+    public Observable<FavoriteEntity> findFavorites() {
 
         return Observable.create(subscriber -> {
             mReference
@@ -39,7 +38,7 @@ public class FirebaseFavoriteRepositoryImpl implements FirebaseFavoriteRepositor
                         @Override
                         public void onDataChange(DataSnapshot dataSnapshot) {
                             for (DataSnapshot snapshot : dataSnapshot.getChildren()) {
-                                FavoritesEntity entity = snapshot.getValue(FavoritesEntity.class);
+                                FavoriteEntity entity = snapshot.getValue(FavoriteEntity.class);
                                 entity.key = snapshot.getKey();
                                 subscriber.onNext(entity);
                             }
@@ -55,7 +54,7 @@ public class FirebaseFavoriteRepositoryImpl implements FirebaseFavoriteRepositor
     }
 
     @Override
-    public Single<FavoritesEntity> findFavoriteById(String id) {
+    public Single<FavoriteEntity> findFavoriteById(String id) {
         return Single.create(subscriber ->
                 mReference
                         .child(MyUser.getUid())
@@ -63,7 +62,7 @@ public class FirebaseFavoriteRepositoryImpl implements FirebaseFavoriteRepositor
                         .addListenerForSingleValueEvent(new ValueEventListener() {
                             @Override
                             public void onDataChange(DataSnapshot dataSnapshot) {
-                                FavoritesEntity entity = dataSnapshot.getValue(FavoritesEntity.class);
+                                FavoriteEntity entity = dataSnapshot.getValue(FavoriteEntity.class);
                                 subscriber.onSuccess(entity);
                             }
 
@@ -75,9 +74,9 @@ public class FirebaseFavoriteRepositoryImpl implements FirebaseFavoriteRepositor
     }
 
     @Override
-    public Single<FavoritesEntity> saveFavorite(String id) {
+    public Single<FavoriteEntity> saveFavorite(String id) {
         return Single.create(subscriber -> {
-            FavoritesEntity entity = new FavoritesEntity();
+            FavoriteEntity entity = new FavoriteEntity();
 
             Task<Void> task = mReference.child(MyUser.getUid()).child(id).setValue(entity.toMap())
                     .addOnSuccessListener(aVoid -> subscriber.onSuccess(entity))

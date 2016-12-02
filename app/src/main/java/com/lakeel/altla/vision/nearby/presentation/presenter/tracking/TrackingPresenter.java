@@ -1,7 +1,7 @@
 package com.lakeel.altla.vision.nearby.presentation.presenter.tracking;
 
 import com.firebase.geofire.GeoLocation;
-import com.lakeel.altla.vision.nearby.data.entity.LocationsDataEntity;
+import com.lakeel.altla.vision.nearby.data.entity.LocationDataEntity;
 import com.lakeel.altla.vision.nearby.domain.usecase.FindLocationDataUseCase;
 import com.lakeel.altla.vision.nearby.domain.usecase.FindLocationUseCase;
 import com.lakeel.altla.vision.nearby.presentation.presenter.BasePresenter;
@@ -49,9 +49,9 @@ public final class TrackingPresenter extends BasePresenter<TrackingView> {
     public void onResume() {
         Subscription subscription = mFindLocationDataUseCase
                 .execute(mBeaconId)
-                .flatMap(new Func1<LocationsDataEntity, Single<GeoLocation>>() {
+                .flatMap(new Func1<LocationDataEntity, Single<GeoLocation>>() {
                     @Override
-                    public Single<GeoLocation> call(LocationsDataEntity entity) {
+                    public Single<GeoLocation> call(LocationDataEntity entity) {
                         if (entity == null) {
                             return Single.just(null);
                         }

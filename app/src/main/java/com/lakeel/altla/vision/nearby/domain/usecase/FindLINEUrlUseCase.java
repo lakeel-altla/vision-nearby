@@ -1,6 +1,6 @@
 package com.lakeel.altla.vision.nearby.domain.usecase;
 
-import com.lakeel.altla.vision.nearby.data.entity.LINELinksEntity;
+import com.lakeel.altla.vision.nearby.data.entity.LINELinkEntity;
 import com.lakeel.altla.vision.nearby.domain.repository.FirebaseLINELinksRepository;
 
 import javax.inject.Inject;
@@ -16,7 +16,7 @@ public final class FindLINEUrlUseCase {
     FindLINEUrlUseCase() {
     }
 
-    public Single<LINELinksEntity> execute(String userId) {
+    public Single<LINELinkEntity> execute(String userId) {
         return mFirebaseLINELinksRepository.findByUserId(userId);
     }
 }

@@ -6,7 +6,7 @@ import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
-import com.lakeel.altla.vision.nearby.data.entity.LINELinksEntity;
+import com.lakeel.altla.vision.nearby.data.entity.LINELinkEntity;
 import com.lakeel.altla.vision.nearby.data.execption.DataStoreException;
 import com.lakeel.altla.vision.nearby.domain.repository.FirebaseLINELinksRepository;
 import com.lakeel.altla.vision.nearby.presentation.firebase.MyUser;
@@ -33,7 +33,7 @@ public class FirebaseLINELinksRepositoryImpl implements FirebaseLINELinksReposit
     @Override
     public Single<String> saveUrl(String url) {
         return Single.create(subscriber -> {
-            LINELinksEntity entity = new LINELinksEntity();
+            LINELinkEntity entity = new LINELinkEntity();
             entity.url = url;
 
             Task<Void> task = mReference
@@ -50,14 +50,14 @@ public class FirebaseLINELinksRepositoryImpl implements FirebaseLINELinksReposit
     }
 
     @Override
-    public Single<LINELinksEntity> findByUserId(String userId) {
+    public Single<LINELinkEntity> findByUserId(String userId) {
         return Single.create(subscriber ->
                 mReference
                         .child(userId)
                         .addListenerForSingleValueEvent(new ValueEventListener() {
                             @Override
                             public void onDataChange(DataSnapshot dataSnapshot) {
-                                LINELinksEntity entity = dataSnapshot.getValue(LINELinksEntity.class);
+                                LINELinkEntity entity = dataSnapshot.getValue(LINELinkEntity.class);
                                 subscriber.onSuccess(entity);
                             }
 
@@ -69,10 +69,10 @@ public class FirebaseLINELinksRepositoryImpl implements FirebaseLINELinksReposit
     }
 
     @Override
-    public Single<LINELinksEntity> findUserIdByLINEUrl(String url) {
-        return Single.create(new Single.OnSubscribe<LINELinksEntity>() {
+    public Single<LINELinkEntity> findUserIdByLINEUrl(String url) {
+        return Single.create(new Single.OnSubscribe<LINELinkEntity>() {
             @Override
-            public void call(SingleSubscriber<? super LINELinksEntity> subscriber) {
+            public void call(SingleSubscriber<? super LINELinkEntity> subscriber) {
                 mReference.orderByChild(URL_KEY).equalTo(url).addListenerForSingleValueEvent(new ValueEventListener() {
                     @Override
                     public void onDataChange(DataSnapshot dataSnapshot) {
@@ -81,7 +81,7 @@ public class FirebaseLINELinksRepositoryImpl implements FirebaseLINELinksReposit
 
                         while (iterator.hasNext()) {
                             DataSnapshot snapshot = iterator.next();
-                            LINELinksEntity entity = snapshot.getValue(LINELinksEntity.class);
+                            LINELinkEntity entity = snapshot.getValue(LINELinkEntity.class);
                             entity.key = snapshot.getKey();
                             subscriber.onSuccess(entity);
                         }

@@ -1,7 +1,7 @@
 package com.lakeel.altla.vision.nearby.presentation.presenter.settings.cm;
 
 import com.lakeel.altla.vision.nearby.R;
-import com.lakeel.altla.vision.nearby.data.entity.CMLinksEntity;
+import com.lakeel.altla.vision.nearby.data.entity.CMLinkEntity;
 import com.lakeel.altla.vision.nearby.data.entity.ConfigsEntity;
 import com.lakeel.altla.vision.nearby.domain.usecase.FindCMLinksUseCase;
 import com.lakeel.altla.vision.nearby.domain.usecase.FindConfigsUseCase;
@@ -54,9 +54,9 @@ public final class CmSettingsPresenter extends BasePresenter<CmSettingsView> {
                 .execute()
                 .toObservable()
                 .filter(entity -> entity.isCmLinkEnabled)
-                .flatMap(new Func1<ConfigsEntity, Observable<CMLinksEntity>>() {
+                .flatMap(new Func1<ConfigsEntity, Observable<CMLinkEntity>>() {
                     @Override
-                    public Observable<CMLinksEntity> call(ConfigsEntity entity) {
+                    public Observable<CMLinkEntity> call(ConfigsEntity entity) {
                         return mFindCMLinksUseCase.
                                 execute()
                                 .subscribeOn(Schedulers.io())

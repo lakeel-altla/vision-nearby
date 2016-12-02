@@ -6,9 +6,9 @@ import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
-import com.lakeel.altla.vision.nearby.data.entity.BeaconsEntity;
+import com.lakeel.altla.vision.nearby.data.entity.BeaconEntity;
 import com.lakeel.altla.vision.nearby.data.execption.DataStoreException;
-import com.lakeel.altla.vision.nearby.data.mapper.BeaconsEntityMapper;
+import com.lakeel.altla.vision.nearby.data.mapper.BeaconEntityMapper;
 import com.lakeel.altla.vision.nearby.domain.repository.FirebaseBeaconsRepository;
 
 import javax.inject.Inject;
@@ -23,7 +23,7 @@ public class FirebaseBeaconsRepositoryImpl implements FirebaseBeaconsRepository 
 
     private DatabaseReference reference;
 
-    private BeaconsEntityMapper mMapper = new BeaconsEntityMapper();
+    private BeaconEntityMapper mMapper = new BeaconEntityMapper();
 
     @Inject
     public FirebaseBeaconsRepositoryImpl(String url) {
@@ -35,7 +35,7 @@ public class FirebaseBeaconsRepositoryImpl implements FirebaseBeaconsRepository 
         return Single.create(new Single.OnSubscribe<String>() {
             @Override
             public void call(SingleSubscriber<? super String> subscriber) {
-                BeaconsEntity entity = mMapper.map(name);
+                BeaconEntity entity = mMapper.map(name);
 
                 Task task = reference
                         .child(beaconId)
@@ -52,7 +52,7 @@ public class FirebaseBeaconsRepositoryImpl implements FirebaseBeaconsRepository 
     }
 
     @Override
-    public Observable<BeaconsEntity> findBeaconsByUserId(String userId) {
+    public Observable<BeaconEntity> findBeaconsByUserId(String userId) {
         return Observable.create(subscriber -> {
             reference
                     .child(userId)
@@ -61,7 +61,7 @@ public class FirebaseBeaconsRepositoryImpl implements FirebaseBeaconsRepository 
                         @Override
                         public void onDataChange(DataSnapshot dataSnapshot) {
                             for (DataSnapshot snapshot : dataSnapshot.getChildren()) {
-                                BeaconsEntity entity = snapshot.getValue(BeaconsEntity.class);
+                                BeaconEntity entity = snapshot.getValue(BeaconEntity.class);
                                 entity.key = snapshot.getKey();
                                 subscriber.onNext(entity);
                             }
@@ -77,14 +77,14 @@ public class FirebaseBeaconsRepositoryImpl implements FirebaseBeaconsRepository 
     }
 
     @Override
-    public Single<BeaconsEntity> findBeacon(String beaconId) {
+    public Single<BeaconEntity> findBeacon(String beaconId) {
         return Single.create(subscriber ->
                 reference
                         .child(beaconId)
                         .addListenerForSingleValueEvent(new ValueEventListener() {
                             @Override
                             public void onDataChange(DataSnapshot dataSnapshot) {
-                                BeaconsEntity entity = dataSnapshot.getValue(BeaconsEntity.class);
+                                BeaconEntity entity = dataSnapshot.getValue(BeaconEntity.class);
                                 entity.key = dataSnapshot.getKey();
                                 subscriber.onSuccess(entity);
                             }

@@ -1,6 +1,6 @@
 package com.lakeel.altla.vision.nearby.data.entity;
 
-public final class PreferencesEntity {
+public final class PreferenceEntity {
 
     public String namespaceId;
 

@@ -1,6 +1,6 @@
 package com.lakeel.altla.vision.nearby.domain.usecase;
 
-import com.lakeel.altla.vision.nearby.data.entity.BeaconsEntity;
+import com.lakeel.altla.vision.nearby.data.entity.BeaconEntity;
 import com.lakeel.altla.vision.nearby.domain.repository.FirebaseBeaconsRepository;
 
 import javax.inject.Inject;
@@ -16,7 +16,7 @@ public final class FindUserIdByBeaconIdUseCase {
     FindUserIdByBeaconIdUseCase() {
     }
 
-    public Single<BeaconsEntity> execute(String beaconId) {
+    public Single<BeaconEntity> execute(String beaconId) {
         return repository.findBeacon(beaconId);
     }
 }
