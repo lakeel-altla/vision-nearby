@@ -3,7 +3,6 @@ package com.lakeel.altla.vision.nearby.data.mapper;
 import com.google.android.gms.awareness.state.Weather;
 import com.google.android.gms.location.DetectedActivity;
 
-import com.lakeel.altla.vision.nearby.data.entity.ItemsEntity;
 import com.lakeel.altla.vision.nearby.data.entity.RecentlyEntity;
 
 import android.location.Location;

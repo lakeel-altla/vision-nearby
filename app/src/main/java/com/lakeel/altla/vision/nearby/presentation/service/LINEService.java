@@ -6,9 +6,9 @@ import android.content.Intent;
 import android.net.Uri;
 
 import com.lakeel.altla.vision.nearby.R;
-import com.lakeel.altla.vision.nearby.data.entity.ItemsEntity;
+import com.lakeel.altla.vision.nearby.data.entity.UserEntity;
 import com.lakeel.altla.vision.nearby.data.entity.LINELinksEntity;
-import com.lakeel.altla.vision.nearby.domain.usecase.FindItemUseCase;
+import com.lakeel.altla.vision.nearby.domain.usecase.FindUserUseCase;
 import com.lakeel.altla.vision.nearby.domain.usecase.FindUserIdByLineUrlUseCase;
 import com.lakeel.altla.vision.nearby.presentation.di.component.DaggerServiceComponent;
 import com.lakeel.altla.vision.nearby.presentation.di.component.ServiceComponent;
@@ -32,7 +32,7 @@ public class LINEService extends IntentService {
     FindUserIdByLineUrlUseCase findUserIdByLineUrlUseCase;
 
     @Inject
-    FindItemUseCase findItemUseCase;
+    FindUserUseCase findUserUseCase;
 
     private static final Logger LOGGER = LoggerFactory.getLogger(LINEService.class);
 
@@ -56,10 +56,10 @@ public class LINEService extends IntentService {
 
         findUserIdByLineUrlUseCase
                 .execute(lineUrl)
-                .flatMap(new Func1<LINELinksEntity, Single<ItemsEntity>>() {
+                .flatMap(new Func1<LINELinksEntity, Single<UserEntity>>() {
                     @Override
-                    public Single<ItemsEntity> call(LINELinksEntity lineLinksEntity) {
-                        return findItemUseCase.execute(lineLinksEntity.key).subscribeOn(Schedulers.io());
+                    public Single<UserEntity> call(LINELinksEntity lineLinksEntity) {
+                        return findUserUseCase.execute(lineLinksEntity.key).subscribeOn(Schedulers.io());
                     }
                 }).subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())

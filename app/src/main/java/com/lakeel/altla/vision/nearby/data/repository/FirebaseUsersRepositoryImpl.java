@@ -6,10 +6,10 @@ import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
-import com.lakeel.altla.vision.nearby.data.entity.ItemsEntity;
+import com.lakeel.altla.vision.nearby.data.entity.UserEntity;
 import com.lakeel.altla.vision.nearby.data.execption.DataStoreException;
-import com.lakeel.altla.vision.nearby.data.mapper.ItemsEntityMapper;
-import com.lakeel.altla.vision.nearby.domain.repository.FirebaseItemsRepository;
+import com.lakeel.altla.vision.nearby.data.mapper.UserEntityMapper;
+import com.lakeel.altla.vision.nearby.domain.repository.FirebaseUsersRepository;
 import com.lakeel.altla.vision.nearby.presentation.firebase.MyUser;
 
 import java.util.HashMap;
@@ -24,7 +24,7 @@ import rx.Single;
 import rx.SingleSubscriber;
 import rx.Subscriber;
 
-public final class FirebaseItemsRepositoryImpl implements FirebaseItemsRepository {
+public final class FirebaseUsersRepositoryImpl implements FirebaseUsersRepository {
 
     private static final String KEY_NAME = "name";
 
@@ -32,15 +32,15 @@ public final class FirebaseItemsRepositoryImpl implements FirebaseItemsRepositor
 
     private DatabaseReference reference;
 
-    private ItemsEntityMapper entityMapper = new ItemsEntityMapper();
+    private UserEntityMapper entityMapper = new UserEntityMapper();
 
     @Inject
-    public FirebaseItemsRepositoryImpl(String url) {
+    public FirebaseUsersRepositoryImpl(String url) {
         reference = FirebaseDatabase.getInstance().getReferenceFromUrl(url);
     }
 
     @Override
-    public Completable saveItem() {
+    public Completable saveUser() {
         return Completable.create(subscriber -> {
             Map<String, Object> map = entityMapper.map();
             Task task = reference.child(MyUser.getUid()).updateChildren(map)
@@ -100,18 +100,18 @@ public final class FirebaseItemsRepositoryImpl implements FirebaseItemsRepositor
     }
 
     @Override
-    public Single<ItemsEntity> findItemsById(String id) {
-        return Single.create(new Single.OnSubscribe<ItemsEntity>() {
+    public Single<UserEntity> findUserById(String userId) {
+        return Single.create(new Single.OnSubscribe<UserEntity>() {
 
             @Override
-            public void call(SingleSubscriber<? super ItemsEntity> subscriber) {
+            public void call(SingleSubscriber<? super UserEntity> subscriber) {
                 reference
-                        .child(id)
+                        .child(userId)
                         .addListenerForSingleValueEvent(new ValueEventListener() {
 
                             @Override
                             public void onDataChange(DataSnapshot dataSnapshot) {
-                                ItemsEntity entity = dataSnapshot.getValue(ItemsEntity.class);
+                                UserEntity entity = dataSnapshot.getValue(UserEntity.class);
                                 entity.key = dataSnapshot.getKey();
                                 subscriber.onSuccess(entity);
                             }
@@ -126,7 +126,7 @@ public final class FirebaseItemsRepositoryImpl implements FirebaseItemsRepositor
     }
 
     @Override
-    public Single<ItemsEntity> findItemsByName(String name) {
+    public Single<UserEntity> findUserByName(String name) {
         return Single.create(subscriber ->
                 reference
                         .orderByChild(KEY_NAME)
@@ -143,7 +143,7 @@ public final class FirebaseItemsRepositoryImpl implements FirebaseItemsRepositor
                                 Iterator<DataSnapshot> iterator = iterable.iterator();
                                 while (iterator.hasNext()) {
                                     DataSnapshot snapshot = iterator.next();
-                                    ItemsEntity entity = snapshot.getValue(ItemsEntity.class);
+                                    UserEntity entity = snapshot.getValue(UserEntity.class);
                                     entity.key = snapshot.getKey();
                                     subscriber.onSuccess(entity);
                                 }

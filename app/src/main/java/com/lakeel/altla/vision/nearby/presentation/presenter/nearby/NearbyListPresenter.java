@@ -12,7 +12,7 @@ import com.lakeel.altla.library.AttachmentListener;
 import com.lakeel.altla.library.ResolutionResultCallback;
 import com.lakeel.altla.vision.nearby.R;
 import com.lakeel.altla.vision.nearby.domain.usecase.FindConfigsUseCase;
-import com.lakeel.altla.vision.nearby.domain.usecase.FindItemUseCase;
+import com.lakeel.altla.vision.nearby.domain.usecase.FindUserUseCase;
 import com.lakeel.altla.vision.nearby.domain.usecase.SaveUsersToCmFavoritesUseCase;
 import com.lakeel.altla.vision.nearby.presentation.constants.AttachmentType;
 import com.lakeel.altla.vision.nearby.presentation.firebase.MyUser;
@@ -54,7 +54,7 @@ public final class NearbyListPresenter extends BasePresenter<NearbyListView> imp
                 return;
             }
 
-            Subscription subscription = mFindItemUseCase
+            Subscription subscription = mFindUserUseCase
                     .execute(value)
                     .toObservable()
                     .filter(entity -> entity != null)
@@ -76,7 +76,7 @@ public final class NearbyListPresenter extends BasePresenter<NearbyListView> imp
     }
 
     @Inject
-    FindItemUseCase mFindItemUseCase;
+    FindUserUseCase mFindUserUseCase;
 
     @Inject
     SaveUsersToCmFavoritesUseCase mSaveUsersToCmFavoritesUseCase;

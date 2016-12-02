@@ -3,7 +3,7 @@ package com.lakeel.altla.vision.nearby.presentation.presenter.profile;
 import com.lakeel.altla.vision.nearby.R;
 import com.lakeel.altla.vision.nearby.core.StringUtils;
 import com.lakeel.altla.vision.nearby.domain.usecase.FindConfigsUseCase;
-import com.lakeel.altla.vision.nearby.domain.usecase.FindItemUseCase;
+import com.lakeel.altla.vision.nearby.domain.usecase.FindUserUseCase;
 import com.lakeel.altla.vision.nearby.domain.usecase.FindLINEUrlUseCase;
 import com.lakeel.altla.vision.nearby.domain.usecase.FindPresenceUseCase;
 import com.lakeel.altla.vision.nearby.domain.usecase.FindUserBeaconsUseCase;
@@ -30,7 +30,7 @@ public final class ProfilePresenter extends BasePresenter<ProfileView> {
     FindPresenceUseCase findPresenceUseCase;
 
     @Inject
-    FindItemUseCase findItemUseCase;
+    FindUserUseCase findUserUseCase;
 
     @Inject
     FindConfigsUseCase findConfigsUseCase;
@@ -66,7 +66,7 @@ public final class ProfilePresenter extends BasePresenter<ProfileView> {
                 .execute(userId)
                 .map(entity -> presencesModelMapper.map(entity))
                 .doOnSuccess(model -> getView().showPresence(model))
-                .flatMap(model -> findItemUseCase.execute(userId).subscribeOn(Schedulers.io()))
+                .flatMap(model -> findUserUseCase.execute(userId).subscribeOn(Schedulers.io()))
                 .map(entity -> itemModelMapper.map(entity))
                 .doOnSuccess(model -> getView().showProfile(model))
                 .flatMap(model -> findConfigsUseCase.execute().subscribeOn(Schedulers.io()))

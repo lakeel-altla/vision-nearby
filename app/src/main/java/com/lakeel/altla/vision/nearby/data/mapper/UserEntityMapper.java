@@ -5,7 +5,7 @@ import com.lakeel.altla.vision.nearby.presentation.firebase.MyUser;
 import java.util.HashMap;
 import java.util.Map;
 
-public final class ItemsEntityMapper {
+public final class UserEntityMapper {
 
     public Map<String, Object> map() {
         Map<String, Object> map = new HashMap<>();

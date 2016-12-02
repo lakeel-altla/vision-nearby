@@ -3,9 +3,9 @@ package com.lakeel.altla.vision.nearby.presentation.presenter.recently;
 import android.support.annotation.IntRange;
 
 import com.lakeel.altla.vision.nearby.R;
-import com.lakeel.altla.vision.nearby.data.entity.ItemsEntity;
+import com.lakeel.altla.vision.nearby.data.entity.UserEntity;
 import com.lakeel.altla.vision.nearby.domain.usecase.FindFavoriteUseCase;
-import com.lakeel.altla.vision.nearby.domain.usecase.FindItemUseCase;
+import com.lakeel.altla.vision.nearby.domain.usecase.FindUserUseCase;
 import com.lakeel.altla.vision.nearby.domain.usecase.FindRecentlyUseCase;
 import com.lakeel.altla.vision.nearby.domain.usecase.SaveFavoriteUseCase;
 import com.lakeel.altla.vision.nearby.presentation.intent.RecentlyBundleData;
@@ -34,7 +34,7 @@ import rx.schedulers.Schedulers;
 public final class RecentlyListPresenter extends BasePresenter<RecentlyListView> {
 
     @Inject
-    FindItemUseCase mFindItemUseCase;
+    FindUserUseCase mFindUserUseCase;
 
     @Inject
     FindFavoriteUseCase mFindFavoriteUseCase;
@@ -64,7 +64,7 @@ public final class RecentlyListPresenter extends BasePresenter<RecentlyListView>
         Subscription subscription = mFindRecentlyUseCase
                 .execute()
                 .flatMap(entity -> {
-                    Observable<ItemsEntity> itemsObservable = mFindItemUseCase.execute(entity.userId).subscribeOn(Schedulers.io()).toObservable();
+                    Observable<UserEntity> itemsObservable = mFindUserUseCase.execute(entity.userId).subscribeOn(Schedulers.io()).toObservable();
                     return Observable.zip(Observable.just(entity), itemsObservable, (recentlyEntity, itemsEntity) ->
                             mRecentlyItemModelMapper.map(recentlyEntity, itemsEntity));
                 })

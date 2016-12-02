@@ -15,7 +15,7 @@ import com.google.android.gms.awareness.state.Weather;
 import com.google.android.gms.common.api.GoogleApiClient;
 import com.google.android.gms.location.ActivityRecognitionResult;
 import com.google.android.gms.location.DetectedActivity;
-import com.lakeel.altla.vision.nearby.domain.usecase.FindItemUseCase;
+import com.lakeel.altla.vision.nearby.domain.usecase.FindUserUseCase;
 import com.lakeel.altla.vision.nearby.domain.usecase.SaveCurrentLocationUseCase;
 import com.lakeel.altla.vision.nearby.domain.usecase.SaveDetectedActivityUseCase;
 import com.lakeel.altla.vision.nearby.domain.usecase.SaveRecentlyUseCase;
@@ -37,7 +37,7 @@ import rx.schedulers.Schedulers;
 public class RecentlyService extends IntentService {
 
     @Inject
-    FindItemUseCase findItemUseCase;
+    FindUserUseCase findUserUseCase;
 
     @Inject
     SaveRecentlyUseCase saveRecentlyUseCase;
@@ -80,7 +80,7 @@ public class RecentlyService extends IntentService {
 
                     @Override
                     public void onConnected(@Nullable Bundle bundle) {
-                        findItemUseCase
+                        findUserUseCase
                                 .execute(userId)
                                 .flatMap(itemEntity -> saveRecentlyUseCase.execute(itemEntity.key).subscribeOn(Schedulers.io()))
                                 .subscribeOn(Schedulers.io())

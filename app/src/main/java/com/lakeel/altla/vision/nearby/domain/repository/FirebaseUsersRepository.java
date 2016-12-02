@@ -1,18 +1,18 @@
 package com.lakeel.altla.vision.nearby.domain.repository;
 
-import com.lakeel.altla.vision.nearby.data.entity.ItemsEntity;
+import com.lakeel.altla.vision.nearby.data.entity.UserEntity;
 
 import rx.Completable;
 import rx.Observable;
 import rx.Single;
 
-public interface FirebaseItemsRepository {
+public interface FirebaseUsersRepository {
 
-    Single<ItemsEntity> findItemsById(String id);
+    Single<UserEntity> findUserById(String userId);
 
-    Single<ItemsEntity> findItemsByName(String name);
+    Single<UserEntity> findUserByName(String name);
 
-    Completable saveItem();
+    Completable saveUser();
 
     Single<String> saveBeacon(String userId, String beaconId);
 

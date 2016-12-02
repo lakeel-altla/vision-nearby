@@ -2,7 +2,7 @@ package com.lakeel.altla.vision.nearby.presentation.presenter.recently;
 
 import com.lakeel.altla.vision.nearby.R;
 import com.lakeel.altla.vision.nearby.domain.usecase.FindFavoriteUseCase;
-import com.lakeel.altla.vision.nearby.domain.usecase.FindItemUseCase;
+import com.lakeel.altla.vision.nearby.domain.usecase.FindUserUseCase;
 import com.lakeel.altla.vision.nearby.domain.usecase.FindLINEUrlUseCase;
 import com.lakeel.altla.vision.nearby.domain.usecase.FindLocationTextUseCase;
 import com.lakeel.altla.vision.nearby.domain.usecase.FindPresenceUseCase;
@@ -26,7 +26,7 @@ import rx.schedulers.Schedulers;
 public final class RecentlyPresenter extends BasePresenter<RecentlyView> {
 
     @Inject
-    FindItemUseCase findItemUseCase;
+    FindUserUseCase findUserUseCase;
 
     @Inject
     FindTimesUseCase findTimesUseCase;
@@ -73,7 +73,7 @@ public final class RecentlyPresenter extends BasePresenter<RecentlyView> {
                 .doOnSuccess(model -> getView().showPresence(model))
                 .flatMap(presenceModel -> findTimesUseCase.execute(userId).subscribeOn(Schedulers.io()))
                 .doOnSuccess(times -> getView().showTimes(times))
-                .flatMap(times -> findItemUseCase.execute(userId).subscribeOn(Schedulers.io()))
+                .flatMap(times -> findUserUseCase.execute(userId).subscribeOn(Schedulers.io()))
                 .map(entity -> itemModelMapper.map(entity))
                 .doOnSuccess(model -> getView().showProfile(model))
                 .flatMap(model -> findLINEUrlUseCase.execute(userId).subscribeOn(Schedulers.io()))

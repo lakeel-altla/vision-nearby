@@ -3,7 +3,7 @@ package com.lakeel.altla.vision.nearby.presentation.presenter.settings.device;
 import android.support.annotation.IntRange;
 
 import com.lakeel.altla.vision.nearby.domain.usecase.FindBeaconsUseCase;
-import com.lakeel.altla.vision.nearby.domain.usecase.FindItemUseCase;
+import com.lakeel.altla.vision.nearby.domain.usecase.FindUserUseCase;
 import com.lakeel.altla.vision.nearby.domain.usecase.FindUserBeaconsUseCase;
 import com.lakeel.altla.vision.nearby.presentation.firebase.MyUser;
 import com.lakeel.altla.vision.nearby.presentation.presenter.BaseItemPresenter;
@@ -28,7 +28,7 @@ import rx.schedulers.Schedulers;
 public class DeviceListPresenter extends BasePresenter<DeviceView> {
 
     @Inject
-    FindItemUseCase mFindItemUseCase;
+    FindUserUseCase mFindUserUseCase;
 
     @Inject
     FindUserBeaconsUseCase findUserBeaconsUseCase;

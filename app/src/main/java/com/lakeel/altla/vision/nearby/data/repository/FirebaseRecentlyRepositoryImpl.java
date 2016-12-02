@@ -13,7 +13,7 @@ import com.google.firebase.database.ValueEventListener;
 import com.lakeel.altla.vision.nearby.data.entity.RecentlyEntity;
 import com.lakeel.altla.vision.nearby.data.execption.DataStoreException;
 import com.lakeel.altla.vision.nearby.data.mapper.RecentlyEntityMapper;
-import com.lakeel.altla.vision.nearby.domain.repository.FirebaseItemsRepository;
+import com.lakeel.altla.vision.nearby.domain.repository.FirebaseUsersRepository;
 import com.lakeel.altla.vision.nearby.domain.repository.FirebaseRecentlyRepository;
 import com.lakeel.altla.vision.nearby.presentation.firebase.MyUser;
 
@@ -41,7 +41,7 @@ public class FirebaseRecentlyRepositoryImpl implements FirebaseRecentlyRepositor
     private RecentlyEntityMapper entityMapper = new RecentlyEntityMapper();
 
     @Inject
-    FirebaseItemsRepository mFirebaseItemsRepository;
+    FirebaseUsersRepository mFirebaseUsersRepository;
 
     @Inject
     public FirebaseRecentlyRepositoryImpl(String url) {

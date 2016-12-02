@@ -1,22 +1,22 @@
 package com.lakeel.altla.vision.nearby.domain.usecase;
 
-import com.lakeel.altla.vision.nearby.data.entity.UserEntity;
 import com.lakeel.altla.vision.nearby.domain.repository.FirebaseUsersRepository;
+import com.lakeel.altla.vision.nearby.data.entity.UserEntity;
 
 import javax.inject.Inject;
 
 import rx.Single;
 
-public final class FindItemNameUseCase {
+public final class FindUserUseCase {
 
     @Inject
     FirebaseUsersRepository mFirebaseUsersRepository;
 
     @Inject
-    FindItemNameUseCase() {
+    public FindUserUseCase() {
     }
 
-    public Single<UserEntity> execute(String name) {
-        return mFirebaseUsersRepository.findUserByName(name);
+    public Single<UserEntity> execute(String userId) {
+        return mFirebaseUsersRepository.findUserById(userId);
     }
 }

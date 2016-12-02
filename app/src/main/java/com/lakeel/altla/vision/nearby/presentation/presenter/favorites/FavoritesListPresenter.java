@@ -4,9 +4,9 @@ import android.support.annotation.IntRange;
 
 import com.lakeel.altla.vision.nearby.R;
 import com.lakeel.altla.vision.nearby.core.CollectionUtils;
-import com.lakeel.altla.vision.nearby.data.entity.ItemsEntity;
+import com.lakeel.altla.vision.nearby.data.entity.UserEntity;
 import com.lakeel.altla.vision.nearby.domain.usecase.FindFavoritesUseCase;
-import com.lakeel.altla.vision.nearby.domain.usecase.FindItemUseCase;
+import com.lakeel.altla.vision.nearby.domain.usecase.FindUserUseCase;
 import com.lakeel.altla.vision.nearby.domain.usecase.RemoveFavoriteUseCase;
 import com.lakeel.altla.vision.nearby.presentation.presenter.BaseItemPresenter;
 import com.lakeel.altla.vision.nearby.presentation.presenter.BasePresenter;
@@ -31,7 +31,7 @@ import rx.schedulers.Schedulers;
 public final class FavoritesListPresenter extends BasePresenter<FavoriteListView> {
 
     @Inject
-    FindItemUseCase mFindItemUseCase;
+    FindUserUseCase mFindUserUseCase;
 
     @Inject
     FindFavoritesUseCase mFindFavoritesUseCase;
@@ -55,7 +55,7 @@ public final class FavoritesListPresenter extends BasePresenter<FavoriteListView
                 .execute()
                 .flatMap(entity -> {
                     String userId = entity.key;
-                    Observable<ItemsEntity> itemsSingle = mFindItemUseCase.execute(userId).toObservable();
+                    Observable<UserEntity> itemsSingle = mFindUserUseCase.execute(userId).toObservable();
 
                     return Observable.zip(Observable.just(entity), itemsSingle, (favoritesEntity, itemsEntity) ->
                             mFavoriteModelMapper.map(favoritesEntity, itemsEntity));

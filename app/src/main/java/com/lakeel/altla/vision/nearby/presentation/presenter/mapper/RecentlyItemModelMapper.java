@@ -2,7 +2,7 @@ package com.lakeel.altla.vision.nearby.presentation.presenter.mapper;
 
 import android.support.annotation.NonNull;
 
-import com.lakeel.altla.vision.nearby.data.entity.ItemsEntity;
+import com.lakeel.altla.vision.nearby.data.entity.UserEntity;
 import com.lakeel.altla.vision.nearby.data.entity.RecentlyEntity;
 import com.lakeel.altla.vision.nearby.data.entity.RecentlyEntity.LocationEntity;
 import com.lakeel.altla.vision.nearby.presentation.presenter.model.LocationModel;
@@ -16,12 +16,12 @@ import java.util.Map;
 public final class RecentlyItemModelMapper {
 
     @NonNull
-    public RecentlyItemModel map(@NonNull RecentlyEntity recentlyEntity, @NonNull ItemsEntity itemsEntity) {
+    public RecentlyItemModel map(@NonNull RecentlyEntity recentlyEntity, @NonNull UserEntity userEntity) {
         RecentlyItemModel model = new RecentlyItemModel();
 
         model.userId = recentlyEntity.userId;
-        model.name = itemsEntity.name;
-        model.imageUri = itemsEntity.imageUri;
+        model.name = userEntity.name;
+        model.imageUri = userEntity.imageUri;
         model.detectedActivity = recentlyEntity.userActivity;
         model.passingTime = recentlyEntity.passingTime;
 
