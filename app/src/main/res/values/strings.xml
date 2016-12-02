@@ -59,6 +59,7 @@
     <string name="title_add_friends">Add to Friends</string>
 
     <string name="notification_title_advertise_ble">Advertising as a beacon.</string>
+    <string name="notification_title_device_found">Device Found.</string>
 
     <string name="preference_summary_publish_in_background">Allow advertise data when the app becomes
         inactive.
@@ -83,6 +84,7 @@
     <string name="message_device_distance_format">%1$s meters away.</string>
 
     <string name="notification_message_advertise_ble">BLE Advertise.</string>
+    <string name="notification_message_device_found">Your device has been found.</string>
 
     <string name="button_add">Add</string>
     <string name="button_remove">Remove</string>

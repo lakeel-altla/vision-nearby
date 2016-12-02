@@ -10,4 +10,6 @@ public interface FirebaseBeaconsRepository {
     Single<String> saveUserBeacon(String beaconId, String name);
 
     Observable<BeaconsEntity> findBeaconsByUserId(String userId);
+
+    Single<BeaconsEntity> findBeacon(String beaconId);
 }

@@ -10,6 +10,7 @@ import com.lakeel.altla.vision.nearby.data.repository.FirebaseItemsRepositoryImp
 import com.lakeel.altla.vision.nearby.data.repository.FirebaseLINELinksRepositoryImpl;
 import com.lakeel.altla.vision.nearby.data.repository.FirebaseLocationsDataRepositoryImpl;
 import com.lakeel.altla.vision.nearby.data.repository.FirebaseLocationsRepositoryImpl;
+import com.lakeel.altla.vision.nearby.data.repository.FirebaseNotificationsRepositoryImpl;
 import com.lakeel.altla.vision.nearby.data.repository.FirebasePresenceRepositoryImpl;
 import com.lakeel.altla.vision.nearby.data.repository.FirebaseRecentlyRepositoryImpl;
 import com.lakeel.altla.vision.nearby.data.repository.FirebaseTokensRepositoryImpl;
@@ -26,6 +27,7 @@ import com.lakeel.altla.vision.nearby.domain.repository.FirebaseItemsRepository;
 import com.lakeel.altla.vision.nearby.domain.repository.FirebaseLINELinksRepository;
 import com.lakeel.altla.vision.nearby.domain.repository.FirebaseLocationsDataRepository;
 import com.lakeel.altla.vision.nearby.domain.repository.FirebaseLocationsRepository;
+import com.lakeel.altla.vision.nearby.domain.repository.FirebaseNotificationsRepository;
 import com.lakeel.altla.vision.nearby.domain.repository.FirebasePresenceRepository;
 import com.lakeel.altla.vision.nearby.domain.repository.FirebaseRecentlyRepository;
 import com.lakeel.altla.vision.nearby.domain.repository.FirebaseTokensRepository;
@@ -66,7 +68,7 @@ public class RepositoryModule {
 
     @CustomScope
     @Provides
-    FirebaseItemsRepository provideItemsRepository(@Named("itemsUrl") String url) {
+    FirebaseItemsRepository provideItemsRepository(@Named("usersUrl") String url) {
         return new FirebaseItemsRepositoryImpl(url);
     }
 
@@ -134,6 +136,12 @@ public class RepositoryModule {
     @Provides
     FirebaseTokensRepository provideFirebaseTokensRepository(@Named("tokensUrl") String url) {
         return new FirebaseTokensRepositoryImpl(url);
+    }
+
+    @CustomScope
+    @Provides
+    FirebaseNotificationsRepository provideFirebaseNotificationRepository(@Named("notificationsUrl") String url) {
+        return new FirebaseNotificationsRepositoryImpl(url);
     }
 
     @CustomScope

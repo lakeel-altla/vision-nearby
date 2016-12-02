@@ -48,7 +48,7 @@ public final class LocationService extends IntentService {
 
     @Override
     protected void onHandleIntent(Intent intent) {
-        ServiceComponent component = DaggerServiceComponent.builder().build();
+        ServiceComponent component = DaggerServiceComponent.create();
         component.inject(this);
 
         String beaconId = intent.getStringExtra(IntentKey.BEACON_ID.name());

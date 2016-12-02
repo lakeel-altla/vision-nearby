@@ -1,5 +1,8 @@
 package com.lakeel.altla.vision.nearby.presentation.presenter.settings.device;
 
+import android.support.annotation.IntRange;
+
+import com.lakeel.altla.vision.nearby.domain.usecase.FindBeaconsUseCase;
 import com.lakeel.altla.vision.nearby.domain.usecase.FindItemUseCase;
 import com.lakeel.altla.vision.nearby.domain.usecase.FindUserBeaconsUseCase;
 import com.lakeel.altla.vision.nearby.presentation.firebase.MyUser;
@@ -13,8 +16,6 @@ import com.lakeel.altla.vision.nearby.presentation.view.adapter.DeviceAdapter;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-
-import android.support.annotation.IntRange;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -30,7 +31,10 @@ public class DeviceListPresenter extends BasePresenter<DeviceView> {
     FindItemUseCase mFindItemUseCase;
 
     @Inject
-    FindUserBeaconsUseCase mFindUserBeaconsUseCase;
+    FindUserBeaconsUseCase findUserBeaconsUseCase;
+
+    @Inject
+    FindBeaconsUseCase findBeaconsUseCase;
 
     private static final Logger LOGGER = LoggerFactory.getLogger(DeviceListPresenter.class);
 
@@ -44,9 +48,9 @@ public class DeviceListPresenter extends BasePresenter<DeviceView> {
 
     @Override
     public void onResume() {
-
-        Subscription subscription = mFindUserBeaconsUseCase
+        Subscription subscription = findUserBeaconsUseCase
                 .execute(MyUser.getUid())
+                .flatMap(beaconId -> findBeaconsUseCase.execute(beaconId).subscribeOn(Schedulers.io()).toObservable())
                 .filter(entity -> entity != null)
                 .map(mMapper::map)
                 .toList()
@@ -58,7 +62,6 @@ public class DeviceListPresenter extends BasePresenter<DeviceView> {
                 }, e -> {
                     LOGGER.error("Failed to find user beacons.", e);
                 });
-
         reusableCompositeSubscription.add(subscription);
     }
 

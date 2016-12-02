@@ -12,7 +12,6 @@ import com.lakeel.altla.vision.nearby.presentation.presenter.BasePresenter;
 import com.lakeel.altla.vision.nearby.presentation.presenter.mapper.BeaconModelMapper;
 import com.lakeel.altla.vision.nearby.presentation.presenter.mapper.ItemModelMapper;
 import com.lakeel.altla.vision.nearby.presentation.presenter.mapper.PresencesModelMapper;
-import com.lakeel.altla.vision.nearby.presentation.presenter.model.BeaconModel;
 import com.lakeel.altla.vision.nearby.presentation.view.ProfileView;
 
 import org.slf4j.Logger;
@@ -109,20 +108,16 @@ public final class ProfilePresenter extends BasePresenter<ProfileView> {
     public void onFindNearbyDeviceMenuClicked() {
         Subscription subscription = mFindUserBeaconsUseCase
                 .execute(mUserId)
-                .map(entity -> mBeaconModelMapper.map(entity))
                 .toList()
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
-                .subscribe(models -> {
-                    ArrayList<String> beaconIds = new ArrayList<>(models.size());
-                    for (BeaconModel model : models) {
-                        beaconIds.add(model.mBeaconId);
-                    }
+                .subscribe(beacons -> {
+                    ArrayList<String> beaconIds = new ArrayList<>(beacons.size());
+                    beaconIds.addAll(beacons);
                     getView().showFindNearbyDeviceFragment(beaconIds, mUserName);
                 }, e -> {
                     LOGGER.error("Failed to find user beacons.", e);
                 });
-
         reusableCompositeSubscription.add(subscription);
     }
 

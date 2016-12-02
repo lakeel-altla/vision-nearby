@@ -20,12 +20,13 @@ import com.lakeel.altla.cm.CMApplication;
 import com.lakeel.altla.cm.config.AccessConfig;
 import com.lakeel.altla.library.ResolutionResultCallback;
 import com.lakeel.altla.vision.nearby.R;
-import com.lakeel.altla.vision.nearby.data.entity.BeaconIdEntity;
 import com.lakeel.altla.vision.nearby.domain.usecase.FindBeaconIdUseCase;
 import com.lakeel.altla.vision.nearby.domain.usecase.FindCMLinksUseCase;
 import com.lakeel.altla.vision.nearby.domain.usecase.FindPreferencesUseCase;
+import com.lakeel.altla.vision.nearby.domain.usecase.FindTokenUseCase;
 import com.lakeel.altla.vision.nearby.domain.usecase.ObservePresenceUseCase;
 import com.lakeel.altla.vision.nearby.domain.usecase.SaveBeaconIdUseCase;
+import com.lakeel.altla.vision.nearby.domain.usecase.SaveBeaconUseCase;
 import com.lakeel.altla.vision.nearby.domain.usecase.SaveTokensUseCase;
 import com.lakeel.altla.vision.nearby.domain.usecase.SaveUserBeaconUseCase;
 import com.lakeel.altla.vision.nearby.presentation.checker.BluetoothChecker;
@@ -48,7 +49,6 @@ import javax.inject.Inject;
 import rx.Single;
 import rx.Subscription;
 import rx.android.schedulers.AndroidSchedulers;
-import rx.functions.Func1;
 import rx.schedulers.Schedulers;
 
 public final class ActivityPresenter extends BasePresenter<ActivityView> implements GoogleApiClient.ConnectionCallbacks, GoogleApiClient.OnConnectionFailedListener {
@@ -73,6 +73,12 @@ public final class ActivityPresenter extends BasePresenter<ActivityView> impleme
 
     @Inject
     SaveUserBeaconUseCase saveUserBeaconUseCase;
+
+    @Inject
+    SaveBeaconUseCase saveBeaconUseCase;
+
+    @Inject
+    FindTokenUseCase findTokenUseCase;
 
     @Inject
     SaveTokensUseCase saveTokensUseCase;
@@ -190,32 +196,24 @@ public final class ActivityPresenter extends BasePresenter<ActivityView> impleme
             getView().showPublishDisableDialog();
         }
 
-        Subscription beaconIdSubscription = findBeaconIdUseCase
+        Subscription beaconSubscription = findBeaconIdUseCase
                 .execute()
-                .flatMap(new Func1<BeaconIdEntity, Single<String>>() {
-                    @Override
-                    public Single<String> call(BeaconIdEntity entity) {
-                        if (entity == null) {
-                            return saveBeaconIdUseCase
-                                    .execute()
-                                    .subscribeOn(Schedulers.io());
-                        }
-                        String beaconId = entity.namespaceId + entity.instanceId;
-                        return Single.just(beaconId);
+                .flatMap(entity -> {
+                    if (entity == null) {
+                        return saveBeaconIdUseCase.execute().subscribeOn(Schedulers.io());
                     }
+                    return Single.just(entity.namespaceId + entity.instanceId);
                 })
-                .flatMap(new Func1<String, Single<String>>() {
-                    @Override
-                    public Single<String> call(String beaconId) {
-                        return saveUserBeaconUseCase
-                                .execute(beaconId)
-                                .subscribeOn(Schedulers.io());
-                    }
+                .flatMap(beaconId -> saveUserBeaconUseCase.execute(MyUser.getUid(), beaconId).subscribeOn(Schedulers.io()))
+                .flatMap(beaconId -> saveBeaconUseCase.execute(beaconId).subscribeOn(Schedulers.io()))
+                .flatMap(beaconId -> {
+                    String token = instanceId.getToken();
+                    return saveTokensUseCase.execute(beaconId, token).subscribeOn(Schedulers.io());
                 })
                 .subscribeOn(Schedulers.io())
                 .doOnError(e -> LOGGER.error("Failed to save beacon data.", e))
                 .subscribe();
-        reusableCompositeSubscription.add(beaconIdSubscription);
+        reusableCompositeSubscription.add(beaconSubscription);
 
         Subscription preferenceSubscription = findPreferencesUseCase
                 .execute()
@@ -237,17 +235,6 @@ public final class ActivityPresenter extends BasePresenter<ActivityView> impleme
                 .subscribe(authConfig -> CMApplication.initialize(authConfig, accessConfig),
                         e -> LOGGER.error("Failed to initialize CM settings.", e));
         reusableCompositeSubscription.add(cmLinksSubscription);
-
-        // まずは毎回保存。
-        // その後、既存 token チェック。
-        String token = instanceId.getToken();
-        Subscription tokenSubscription = saveTokensUseCase
-                .execute(token)
-                .subscribeOn(Schedulers.io())
-                .observeOn(AndroidSchedulers.mainThread())
-                .doOnError(e -> LOGGER.error("Failed to save token.", e))
-                .subscribe();
-        reusableCompositeSubscription.add(tokenSubscription);
     }
 
     public void onAccessLocationGranted() {

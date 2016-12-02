@@ -9,7 +9,7 @@ import com.lakeel.altla.vision.nearby.R;
 import com.lakeel.altla.vision.nearby.data.entity.ItemsEntity;
 import com.lakeel.altla.vision.nearby.data.entity.LINELinksEntity;
 import com.lakeel.altla.vision.nearby.domain.usecase.FindItemUseCase;
-import com.lakeel.altla.vision.nearby.domain.usecase.FindUserIdUseCase;
+import com.lakeel.altla.vision.nearby.domain.usecase.FindUserIdByLineUrlUseCase;
 import com.lakeel.altla.vision.nearby.presentation.di.component.DaggerServiceComponent;
 import com.lakeel.altla.vision.nearby.presentation.di.component.ServiceComponent;
 import com.lakeel.altla.vision.nearby.presentation.intent.IntentKey;
@@ -29,7 +29,7 @@ import rx.schedulers.Schedulers;
 public class LINEService extends IntentService {
 
     @Inject
-    FindUserIdUseCase findUserIdUseCase;
+    FindUserIdByLineUrlUseCase findUserIdByLineUrlUseCase;
 
     @Inject
     FindItemUseCase findItemUseCase;
@@ -54,7 +54,7 @@ public class LINEService extends IntentService {
 
         LOGGER.info("LINE URL was found:URL=" + lineUrl);
 
-        findUserIdUseCase
+        findUserIdByLineUrlUseCase
                 .execute(lineUrl)
                 .flatMap(new Func1<LINELinksEntity, Single<ItemsEntity>>() {
                     @Override

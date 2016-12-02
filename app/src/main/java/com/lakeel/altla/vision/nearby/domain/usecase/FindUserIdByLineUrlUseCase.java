@@ -7,13 +7,13 @@ import javax.inject.Inject;
 
 import rx.Single;
 
-public final class FindUserIdUseCase {
+public final class FindUserIdByLineUrlUseCase {
 
     @Inject
     FirebaseLINELinksRepository repository;
 
     @Inject
-    FindUserIdUseCase() {
+    FindUserIdByLineUrlUseCase() {
     }
 
     public Single<LINELinksEntity> execute(String lineUrl) {

@@ -12,10 +12,10 @@ public final class SaveTokensUseCase {
     FirebaseTokensRepository firebaseTokensRepository;
 
     @Inject
-    SaveTokensUseCase(){
+    SaveTokensUseCase() {
     }
 
-    public Single<String> execute(String token) {
-        return firebaseTokensRepository.saveToken(token);
+    public Single<String> execute(String beaconId, String token) {
+        return firebaseTokensRepository.saveTokenByBeaconId(beaconId, token);
     }
 }

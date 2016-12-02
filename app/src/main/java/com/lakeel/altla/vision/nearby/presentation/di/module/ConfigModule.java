@@ -14,7 +14,7 @@ public final class ConfigModule {
     @CustomScope
     @Provides
     @Named("favoritesUrl")
-    String provideUsersUrl() {
+    String provideFavoritesUrl() {
         return "https://profile-notification-95441.firebaseio.com/favorites";
     }
 
@@ -27,9 +27,9 @@ public final class ConfigModule {
 
     @CustomScope
     @Provides
-    @Named("itemsUrl")
-    String provideItemsUrl() {
-        return "https://profile-notification-95441.firebaseio.com/items";
+    @Named("usersUrl")
+    String provideUsersUrl() {
+        return "https://profile-notification-95441.firebaseio.com/users";
     }
 
     @CustomScope
@@ -101,6 +101,13 @@ public final class ConfigModule {
     @Named("tokensUrl")
     String provideTokensUrl() {
         return "https://profile-notification-95441.firebaseio.com/tokens";
+    }
+
+    @CustomScope
+    @Provides
+    @Named("notificationsUrl")
+    String provideNotificationsUrl() {
+        return "https://profile-notification-95441.firebaseio.com/notifications";
     }
 
     @CustomScope
