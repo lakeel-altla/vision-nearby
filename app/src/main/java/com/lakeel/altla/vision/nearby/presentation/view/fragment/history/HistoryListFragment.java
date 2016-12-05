@@ -72,12 +72,8 @@ public final class HistoryListFragment extends Fragment implements HistoryListVi
 
         recyclerView.addItemDecoration(new DividerItemDecoration(getContext()));
         recyclerView.setAdapter(adapter);
-    }
 
-    @Override
-    public void onResume() {
-        super.onResume();
-        presenter.onResume();
+        presenter.onActivityCreated();
     }
 
     @Override

@@ -89,8 +89,6 @@ public final class DeviceDistanceEstimationFragment extends Fragment implements 
     public void onActivityCreated(Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
 
-        presenter.onActivityCreated();
-
         getActivity().setTitle(R.string.title_find_nearby_device);
 
         ((MainActivity) getActivity()).setDrawerIndicatorEnabled(false);
@@ -111,6 +109,7 @@ public final class DeviceDistanceEstimationFragment extends Fragment implements 
     @Override
     public void onResume() {
         super.onResume();
+
         presenter.onResume();
 
         circleImage.setImageDrawable(ResourcesCompat.getDrawable(getResources(), R.drawable.circle, null));
@@ -118,6 +117,12 @@ public final class DeviceDistanceEstimationFragment extends Fragment implements 
         animation.setDuration(2000);
         animation.setRepeatCount(INFINITE);
         circleImage.startAnimation(animation);
+    }
+
+    @Override
+    public void onPause() {
+        super.onPause();
+        presenter.onPause();
     }
 
     @Override

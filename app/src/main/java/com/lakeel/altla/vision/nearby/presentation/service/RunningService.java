@@ -8,23 +8,23 @@ import java.util.List;
 
 import static android.content.Context.ACTIVITY_SERVICE;
 
-public final class ServiceManager {
+public final class RunningService {
 
     private final Class clazz;
 
     private final Context context;
 
-    public ServiceManager(Context context, Class clazz) {
+    public RunningService(Context context, Class clazz) {
         this.clazz = clazz;
         this.context = context;
     }
 
-    public void stopService() {
+    public void stop() {
         ActivityManager am = (ActivityManager) context.getSystemService(ACTIVITY_SERVICE);
         List<ActivityManager.RunningServiceInfo> services = am.getRunningServices(Integer.MAX_VALUE);
 
-        for (ActivityManager.RunningServiceInfo runningService : services) {
-            if (runningService.service.getClassName().equals(clazz.getName())) {
+        for (ActivityManager.RunningServiceInfo runningServiceInfo : services) {
+            if (runningServiceInfo.service.getClassName().equals(clazz.getName())) {
                 Intent intent = new Intent(context, clazz);
                 context.stopService(intent);
             }

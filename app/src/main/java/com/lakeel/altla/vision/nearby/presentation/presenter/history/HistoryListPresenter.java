@@ -62,8 +62,7 @@ public final class HistoryListPresenter extends BasePresenter<HistoryListView> {
     HistoryListPresenter() {
     }
 
-    @Override
-    public void onResume() {
+    public void onActivityCreated() {
         Subscription subscription = findHistoryUseCase
                 .execute(MyUser.getUid())
                 .flatMap(entity -> {
@@ -84,7 +83,7 @@ public final class HistoryListPresenter extends BasePresenter<HistoryListView> {
                     LOGGER.error("Failed to find history.", e);
                     getView().showSnackBar(R.string.error_process);
                 });
-        reusableCompositeSubscription.add(subscription);
+        reusableSubscriptions.add(subscription);
     }
 
     public void onCreateItemView(HistoryItemView historyItemView) {
@@ -142,7 +141,7 @@ public final class HistoryListPresenter extends BasePresenter<HistoryListView> {
                         getView().showSnackBar(R.string.error_not_added);
                     });
 
-            reusableCompositeSubscription.add(subscription);
+            reusableSubscriptions.add(subscription);
         }
     }
 

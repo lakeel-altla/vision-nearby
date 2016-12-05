@@ -77,7 +77,7 @@ public final class NearbyListPresenter extends BasePresenter<NearbyListView> imp
                         getView().updateItems();
                     }, e -> LOGGER.error("Failed to find nearby item.", e));
 
-            reusableCompositeSubscription.add(subscription);
+            reusableSubscriptions.add(subscription);
         }
     }
 
@@ -128,7 +128,6 @@ public final class NearbyListPresenter extends BasePresenter<NearbyListView> imp
         subscriber = new ForegroundSubscriber(googleApiClient, new NearbyMessagesListener());
     }
 
-    @Override
     public void onResume() {
         googleApiClient.registerConnectionCallbacks(this);
         googleApiClient.connect();
@@ -140,10 +139,9 @@ public final class NearbyListPresenter extends BasePresenter<NearbyListView> imp
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribe(bool -> isCMLinkEnabled = bool,
                         e -> LOGGER.error("Failed to find config settings.", e));
-        reusableCompositeSubscription.add(subscription);
+        reusableSubscriptions.add(subscription);
     }
 
-    @Override
     public void onPause() {
         googleApiClient.unregisterConnectionCallbacks(this);
     }
@@ -219,7 +217,7 @@ public final class NearbyListPresenter extends BasePresenter<NearbyListView> imp
                     getView().showSnackBar(R.string.error_not_added);
                 });
 
-        reusableCompositeSubscription.add(subscription);
+        reusableSubscriptions.add(subscription);
     }
 
     public void onSubscribe() {
@@ -239,7 +237,7 @@ public final class NearbyListPresenter extends BasePresenter<NearbyListView> imp
                 getView().showSnackBar(R.string.message_not_found);
             }
 
-            reusableCompositeSubscription.unSubscribe();
+            reusableSubscriptions.unSubscribe();
         }, 10, TimeUnit.SECONDS);
     }
 

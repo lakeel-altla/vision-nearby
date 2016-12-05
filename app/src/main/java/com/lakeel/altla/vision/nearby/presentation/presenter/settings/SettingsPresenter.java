@@ -24,7 +24,6 @@ public final class SettingsPresenter extends BasePresenter<SettingsView> {
     SettingsPresenter() {
     }
 
-    @Override
     public void onActivityCreated() {
         Subscription subscription = findConfigsUseCase
                 .execute()
@@ -37,6 +36,6 @@ public final class SettingsPresenter extends BasePresenter<SettingsView> {
                 }, e -> {
                     LOGGER.error("Failed to find CM links settings.", e);
                 });
-        reusableCompositeSubscription.add(subscription);
+        reusableSubscriptions.add(subscription);
     }
 }

@@ -51,8 +51,7 @@ public final class FavoriteListPresenter extends BasePresenter<FavoriteListView>
     FavoriteListPresenter() {
     }
 
-    @Override
-    public void onResume() {
+    public void onActivityCreated() {
         Subscription subscription = findFavoritesUseCase
                 .execute(MyUser.getUid())
                 .flatMap(entity -> {
@@ -69,7 +68,7 @@ public final class FavoriteListPresenter extends BasePresenter<FavoriteListView>
                 }, e -> {
                     getView().showSnackBar(R.string.error_process);
                 });
-        reusableCompositeSubscription.add(subscription);
+        reusableSubscriptions.add(subscription);
     }
 
     public void onCreateItemView(FavoriteItemView favoriteItemView) {
@@ -112,7 +111,7 @@ public final class FavoriteListPresenter extends BasePresenter<FavoriteListView>
 
                                 getView().showSnackBar(R.string.message_removed);
                             });
-            reusableCompositeSubscription.add(subscription);
+            reusableSubscriptions.add(subscription);
         }
     }
 

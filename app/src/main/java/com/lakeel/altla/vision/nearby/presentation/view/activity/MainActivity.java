@@ -108,18 +108,6 @@ public class MainActivity extends AppCompatActivity
     }
 
     @Override
-    public void onResume() {
-        super.onResume();
-        presenter.onResume();
-    }
-
-    @Override
-    public void onPause() {
-        super.onPause();
-        presenter.onPause();
-    }
-
-    @Override
     public void onStart() {
         super.onStart();
         presenter.onStart();

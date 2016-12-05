@@ -70,9 +70,9 @@ public final class BleSettingsFragment extends PreferenceFragmentCompat implemen
     }
 
     @Override
-    public void onResume() {
-        super.onResume();
-        presenter.onResume();
+    public void onActivityCreated(Bundle savedInstanceState) {
+        super.onActivityCreated(savedInstanceState);
+        presenter.onActivityCreated();
     }
 
     @Override

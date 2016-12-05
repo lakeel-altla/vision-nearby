@@ -48,8 +48,7 @@ public class DeviceListPresenter extends BasePresenter<DeviceView> {
     DeviceListPresenter() {
     }
 
-    @Override
-    public void onResume() {
+    public void onActivityCreated() {
         Subscription subscription = findUserBeaconsUseCase
                 .execute(MyUser.getUid())
                 .flatMap(this::findBeacon)
@@ -64,7 +63,7 @@ public class DeviceListPresenter extends BasePresenter<DeviceView> {
                 }, e -> {
                     LOGGER.error("Failed to find user beacons.", e);
                 });
-        reusableCompositeSubscription.add(subscription);
+        reusableSubscriptions.add(subscription);
     }
 
     public int getItemCount() {

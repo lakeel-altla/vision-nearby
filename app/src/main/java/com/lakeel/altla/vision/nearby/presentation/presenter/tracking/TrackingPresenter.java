@@ -44,7 +44,6 @@ public final class TrackingPresenter extends BasePresenter<TrackingView> {
     TrackingPresenter() {
     }
 
-    @Override
     public void onResume() {
         Subscription subscription = findLocationDataUseCase
                 .execute(beaconId)
@@ -72,7 +71,7 @@ public final class TrackingPresenter extends BasePresenter<TrackingView> {
                         }
                     }
                 }, e -> LOGGER.error("Failed to find location.", e));
-        reusableCompositeSubscription.add(subscription);
+        reusableSubscriptions.add(subscription);
     }
 
     public void setBeaconData(String beaconId, String beaconName) {

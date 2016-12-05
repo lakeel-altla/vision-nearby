@@ -30,7 +30,6 @@ public final class LineSettingsPresenter extends BasePresenter<LineSettingsView>
     LineSettingsPresenter() {
     }
 
-    @Override
     public void onActivityCreated() {
         Subscription subscription = findLineLinkUseCase
                 .execute(MyUser.getUid())
@@ -41,7 +40,7 @@ public final class LineSettingsPresenter extends BasePresenter<LineSettingsView>
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribe(url -> getView().showLineUrl(url),
                         e -> LOGGER.error("Failed to find LINE url.", e));
-        reusableCompositeSubscription.add(subscription);
+        reusableSubscriptions.add(subscription);
     }
 
     public void onSaveLineUrl(String url) {
@@ -57,6 +56,6 @@ public final class LineSettingsPresenter extends BasePresenter<LineSettingsView>
                             LOGGER.error("Failed to save line URL.", e);
                             getView().showSnackBar(R.string.error_not_added);
                         });
-        reusableCompositeSubscription.add(subscription);
+        reusableSubscriptions.add(subscription);
     }
 }

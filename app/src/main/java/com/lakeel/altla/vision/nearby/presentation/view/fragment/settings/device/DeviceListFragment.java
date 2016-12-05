@@ -65,12 +65,8 @@ public final class DeviceListFragment extends Fragment implements DeviceView {
 
         DeviceAdapter adapter = new DeviceAdapter(presenter);
         recyclerView.setAdapter(adapter);
-    }
 
-    @Override
-    public void onResume() {
-        super.onResume();
-        presenter.onResume();
+        presenter.onActivityCreated();
     }
 
     @Override

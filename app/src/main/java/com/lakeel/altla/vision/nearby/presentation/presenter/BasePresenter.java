@@ -4,7 +4,7 @@ import android.support.annotation.CallSuper;
 
 public class BasePresenter<V> {
 
-    protected ReusableCompositeSubscription reusableCompositeSubscription = new ReusableCompositeSubscription();
+    protected ReusableCompositeSubscription reusableSubscriptions = new ReusableCompositeSubscription();
 
     protected V view;
 
@@ -17,20 +17,8 @@ public class BasePresenter<V> {
         view = v;
     }
 
-    public void onActivityCreated() {
-    }
-
-    public void onResume() {
-    }
-
-    public void onPause() {
-    }
-
-    public void onStart() {
-    }
-
     @CallSuper
     public void onStop() {
-        reusableCompositeSubscription.unSubscribe();
+        reusableSubscriptions.unSubscribe();
     }
 }

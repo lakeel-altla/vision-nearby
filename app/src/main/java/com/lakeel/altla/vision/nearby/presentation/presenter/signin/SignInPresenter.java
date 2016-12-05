@@ -61,6 +61,6 @@ public final class SignInPresenter extends BasePresenter<SignInView> {
                     getView().showSnackBar(R.string.error_not_signed_in);
                     FirebaseAuth.getInstance().signOut();
                 }, () -> getView().onSignedIn());
-        reusableCompositeSubscription.add(subscription);
+        reusableSubscriptions.add(subscription);
     }
 }

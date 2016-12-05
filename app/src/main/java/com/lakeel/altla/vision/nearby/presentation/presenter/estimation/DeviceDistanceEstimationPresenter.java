@@ -63,13 +63,11 @@ public final class DeviceDistanceEstimationPresenter extends BasePresenter<Devic
                 .build();
     }
 
-    @Override
     public void onResume() {
         googleApiClient.registerConnectionCallbacks(this);
         googleApiClient.connect();
     }
 
-    @Override
     public void onPause() {
         googleApiClient.unregisterConnectionCallbacks(this);
     }

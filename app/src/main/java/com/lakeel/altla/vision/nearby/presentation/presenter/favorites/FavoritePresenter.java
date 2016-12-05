@@ -70,7 +70,6 @@ public final class FavoritePresenter extends BasePresenter<FavoriteView> {
     FavoritePresenter() {
     }
 
-    @Override
     public void onActivityCreated() {
         Subscription presenceSubscription = findPresenceUseCase
                 .execute(userId)
@@ -79,7 +78,7 @@ public final class FavoritePresenter extends BasePresenter<FavoriteView> {
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribe(model -> getView().showPresence(model),
                         e -> LOGGER.error("Failed to find presence.", e));
-        reusableCompositeSubscription.add(presenceSubscription);
+        reusableSubscriptions.add(presenceSubscription);
 
         Subscription userSubscription = findUserUseCase
                 .execute(userId)
@@ -88,7 +87,7 @@ public final class FavoritePresenter extends BasePresenter<FavoriteView> {
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribe(model -> getView().showProfile(model),
                         e -> LOGGER.error("Failed to find user.", e));
-        reusableCompositeSubscription.add(userSubscription);
+        reusableSubscriptions.add(userSubscription);
 
         Subscription configsSubscription = findConfigsUseCase
                 .execute()
@@ -99,7 +98,7 @@ public final class FavoritePresenter extends BasePresenter<FavoriteView> {
                     isCmLinkClicked = isCmLinkEnabled;
                     getView().initializeOptionMenu();
                 }, e -> LOGGER.error("Failed to find configs.", e));
-        reusableCompositeSubscription.add(configsSubscription);
+        reusableSubscriptions.add(configsSubscription);
 
         Subscription lineLinkSubscription = findLineLinkUseCase
                 .execute(userId)
@@ -112,7 +111,7 @@ public final class FavoritePresenter extends BasePresenter<FavoriteView> {
                 .subscribe(lineUrl -> getView().showLineUrl(lineUrl),
                         e -> LOGGER.error("Failed to find LINE links.", e)
                 );
-        reusableCompositeSubscription.add(lineLinkSubscription);
+        reusableSubscriptions.add(lineLinkSubscription);
     }
 
     public void setUserData(String userId, String userName) {
@@ -141,7 +140,7 @@ public final class FavoritePresenter extends BasePresenter<FavoriteView> {
                 }, e -> {
                     LOGGER.error("Failed to find user beacons.", e);
                 });
-        reusableCompositeSubscription.add(subscription);
+        reusableSubscriptions.add(subscription);
     }
 
     public void onCmMenuClicked() {
@@ -156,9 +155,9 @@ public final class FavoritePresenter extends BasePresenter<FavoriteView> {
                             LOGGER.error("Failed to add to CM favorites.", e);
                             getView().showSnackBar(R.string.error_not_added);
                         });
-        reusableCompositeSubscription.add(subscription);
+        reusableSubscriptions.add(subscription);
     }
-    
+
     Single<Timestamp> saveCMFavorites(CmFavoriteData data) {
         return saveCMFavoritesUseCase.execute(data).subscribeOn(Schedulers.io());
     }

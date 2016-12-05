@@ -8,7 +8,7 @@ import com.lakeel.altla.vision.nearby.presentation.checker.BluetoothChecker.BleS
 import com.lakeel.altla.vision.nearby.presentation.presenter.BasePresenter;
 import com.lakeel.altla.vision.nearby.presentation.presenter.mapper.BeaconIdModelMapper;
 import com.lakeel.altla.vision.nearby.presentation.service.AdvertiseService;
-import com.lakeel.altla.vision.nearby.presentation.service.ServiceManager;
+import com.lakeel.altla.vision.nearby.presentation.service.RunningService;
 import com.lakeel.altla.vision.nearby.presentation.view.BleSettingsView;
 
 import org.slf4j.Logger;
@@ -36,8 +36,7 @@ public final class BleSettingsPresenter extends BasePresenter<BleSettingsView> {
         this.context = context;
     }
 
-    @Override
-    public void onResume() {
+    public void onActivityCreated() {
         BluetoothChecker checker = new BluetoothChecker(context);
         BleState state = checker.getState();
         if (state == BleState.SUBSCRIBE_ONLY) {
@@ -53,11 +52,11 @@ public final class BleSettingsPresenter extends BasePresenter<BleSettingsView> {
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribe(model -> getView().startAdvertise(model),
                         e -> LOGGER.error("Failed to find a beacon ID.", e));
-        reusableCompositeSubscription.add(subscription);
+        reusableSubscriptions.add(subscription);
     }
 
     public void onStopAdvertise() {
-        ServiceManager manager = new ServiceManager(context, AdvertiseService.class);
-        manager.stopService();
+        RunningService runningService = new RunningService(context, AdvertiseService.class);
+        runningService.stop();
     }
 }

@@ -74,12 +74,8 @@ public final class FavoriteListFragment extends Fragment implements FavoriteList
 
         FavoritesAdapter favoritesRecyclerAdapter = new FavoritesAdapter(presenter);
         recyclerView.setAdapter(favoritesRecyclerAdapter);
-    }
 
-    @Override
-    public void onResume() {
-        super.onResume();
-        presenter.onResume();
+        presenter.onActivityCreated();
     }
 
     @Override

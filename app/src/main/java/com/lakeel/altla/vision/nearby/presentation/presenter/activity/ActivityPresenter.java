@@ -37,7 +37,7 @@ import com.lakeel.altla.vision.nearby.presentation.presenter.BasePresenter;
 import com.lakeel.altla.vision.nearby.presentation.presenter.mapper.CMAuthConfigMapper;
 import com.lakeel.altla.vision.nearby.presentation.presenter.mapper.PreferencesModelMapper;
 import com.lakeel.altla.vision.nearby.presentation.service.AdvertiseService;
-import com.lakeel.altla.vision.nearby.presentation.service.ServiceManager;
+import com.lakeel.altla.vision.nearby.presentation.service.RunningService;
 import com.lakeel.altla.vision.nearby.presentation.subscriber.BackgroundSubscriber;
 import com.lakeel.altla.vision.nearby.presentation.subscriber.Subscriber;
 import com.lakeel.altla.vision.nearby.presentation.view.ActivityView;
@@ -124,12 +124,10 @@ public final class ActivityPresenter extends BasePresenter<ActivityView> impleme
         }
     }
 
-    @Override
     public void onStart() {
         if (MyUser.isAuthenticated() && isAccessLocationGranted()) {
             googleApiClient.registerConnectionCallbacks(this);
             googleApiClient.registerConnectionFailedListener(this);
-
             onConnect();
         }
     }
@@ -162,7 +160,7 @@ public final class ActivityPresenter extends BasePresenter<ActivityView> impleme
                     }
                 }, e -> LOGGER.error("Failed to find preference settings.", e));
 
-        reusableCompositeSubscription.add(subscription);
+        reusableSubscriptions.add(subscription);
     }
 
     @Override
@@ -209,7 +207,7 @@ public final class ActivityPresenter extends BasePresenter<ActivityView> impleme
                 .subscribeOn(Schedulers.io())
                 .doOnError(e -> LOGGER.error("Failed to save beacon data.", e))
                 .subscribe();
-        reusableCompositeSubscription.add(beaconSubscription);
+        reusableSubscriptions.add(beaconSubscription);
 
         Subscription preferenceSubscription = findPreferencesUseCase
                 .execute()
@@ -220,7 +218,7 @@ public final class ActivityPresenter extends BasePresenter<ActivityView> impleme
                         getView().startAdvertiseService(model);
                     }
                 }, e -> LOGGER.error("Failed to find preferences.", e));
-        reusableCompositeSubscription.add(preferenceSubscription);
+        reusableSubscriptions.add(preferenceSubscription);
 
         Subscription cmLinksSubscription = findCMLinkUseCase
                 .execute(MyUser.getUid())
@@ -228,7 +226,7 @@ public final class ActivityPresenter extends BasePresenter<ActivityView> impleme
                 .subscribeOn(Schedulers.io())
                 .subscribe(authConfig -> CMApplication.initialize(authConfig, accessConfig),
                         e -> LOGGER.error("Failed to initialize CM settings.", e));
-        reusableCompositeSubscription.add(cmLinksSubscription);
+        reusableSubscriptions.add(cmLinksSubscription);
     }
 
     public void onAccessLocationGranted() {
@@ -281,8 +279,8 @@ public final class ActivityPresenter extends BasePresenter<ActivityView> impleme
             if (task1.isSuccessful()) {
                 onUnSubscribeInBackground();
 
-                ServiceManager manager = new ServiceManager(context, AdvertiseService.class);
-                manager.stopService();
+                RunningService runningService = new RunningService(context, AdvertiseService.class);
+                runningService.stop();
 
                 getView().showSignInFragment();
             } else {
