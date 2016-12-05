@@ -48,7 +48,6 @@ public class App extends Application {
 
     private void initImageLoaderInstance() {
         // Init ImageLoader instance.
-
         DisplayImageOptions displayImageOptions = new DisplayImageOptions.Builder()
                 .showImageForEmptyUri(R.mipmap.ic_user)
                 .showImageOnFail(R.mipmap.ic_user)
