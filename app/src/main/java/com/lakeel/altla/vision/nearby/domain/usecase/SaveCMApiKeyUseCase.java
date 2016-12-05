@@ -9,13 +9,13 @@ import rx.Single;
 public final class SaveCMApiKeyUseCase {
 
     @Inject
-    FirebaseCMLinksRepository mFirebaseCMLinksRepository;
+    FirebaseCMLinksRepository repository;
 
     @Inject
     SaveCMApiKeyUseCase() {
     }
 
     public Single<String> execute(String userId, String apiKey) {
-        return mFirebaseCMLinksRepository.saveCMApiKey(userId, apiKey);
+        return repository.saveCMApiKey(userId, apiKey);
     }
 }

@@ -15,16 +15,16 @@ import rx.Single;
 
 public class FirebaseConfigsRepositoryImpl implements FirebaseConfigsRepository {
 
-    private DatabaseReference mReference;
+    private DatabaseReference reference;
 
     @Inject
     public FirebaseConfigsRepositoryImpl(String url) {
-        mReference = FirebaseDatabase.getInstance().getReferenceFromUrl(url);
+        reference = FirebaseDatabase.getInstance().getReferenceFromUrl(url);
     }
 
     @Override
     public Single<ConfigsEntity> find() {
-        return Single.create(subscriber -> mReference.addListenerForSingleValueEvent(new ValueEventListener() {
+        return Single.create(subscriber -> reference.addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
                 ConfigsEntity entity = dataSnapshot.getValue(ConfigsEntity.class);

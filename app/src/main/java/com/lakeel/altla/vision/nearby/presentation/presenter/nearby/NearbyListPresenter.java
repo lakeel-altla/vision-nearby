@@ -8,12 +8,16 @@ import android.support.annotation.Nullable;
 import com.google.android.gms.common.api.GoogleApiClient;
 import com.google.android.gms.common.api.Status;
 import com.google.android.gms.nearby.Nearby;
+import com.lakeel.altla.cm.resource.Timestamp;
 import com.lakeel.altla.library.AttachmentListener;
 import com.lakeel.altla.library.ResolutionResultCallback;
 import com.lakeel.altla.vision.nearby.R;
+import com.lakeel.altla.vision.nearby.presentation.presenter.mapper.CmFavoritesDataMapper;
+import com.lakeel.altla.vision.nearby.presentation.presenter.data.CmFavoriteData;
 import com.lakeel.altla.vision.nearby.domain.usecase.FindConfigsUseCase;
+import com.lakeel.altla.vision.nearby.domain.usecase.FindCMJidUseCase;
 import com.lakeel.altla.vision.nearby.domain.usecase.FindUserUseCase;
-import com.lakeel.altla.vision.nearby.domain.usecase.SaveUsersToCmFavoritesUseCase;
+import com.lakeel.altla.vision.nearby.domain.usecase.SaveCMFavoritesUseCase;
 import com.lakeel.altla.vision.nearby.presentation.constants.AttachmentType;
 import com.lakeel.altla.vision.nearby.presentation.firebase.MyUser;
 import com.lakeel.altla.vision.nearby.presentation.presenter.BaseItemPresenter;
@@ -37,8 +41,10 @@ import java.util.concurrent.TimeUnit;
 
 import javax.inject.Inject;
 
+import rx.Observable;
 import rx.Subscription;
 import rx.android.schedulers.AndroidSchedulers;
+import rx.functions.Func1;
 import rx.schedulers.Schedulers;
 
 public final class NearbyListPresenter extends BasePresenter<NearbyListView> implements GoogleApiClient.ConnectionCallbacks {
@@ -54,7 +60,7 @@ public final class NearbyListPresenter extends BasePresenter<NearbyListView> imp
                 return;
             }
 
-            Subscription subscription = mFindUserUseCase
+            Subscription subscription = findUserUseCase
                     .execute(value)
                     .toObservable()
                     .filter(entity -> entity != null)
@@ -76,13 +82,16 @@ public final class NearbyListPresenter extends BasePresenter<NearbyListView> imp
     }
 
     @Inject
-    FindUserUseCase mFindUserUseCase;
+    FindUserUseCase findUserUseCase;
 
     @Inject
-    SaveUsersToCmFavoritesUseCase mSaveUsersToCmFavoritesUseCase;
+    FindConfigsUseCase findConfigsUseCase;
 
     @Inject
-    FindConfigsUseCase mFindConfigsUseCase;
+    FindCMJidUseCase findCMJidUseCase;
+
+    @Inject
+    SaveCMFavoritesUseCase saveCMFavoritesUseCase;
 
     private static Logger LOGGER = LoggerFactory.getLogger(NearbyListPresenter.class);
 
@@ -95,6 +104,8 @@ public final class NearbyListPresenter extends BasePresenter<NearbyListView> imp
     private final List<NearbyItemModel> mCheckedModels = new LinkedList<>();
 
     private NearbyItemsModelMapper mMapper = new NearbyItemsModelMapper();
+
+    private CmFavoritesDataMapper cmFavoritesDataMapper = new CmFavoritesDataMapper();
 
     private ScheduledThreadPoolExecutor mExecutor = new ScheduledThreadPoolExecutor(1);
 
@@ -123,7 +134,7 @@ public final class NearbyListPresenter extends BasePresenter<NearbyListView> imp
         mGoogleApiClient.registerConnectionCallbacks(this);
         mGoogleApiClient.connect();
 
-        Subscription subscription = mFindConfigsUseCase
+        Subscription subscription = findConfigsUseCase
                 .execute()
                 .map(entity -> entity.isCmLinkEnabled)
                 .subscribeOn(Schedulers.io())
@@ -187,8 +198,17 @@ public final class NearbyListPresenter extends BasePresenter<NearbyListView> imp
             nearbyIds.add(model.mId);
         }
 
-        Subscription subscription = mSaveUsersToCmFavoritesUseCase
-                .execute(nearbyIds)
+        Subscription subscription = Observable
+                .from(nearbyIds)
+                .flatMap(userId -> findCMJidUseCase.execute(userId).subscribeOn(Schedulers.io()).toObservable())
+                .toList()
+                .map(userIds -> cmFavoritesDataMapper.map(userIds))
+                .flatMap(new Func1<CmFavoriteData, Observable<Timestamp>>() {
+                    @Override
+                    public Observable<Timestamp> call(CmFavoriteData data) {
+                        return saveCMFavoritesUseCase.execute(data).subscribeOn(Schedulers.io()).toObservable();
+                    }
+                })
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribe(timestamp -> {

@@ -10,13 +10,13 @@ import rx.Observable;
 public final class FindRecentlyUseCase {
 
     @Inject
-    FirebaseHistoryRepository mFirebaseHistoryRepository;
+    FirebaseHistoryRepository repository;
 
     @Inject
     FindRecentlyUseCase() {
     }
 
     public Observable<HistoryEntity> execute(String userId) {
-        return mFirebaseHistoryRepository.findHistoryByUserId(userId);
+        return repository.findHistoryByUserId(userId);
     }
 }

@@ -10,13 +10,13 @@ import rx.Single;
 public final class FindLocationUseCase {
 
     @Inject
-    FirebaseLocationsRepository mFirebaseLocationsRepository;
+    FirebaseLocationsRepository repository;
 
     @Inject
     FindLocationUseCase() {
     }
 
     public Single<GeoLocation> execute(String key) {
-        return mFirebaseLocationsRepository.findLocationByKey(key);
+        return repository.findLocationByKey(key);
     }
 }

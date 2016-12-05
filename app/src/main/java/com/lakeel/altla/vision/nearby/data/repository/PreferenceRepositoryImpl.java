@@ -5,7 +5,7 @@ import android.content.SharedPreferences;
 import android.preference.PreferenceManager;
 
 import com.lakeel.altla.vision.nearby.core.StringUtils;
-import com.lakeel.altla.vision.nearby.data.entity.BeaconIdEntity;
+import com.lakeel.altla.vision.nearby.data.entity.PreferenceBeaconIdEntity;
 import com.lakeel.altla.vision.nearby.data.entity.PreferenceEntity;
 import com.lakeel.altla.vision.nearby.domain.repository.PreferenceRepository;
 
@@ -52,10 +52,10 @@ public class PreferenceRepositoryImpl implements PreferenceRepository {
     }
 
     @Override
-    public Single<BeaconIdEntity> findBeaconId() {
-        return Single.create(new Single.OnSubscribe<BeaconIdEntity>() {
+    public Single<PreferenceBeaconIdEntity> findBeaconId() {
+        return Single.create(new Single.OnSubscribe<PreferenceBeaconIdEntity>() {
             @Override
-            public void call(SingleSubscriber<? super BeaconIdEntity> subscriber) {
+            public void call(SingleSubscriber<? super PreferenceBeaconIdEntity> subscriber) {
                 String namespaceId = preference.getString(KEY_NAMESPACE_ID, StringUtils.EMPTY);
                 String instanceId = preference.getString(KEY_INSTANCE_ID, StringUtils.EMPTY);
 
@@ -64,7 +64,7 @@ public class PreferenceRepositoryImpl implements PreferenceRepository {
                     return;
                 }
 
-                BeaconIdEntity entity = new BeaconIdEntity();
+                PreferenceBeaconIdEntity entity = new PreferenceBeaconIdEntity();
                 entity.namespaceId = namespaceId;
                 entity.instanceId = instanceId;
 

@@ -9,13 +9,13 @@ import rx.Single;
 public final class SaveCMSecretKeyUseCase {
 
     @Inject
-    FirebaseCMLinksRepository mFirebaseCMLinksRepository;
+    FirebaseCMLinksRepository repository;
 
     @Inject
     SaveCMSecretKeyUseCase() {
     }
 
     public Single<String> execute(String userId, String secretKey) {
-        return mFirebaseCMLinksRepository.saveCMSecretKey(userId, secretKey);
+        return repository.saveCMSecretKey(userId, secretKey);
     }
 }

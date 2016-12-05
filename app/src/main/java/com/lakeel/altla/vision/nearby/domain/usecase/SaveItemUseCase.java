@@ -9,7 +9,7 @@ import rx.Completable;
 public final class SaveItemUseCase {
 
     @Inject
-    FirebaseUsersRepository mFirebaseUsersRepository;
+    FirebaseUsersRepository repository;
 
 
     @Inject
@@ -17,6 +17,6 @@ public final class SaveItemUseCase {
     }
 
     public Completable execute(String userId) {
-        return mFirebaseUsersRepository.saveUser(userId);
+        return repository.saveUser(userId);
     }
 }

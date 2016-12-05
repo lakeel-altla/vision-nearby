@@ -10,14 +10,14 @@ import rx.Single;
 public final class FindPreferencesUseCase {
 
     @Inject
-    PreferenceRepository mPreferenceRepository;
+    PreferenceRepository repository;
 
     @Inject
     FindPreferencesUseCase() {
     }
 
     public Single<PreferenceEntity> execute() {
-        return mPreferenceRepository.findPreferences();
+        return repository.findPreferences();
     }
 
 }

@@ -9,13 +9,13 @@ import rx.Single;
 public final class SaveTokensUseCase {
 
     @Inject
-    FirebaseTokensRepository firebaseTokensRepository;
+    FirebaseTokensRepository repository;
 
     @Inject
     SaveTokensUseCase() {
     }
 
     public Single<String> execute(String userId, String beaconId, String token) {
-        return firebaseTokensRepository.saveToken(userId, beaconId, token);
+        return repository.saveToken(userId, beaconId, token);
     }
 }

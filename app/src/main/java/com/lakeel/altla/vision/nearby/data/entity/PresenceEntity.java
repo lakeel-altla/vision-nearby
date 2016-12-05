@@ -4,5 +4,5 @@ public final class PresenceEntity {
 
     public boolean isConnected;
 
-    public long lastOnline;
+    public long lastOnlineTime;
 }

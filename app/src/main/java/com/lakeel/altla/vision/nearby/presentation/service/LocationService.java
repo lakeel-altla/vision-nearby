@@ -13,7 +13,7 @@ import android.support.v4.content.ContextCompat;
 import com.google.android.gms.awareness.Awareness;
 import com.google.android.gms.common.api.GoogleApiClient;
 import com.lakeel.altla.vision.nearby.domain.usecase.SaveLocationDataUseCase;
-import com.lakeel.altla.vision.nearby.domain.usecase.SaveLocationUseCase;
+import com.lakeel.altla.vision.nearby.domain.usecase.SaveDeviceLocationUseCase;
 import com.lakeel.altla.vision.nearby.presentation.di.component.DaggerServiceComponent;
 import com.lakeel.altla.vision.nearby.presentation.di.component.ServiceComponent;
 import com.lakeel.altla.vision.nearby.presentation.intent.IntentKey;
@@ -29,7 +29,7 @@ import rx.schedulers.Schedulers;
 public final class LocationService extends IntentService {
 
     @Inject
-    SaveLocationUseCase saveLocationUseCase;
+    SaveDeviceLocationUseCase saveDeviceLocationUseCase;
 
     @Inject
     SaveLocationDataUseCase saveLocationDataUseCase;
@@ -61,7 +61,7 @@ public final class LocationService extends IntentService {
                     @Override
                     public void onConnected(@Nullable Bundle bundle) {
                         getUserCurrentLocation(context)
-                                .flatMap(location -> saveLocationUseCase.execute(location).subscribeOn(Schedulers.io()))
+                                .flatMap(location -> saveDeviceLocationUseCase.execute(location).subscribeOn(Schedulers.io()))
                                 .flatMap(uniqueId -> saveLocationDataUseCase.execute(uniqueId, beaconId).subscribeOn(Schedulers.io()))
                                 .subscribeOn(Schedulers.io())
                                 .subscribe(aVoid -> LOGGER.debug("Succeeded to save location data."),

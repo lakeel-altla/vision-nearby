@@ -7,16 +7,16 @@ import javax.inject.Inject;
 
 import rx.Single;
 
-public final class FindCMLinksUseCase {
+public final class FindCMLinkUseCase {
 
     @Inject
-    FirebaseCMLinksRepository mFirebaseCMLinksRepository;
+    FirebaseCMLinksRepository repository;
 
     @Inject
-    FindCMLinksUseCase() {
+    FindCMLinkUseCase() {
     }
 
     public Single<CMLinkEntity> execute(String userId) {
-        return mFirebaseCMLinksRepository.findCmLinksByUserId(userId);
+        return repository.findCmLinksByUserId(userId);
     }
 }

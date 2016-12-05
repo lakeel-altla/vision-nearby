@@ -19,17 +19,17 @@ public final class FirebaseConnectionRepositoryImpl implements FirebaseConnectio
 
     private static final Logger LOGGER = LoggerFactory.getLogger(FirebaseConnectionRepositoryImpl.class);
 
-    private DatabaseReference mReference;
+    private DatabaseReference reference;
 
     @Inject
     public FirebaseConnectionRepositoryImpl(String url) {
-        mReference = FirebaseDatabase.getInstance().getReferenceFromUrl(url);
+        reference = FirebaseDatabase.getInstance().getReferenceFromUrl(url);
     }
 
     @Override
     public Observable<Object> observeConnected() {
         return Observable.create(subscriber -> {
-            mReference.addValueEventListener(new ValueEventListener() {
+            reference.addValueEventListener(new ValueEventListener() {
                 @Override
                 public void onDataChange(DataSnapshot dataSnapshot) {
                     boolean connected = dataSnapshot.getValue(Boolean.class);

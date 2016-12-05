@@ -10,13 +10,13 @@ import rx.Single;
 public final class FindLineUrlUseCase {
 
     @Inject
-    FirebaseLineLinksRepository mFirebaseLineLinksRepository;
+    FirebaseLineLinksRepository repository;
 
     @Inject
     FindLineUrlUseCase() {
     }
 
     public Single<LineLinkEntity> execute(String userId) {
-        return mFirebaseLineLinksRepository.findByUserId(userId);
+        return repository.findByUserId(userId);
     }
 }

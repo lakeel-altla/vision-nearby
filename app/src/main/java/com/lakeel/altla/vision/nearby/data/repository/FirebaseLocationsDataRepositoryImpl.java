@@ -10,7 +10,6 @@ import com.lakeel.altla.vision.nearby.data.entity.LocationDataEntity;
 import com.lakeel.altla.vision.nearby.data.execption.DataStoreException;
 import com.lakeel.altla.vision.nearby.data.mapper.LocationDataEntityMapper;
 import com.lakeel.altla.vision.nearby.domain.repository.FirebaseLocationsDataRepository;
-import com.lakeel.altla.vision.nearby.presentation.firebase.MyUser;
 
 import java.util.Iterator;
 
@@ -22,19 +21,19 @@ public final class FirebaseLocationsDataRepositoryImpl implements FirebaseLocati
 
     private static final String KEY_BEACON_ID = "beaconId";
 
-    private DatabaseReference databaseReference;
+    private DatabaseReference reference;
 
-    private final LocationDataEntityMapper locationDataEntityMapper = new LocationDataEntityMapper();
+    private final LocationDataEntityMapper entityMapper = new LocationDataEntityMapper();
 
     @Inject
     public FirebaseLocationsDataRepositoryImpl(String url) {
-        databaseReference = FirebaseDatabase.getInstance().getReferenceFromUrl(url);
+        reference = FirebaseDatabase.getInstance().getReferenceFromUrl(url);
     }
 
     @Override
     public Single<LocationDataEntity> findLocationsDataByBeaconId(String beaconId) {
         return Single.create(subscriber ->
-                databaseReference
+                reference
                         .orderByChild(KEY_BEACON_ID)
                         .equalTo(beaconId)
                         .limitToFirst(1)
@@ -66,8 +65,8 @@ public final class FirebaseLocationsDataRepositoryImpl implements FirebaseLocati
     @Override
     public Single<LocationDataEntity> saveLocationData(String uniqueId, String beaconId) {
         return Single.create(subscriber -> {
-            LocationDataEntity entity = locationDataEntityMapper.map(beaconId);
-            Task task = databaseReference
+            LocationDataEntity entity = entityMapper.map(beaconId);
+            Task task = reference
                     .child(uniqueId)
                     .setValue(entity.toMap())
                     .addOnSuccessListener(aVoid -> subscriber.onSuccess(entity))

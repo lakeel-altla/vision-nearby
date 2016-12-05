@@ -9,13 +9,13 @@ import rx.Single;
 public final class FindTimesUseCase {
 
     @Inject
-    FirebaseHistoryRepository mFirebaseHistoryRepository;
+    FirebaseHistoryRepository repository;
 
     @Inject
     public FindTimesUseCase() {
     }
 
     public Single<Long> execute(String myUserId, String otherUserId) {
-        return mFirebaseHistoryRepository.findPassingTimes(myUserId, otherUserId);
+        return repository.findPassingTimes(myUserId, otherUserId);
     }
 }

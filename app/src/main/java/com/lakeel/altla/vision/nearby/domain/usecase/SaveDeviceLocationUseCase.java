@@ -8,13 +8,13 @@ import javax.inject.Inject;
 
 import rx.Single;
 
-public final class SaveLocationUseCase {
+public final class SaveDeviceLocationUseCase {
 
     @Inject
     FirebaseLocationsRepository repository;
 
     @Inject
-    SaveLocationUseCase() {
+    SaveDeviceLocationUseCase() {
     }
 
     public Single<String> execute(Location location) {

@@ -132,7 +132,7 @@ public final class FavoriteFragment extends Fragment implements FavoriteView {
                 mPresenter.onShare();
                 break;
             case find:
-                mPresenter.onFindNearbyDeviceMenuClicked();
+                mPresenter.onNearbyDeviceMenuClicked();
                 break;
             default:
                 break;

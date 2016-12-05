@@ -1,7 +1,7 @@
 package com.lakeel.altla.vision.nearby.presentation.presenter.settings.cm;
 
 import com.lakeel.altla.vision.nearby.R;
-import com.lakeel.altla.vision.nearby.domain.usecase.FindCMLinksUseCase;
+import com.lakeel.altla.vision.nearby.domain.usecase.FindCMLinkUseCase;
 import com.lakeel.altla.vision.nearby.domain.usecase.FindConfigsUseCase;
 import com.lakeel.altla.vision.nearby.domain.usecase.SaveCMApiKeyUseCase;
 import com.lakeel.altla.vision.nearby.domain.usecase.SaveCMJidUseCase;
@@ -26,7 +26,7 @@ public final class CmSettingsPresenter extends BasePresenter<CmSettingsView> {
     FindConfigsUseCase findConfigsUseCase;
 
     @Inject
-    FindCMLinksUseCase findCMLinksUseCase;
+    FindCMLinkUseCase findCMLinkUseCase;
 
     @Inject
     SaveCMApiKeyUseCase saveCMApiKeyUseCase;
@@ -51,7 +51,7 @@ public final class CmSettingsPresenter extends BasePresenter<CmSettingsView> {
                 .execute()
                 .toObservable()
                 .filter(entity -> entity.isCmLinkEnabled)
-                .flatMap(entity -> findCMLinksUseCase.execute(MyUser.getUid()).subscribeOn(Schedulers.io()).toObservable())
+                .flatMap(entity -> findCMLinkUseCase.execute(MyUser.getUid()).subscribeOn(Schedulers.io()).toObservable())
                 .map(entity -> CMLinksModelMapper.map(entity))
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())

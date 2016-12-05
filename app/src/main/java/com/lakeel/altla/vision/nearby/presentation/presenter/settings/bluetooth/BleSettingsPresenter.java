@@ -2,7 +2,7 @@ package com.lakeel.altla.vision.nearby.presentation.presenter.settings.bluetooth
 
 import android.content.Context;
 
-import com.lakeel.altla.vision.nearby.domain.usecase.FindBeaconIdUseCase;
+import com.lakeel.altla.vision.nearby.domain.usecase.FindPreferenceBeaconIdUseCase;
 import com.lakeel.altla.vision.nearby.presentation.checker.BluetoothChecker;
 import com.lakeel.altla.vision.nearby.presentation.checker.BluetoothChecker.BleState;
 import com.lakeel.altla.vision.nearby.presentation.presenter.BasePresenter;
@@ -23,7 +23,7 @@ import rx.schedulers.Schedulers;
 public final class BleSettingsPresenter extends BasePresenter<BleSettingsView> {
 
     @Inject
-    FindBeaconIdUseCase mFindBeaconIdUseCase;
+    FindPreferenceBeaconIdUseCase mFindPreferenceBeaconIdUseCase;
 
     private static final Logger LOGGER = LoggerFactory.getLogger(BleSettingsPresenter.class);
 
@@ -46,7 +46,7 @@ public final class BleSettingsPresenter extends BasePresenter<BleSettingsView> {
     }
 
     public void onStartPublish() {
-        Subscription subscription = mFindBeaconIdUseCase
+        Subscription subscription = mFindPreferenceBeaconIdUseCase
                 .execute()
                 .map(entity -> mBeaconIdModelMapper.map(entity))
                 .subscribeOn(Schedulers.io())

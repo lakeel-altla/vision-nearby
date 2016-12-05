@@ -10,13 +10,13 @@ import rx.Observable;
 public final class FindFavoritesUseCase {
 
     @Inject
-    FirebaseFavoritesRepository mFavoritesRepository;
+    FirebaseFavoritesRepository repository;
 
     @Inject
     FindFavoritesUseCase() {
     }
 
     public Observable<FavoriteEntity> execute(String userId) {
-        return mFavoritesRepository.findFavoritesByUserId(userId);
+        return repository.findFavoritesByUserId(userId);
     }
 }

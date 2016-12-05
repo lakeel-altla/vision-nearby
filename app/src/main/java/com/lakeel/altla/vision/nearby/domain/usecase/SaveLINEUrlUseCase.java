@@ -9,13 +9,13 @@ import rx.Single;
 public final class SaveLineUrlUseCase {
 
     @Inject
-    FirebaseLineLinksRepository mFirebaseLineLinksRepository;
+    FirebaseLineLinksRepository repository;
 
     @Inject
     SaveLineUrlUseCase() {
     }
 
     public Single<String> execute(String userId, String url) {
-        return mFirebaseLineLinksRepository.saveUrl(userId, url);
+        return repository.saveUrl(userId, url);
     }
 }

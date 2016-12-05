@@ -14,7 +14,6 @@ import com.lakeel.altla.vision.nearby.data.entity.HistoryEntity;
 import com.lakeel.altla.vision.nearby.data.execption.DataStoreException;
 import com.lakeel.altla.vision.nearby.data.mapper.HistoryEntityMapper;
 import com.lakeel.altla.vision.nearby.domain.repository.FirebaseHistoryRepository;
-import com.lakeel.altla.vision.nearby.domain.repository.FirebaseUsersRepository;
 
 import java.util.HashMap;
 
@@ -38,10 +37,7 @@ public class FirebaseHistoryRepositoryImpl implements FirebaseHistoryRepository 
     private DatabaseReference reference;
 
     private HistoryEntityMapper entityMapper = new HistoryEntityMapper();
-
-    @Inject
-    FirebaseUsersRepository mFirebaseUsersRepository;
-
+    
     @Inject
     public FirebaseHistoryRepositoryImpl(String url) {
         reference = FirebaseDatabase.getInstance().getReferenceFromUrl(url);

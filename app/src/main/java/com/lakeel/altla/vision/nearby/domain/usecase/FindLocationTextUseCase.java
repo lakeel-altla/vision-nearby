@@ -6,18 +6,17 @@ import com.lakeel.altla.vision.nearby.domain.repository.RestGeocodeRepository;
 import javax.inject.Inject;
 
 import rx.Single;
-import rx.schedulers.Schedulers;
 
 public final class FindLocationTextUseCase {
 
     @Inject
-    RestGeocodeRepository mRestGeocodeRepository;
+    RestGeocodeRepository repository;
 
     @Inject
     public FindLocationTextUseCase() {
     }
 
     public Single<Geocode> execute(String language, String latitude, String longitude) {
-        return mRestGeocodeRepository.findLocationByGeocode(language, latitude, longitude);
+        return repository.findLocationByGeocode(language, latitude, longitude);
     }
 }

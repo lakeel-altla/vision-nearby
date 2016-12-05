@@ -10,13 +10,13 @@ import rx.Single;
 public final class FindLocationDataUseCase {
 
     @Inject
-    FirebaseLocationsDataRepository mFirebaseLocationsDataRepository;
+    FirebaseLocationsDataRepository repository;
 
     @Inject
     FindLocationDataUseCase() {
     }
 
     public Single<LocationDataEntity> execute(String beaconId) {
-        return mFirebaseLocationsDataRepository.findLocationsDataByBeaconId(beaconId);
+        return repository.findLocationsDataByBeaconId(beaconId);
     }
 }

@@ -6,16 +6,17 @@ import javax.inject.Inject;
 
 import rx.Single;
 
-public final class SaveCMJidUseCase {
+public final class FindCMJidUseCase {
 
     @Inject
     FirebaseCMLinksRepository repository;
 
     @Inject
-    SaveCMJidUseCase() {
+    FindCMJidUseCase() {
     }
 
-    public Single<String> execute(String userId, String jid) {
-        return repository.saveCMJid(userId, jid);
+    public Single<String> execute(String userId) {
+        return repository.findCmJidByItemId(userId);
     }
+
 }

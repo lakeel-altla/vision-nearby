@@ -9,7 +9,6 @@ public final class NotificationEntityMapper {
         entity.to = to;
         entity.title = title;
         entity.message = message;
-
         return entity;
     }
 

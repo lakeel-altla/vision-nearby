@@ -9,13 +9,13 @@ import rx.Single;
 public final class SaveLocationTextUseCase {
 
     @Inject
-    FirebaseHistoryRepository mFirebaseHistoryRepository;
+    FirebaseHistoryRepository repository;
 
     @Inject
     public SaveLocationTextUseCase() {
     }
 
     public Single<String> execute(String key, String userId, String language, String locationText) {
-        return mFirebaseHistoryRepository.saveLocationText(key, userId, language, locationText);
+        return repository.saveLocationText(key, userId, language, locationText);
     }
 }

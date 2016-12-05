@@ -10,13 +10,13 @@ import rx.Single;
 public final class FindItemNameUseCase {
 
     @Inject
-    FirebaseUsersRepository mFirebaseUsersRepository;
+    FirebaseUsersRepository repository;
 
     @Inject
     FindItemNameUseCase() {
     }
 
     public Single<UserEntity> execute(String name) {
-        return mFirebaseUsersRepository.findUserByName(name);
+        return repository.findUserByName(name);
     }
 }

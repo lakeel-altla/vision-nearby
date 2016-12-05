@@ -9,7 +9,6 @@ import com.google.firebase.database.ValueEventListener;
 import com.lakeel.altla.vision.nearby.data.entity.LineLinkEntity;
 import com.lakeel.altla.vision.nearby.data.execption.DataStoreException;
 import com.lakeel.altla.vision.nearby.domain.repository.FirebaseLineLinksRepository;
-import com.lakeel.altla.vision.nearby.presentation.firebase.MyUser;
 
 import java.util.Iterator;
 
@@ -23,11 +22,11 @@ public class FirebaseLineLinksRepositoryImpl implements FirebaseLineLinksReposit
 
     private static final String URL_KEY = "url";
 
-    private DatabaseReference mReference;
+    private DatabaseReference reference;
 
     @Inject
     public FirebaseLineLinksRepositoryImpl(String url) {
-        mReference = FirebaseDatabase.getInstance().getReferenceFromUrl(url);
+        reference = FirebaseDatabase.getInstance().getReferenceFromUrl(url);
     }
 
     @Override
@@ -36,7 +35,7 @@ public class FirebaseLineLinksRepositoryImpl implements FirebaseLineLinksReposit
             LineLinkEntity entity = new LineLinkEntity();
             entity.url = url;
 
-            Task<Void> task = mReference
+            Task<Void> task = reference
                     .child(userId)
                     .setValue(entity)
                     .addOnSuccessListener(aVoid -> subscriber.onSuccess(url))
@@ -52,7 +51,7 @@ public class FirebaseLineLinksRepositoryImpl implements FirebaseLineLinksReposit
     @Override
     public Single<LineLinkEntity> findByUserId(String userId) {
         return Single.create(subscriber ->
-                mReference
+                reference
                         .child(userId)
                         .addListenerForSingleValueEvent(new ValueEventListener() {
                             @Override
@@ -73,7 +72,7 @@ public class FirebaseLineLinksRepositoryImpl implements FirebaseLineLinksReposit
         return Single.create(new Single.OnSubscribe<LineLinkEntity>() {
             @Override
             public void call(SingleSubscriber<? super LineLinkEntity> subscriber) {
-                mReference.orderByChild(URL_KEY).equalTo(url).addListenerForSingleValueEvent(new ValueEventListener() {
+                reference.orderByChild(URL_KEY).equalTo(url).addListenerForSingleValueEvent(new ValueEventListener() {
                     @Override
                     public void onDataChange(DataSnapshot dataSnapshot) {
                         Iterable<DataSnapshot> iterable = dataSnapshot.getChildren();

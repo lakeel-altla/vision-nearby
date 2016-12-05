@@ -6,13 +6,13 @@ import javax.inject.Inject;
 
 import rx.Single;
 
-public final class SaveRecentlyUseCase {
+public final class SaveHistoryUseCase {
 
     @Inject
     FirebaseHistoryRepository repository;
 
     @Inject
-    SaveRecentlyUseCase() {
+    SaveHistoryUseCase() {
     }
 
     public Single<String> execute(String myUserId, String otherUserId) {

@@ -4,6 +4,7 @@ import android.Manifest;
 import android.app.Activity;
 import android.content.Context;
 import android.content.pm.PackageManager;
+import android.os.Build;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
@@ -20,12 +21,12 @@ import com.lakeel.altla.cm.CMApplication;
 import com.lakeel.altla.cm.config.AccessConfig;
 import com.lakeel.altla.library.ResolutionResultCallback;
 import com.lakeel.altla.vision.nearby.R;
-import com.lakeel.altla.vision.nearby.domain.usecase.FindBeaconIdUseCase;
-import com.lakeel.altla.vision.nearby.domain.usecase.FindCMLinksUseCase;
+import com.lakeel.altla.vision.nearby.domain.usecase.FindPreferenceBeaconIdUseCase;
+import com.lakeel.altla.vision.nearby.domain.usecase.FindCMLinkUseCase;
 import com.lakeel.altla.vision.nearby.domain.usecase.FindPreferencesUseCase;
 import com.lakeel.altla.vision.nearby.domain.usecase.FindTokenUseCase;
 import com.lakeel.altla.vision.nearby.domain.usecase.ObservePresenceUseCase;
-import com.lakeel.altla.vision.nearby.domain.usecase.SaveBeaconIdUseCase;
+import com.lakeel.altla.vision.nearby.domain.usecase.SavePreferenceBeaconIdUseCase;
 import com.lakeel.altla.vision.nearby.domain.usecase.SaveBeaconUseCase;
 import com.lakeel.altla.vision.nearby.domain.usecase.SaveTokensUseCase;
 import com.lakeel.altla.vision.nearby.domain.usecase.SaveUserBeaconUseCase;
@@ -57,16 +58,16 @@ public final class ActivityPresenter extends BasePresenter<ActivityView> impleme
     AccessConfig accessConfig;
 
     @Inject
-    SaveBeaconIdUseCase saveBeaconIdUseCase;
+    SavePreferenceBeaconIdUseCase savePreferenceBeaconIdUseCase;
 
     @Inject
     ObservePresenceUseCase observePresenceUseCase;
 
     @Inject
-    FindCMLinksUseCase findCMLinksUseCase;
+    FindCMLinkUseCase findCMLinkUseCase;
 
     @Inject
-    FindBeaconIdUseCase findBeaconIdUseCase;
+    FindPreferenceBeaconIdUseCase findPreferenceBeaconIdUseCase;
 
     @Inject
     FindPreferencesUseCase findPreferencesUseCase;
@@ -196,16 +197,16 @@ public final class ActivityPresenter extends BasePresenter<ActivityView> impleme
             getView().showPublishDisableDialog();
         }
 
-        Subscription beaconSubscription = findBeaconIdUseCase
+        Subscription beaconSubscription = findPreferenceBeaconIdUseCase
                 .execute()
                 .flatMap(entity -> {
                     if (entity == null) {
-                        return saveBeaconIdUseCase.execute().subscribeOn(Schedulers.io());
+                        return savePreferenceBeaconIdUseCase.execute().subscribeOn(Schedulers.io());
                     }
                     return Single.just(entity.namespaceId + entity.instanceId);
                 })
                 .flatMap(beaconId -> saveUserBeaconUseCase.execute(MyUser.getUid(), beaconId).subscribeOn(Schedulers.io()))
-                .flatMap(beaconId -> saveBeaconUseCase.execute(beaconId).subscribeOn(Schedulers.io()))
+                .flatMap(beaconId -> saveBeaconUseCase.execute(beaconId, MyUser.getUid(), Build.MODEL).subscribeOn(Schedulers.io()))
                 .flatMap(beaconId -> {
                     String token = instanceId.getToken();
                     return saveTokensUseCase.execute(MyUser.getUid(), beaconId, token).subscribeOn(Schedulers.io());
@@ -226,7 +227,7 @@ public final class ActivityPresenter extends BasePresenter<ActivityView> impleme
                 }, e -> LOGGER.error("Failed to find preferences.", e));
         reusableCompositeSubscription.add(preferenceSubscription);
 
-        Subscription cmLinksSubscription = findCMLinksUseCase
+        Subscription cmLinksSubscription = findCMLinkUseCase
                 .execute(MyUser.getUid())
                 .subscribeOn(Schedulers.io())
                 .map(entity -> cmAuthConfigMapper.map(entity))

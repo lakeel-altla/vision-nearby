@@ -10,13 +10,13 @@ import rx.Single;
 public final class SaveFavoriteUseCase {
 
     @Inject
-    FirebaseFavoritesRepository mFirebaseFavoritesRepository;
+    FirebaseFavoritesRepository repository;
 
     @Inject
     public SaveFavoriteUseCase() {
     }
 
     public Single<FavoriteEntity> execute(String myUserId, String otherUserId) {
-        return mFirebaseFavoritesRepository.saveFavorite(myUserId, otherUserId);
+        return repository.saveFavorite(myUserId, otherUserId);
     }
 }

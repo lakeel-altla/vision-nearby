@@ -1,4 +1,4 @@
-package com.lakeel.altla.vision.nearby.data.execption;
+package com.lakeel.altla.vision.nearby.presentation.exception;
 
 public class UserNotAuthorizedException extends RuntimeException {
 

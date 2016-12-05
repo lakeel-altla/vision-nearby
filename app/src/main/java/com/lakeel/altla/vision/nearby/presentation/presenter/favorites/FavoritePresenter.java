@@ -2,15 +2,17 @@ package com.lakeel.altla.vision.nearby.presentation.presenter.favorites;
 
 import com.lakeel.altla.vision.nearby.R;
 import com.lakeel.altla.vision.nearby.core.StringUtils;
+import com.lakeel.altla.vision.nearby.domain.usecase.FindCMJidUseCase;
+import com.lakeel.altla.vision.nearby.presentation.presenter.mapper.CmFavoritesDataMapper;
 import com.lakeel.altla.vision.nearby.domain.usecase.FindConfigsUseCase;
-import com.lakeel.altla.vision.nearby.domain.usecase.FindUserUseCase;
 import com.lakeel.altla.vision.nearby.domain.usecase.FindLineUrlUseCase;
 import com.lakeel.altla.vision.nearby.domain.usecase.FindPresenceUseCase;
 import com.lakeel.altla.vision.nearby.domain.usecase.FindUserBeaconsUseCase;
-import com.lakeel.altla.vision.nearby.domain.usecase.SaveUserToCmFavoritesUseCase;
+import com.lakeel.altla.vision.nearby.domain.usecase.FindUserUseCase;
+import com.lakeel.altla.vision.nearby.domain.usecase.SaveCMFavoritesUseCase;
 import com.lakeel.altla.vision.nearby.presentation.presenter.BasePresenter;
-import com.lakeel.altla.vision.nearby.presentation.presenter.mapper.UserModelMapper;
 import com.lakeel.altla.vision.nearby.presentation.presenter.mapper.PresencesModelMapper;
+import com.lakeel.altla.vision.nearby.presentation.presenter.mapper.UserModelMapper;
 import com.lakeel.altla.vision.nearby.presentation.view.FavoriteView;
 
 import org.slf4j.Logger;
@@ -42,13 +44,18 @@ public final class FavoritePresenter extends BasePresenter<FavoriteView> {
     FindUserBeaconsUseCase findUserBeaconsUseCase;
 
     @Inject
-    SaveUserToCmFavoritesUseCase saveUserToCmFavoritesUseCase;
+    FindCMJidUseCase findCMJidUseCase;
+
+    @Inject
+    SaveCMFavoritesUseCase saveCMFavoritesUseCase;
 
     private static final Logger LOGGER = LoggerFactory.getLogger(FavoritePresenter.class);
 
     private PresencesModelMapper presencesModelMapper = new PresencesModelMapper();
 
     private UserModelMapper userModelMapper = new UserModelMapper();
+
+    private CmFavoritesDataMapper cmFavoritesDataMapper = new CmFavoritesDataMapper();
 
     private String userId;
 
@@ -102,7 +109,7 @@ public final class FavoritePresenter extends BasePresenter<FavoriteView> {
         getView().showShareSheet();
     }
 
-    public void onFindNearbyDeviceMenuClicked() {
+    public void onNearbyDeviceMenuClicked() {
         Subscription subscription = findUserBeaconsUseCase
                 .execute(userId)
                 .toList()
@@ -119,8 +126,10 @@ public final class FavoritePresenter extends BasePresenter<FavoriteView> {
     }
 
     public void onCmMenuClicked() {
-        Subscription subscription = saveUserToCmFavoritesUseCase
+        Subscription subscription = findCMJidUseCase
                 .execute(userId)
+                .map(jid -> cmFavoritesDataMapper.map(jid))
+                .flatMap(data -> saveCMFavoritesUseCase.execute(data).subscribeOn(Schedulers.io()))
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribe(o -> getView().showSnackBar(R.string.message_added),
@@ -128,8 +137,6 @@ public final class FavoritePresenter extends BasePresenter<FavoriteView> {
                             LOGGER.error("Failed to add to CM favorites.", e);
                             getView().showSnackBar(R.string.error_not_added);
                         });
-
         reusableCompositeSubscription.add(subscription);
     }
-
 }

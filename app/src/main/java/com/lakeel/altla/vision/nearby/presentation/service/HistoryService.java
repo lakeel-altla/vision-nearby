@@ -16,9 +16,9 @@ import com.google.android.gms.common.api.GoogleApiClient;
 import com.google.android.gms.location.ActivityRecognitionResult;
 import com.google.android.gms.location.DetectedActivity;
 import com.lakeel.altla.vision.nearby.domain.usecase.FindUserUseCase;
-import com.lakeel.altla.vision.nearby.domain.usecase.SaveCurrentLocationUseCase;
+import com.lakeel.altla.vision.nearby.domain.usecase.SaveUserLocationUseCase;
 import com.lakeel.altla.vision.nearby.domain.usecase.SaveDetectedActivityUseCase;
-import com.lakeel.altla.vision.nearby.domain.usecase.SaveRecentlyUseCase;
+import com.lakeel.altla.vision.nearby.domain.usecase.SaveHistoryUseCase;
 import com.lakeel.altla.vision.nearby.domain.usecase.SaveWeatherUseCase;
 import com.lakeel.altla.vision.nearby.presentation.di.component.DaggerServiceComponent;
 import com.lakeel.altla.vision.nearby.presentation.di.component.ServiceComponent;
@@ -41,10 +41,10 @@ public class HistoryService extends IntentService {
     FindUserUseCase findUserUseCase;
 
     @Inject
-    SaveRecentlyUseCase saveRecentlyUseCase;
+    SaveHistoryUseCase saveHistoryUseCase;
 
     @Inject
-    SaveCurrentLocationUseCase saveCurrentLocationUseCase;
+    SaveUserLocationUseCase saveUserLocationUseCase;
 
     @Inject
     SaveDetectedActivityUseCase saveDetectedActivityUseCase;
@@ -83,7 +83,7 @@ public class HistoryService extends IntentService {
                     public void onConnected(@Nullable Bundle bundle) {
                         findUserUseCase
                                 .execute(userId)
-                                .flatMap(userEntity -> saveRecentlyUseCase.execute(MyUser.getUid(), userEntity.key).subscribeOn(Schedulers.io()))
+                                .flatMap(userEntity -> saveHistoryUseCase.execute(MyUser.getUid(), userEntity.key).subscribeOn(Schedulers.io()))
                                 .subscribeOn(Schedulers.io())
                                 .subscribe(uniqueKey -> {
                                     getUserCurrentActivity()
@@ -93,7 +93,7 @@ public class HistoryService extends IntentService {
                                             .subscribe();
 
                                     getUserCurrentLocation(context)
-                                            .flatMap(location -> saveCurrentLocationUseCase.execute(uniqueKey, MyUser.getUid(), location).subscribeOn(Schedulers.io()))
+                                            .flatMap(location -> saveUserLocationUseCase.execute(uniqueKey, MyUser.getUid(), location).subscribeOn(Schedulers.io()))
                                             .subscribeOn(Schedulers.io())
                                             .doOnError(e -> LOGGER.error("Failed to save user current location.", e))
                                             .subscribe();

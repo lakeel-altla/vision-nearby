@@ -9,13 +9,13 @@ import javax.inject.Inject;
 
 import rx.Single;
 
-public final class SaveCurrentLocationUseCase {
+public final class SaveUserLocationUseCase {
 
     @Inject
     FirebaseHistoryRepository repository;
 
     @Inject
-    SaveCurrentLocationUseCase() {
+    SaveUserLocationUseCase() {
     }
 
     public Single<HistoryEntity> execute(String uniqueId, String userId, Location location) {

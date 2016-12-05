@@ -9,13 +9,13 @@ import rx.Completable;
 public final class RemoveFavoriteUseCase {
 
     @Inject
-    FirebaseFavoritesRepository mFavoritesRepository;
+    FirebaseFavoritesRepository repository;
 
     @Inject
     public RemoveFavoriteUseCase() {
     }
 
     public Completable execute(String myUserId, String otherUserId) {
-        return mFavoritesRepository.removeFavoriteByUid(myUserId, otherUserId);
+        return repository.removeFavoriteByUid(myUserId, otherUserId);
     }
 }

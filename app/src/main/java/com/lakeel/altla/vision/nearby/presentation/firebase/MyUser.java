@@ -4,7 +4,7 @@ import android.net.Uri;
 
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
-import com.lakeel.altla.vision.nearby.data.execption.UserNotAuthorizedException;
+import com.lakeel.altla.vision.nearby.presentation.exception.UserNotAuthorizedException;
 
 public final class MyUser {
 

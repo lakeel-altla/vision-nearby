@@ -23,16 +23,16 @@ public final class FirebaseCMLinksRepositoryImpl implements FirebaseCMLinksRepos
 
     private static final String KEY_JID_KEY = "jidKey";
 
-    private DatabaseReference mReference;
+    private DatabaseReference reference;
 
     @Inject
     public FirebaseCMLinksRepositoryImpl(String url) {
-        mReference = FirebaseDatabase.getInstance().getReferenceFromUrl(url);
+        reference = FirebaseDatabase.getInstance().getReferenceFromUrl(url);
     }
 
     @Override
     public Single<String> findCmJidByItemId(String userId) {
-        return Single.create(subscriber -> mReference.child(userId).addListenerForSingleValueEvent(new ValueEventListener() {
+        return Single.create(subscriber -> reference.child(userId).addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
                 CMLinkEntity entity = dataSnapshot.getValue(CMLinkEntity.class);
@@ -49,7 +49,7 @@ public final class FirebaseCMLinksRepositoryImpl implements FirebaseCMLinksRepos
     @Override
     public Single<CMLinkEntity> findCmLinksByUserId(String userId) {
         return Single.create(subscriber ->
-                mReference.child(userId).addListenerForSingleValueEvent(new ValueEventListener() {
+                reference.child(userId).addListenerForSingleValueEvent(new ValueEventListener() {
                     @Override
                     public void onDataChange(DataSnapshot dataSnapshot) {
                         CMLinkEntity entity = dataSnapshot.getValue(CMLinkEntity.class);
@@ -68,7 +68,7 @@ public final class FirebaseCMLinksRepositoryImpl implements FirebaseCMLinksRepos
         return Single.create(new Single.OnSubscribe<String>() {
             @Override
             public void call(SingleSubscriber<? super String> subscriber) {
-                Task<Void> task = mReference
+                Task<Void> task = reference
                         .child(userId)
                         .child(KEY_API_KEY)
                         .setValue(apiKey)
@@ -88,7 +88,7 @@ public final class FirebaseCMLinksRepositoryImpl implements FirebaseCMLinksRepos
         return Single.create(new Single.OnSubscribe<String>() {
             @Override
             public void call(SingleSubscriber<? super String> subscriber) {
-                Task<Void> task = mReference
+                Task<Void> task = reference
                         .child(userId)
                         .child(KEY_SECRET_KEY)
                         .setValue(secretKey)
@@ -108,7 +108,7 @@ public final class FirebaseCMLinksRepositoryImpl implements FirebaseCMLinksRepos
         return Single.create(new Single.OnSubscribe<String>() {
             @Override
             public void call(SingleSubscriber<? super String> subscriber) {
-                Task<Void> task = mReference
+                Task<Void> task = reference
                         .child(userId)
                         .child(KEY_JID_KEY)
                         .setValue(jid)

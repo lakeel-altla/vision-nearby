@@ -23,7 +23,7 @@ public class FirebaseBeaconsRepositoryImpl implements FirebaseBeaconsRepository 
 
     private DatabaseReference reference;
 
-    private BeaconEntityMapper mMapper = new BeaconEntityMapper();
+    private BeaconEntityMapper entityMapper = new BeaconEntityMapper();
 
     @Inject
     public FirebaseBeaconsRepositoryImpl(String url) {
@@ -31,11 +31,11 @@ public class FirebaseBeaconsRepositoryImpl implements FirebaseBeaconsRepository 
     }
 
     @Override
-    public Single<String> saveUserBeacon(String beaconId, String name) {
+    public Single<String> saveUserBeacon(String beaconId, String userId, String name) {
         return Single.create(new Single.OnSubscribe<String>() {
             @Override
             public void call(SingleSubscriber<? super String> subscriber) {
-                BeaconEntity entity = mMapper.map(name);
+                BeaconEntity entity = entityMapper.map(userId, name);
 
                 Task task = reference
                         .child(beaconId)

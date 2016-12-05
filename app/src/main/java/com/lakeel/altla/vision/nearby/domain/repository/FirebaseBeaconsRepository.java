@@ -7,7 +7,7 @@ import rx.Single;
 
 public interface FirebaseBeaconsRepository {
 
-    Single<String> saveUserBeacon(String beaconId, String name);
+    Single<String> saveUserBeacon(String beaconId, String userId, String name);
 
     Observable<BeaconEntity> findBeaconsByUserId(String userId);
 

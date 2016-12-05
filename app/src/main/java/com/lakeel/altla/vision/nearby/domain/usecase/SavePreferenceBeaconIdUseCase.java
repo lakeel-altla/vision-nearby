@@ -6,16 +6,16 @@ import javax.inject.Inject;
 
 import rx.Single;
 
-public final class SaveBeaconIdUseCase {
+public final class SavePreferenceBeaconIdUseCase {
 
     @Inject
-    PreferenceRepository mPreferenceRepository;
+    PreferenceRepository repository;
 
     @Inject
-    SaveBeaconIdUseCase() {
+    SavePreferenceBeaconIdUseCase() {
     }
 
     public Single<String> execute() {
-        return mPreferenceRepository.saveBeaconId();
+        return repository.saveBeaconId();
     }
 }
