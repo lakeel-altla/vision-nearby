@@ -77,8 +77,8 @@ public final class ConfigModule {
 
     @InjectScope
     @Provides
-    @Named("LINELinksUrl")
-    String provideLINELinksUrl() {
+    @Named("LineLinksUrl")
+    String provideLineLinksUrl() {
         return "https://profile-notification-95441.firebaseio.com/links/line";
     }
 
@@ -91,9 +91,9 @@ public final class ConfigModule {
 
     @InjectScope
     @Provides
-    @Named("locationsDataUrl")
-    String provideLocationsDataUrl() {
-        return "https://profile-notification-95441.firebaseio.com/locations-data";
+    @Named("locationDataUrl")
+    String provideLocationDataUrl() {
+        return "https://profile-notification-95441.firebaseio.com/locationData";
     }
 
     @InjectScope

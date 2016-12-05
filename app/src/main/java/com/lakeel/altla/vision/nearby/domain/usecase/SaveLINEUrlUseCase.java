@@ -1,21 +1,21 @@
 package com.lakeel.altla.vision.nearby.domain.usecase;
 
-import com.lakeel.altla.vision.nearby.domain.repository.FirebaseLINELinksRepository;
+import com.lakeel.altla.vision.nearby.domain.repository.FirebaseLineLinksRepository;
 
 import javax.inject.Inject;
 
 import rx.Single;
 
-public final class SaveLINEUrlUseCase {
+public final class SaveLineUrlUseCase {
 
     @Inject
-    FirebaseLINELinksRepository mFirebaseLINELinksRepository;
+    FirebaseLineLinksRepository mFirebaseLineLinksRepository;
 
     @Inject
-    SaveLINEUrlUseCase() {
+    SaveLineUrlUseCase() {
     }
 
     public Single<String> execute(String url) {
-        return mFirebaseLINELinksRepository.saveUrl(url);
+        return mFirebaseLineLinksRepository.saveUrl(url);
     }
 }

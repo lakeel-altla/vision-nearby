@@ -2,8 +2,8 @@ package com.lakeel.altla.vision.nearby.presentation.presenter.recently;
 
 import com.lakeel.altla.vision.nearby.R;
 import com.lakeel.altla.vision.nearby.domain.usecase.FindFavoriteUseCase;
+import com.lakeel.altla.vision.nearby.domain.usecase.FindLineUrlUseCase;
 import com.lakeel.altla.vision.nearby.domain.usecase.FindUserUseCase;
-import com.lakeel.altla.vision.nearby.domain.usecase.FindLINEUrlUseCase;
 import com.lakeel.altla.vision.nearby.domain.usecase.FindLocationTextUseCase;
 import com.lakeel.altla.vision.nearby.domain.usecase.FindPresenceUseCase;
 import com.lakeel.altla.vision.nearby.domain.usecase.FindTimesUseCase;
@@ -47,7 +47,7 @@ public final class RecentlyPresenter extends BasePresenter<RecentlyView> {
     SaveLocationTextUseCase saveLocationTextUseCase;
 
     @Inject
-    FindLINEUrlUseCase findLINEUrlUseCase;
+    FindLineUrlUseCase findLineUrlUseCase;
 
     private static final Logger LOGGER = LoggerFactory.getLogger(RecentlyPresenter.class);
 
@@ -76,7 +76,7 @@ public final class RecentlyPresenter extends BasePresenter<RecentlyView> {
                 .flatMap(times -> findUserUseCase.execute(userId).subscribeOn(Schedulers.io()))
                 .map(entity -> itemModelMapper.map(entity))
                 .doOnSuccess(model -> getView().showProfile(model))
-                .flatMap(model -> findLINEUrlUseCase.execute(userId).subscribeOn(Schedulers.io()))
+                .flatMap(model -> findLineUrlUseCase.execute(userId).subscribeOn(Schedulers.io()))
                 .map(lineLinksEntity -> lineLinksEntity.url)
                 .doOnSuccess(lineUrl -> getView().showLineUrl(lineUrl))
                 .flatMapObservable(s -> findFavoriteUseCase.execute(userId).subscribeOn(Schedulers.io()).toObservable())

@@ -1,14 +1,14 @@
 package com.lakeel.altla.vision.nearby.domain.repository;
 
-import com.lakeel.altla.vision.nearby.data.entity.LINELinkEntity;
+import com.lakeel.altla.vision.nearby.data.entity.LineLinkEntity;
 
 import rx.Single;
 
-public interface FirebaseLINELinksRepository {
+public interface FirebaseLineLinksRepository {
 
     Single<String> saveUrl(String url);
 
-    Single<LINELinkEntity> findByUserId(String userId);
+    Single<LineLinkEntity> findByUserId(String userId);
 
-    Single<LINELinkEntity> findUserIdByLINEUrl(String url);
+    Single<LineLinkEntity> findUserIdByLineUrl(String url);
 }

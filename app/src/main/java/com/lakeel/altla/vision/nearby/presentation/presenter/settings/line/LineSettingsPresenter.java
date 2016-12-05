@@ -1,8 +1,8 @@
 package com.lakeel.altla.vision.nearby.presentation.presenter.settings.line;
 
 import com.lakeel.altla.vision.nearby.R;
-import com.lakeel.altla.vision.nearby.domain.usecase.FindLINEUrlUseCase;
-import com.lakeel.altla.vision.nearby.domain.usecase.SaveLINEUrlUseCase;
+import com.lakeel.altla.vision.nearby.domain.usecase.FindLineUrlUseCase;
+import com.lakeel.altla.vision.nearby.domain.usecase.SaveLineUrlUseCase;
 import com.lakeel.altla.vision.nearby.presentation.firebase.MyUser;
 import com.lakeel.altla.vision.nearby.presentation.presenter.BasePresenter;
 import com.lakeel.altla.vision.nearby.presentation.view.LineSettingsView;
@@ -19,10 +19,10 @@ import rx.schedulers.Schedulers;
 public final class LineSettingsPresenter extends BasePresenter<LineSettingsView> {
 
     @Inject
-    SaveLINEUrlUseCase mSaveLINEUrlUseCase;
+    SaveLineUrlUseCase mSaveLineUrlUseCase;
 
     @Inject
-    FindLINEUrlUseCase mFindLINEUrlUseCase;
+    FindLineUrlUseCase mFindLineUrlUseCase;
 
     private static final Logger LOGGER = LoggerFactory.getLogger(LineSettingsPresenter.class);
 
@@ -32,25 +32,25 @@ public final class LineSettingsPresenter extends BasePresenter<LineSettingsView>
 
     @Override
     public void onActivityCreated() {
-        Subscription subscription = mFindLINEUrlUseCase
+        Subscription subscription = mFindLineUrlUseCase
                 .execute(MyUser.getUid())
                 .toObservable()
                 .filter(entity -> entity != null)
                 .map(entity -> entity.url)
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
-                .subscribe(url -> getView().showLINEUrl(url),
+                .subscribe(url -> getView().showLineUrl(url),
                         e -> LOGGER.error("Failed to find LINE url.", e));
         reusableCompositeSubscription.add(subscription);
     }
 
     public void onSaveLineUrl(String url) {
-        Subscription subscription = mSaveLINEUrlUseCase
+        Subscription subscription = mSaveLineUrlUseCase
                 .execute(url)
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribe(s -> {
-                            getView().showLINEUrl(url);
+                            getView().showLineUrl(url);
                             getView().showSnackBar(R.string.message_added);
                         },
                         e -> {

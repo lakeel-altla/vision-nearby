@@ -4,7 +4,7 @@ import android.support.annotation.StringRes;
 
 public interface LineSettingsView {
 
-    void showLINEUrl(String url);
+    void showLineUrl(String url);
 
     void showSnackBar(@StringRes int resId);
 }

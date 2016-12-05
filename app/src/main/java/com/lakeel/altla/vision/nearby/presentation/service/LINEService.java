@@ -7,7 +7,7 @@ import android.net.Uri;
 
 import com.lakeel.altla.vision.nearby.R;
 import com.lakeel.altla.vision.nearby.data.entity.UserEntity;
-import com.lakeel.altla.vision.nearby.data.entity.LINELinkEntity;
+import com.lakeel.altla.vision.nearby.data.entity.LineLinkEntity;
 import com.lakeel.altla.vision.nearby.domain.usecase.FindUserUseCase;
 import com.lakeel.altla.vision.nearby.domain.usecase.FindUserIdByLineUrlUseCase;
 import com.lakeel.altla.vision.nearby.presentation.di.component.DaggerServiceComponent;
@@ -26,7 +26,7 @@ import rx.android.schedulers.AndroidSchedulers;
 import rx.functions.Func1;
 import rx.schedulers.Schedulers;
 
-public class LINEService extends IntentService {
+public class LineService extends IntentService {
 
     @Inject
     FindUserIdByLineUrlUseCase findUserIdByLineUrlUseCase;
@@ -34,13 +34,13 @@ public class LINEService extends IntentService {
     @Inject
     FindUserUseCase findUserUseCase;
 
-    private static final Logger LOGGER = LoggerFactory.getLogger(LINEService.class);
+    private static final Logger LOGGER = LoggerFactory.getLogger(LineService.class);
 
-    public LINEService() {
-        this(LINEService.class.getSimpleName());
+    public LineService() {
+        this(LineService.class.getSimpleName());
     }
 
-    public LINEService(String name) {
+    public LineService(String name) {
         super(name);
     }
 
@@ -56,9 +56,9 @@ public class LINEService extends IntentService {
 
         findUserIdByLineUrlUseCase
                 .execute(lineUrl)
-                .flatMap(new Func1<LINELinkEntity, Single<UserEntity>>() {
+                .flatMap(new Func1<LineLinkEntity, Single<UserEntity>>() {
                     @Override
-                    public Single<UserEntity> call(LINELinkEntity lineLinkEntity) {
+                    public Single<UserEntity> call(LineLinkEntity lineLinkEntity) {
                         return findUserUseCase.execute(lineLinkEntity.key).subscribeOn(Schedulers.io());
                     }
                 }).subscribeOn(Schedulers.io())

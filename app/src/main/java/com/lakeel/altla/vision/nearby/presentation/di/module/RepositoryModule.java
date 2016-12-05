@@ -5,7 +5,7 @@ import com.lakeel.altla.vision.nearby.data.repository.FirebaseCMLinksRepositoryI
 import com.lakeel.altla.vision.nearby.data.repository.FirebaseConfigsRepositoryImpl;
 import com.lakeel.altla.vision.nearby.data.repository.FirebaseConnectionRepositoryImpl;
 import com.lakeel.altla.vision.nearby.data.repository.FirebaseFavoritesRepositoryImpl;
-import com.lakeel.altla.vision.nearby.data.repository.FirebaseLINELinksRepositoryImpl;
+import com.lakeel.altla.vision.nearby.data.repository.FirebaseLineLinksRepositoryImpl;
 import com.lakeel.altla.vision.nearby.data.repository.FirebaseLocationsDataRepositoryImpl;
 import com.lakeel.altla.vision.nearby.data.repository.FirebaseLocationsRepositoryImpl;
 import com.lakeel.altla.vision.nearby.data.repository.FirebaseNotificationsRepositoryImpl;
@@ -21,7 +21,7 @@ import com.lakeel.altla.vision.nearby.domain.repository.FirebaseCMLinksRepositor
 import com.lakeel.altla.vision.nearby.domain.repository.FirebaseConfigsRepository;
 import com.lakeel.altla.vision.nearby.domain.repository.FirebaseConnectionRepository;
 import com.lakeel.altla.vision.nearby.domain.repository.FirebaseFavoritesRepository;
-import com.lakeel.altla.vision.nearby.domain.repository.FirebaseLINELinksRepository;
+import com.lakeel.altla.vision.nearby.domain.repository.FirebaseLineLinksRepository;
 import com.lakeel.altla.vision.nearby.domain.repository.FirebaseLocationsDataRepository;
 import com.lakeel.altla.vision.nearby.domain.repository.FirebaseLocationsRepository;
 import com.lakeel.altla.vision.nearby.domain.repository.FirebaseNotificationsRepository;
@@ -108,8 +108,8 @@ public class RepositoryModule {
 
     @InjectScope
     @Provides
-    FirebaseLINELinksRepository provideLINELinksRepository(@Named("LINELinksUrl") String url) {
-        return new FirebaseLINELinksRepositoryImpl(url);
+    FirebaseLineLinksRepository provideLineLinksRepository(@Named("LineLinksUrl") String url) {
+        return new FirebaseLineLinksRepositoryImpl(url);
     }
 
     @InjectScope
@@ -120,7 +120,7 @@ public class RepositoryModule {
 
     @InjectScope
     @Provides
-    FirebaseLocationsDataRepository provideFirebaseLocationsDataRepository(@Named("locationsDataUrl") String url) {
+    FirebaseLocationsDataRepository provideFirebaseLocationsDataRepository(@Named("locationDataUrl") String url) {
         return new FirebaseLocationsDataRepositoryImpl(url);
     }
 

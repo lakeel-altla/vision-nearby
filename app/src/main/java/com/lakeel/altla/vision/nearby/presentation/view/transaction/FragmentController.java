@@ -1,5 +1,10 @@
 package com.lakeel.altla.vision.nearby.presentation.view.transaction;
 
+import android.support.annotation.IdRes;
+import android.support.v4.app.Fragment;
+import android.support.v4.app.FragmentManager;
+import android.support.v4.app.FragmentTransaction;
+
 import com.lakeel.altla.vision.nearby.R;
 import com.lakeel.altla.vision.nearby.presentation.intent.RecentlyBundleData;
 import com.lakeel.altla.vision.nearby.presentation.view.fragment.estimation.DeviceDistanceEstimationFragment;
@@ -15,11 +20,6 @@ import com.lakeel.altla.vision.nearby.presentation.view.fragment.settings.device
 import com.lakeel.altla.vision.nearby.presentation.view.fragment.settings.line.LineSettingsFragment;
 import com.lakeel.altla.vision.nearby.presentation.view.fragment.signin.SignInFragment;
 import com.lakeel.altla.vision.nearby.presentation.view.fragment.tracking.TrackingFragment;
-
-import android.support.annotation.IdRes;
-import android.support.v4.app.Fragment;
-import android.support.v4.app.FragmentManager;
-import android.support.v4.app.FragmentTransaction;
 
 import java.util.ArrayList;
 

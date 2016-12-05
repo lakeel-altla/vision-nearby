@@ -4,7 +4,7 @@ import com.lakeel.altla.vision.nearby.R;
 import com.lakeel.altla.vision.nearby.core.StringUtils;
 import com.lakeel.altla.vision.nearby.domain.usecase.FindConfigsUseCase;
 import com.lakeel.altla.vision.nearby.domain.usecase.FindUserUseCase;
-import com.lakeel.altla.vision.nearby.domain.usecase.FindLINEUrlUseCase;
+import com.lakeel.altla.vision.nearby.domain.usecase.FindLineUrlUseCase;
 import com.lakeel.altla.vision.nearby.domain.usecase.FindPresenceUseCase;
 import com.lakeel.altla.vision.nearby.domain.usecase.FindUserBeaconsUseCase;
 import com.lakeel.altla.vision.nearby.domain.usecase.SaveUserToCmFavoritesUseCase;
@@ -36,7 +36,7 @@ public final class ProfilePresenter extends BasePresenter<ProfileView> {
     FindConfigsUseCase findConfigsUseCase;
 
     @Inject
-    FindLINEUrlUseCase findLINEUrlUseCase;
+    FindLineUrlUseCase findLineUrlUseCase;
 
     @Inject
     FindUserBeaconsUseCase findUserBeaconsUseCase;
@@ -75,7 +75,7 @@ public final class ProfilePresenter extends BasePresenter<ProfileView> {
                     isCmLinkClicked = isCmLinkEnabled;
                     getView().initializeOptionMenu();
                 })
-                .flatMap(aBoolean -> findLINEUrlUseCase.execute(userId).subscribeOn(Schedulers.io()))
+                .flatMap(aBoolean -> findLineUrlUseCase.execute(userId).subscribeOn(Schedulers.io()))
                 .map(entity -> {
                     if (entity == null) return StringUtils.EMPTY;
                     return entity.url;

@@ -26,7 +26,7 @@ public final class LineSettingsFragment extends PreferenceFragmentCompat impleme
 
     private static final String KEY_LINE_URL = "lineUrl";
 
-    private EditTextPreference mLINEUrlPreference;
+    private EditTextPreference lineUrlPreference;
 
     @Override
     public void onCreatePreferences(Bundle savedInstanceState, String rootKey) {
@@ -43,8 +43,8 @@ public final class LineSettingsFragment extends PreferenceFragmentCompat impleme
 
         mPresenter.onCreateView(this);
 
-        mLINEUrlPreference = (EditTextPreference) findPreference(KEY_LINE_URL);
-        mLINEUrlPreference.setOnPreferenceChangeListener((preference, newValue) -> {
+        lineUrlPreference = (EditTextPreference) findPreference(KEY_LINE_URL);
+        lineUrlPreference.setOnPreferenceChangeListener((preference, newValue) -> {
             String lineUrl = (String) newValue;
             mPresenter.onSaveLineUrl(lineUrl);
             return false;
@@ -76,9 +76,9 @@ public final class LineSettingsFragment extends PreferenceFragmentCompat impleme
     }
 
     @Override
-    public void showLINEUrl(String url) {
-        mLINEUrlPreference.setText(url);
-        mLINEUrlPreference.setSummary(url);
+    public void showLineUrl(String url) {
+        lineUrlPreference.setText(url);
+        lineUrlPreference.setSummary(url);
     }
 
     @Override
