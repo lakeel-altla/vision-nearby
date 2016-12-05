@@ -2,7 +2,7 @@ package com.lakeel.altla.vision.nearby.presentation.intent;
 
 import java.io.Serializable;
 
-public final class RecentlyBundleData implements Serializable {
+public final class HistoryBundleData implements Serializable {
 
     public String userId;
 

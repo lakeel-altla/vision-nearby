@@ -28,7 +28,7 @@ import com.lakeel.altla.vision.nearby.presentation.constants.BundleKey;
 import com.lakeel.altla.vision.nearby.presentation.constants.DetectedActivityType;
 import com.lakeel.altla.vision.nearby.presentation.constants.Radius;
 import com.lakeel.altla.vision.nearby.presentation.constants.WeatherCondition;
-import com.lakeel.altla.vision.nearby.presentation.intent.RecentlyBundleData;
+import com.lakeel.altla.vision.nearby.presentation.intent.HistoryBundleData;
 import com.lakeel.altla.vision.nearby.presentation.presenter.history.HistoryPresenter;
 import com.lakeel.altla.vision.nearby.presentation.presenter.model.UserModel;
 import com.lakeel.altla.vision.nearby.presentation.presenter.model.PresenceModel;
@@ -51,7 +51,7 @@ import butterknife.OnClick;
 
 public final class HistoryFragment extends Fragment implements HistoryView, OnMapReadyCallback {
 
-    public static HistoryFragment newInstance(RecentlyBundleData data) {
+    public static HistoryFragment newInstance(HistoryBundleData data) {
         Bundle args = new Bundle();
         args.putSerializable(BundleKey.RECENTLY.getValue(), data);
 
@@ -125,7 +125,7 @@ public final class HistoryFragment extends Fragment implements HistoryView, OnMa
         supportMapFragment.getMapAsync(this);
 
         Bundle bundle = getArguments();
-        RecentlyBundleData bundleData = (RecentlyBundleData) bundle.getSerializable(BundleKey.RECENTLY.getValue());
+        HistoryBundleData bundleData = (HistoryBundleData) bundle.getSerializable(BundleKey.RECENTLY.getValue());
         if (bundleData == null) {
             throw new IllegalStateException("Bundle data is not set.");
         }
@@ -140,7 +140,7 @@ public final class HistoryFragment extends Fragment implements HistoryView, OnMa
         if (bundleData.weather == null) {
             passingLayout.textViewWeather.setText(WeatherCondition.UNKNOWN.getWeather());
         } else {
-            RecentlyBundleData.Weather weather = bundleData.weather;
+            HistoryBundleData.Weather weather = bundleData.weather;
             BigDecimal temperature = new BigDecimal(weather.temperature);
             BigDecimal roundUppedTemperature = temperature.setScale(0, BigDecimal.ROUND_HALF_UP);
             int humidity = weather.humidity;

@@ -11,7 +11,7 @@ import android.view.ViewGroup;
 import android.widget.RelativeLayout;
 
 import com.lakeel.altla.vision.nearby.R;
-import com.lakeel.altla.vision.nearby.presentation.intent.RecentlyBundleData;
+import com.lakeel.altla.vision.nearby.presentation.intent.HistoryBundleData;
 import com.lakeel.altla.vision.nearby.presentation.presenter.history.HistoryListPresenter;
 import com.lakeel.altla.vision.nearby.presentation.view.HistoryListView;
 import com.lakeel.altla.vision.nearby.presentation.view.activity.MainActivity;
@@ -99,8 +99,8 @@ public final class HistoryListFragment extends Fragment implements HistoryListVi
     }
 
     @Override
-    public void showRecentlyUserActivity(RecentlyBundleData data) {
+    public void showHistoryFragment(HistoryBundleData data) {
         FragmentController controller = new FragmentController(getActivity().getSupportFragmentManager());
-        controller.showRecentlyFragment(data);
+        controller.showHistoryFragment(data);
     }
 }

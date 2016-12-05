@@ -9,7 +9,7 @@ import com.lakeel.altla.vision.nearby.domain.usecase.FindRecentlyUseCase;
 import com.lakeel.altla.vision.nearby.domain.usecase.FindUserUseCase;
 import com.lakeel.altla.vision.nearby.domain.usecase.SaveFavoriteUseCase;
 import com.lakeel.altla.vision.nearby.presentation.firebase.MyUser;
-import com.lakeel.altla.vision.nearby.presentation.intent.RecentlyBundleData;
+import com.lakeel.altla.vision.nearby.presentation.intent.HistoryBundleData;
 import com.lakeel.altla.vision.nearby.presentation.presenter.BaseItemPresenter;
 import com.lakeel.altla.vision.nearby.presentation.presenter.BasePresenter;
 import com.lakeel.altla.vision.nearby.presentation.presenter.mapper.RecentlyModelMapper;
@@ -101,7 +101,8 @@ public final class HistoryListPresenter extends BasePresenter<HistoryListView> {
         }
 
         public void onClick(HistoryModel model) {
-            RecentlyBundleData data = new RecentlyBundleData();
+            HistoryBundleData data = new HistoryBundleData();
+
             data.userId = model.userId;
             data.userName = model.name;
 
@@ -116,7 +117,7 @@ public final class HistoryListPresenter extends BasePresenter<HistoryListView> {
             }
 
             if (model.weather != null) {
-                RecentlyBundleData.Weather weather = new RecentlyBundleData.Weather();
+                HistoryBundleData.Weather weather = new HistoryBundleData.Weather();
                 weather.conditions = model.weather.conditions;
                 weather.humidity = model.weather.humidity;
                 weather.temperature = model.weather.temperature;
@@ -125,7 +126,7 @@ public final class HistoryListPresenter extends BasePresenter<HistoryListView> {
 
             data.timestamp = model.passingTime;
 
-            getView().showRecentlyUserActivity(data);
+            getView().showHistoryFragment(data);
         }
 
         public void onAdd(String otherUserId) {

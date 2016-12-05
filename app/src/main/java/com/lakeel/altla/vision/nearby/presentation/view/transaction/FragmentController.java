@@ -6,13 +6,13 @@ import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentTransaction;
 
 import com.lakeel.altla.vision.nearby.R;
-import com.lakeel.altla.vision.nearby.presentation.intent.RecentlyBundleData;
+import com.lakeel.altla.vision.nearby.presentation.intent.HistoryBundleData;
 import com.lakeel.altla.vision.nearby.presentation.view.fragment.estimation.DeviceDistanceEstimationFragment;
+import com.lakeel.altla.vision.nearby.presentation.view.fragment.favorites.FavoriteFragment;
 import com.lakeel.altla.vision.nearby.presentation.view.fragment.favorites.FavoriteListFragment;
 import com.lakeel.altla.vision.nearby.presentation.view.fragment.history.HistoryFragment;
 import com.lakeel.altla.vision.nearby.presentation.view.fragment.history.HistoryListFragment;
 import com.lakeel.altla.vision.nearby.presentation.view.fragment.nearby.NearbyListFragment;
-import com.lakeel.altla.vision.nearby.presentation.view.fragment.favorites.FavoriteFragment;
 import com.lakeel.altla.vision.nearby.presentation.view.fragment.settings.SettingsFragment;
 import com.lakeel.altla.vision.nearby.presentation.view.fragment.settings.bluetooth.BleSettingsFragment;
 import com.lakeel.altla.vision.nearby.presentation.view.fragment.settings.cm.CmSettingsFragment;
@@ -31,7 +31,7 @@ public final class FragmentController {
 
     private final String RECENTLY_LIST_FRAGMENT_TAG = HistoryListFragment.class.getSimpleName();
 
-    private final String RECENTLY_FRAGMENT_TAG = HistoryFragment.class.getSimpleName();
+    private final String HISTORY_FRAGMENT_TAG = HistoryFragment.class.getSimpleName();
 
     private final String TRACKING_FRAGMENT_TAG = TrackingFragment.class.getSimpleName();
 
@@ -75,9 +75,9 @@ public final class FragmentController {
         replaceFragment(R.id.fragmentPlaceholder, fragment, RECENTLY_LIST_FRAGMENT_TAG);
     }
 
-    public void showRecentlyFragment(RecentlyBundleData data) {
+    public void showHistoryFragment(HistoryBundleData data) {
         HistoryFragment fragment = HistoryFragment.newInstance(data);
-        replaceFragment(R.id.fragmentPlaceholder, fragment, RECENTLY_FRAGMENT_TAG);
+        replaceFragment(R.id.fragmentPlaceholder, fragment, HISTORY_FRAGMENT_TAG);
     }
 
     public void showTrackingFragment(String id, String beaconName) {

@@ -1,6 +1,6 @@
 package com.lakeel.altla.vision.nearby.presentation.view;
 
-import com.lakeel.altla.vision.nearby.presentation.intent.RecentlyBundleData;
+import com.lakeel.altla.vision.nearby.presentation.intent.HistoryBundleData;
 
 import android.support.annotation.StringRes;
 
@@ -10,5 +10,5 @@ public interface HistoryListView extends BaseView {
 
     void showSnackBar(@StringRes int resId);
 
-    void showRecentlyUserActivity(RecentlyBundleData data);
+    void showHistoryFragment(HistoryBundleData data);
 }
