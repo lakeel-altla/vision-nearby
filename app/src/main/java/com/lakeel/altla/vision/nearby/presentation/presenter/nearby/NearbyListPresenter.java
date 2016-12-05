@@ -18,7 +18,7 @@ import com.lakeel.altla.vision.nearby.domain.usecase.FindConfigsUseCase;
 import com.lakeel.altla.vision.nearby.domain.usecase.FindCMJidUseCase;
 import com.lakeel.altla.vision.nearby.domain.usecase.FindUserUseCase;
 import com.lakeel.altla.vision.nearby.domain.usecase.SaveCMFavoritesUseCase;
-import com.lakeel.altla.vision.nearby.presentation.constants.AttachmentType;
+import com.lakeel.altla.vision.nearby.presentation.constants.BeaconAttachment;
 import com.lakeel.altla.vision.nearby.presentation.firebase.MyUser;
 import com.lakeel.altla.vision.nearby.presentation.presenter.BaseItemPresenter;
 import com.lakeel.altla.vision.nearby.presentation.presenter.BasePresenter;
@@ -53,7 +53,7 @@ public final class NearbyListPresenter extends BasePresenter<NearbyListView> imp
 
         @Override
         protected void onFound(String type, String value) {
-            if (AttachmentType.USER_ID != AttachmentType.toType(type)) {
+            if (BeaconAttachment.USER_ID != BeaconAttachment.toType(type)) {
                 return;
             }
             if (MyUser.getUid().equals(value)) {

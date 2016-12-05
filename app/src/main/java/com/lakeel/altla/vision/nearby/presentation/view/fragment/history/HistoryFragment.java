@@ -25,7 +25,7 @@ import com.google.android.gms.maps.model.MarkerOptions;
 import com.lakeel.altla.vision.nearby.R;
 import com.lakeel.altla.vision.nearby.presentation.constants.AppColor;
 import com.lakeel.altla.vision.nearby.presentation.constants.BundleKey;
-import com.lakeel.altla.vision.nearby.presentation.constants.DetectedActivityType;
+import com.lakeel.altla.vision.nearby.presentation.constants.DetectedActivity;
 import com.lakeel.altla.vision.nearby.presentation.constants.Radius;
 import com.lakeel.altla.vision.nearby.presentation.constants.WeatherCondition;
 import com.lakeel.altla.vision.nearby.presentation.intent.HistoryBundleData;
@@ -159,7 +159,7 @@ public final class HistoryFragment extends Fragment implements HistoryView, OnMa
             passingLayout.textViewWeather.setText(builder.toString());
         }
 
-        passingLayout.textViewDetectedActivity.setText(DetectedActivityType.toUserActivity(bundleData.detectedActivity).getValue());
+        passingLayout.textViewDetectedActivity.setText(DetectedActivity.toUserActivity(bundleData.detectedActivity).getValue());
 
         presenter.onActivityCreated();
     }
