@@ -6,7 +6,7 @@ import com.google.android.gms.common.api.Status;
 import com.lakeel.altla.vision.nearby.R;
 import com.lakeel.altla.vision.nearby.android.ConfirmDialog;
 import com.lakeel.altla.vision.nearby.presentation.application.App;
-import com.lakeel.altla.vision.nearby.presentation.di.component.UserComponent;
+import com.lakeel.altla.vision.nearby.presentation.di.component.ViewComponent;
 import com.lakeel.altla.vision.nearby.presentation.di.module.ActivityModule;
 import com.lakeel.altla.vision.nearby.presentation.intent.IntentKey;
 import com.lakeel.altla.vision.nearby.presentation.presenter.activity.ActivityPresenter;
@@ -61,7 +61,7 @@ public class MainActivity extends AppCompatActivity
 
     private DrawerHeaderLayout mDrawerHeaderLayout = new DrawerHeaderLayout();
 
-    private UserComponent mUserComponent;
+    private ViewComponent mViewComponent;
 
     private ActionBarDrawerToggle mToggle;
 
@@ -82,9 +82,9 @@ public class MainActivity extends AppCompatActivity
         // because the NullPointerException occurs, create an instance of the Dagger before super#onCreate().
 
         // Dagger
-        mUserComponent = App.getApplicationComponent(this)
+        mViewComponent = App.getApplicationComponent(this)
                 .userComponent(new ActivityModule(this));
-        mUserComponent.inject(this);
+        mViewComponent.inject(this);
 
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
@@ -296,8 +296,8 @@ public class MainActivity extends AppCompatActivity
         fragmentController.showFavoritesListFragment();
     }
 
-    public static UserComponent getUserComponent(@NonNull Fragment fragment) {
-        return ((MainActivity) fragment.getActivity()).mUserComponent;
+    public static ViewComponent getUserComponent(@NonNull Fragment fragment) {
+        return ((MainActivity) fragment.getActivity()).mViewComponent;
     }
 
     public void setDrawerIndicatorEnabled(boolean enabled) {

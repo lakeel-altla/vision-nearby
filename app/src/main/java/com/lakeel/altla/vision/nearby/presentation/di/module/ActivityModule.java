@@ -3,7 +3,7 @@ package com.lakeel.altla.vision.nearby.presentation.di.module;
 import android.app.Activity;
 import android.support.annotation.NonNull;
 
-import com.lakeel.altla.vision.nearby.presentation.di.CustomScope;
+import com.lakeel.altla.vision.nearby.presentation.di.InjectScope;
 
 import dagger.Module;
 import dagger.Provides;
@@ -17,7 +17,7 @@ public class ActivityModule {
         this.activity = activity;
     }
 
-    @CustomScope
+    @InjectScope
     @Provides
     Activity provideActivity() {
         return activity;

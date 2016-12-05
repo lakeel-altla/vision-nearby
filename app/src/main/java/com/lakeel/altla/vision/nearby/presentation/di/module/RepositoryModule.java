@@ -32,7 +32,7 @@ import com.lakeel.altla.vision.nearby.domain.repository.FirebaseUsersRepository;
 import com.lakeel.altla.vision.nearby.domain.repository.PreferenceRepository;
 import com.lakeel.altla.vision.nearby.domain.repository.RestCmRepository;
 import com.lakeel.altla.vision.nearby.domain.repository.RestGeocodeRepository;
-import com.lakeel.altla.vision.nearby.presentation.di.CustomScope;
+import com.lakeel.altla.vision.nearby.presentation.di.InjectScope;
 
 import javax.inject.Named;
 
@@ -46,103 +46,103 @@ import retrofit2.converter.gson.GsonConverterFactory;
 @Module
 public class RepositoryModule {
 
-    @CustomScope
+    @InjectScope
     @Provides
     FirebaseFavoritesRepository provideFavoritesRepository(@Named("favoritesUrl") String url) {
         return new FirebaseFavoritesRepositoryImpl(url);
     }
 
-    @CustomScope
+    @InjectScope
     @Provides
     FirebaseRecentlyRepository provideRecentlyRepository(@Named("recentlyUrl") String url) {
         return new FirebaseRecentlyRepositoryImpl(url);
     }
 
-    @CustomScope
+    @InjectScope
     @Provides
     FirebaseUsersRepository provideUsersRepository(@Named("usersUrl") String url) {
         return new FirebaseUsersRepositoryImpl(url);
     }
 
-    @CustomScope
+    @InjectScope
     @Provides
     FirebaseBeaconsRepository provideBeaconsRepository(@Named("beaconsUrl") String url) {
         return new FirebaseBeaconsRepositoryImpl(url);
     }
 
-    @CustomScope
+    @InjectScope
     @Provides
     FirebasePresencesRepository providePresenceRepository(@Named("presencesUrl") String url) {
         return new FirebasePresencesRepositoryImpl(url);
     }
 
-    @CustomScope
+    @InjectScope
     @Provides
     FirebaseConfigsRepository provideConfigsRepository(@Named("configsUrl") String url) {
         return new FirebaseConfigsRepositoryImpl(url);
     }
 
-    @CustomScope
+    @InjectScope
     @Provides
     FirebaseConnectionRepository provideConnectionRepository(@Named("connectionUrl") String url) {
         return new FirebaseConnectionRepositoryImpl(url);
     }
 
-    @CustomScope
+    @InjectScope
     @Provides
     RestGeocodeRepository provideLocationRepository(RestGeocodeRepositoryImpl repository) {
         return repository;
     }
 
-    @CustomScope
+    @InjectScope
     @Provides
     PreferenceRepository providePreferenceRepository(PreferenceRepositoryImpl repository) {
         return repository;
     }
 
-    @CustomScope
+    @InjectScope
     @Provides
     FirebaseCMLinksRepository provideCMLinksRepository(@Named("CMLinksUrl") String url) {
         return new FirebaseCMLinksRepositoryImpl(url);
     }
 
-    @CustomScope
+    @InjectScope
     @Provides
     FirebaseLINELinksRepository provideLINELinksRepository(@Named("LINELinksUrl") String url) {
         return new FirebaseLINELinksRepositoryImpl(url);
     }
 
-    @CustomScope
+    @InjectScope
     @Provides
     FirebaseLocationsRepository provideFirebaseLocationsRepository(@Named("locationsUrl") String url) {
         return new FirebaseLocationsRepositoryImpl(url);
     }
 
-    @CustomScope
+    @InjectScope
     @Provides
     FirebaseLocationsDataRepository provideFirebaseLocationsDataRepository(@Named("locationsDataUrl") String url) {
         return new FirebaseLocationsDataRepositoryImpl(url);
     }
 
-    @CustomScope
+    @InjectScope
     @Provides
     FirebaseTokensRepository provideFirebaseTokensRepository(@Named("tokensUrl") String url) {
         return new FirebaseTokensRepositoryImpl(url);
     }
 
-    @CustomScope
+    @InjectScope
     @Provides
     FirebaseNotificationsRepository provideFirebaseNotificationRepository(@Named("notificationsUrl") String url) {
         return new FirebaseNotificationsRepositoryImpl(url);
     }
 
-    @CustomScope
+    @InjectScope
     @Provides
     RestCmRepository provideCmApiRepository(RestCmRepositoryImpl repository) {
         return repository;
     }
 
-    @CustomScope
+    @InjectScope
     @Provides
     OkHttpClient provideOkHttpClient() {
         return new OkHttpClient()
@@ -150,7 +150,7 @@ public class RepositoryModule {
                 .build();
     }
 
-    @CustomScope
+    @InjectScope
     @Provides
     Retrofit provideGeocodeRetrofit(@Named("geocodeBaseUrl") String baseUrl, OkHttpClient okHttpClient) {
         return new Retrofit.Builder()

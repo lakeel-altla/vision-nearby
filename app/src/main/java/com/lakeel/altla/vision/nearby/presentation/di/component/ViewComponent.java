@@ -1,6 +1,6 @@
 package com.lakeel.altla.vision.nearby.presentation.di.component;
 
-import com.lakeel.altla.vision.nearby.presentation.di.CustomScope;
+import com.lakeel.altla.vision.nearby.presentation.di.InjectScope;
 import com.lakeel.altla.vision.nearby.presentation.di.module.ActivityModule;
 import com.lakeel.altla.vision.nearby.presentation.di.module.ConfigModule;
 import com.lakeel.altla.vision.nearby.presentation.di.module.PresenterModule;
@@ -24,9 +24,9 @@ import com.lakeel.altla.vision.nearby.presentation.view.fragment.tracking.Tracki
 
 import dagger.Subcomponent;
 
-@CustomScope
+@InjectScope
 @Subcomponent(modules = {ActivityModule.class, PresenterModule.class, RepositoryModule.class, ConfigModule.class})
-public interface UserComponent {
+public interface ViewComponent {
 
     void inject(MainActivity activity);
 

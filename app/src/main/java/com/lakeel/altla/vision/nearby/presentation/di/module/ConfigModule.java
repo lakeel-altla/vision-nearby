@@ -1,7 +1,7 @@
 package com.lakeel.altla.vision.nearby.presentation.di.module;
 
 import com.lakeel.altla.cm.config.AccessConfig;
-import com.lakeel.altla.vision.nearby.presentation.di.CustomScope;
+import com.lakeel.altla.vision.nearby.presentation.di.InjectScope;
 
 import javax.inject.Named;
 
@@ -11,63 +11,63 @@ import dagger.Provides;
 @Module
 public final class ConfigModule {
 
-    @CustomScope
+    @InjectScope
     @Provides
     @Named("favoritesUrl")
     String provideFavoritesUrl() {
         return "https://profile-notification-95441.firebaseio.com/favorites";
     }
 
-    @CustomScope
+    @InjectScope
     @Provides
     @Named("recentlyUrl")
     String provideRecentlyUrl() {
         return "https://profile-notification-95441.firebaseio.com/recently";
     }
 
-    @CustomScope
+    @InjectScope
     @Provides
     @Named("usersUrl")
     String provideUsersUrl() {
         return "https://profile-notification-95441.firebaseio.com/users";
     }
 
-    @CustomScope
+    @InjectScope
     @Provides
     @Named("beaconsUrl")
     String provideBeaconsUrl() {
         return "https://profile-notification-95441.firebaseio.com/beacons";
     }
 
-    @CustomScope
+    @InjectScope
     @Provides
     @Named("presencesUrl")
     String providePresencesUrl() {
         return "https://profile-notification-95441.firebaseio.com/presences";
     }
 
-    @CustomScope
+    @InjectScope
     @Provides
     @Named("profilesUrl")
     String provideProfilesUrl() {
         return "https://profile-notification-95441.firebaseio.com/profiles";
     }
 
-    @CustomScope
+    @InjectScope
     @Provides
     @Named("configsUrl")
     String provideConfigsUrl() {
         return "https://profile-notification-95441.firebaseio.com/configs";
     }
 
-    @CustomScope
+    @InjectScope
     @Provides
     @Named("connectionUrl")
     String provideConnectionUrl() {
         return "https://profile-notification-95441.firebaseio.com/.info/connected";
     }
 
-    @CustomScope
+    @InjectScope
     @Provides
     @Named("CMLinksUrl")
     String provideCMLinksUrl() {
@@ -75,63 +75,63 @@ public final class ConfigModule {
     }
 
 
-    @CustomScope
+    @InjectScope
     @Provides
     @Named("LINELinksUrl")
     String provideLINELinksUrl() {
         return "https://profile-notification-95441.firebaseio.com/links/line";
     }
 
-    @CustomScope
+    @InjectScope
     @Provides
     @Named("locationsUrl")
     String provideLocationsUrl() {
         return "https://profile-notification-95441.firebaseio.com/locations";
     }
 
-    @CustomScope
+    @InjectScope
     @Provides
     @Named("locationsDataUrl")
     String provideLocationsDataUrl() {
         return "https://profile-notification-95441.firebaseio.com/locations-data";
     }
 
-    @CustomScope
+    @InjectScope
     @Provides
     @Named("tokensUrl")
     String provideTokensUrl() {
         return "https://profile-notification-95441.firebaseio.com/tokens";
     }
 
-    @CustomScope
+    @InjectScope
     @Provides
     @Named("notificationsUrl")
     String provideNotificationsUrl() {
         return "https://profile-notification-95441.firebaseio.com/notifications";
     }
 
-    @CustomScope
+    @InjectScope
     @Provides
     @Named("geocodeBaseUrl")
     String provideGeoCodeBaseUrl() {
         return "https://maps.googleapis.com/maps/api/geocode/";
     }
 
-    @CustomScope
+    @InjectScope
     @Provides
     @Named("CMHost")
     String provideCMHost() {
         return "172.16.10.237";
     }
 
-    @CustomScope
+    @InjectScope
     @Provides
     @Named("CMPort")
     int provideCMPort() {
         return 9080;
     }
 
-    @CustomScope
+    @InjectScope
     @Provides
     AccessConfig provideAccessConfig(@Named("CMHost") String host, @Named("CMPort") int port) {
         return new AccessConfig(host, port);

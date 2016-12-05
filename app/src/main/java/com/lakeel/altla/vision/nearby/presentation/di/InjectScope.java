@@ -5,5 +5,5 @@ import java.lang.annotation.RetentionPolicy;
 
 @javax.inject.Scope
 @Retention(RetentionPolicy.RUNTIME)
-public @interface CustomScope {
+public @interface InjectScope {
 }
