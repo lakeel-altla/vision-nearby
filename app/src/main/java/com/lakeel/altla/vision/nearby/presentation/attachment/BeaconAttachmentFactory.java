@@ -3,20 +3,20 @@ package com.lakeel.altla.vision.nearby.presentation.attachment;
 import com.lakeel.altla.vision.nearby.presentation.constants.AttachmentType;
 
 
-public final class AttachmentStateFactory {
+public final class BeaconAttachmentFactory {
 
-    private AttachmentStateFactory() {
+    private BeaconAttachmentFactory() {
     }
 
-    public static AttachmentState create(String attachmentType) {
+    public static BeaconAttachment create(String attachmentType) {
         AttachmentType type = AttachmentType.toType(attachmentType);
         switch (type) {
             case USER_ID:
-                return new UserIdAttachmentState();
+                return new UserIdBeaconAttachment();
             case LINE_URL:
-                return new LineUrlAttachmentState();
+                return new LineUrlBeaconAttachment();
             case BEACON_ID:
-                return new BeaconIdAttachmentState();
+                return new BeaconIdBeaconAttachment();
             default:
                 return null;
         }
