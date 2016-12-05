@@ -32,7 +32,7 @@ public final class PublishService extends Service {
             String namespaceId = (String) bundle.get(IntentKey.NAMESPACE_ID.name());
             String instanceId = (String) bundle.get(IntentKey.INSTANCE_ID.name());
 
-            LOGGER.debug("namespaceId=" + namespaceId + " instanceId=" + instanceId);
+            LOGGER.debug("Namespace Id=" + namespaceId + " Instance Id=" + instanceId);
 
             if (StringUtils.isEmpty(namespaceId) || StringUtils.isEmpty(instanceId)) {
                 LOGGER.error("Stop publish service because Namespace ID or Instance ID was empty.");
