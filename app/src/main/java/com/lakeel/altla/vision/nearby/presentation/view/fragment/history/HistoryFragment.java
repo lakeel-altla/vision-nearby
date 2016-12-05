@@ -28,13 +28,14 @@ import com.lakeel.altla.vision.nearby.presentation.constants.BundleKey;
 import com.lakeel.altla.vision.nearby.presentation.constants.DetectedActivity;
 import com.lakeel.altla.vision.nearby.presentation.constants.Radius;
 import com.lakeel.altla.vision.nearby.presentation.constants.WeatherCondition;
-import com.lakeel.altla.vision.nearby.presentation.intent.HistoryBundleData;
 import com.lakeel.altla.vision.nearby.presentation.presenter.history.HistoryPresenter;
-import com.lakeel.altla.vision.nearby.presentation.presenter.model.UserModel;
 import com.lakeel.altla.vision.nearby.presentation.presenter.model.PresenceModel;
+import com.lakeel.altla.vision.nearby.presentation.presenter.model.UserModel;
 import com.lakeel.altla.vision.nearby.presentation.view.DateFormatter;
 import com.lakeel.altla.vision.nearby.presentation.view.HistoryView;
 import com.lakeel.altla.vision.nearby.presentation.view.activity.MainActivity;
+import com.lakeel.altla.vision.nearby.presentation.view.bundle.HistoryBundle;
+import com.lakeel.altla.vision.nearby.presentation.view.bundle.WeatherBundle;
 import com.lakeel.altla.vision.nearby.presentation.view.layout.PassingLayout;
 import com.lakeel.altla.vision.nearby.presentation.view.layout.PresenceLayout;
 import com.lakeel.altla.vision.nearby.presentation.view.layout.ProfileLayout;
@@ -51,7 +52,7 @@ import butterknife.OnClick;
 
 public final class HistoryFragment extends Fragment implements HistoryView, OnMapReadyCallback {
 
-    public static HistoryFragment newInstance(HistoryBundleData data) {
+    public static HistoryFragment newInstance(HistoryBundle data) {
         Bundle args = new Bundle();
         args.putSerializable(BundleKey.RECENTLY.getValue(), data);
 
@@ -125,7 +126,7 @@ public final class HistoryFragment extends Fragment implements HistoryView, OnMa
         supportMapFragment.getMapAsync(this);
 
         Bundle bundle = getArguments();
-        HistoryBundleData bundleData = (HistoryBundleData) bundle.getSerializable(BundleKey.RECENTLY.getValue());
+        HistoryBundle bundleData = (HistoryBundle) bundle.getSerializable(BundleKey.RECENTLY.getValue());
         if (bundleData == null) {
             throw new IllegalStateException("Bundle data is not set.");
         }
@@ -137,14 +138,14 @@ public final class HistoryFragment extends Fragment implements HistoryView, OnMa
         DateFormatter dateFormatter = new DateFormatter(bundleData.timestamp);
         passingLayout.textViewDate.setText(dateFormatter.format());
 
-        if (bundleData.weather == null) {
+        if (bundleData.weatherBundle == null) {
             passingLayout.textViewWeather.setText(WeatherCondition.UNKNOWN.getWeather());
         } else {
-            HistoryBundleData.Weather weather = bundleData.weather;
-            BigDecimal temperature = new BigDecimal(weather.temperature);
+            WeatherBundle weatherBundle = bundleData.weatherBundle;
+            BigDecimal temperature = new BigDecimal(weatherBundle.temperature);
             BigDecimal roundUppedTemperature = temperature.setScale(0, BigDecimal.ROUND_HALF_UP);
-            int humidity = weather.humidity;
-            int conditions[] = weather.conditions;
+            int humidity = weatherBundle.humidity;
+            int conditions[] = weatherBundle.conditions;
 
             StringBuilder builder = new StringBuilder();
             for (int value : conditions) {

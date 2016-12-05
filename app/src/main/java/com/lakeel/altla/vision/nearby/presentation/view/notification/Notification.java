@@ -2,7 +2,6 @@ package com.lakeel.altla.vision.nearby.presentation.view.notification;
 
 import com.lakeel.altla.vision.nearby.R;
 
-import android.app.Notification;
 import android.app.PendingIntent;
 import android.content.Context;
 import android.support.annotation.StringRes;
@@ -11,11 +10,11 @@ import android.support.v4.content.ContextCompat;
 
 import java.util.UUID;
 
-public final class NotificationNotifier {
+public final class Notification {
 
-    private Notification mNotification;
+    private android.app.Notification notification;
 
-    private android.app.NotificationManager mManager;
+    private android.app.NotificationManager notificationManager;
 
     public static class Builder {
 
@@ -56,13 +55,13 @@ public final class NotificationNotifier {
             return this;
         }
 
-        public NotificationNotifier build() {
-            return new NotificationNotifier(this);
+        public Notification build() {
+            return new Notification(this);
         }
     }
 
-    public NotificationNotifier(Builder builder) {
-        mNotification = new NotificationCompat.Builder(builder.mContext)
+    public Notification(Builder builder) {
+        notification = new NotificationCompat.Builder(builder.mContext)
                 .setContentTitle(builder.mTitle)
                 .setTicker(builder.mText)
                 .setContentText(builder.mText)
@@ -72,10 +71,10 @@ public final class NotificationNotifier {
                 .setContentIntent(builder.mIntent)
                 .setColor(ContextCompat.getColor(builder.mContext, R.color.colorPrimary))
                 .build();
-        mManager = (android.app.NotificationManager) builder.mContext.getSystemService(Context.NOTIFICATION_SERVICE);
+        notificationManager = (android.app.NotificationManager) builder.mContext.getSystemService(Context.NOTIFICATION_SERVICE);
     }
 
     public void notifyNotification() {
-        mManager.notify(UUID.randomUUID().hashCode(), mNotification);
+        notificationManager.notify(UUID.randomUUID().hashCode(), notification);
     }
 }

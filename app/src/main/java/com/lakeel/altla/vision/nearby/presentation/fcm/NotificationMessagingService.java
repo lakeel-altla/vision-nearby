@@ -5,7 +5,7 @@ import android.app.PendingIntent;
 import com.google.firebase.messaging.FirebaseMessagingService;
 import com.google.firebase.messaging.RemoteMessage;
 import com.lakeel.altla.vision.nearby.presentation.intent.DefaultPendingIntent;
-import com.lakeel.altla.vision.nearby.presentation.view.notification.NotificationNotifier;
+import com.lakeel.altla.vision.nearby.presentation.view.notification.Notification;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -32,7 +32,7 @@ public class NotificationMessagingService extends FirebaseMessagingService {
         DefaultPendingIntent defaultPendingIntent = new DefaultPendingIntent(getApplicationContext());
         PendingIntent pendingIntent = defaultPendingIntent.create();
 
-        NotificationNotifier notifier = new NotificationNotifier.Builder(getApplicationContext())
+        Notification notifier = new Notification.Builder(getApplicationContext())
                 .title(title)
                 .text(message)
                 .intent(pendingIntent)

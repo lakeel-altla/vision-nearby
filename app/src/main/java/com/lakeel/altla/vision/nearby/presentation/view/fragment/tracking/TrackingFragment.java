@@ -14,7 +14,7 @@ import com.lakeel.altla.vision.nearby.R;
 import com.lakeel.altla.vision.nearby.presentation.constants.BundleKey;
 import com.lakeel.altla.vision.nearby.presentation.constants.AppColor;
 import com.lakeel.altla.vision.nearby.presentation.constants.Radius;
-import com.lakeel.altla.vision.nearby.presentation.intent.GoogleMapDirectionIntentCreator;
+import com.lakeel.altla.vision.nearby.presentation.intent.GoogleMapDirectionIntent;
 import com.lakeel.altla.vision.nearby.presentation.presenter.tracking.TrackingPresenter;
 import com.lakeel.altla.vision.nearby.presentation.view.TrackingView;
 import com.lakeel.altla.vision.nearby.presentation.view.activity.MainActivity;
@@ -204,8 +204,8 @@ public final class TrackingFragment extends Fragment implements TrackingView, On
 
     @Override
     public void launchGoogleMapApp(String latitude, String longitude) {
-        GoogleMapDirectionIntentCreator mapIntent = new GoogleMapDirectionIntentCreator(latitude, longitude);
-        Intent intent = mapIntent.create();
+        GoogleMapDirectionIntent directionIntent = new GoogleMapDirectionIntent(latitude, longitude);
+        Intent intent = directionIntent.create();
         startActivity(intent);
     }
 

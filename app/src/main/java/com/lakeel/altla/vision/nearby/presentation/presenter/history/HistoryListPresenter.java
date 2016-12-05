@@ -9,7 +9,6 @@ import com.lakeel.altla.vision.nearby.domain.usecase.FindRecentlyUseCase;
 import com.lakeel.altla.vision.nearby.domain.usecase.FindUserUseCase;
 import com.lakeel.altla.vision.nearby.domain.usecase.SaveFavoriteUseCase;
 import com.lakeel.altla.vision.nearby.presentation.firebase.MyUser;
-import com.lakeel.altla.vision.nearby.presentation.intent.HistoryBundleData;
 import com.lakeel.altla.vision.nearby.presentation.presenter.BaseItemPresenter;
 import com.lakeel.altla.vision.nearby.presentation.presenter.BasePresenter;
 import com.lakeel.altla.vision.nearby.presentation.presenter.mapper.RecentlyModelMapper;
@@ -17,6 +16,8 @@ import com.lakeel.altla.vision.nearby.presentation.presenter.model.HistoryModel;
 import com.lakeel.altla.vision.nearby.presentation.presenter.model.LocationModel;
 import com.lakeel.altla.vision.nearby.presentation.view.HistoryItemView;
 import com.lakeel.altla.vision.nearby.presentation.view.HistoryListView;
+import com.lakeel.altla.vision.nearby.presentation.view.bundle.HistoryBundle;
+import com.lakeel.altla.vision.nearby.presentation.view.bundle.WeatherBundle;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -101,7 +102,7 @@ public final class HistoryListPresenter extends BasePresenter<HistoryListView> {
         }
 
         public void onClick(HistoryModel model) {
-            HistoryBundleData data = new HistoryBundleData();
+            HistoryBundle data = new HistoryBundle();
 
             data.userId = model.userId;
             data.userName = model.name;
@@ -117,11 +118,11 @@ public final class HistoryListPresenter extends BasePresenter<HistoryListView> {
             }
 
             if (model.weather != null) {
-                HistoryBundleData.Weather weather = new HistoryBundleData.Weather();
-                weather.conditions = model.weather.conditions;
-                weather.humidity = model.weather.humidity;
-                weather.temperature = model.weather.temperature;
-                data.weather = weather;
+                WeatherBundle weatherBundle = new WeatherBundle();
+                weatherBundle.conditions = model.weather.conditions;
+                weatherBundle.humidity = model.weather.humidity;
+                weatherBundle.temperature = model.weather.temperature;
+                data.weatherBundle = weatherBundle;
             }
 
             data.timestamp = model.passingTime;

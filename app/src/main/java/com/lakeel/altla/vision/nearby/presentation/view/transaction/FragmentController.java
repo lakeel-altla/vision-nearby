@@ -6,7 +6,7 @@ import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentTransaction;
 
 import com.lakeel.altla.vision.nearby.R;
-import com.lakeel.altla.vision.nearby.presentation.intent.HistoryBundleData;
+import com.lakeel.altla.vision.nearby.presentation.view.bundle.HistoryBundle;
 import com.lakeel.altla.vision.nearby.presentation.view.fragment.estimation.DeviceDistanceEstimationFragment;
 import com.lakeel.altla.vision.nearby.presentation.view.fragment.favorites.FavoriteFragment;
 import com.lakeel.altla.vision.nearby.presentation.view.fragment.favorites.FavoriteListFragment;
@@ -75,7 +75,7 @@ public final class FragmentController {
         replaceFragment(R.id.fragmentPlaceholder, fragment, RECENTLY_LIST_FRAGMENT_TAG);
     }
 
-    public void showHistoryFragment(HistoryBundleData data) {
+    public void showHistoryFragment(HistoryBundle data) {
         HistoryFragment fragment = HistoryFragment.newInstance(data);
         replaceFragment(R.id.fragmentPlaceholder, fragment, HISTORY_FRAGMENT_TAG);
     }
