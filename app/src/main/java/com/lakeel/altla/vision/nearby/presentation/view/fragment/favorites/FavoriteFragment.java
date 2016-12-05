@@ -26,7 +26,7 @@ import com.lakeel.altla.vision.nearby.presentation.view.GridShareSheet;
 import com.lakeel.altla.vision.nearby.presentation.view.activity.MainActivity;
 import com.lakeel.altla.vision.nearby.presentation.view.layout.PresenceLayout;
 import com.lakeel.altla.vision.nearby.presentation.view.layout.ProfileLayout;
-import com.lakeel.altla.vision.nearby.presentation.view.layout.SNSLayout;
+import com.lakeel.altla.vision.nearby.presentation.view.layout.SnsLayout;
 import com.lakeel.altla.vision.nearby.presentation.view.transaction.FragmentController;
 import com.nostra13.universalimageloader.core.ImageLoader;
 
@@ -68,7 +68,7 @@ public final class FavoriteFragment extends Fragment implements FavoriteView {
 
     private ProfileLayout profileLayout = new ProfileLayout();
 
-    private SNSLayout snsLayout = new SNSLayout();
+    private SnsLayout snsLayout = new SnsLayout();
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,

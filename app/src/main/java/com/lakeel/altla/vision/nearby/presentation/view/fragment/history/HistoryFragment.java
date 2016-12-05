@@ -38,7 +38,7 @@ import com.lakeel.altla.vision.nearby.presentation.view.activity.MainActivity;
 import com.lakeel.altla.vision.nearby.presentation.view.layout.PassingLayout;
 import com.lakeel.altla.vision.nearby.presentation.view.layout.PresenceLayout;
 import com.lakeel.altla.vision.nearby.presentation.view.layout.ProfileLayout;
-import com.lakeel.altla.vision.nearby.presentation.view.layout.SNSLayout;
+import com.lakeel.altla.vision.nearby.presentation.view.layout.SnsLayout;
 import com.nostra13.universalimageloader.core.ImageLoader;
 
 import java.math.BigDecimal;
@@ -81,7 +81,7 @@ public final class HistoryFragment extends Fragment implements HistoryView, OnMa
 
     private ProfileLayout profileLayout = new ProfileLayout();
 
-    private SNSLayout snsLayout = new SNSLayout();
+    private SnsLayout snsLayout = new SnsLayout();
 
     private GoogleMap map;
 
