@@ -83,7 +83,7 @@ public class MainActivity extends AppCompatActivity
 
         // Dagger
         mViewComponent = App.getApplicationComponent(this)
-                .userComponent(new ActivityModule(this));
+                .viewComponent(new ActivityModule(this));
         mViewComponent.inject(this);
 
         super.onCreate(savedInstanceState);
