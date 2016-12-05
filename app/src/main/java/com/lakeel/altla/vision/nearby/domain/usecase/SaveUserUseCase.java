@@ -6,14 +6,13 @@ import javax.inject.Inject;
 
 import rx.Completable;
 
-public final class SaveItemUseCase {
+public final class SaveUserUseCase {
 
     @Inject
     FirebaseUsersRepository repository;
 
-
     @Inject
-    public SaveItemUseCase() {
+    public SaveUserUseCase() {
     }
 
     public Completable execute(String userId) {

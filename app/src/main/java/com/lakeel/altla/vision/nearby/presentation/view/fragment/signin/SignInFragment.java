@@ -1,10 +1,5 @@
 package com.lakeel.altla.vision.nearby.presentation.view.fragment.signin;
 
-import com.lakeel.altla.vision.nearby.R;
-import com.lakeel.altla.vision.nearby.presentation.presenter.signin.SignInPresenter;
-import com.lakeel.altla.vision.nearby.presentation.view.SignInView;
-import com.lakeel.altla.vision.nearby.presentation.view.activity.MainActivity;
-
 import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
@@ -16,6 +11,11 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.RelativeLayout;
 
+import com.lakeel.altla.vision.nearby.R;
+import com.lakeel.altla.vision.nearby.presentation.presenter.signin.SignInPresenter;
+import com.lakeel.altla.vision.nearby.presentation.view.SignInView;
+import com.lakeel.altla.vision.nearby.presentation.view.activity.MainActivity;
+
 import javax.inject.Inject;
 
 import butterknife.BindView;
@@ -24,16 +24,11 @@ import butterknife.OnClick;
 
 public final class SignInFragment extends Fragment implements SignInView {
 
-    //
-    // Fragment 再生成時、リフレクションでデフォルトコンストラクタが
-    // 呼ばれるため、デフォルトコンストラクタは public で残しておかなければならない。
-    //
-
     @Inject
-    SignInPresenter mPresenter;
+    SignInPresenter presenter;
 
     @BindView(R.id.layout)
-    RelativeLayout mRelativeLayout;
+    RelativeLayout mainLayout;
 
     private static final int SIGN_IN_REQUEST_CODE = 1;
 
@@ -55,7 +50,7 @@ public final class SignInFragment extends Fragment implements SignInView {
         View view = inflater.inflate(R.layout.fragment_sign_in, container, false);
         ButterKnife.bind(this, view);
 
-        mPresenter.onCreateView(this);
+        presenter.onCreateView(this);
 
         return view;
     }
@@ -75,21 +70,21 @@ public final class SignInFragment extends Fragment implements SignInView {
     @Override
     public void onStop() {
         super.onStop();
-        mPresenter.onStop();
+        presenter.onStop();
     }
 
     @OnClick(R.id.button_signIn)
     public void onSignInButtonClick(View view) {
-        mPresenter.onSignIn();
+        presenter.onSignIn();
     }
 
     @Override
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
         if (SIGN_IN_REQUEST_CODE == requestCode) {
             if (Activity.RESULT_OK == resultCode) {
-                mPresenter.onSignedIn();
+                presenter.onSignedIn();
             } else {
-                Snackbar.make(mRelativeLayout, R.string.error_not_signed_in, Snackbar.LENGTH_SHORT).show();
+                Snackbar.make(mainLayout, R.string.error_not_signed_in, Snackbar.LENGTH_SHORT).show();
             }
         }
     }
@@ -106,6 +101,6 @@ public final class SignInFragment extends Fragment implements SignInView {
 
     @Override
     public void showSnackBar(int resId) {
-        Snackbar.make(mRelativeLayout, R.string.error_not_signed_in, Snackbar.LENGTH_SHORT).show();
+        Snackbar.make(mainLayout, R.string.error_not_signed_in, Snackbar.LENGTH_SHORT).show();
     }
 }

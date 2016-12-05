@@ -14,29 +14,29 @@ public final class DateFormatter {
 
     private static final String FORMAT_OTHER = "yyyy/MM/dd";
 
-    private final DateComparator mDateComparator;
+    private final DateComparator dateComparator;
 
-    private final DateTime mDateTime;
+    private final DateTime dateTime;
 
     public DateFormatter(long dataTime) {
-        mDateTime = new DateTime(dataTime);
-        mDateComparator = new DateComparator(mDateTime, new DateTime());
+        dateTime = new DateTime(dataTime);
+        dateComparator = new DateComparator(dateTime, new DateTime());
     }
 
     public String format() {
         String dateString;
-        if (mDateComparator.isSameDay()) {
+        if (dateComparator.isSameDay()) {
             // Same day.
-            dateString = mDateTime.toString(FORMAT_TODAY, Locale.getDefault());
-        } else if (mDateComparator.isSameWeek()) {
+            dateString = dateTime.toString(FORMAT_TODAY, Locale.getDefault());
+        } else if (dateComparator.isSameWeek()) {
             // Same week.
-            dateString = mDateTime.toString(FORMAT_THIS_WEEK, Locale.getDefault());
-        } else if (mDateComparator.isSameYear()) {
+            dateString = dateTime.toString(FORMAT_THIS_WEEK, Locale.getDefault());
+        } else if (dateComparator.isSameYear()) {
             // Same year.
-            dateString = mDateTime.toString(FORMAT_THIS_YEAR, Locale.getDefault());
+            dateString = dateTime.toString(FORMAT_THIS_YEAR, Locale.getDefault());
         } else {
             // Other.
-            dateString = mDateTime.toString(FORMAT_OTHER, Locale.getDefault());
+            dateString = dateTime.toString(FORMAT_OTHER, Locale.getDefault());
         }
         return dateString;
     }

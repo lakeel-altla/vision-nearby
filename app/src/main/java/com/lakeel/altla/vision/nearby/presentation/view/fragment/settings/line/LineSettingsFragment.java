@@ -1,10 +1,5 @@
 package com.lakeel.altla.vision.nearby.presentation.view.fragment.settings.line;
 
-import com.lakeel.altla.vision.nearby.R;
-import com.lakeel.altla.vision.nearby.presentation.presenter.settings.line.LineSettingsPresenter;
-import com.lakeel.altla.vision.nearby.presentation.view.LineSettingsView;
-import com.lakeel.altla.vision.nearby.presentation.view.activity.MainActivity;
-
 import android.os.Bundle;
 import android.support.annotation.StringRes;
 import android.support.design.widget.Snackbar;
@@ -13,20 +8,25 @@ import android.support.v7.preference.PreferenceFragmentCompat;
 import android.view.MenuItem;
 import android.view.View;
 
+import com.lakeel.altla.vision.nearby.R;
+import com.lakeel.altla.vision.nearby.presentation.presenter.settings.line.LineSettingsPresenter;
+import com.lakeel.altla.vision.nearby.presentation.view.LineSettingsView;
+import com.lakeel.altla.vision.nearby.presentation.view.activity.MainActivity;
+
 import javax.inject.Inject;
 
 public final class LineSettingsFragment extends PreferenceFragmentCompat implements LineSettingsView {
 
-    public static LineSettingsFragment newInstance() {
-        return new LineSettingsFragment();
-    }
-
     @Inject
-    LineSettingsPresenter mPresenter;
+    LineSettingsPresenter presenter;
 
     private static final String KEY_LINE_URL = "lineUrl";
 
     private EditTextPreference lineUrlPreference;
+
+    public static LineSettingsFragment newInstance() {
+        return new LineSettingsFragment();
+    }
 
     @Override
     public void onCreatePreferences(Bundle savedInstanceState, String rootKey) {
@@ -41,12 +41,12 @@ public final class LineSettingsFragment extends PreferenceFragmentCompat impleme
         // Dagger
         MainActivity.getUserComponent(this).inject(this);
 
-        mPresenter.onCreateView(this);
+        presenter.onCreateView(this);
 
         lineUrlPreference = (EditTextPreference) findPreference(KEY_LINE_URL);
         lineUrlPreference.setOnPreferenceChangeListener((preference, newValue) -> {
             String lineUrl = (String) newValue;
-            mPresenter.onSaveLineUrl(lineUrl);
+            presenter.onSaveLineUrl(lineUrl);
             return false;
         });
     }
@@ -54,13 +54,13 @@ public final class LineSettingsFragment extends PreferenceFragmentCompat impleme
     @Override
     public void onActivityCreated(Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
-        mPresenter.onActivityCreated();
+        presenter.onActivityCreated();
     }
 
     @Override
     public void onStop() {
         super.onStop();
-        mPresenter.onStop();
+        presenter.onStop();
     }
 
     @Override

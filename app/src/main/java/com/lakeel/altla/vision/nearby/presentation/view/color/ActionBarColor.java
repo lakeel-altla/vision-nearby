@@ -9,21 +9,21 @@ import android.support.v7.app.AppCompatActivity;
 
 public final class ActionBarColor {
 
-    private final Activity mActivity;
+    private final Activity activity;
 
-    private final int mColorInt;
+    private final int colorInt;
 
     public ActionBarColor(Activity activity, @ColorRes int colorInt) {
-        mActivity = activity;
-        mColorInt = colorInt;
+        this.activity = activity;
+        this.colorInt = colorInt;
     }
 
     public void draw() {
-        ActionBar actionBar = ((AppCompatActivity) mActivity).getSupportActionBar();
+        ActionBar actionBar = ((AppCompatActivity) activity).getSupportActionBar();
         if (actionBar != null) {
             actionBar.setBackgroundDrawable(
                     new ColorDrawable(
-                            ContextCompat.getColor(mActivity.getApplicationContext(), mColorInt)));
+                            ContextCompat.getColor(activity.getApplicationContext(), colorInt)));
         }
     }
 }

@@ -7,9 +7,9 @@ public final class NearbyItemsModelMapper {
 
     public NearbyItemModel map(UserEntity entity) {
         NearbyItemModel model = new NearbyItemModel();
-        model.mId = entity.key;
-        model.mName = entity.name;
-        model.mImageUri = entity.imageUri;
+        model.userId = entity.key;
+        model.name = entity.name;
+        model.imageUri = entity.imageUri;
         return model;
     }
 }

@@ -52,26 +52,17 @@ import butterknife.OnClick;
 
 public final class HistoryFragment extends Fragment implements HistoryView, OnMapReadyCallback {
 
-    public static HistoryFragment newInstance(HistoryBundle data) {
-        Bundle args = new Bundle();
-        args.putSerializable(BundleKey.RECENTLY.getValue(), data);
-
-        HistoryFragment fragment = new HistoryFragment();
-        fragment.setArguments(args);
-        return fragment;
-    }
-
     @Inject
     HistoryPresenter presenter;
 
     @BindView(R.id.mainLayout)
-    RelativeLayout mMainLayout;
+    RelativeLayout mainLayout;
 
     @BindView(R.id.imageViewUser)
-    ImageView mImageView;
+    ImageView userImageView;
 
     @BindView(R.id.shareSheet)
-    BottomSheetLayout mShareSheet;
+    BottomSheetLayout shareSheet;
 
     @BindView(R.id.addButton)
     FloatingActionButton addButton;
@@ -89,6 +80,15 @@ public final class HistoryFragment extends Fragment implements HistoryView, OnMa
     private SupportMapFragment supportMapFragment;
 
     private View mapView;
+
+    public static HistoryFragment newInstance(HistoryBundle data) {
+        Bundle args = new Bundle();
+        args.putSerializable(BundleKey.RECENTLY.getValue(), data);
+
+        HistoryFragment fragment = new HistoryFragment();
+        fragment.setArguments(args);
+        return fragment;
+    }
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -200,7 +200,7 @@ public final class HistoryFragment extends Fragment implements HistoryView, OnMa
 
     @Override
     public void showSnackBar(int resId) {
-        Snackbar.make(mMainLayout, resId, Snackbar.LENGTH_SHORT).show();
+        Snackbar.make(mainLayout, resId, Snackbar.LENGTH_SHORT).show();
     }
 
     @Override
@@ -251,7 +251,7 @@ public final class HistoryFragment extends Fragment implements HistoryView, OnMa
     @Override
     public void showProfile(UserModel model) {
         ImageLoader imageLoader = ImageLoader.getInstance();
-        imageLoader.displayImage(model.imageUri, mImageView);
+        imageLoader.displayImage(model.imageUri, userImageView);
 
         profileLayout.textViewName.setText(model.name);
         profileLayout.textViewEmail.setAutoLinkMask(Linkify.EMAIL_ADDRESSES);

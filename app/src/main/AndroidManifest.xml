@@ -47,7 +47,7 @@
         <service android:name=".presentation.service.NotificationService" />
 
         <service
-            android:name=".presentation.service.PublishService"
+            android:name=".presentation.service.AdvertiseService"
             android:enabled="true"
             android:exported="false"
             android:isolatedProcess="false"

@@ -1,16 +1,18 @@
 package com.lakeel.altla.vision.nearby.presentation.presenter.favorites;
 
+import com.lakeel.altla.cm.resource.Timestamp;
 import com.lakeel.altla.vision.nearby.R;
 import com.lakeel.altla.vision.nearby.core.StringUtils;
 import com.lakeel.altla.vision.nearby.domain.usecase.FindCMJidUseCase;
-import com.lakeel.altla.vision.nearby.presentation.presenter.mapper.CmFavoritesDataMapper;
 import com.lakeel.altla.vision.nearby.domain.usecase.FindConfigsUseCase;
-import com.lakeel.altla.vision.nearby.domain.usecase.FindLineUrlUseCase;
+import com.lakeel.altla.vision.nearby.domain.usecase.FindLineLinkUseCase;
 import com.lakeel.altla.vision.nearby.domain.usecase.FindPresenceUseCase;
 import com.lakeel.altla.vision.nearby.domain.usecase.FindUserBeaconsUseCase;
 import com.lakeel.altla.vision.nearby.domain.usecase.FindUserUseCase;
 import com.lakeel.altla.vision.nearby.domain.usecase.SaveCMFavoritesUseCase;
 import com.lakeel.altla.vision.nearby.presentation.presenter.BasePresenter;
+import com.lakeel.altla.vision.nearby.presentation.presenter.data.CmFavoriteData;
+import com.lakeel.altla.vision.nearby.presentation.presenter.mapper.CmFavoritesDataMapper;
 import com.lakeel.altla.vision.nearby.presentation.presenter.mapper.PresencesModelMapper;
 import com.lakeel.altla.vision.nearby.presentation.presenter.mapper.UserModelMapper;
 import com.lakeel.altla.vision.nearby.presentation.view.FavoriteView;
@@ -22,6 +24,7 @@ import java.util.ArrayList;
 
 import javax.inject.Inject;
 
+import rx.Single;
 import rx.Subscription;
 import rx.android.schedulers.AndroidSchedulers;
 import rx.schedulers.Schedulers;
@@ -38,7 +41,7 @@ public final class FavoritePresenter extends BasePresenter<FavoriteView> {
     FindConfigsUseCase findConfigsUseCase;
 
     @Inject
-    FindLineUrlUseCase findLineUrlUseCase;
+    FindLineLinkUseCase findLineLinkUseCase;
 
     @Inject
     FindUserBeaconsUseCase findUserBeaconsUseCase;
@@ -69,20 +72,37 @@ public final class FavoritePresenter extends BasePresenter<FavoriteView> {
 
     @Override
     public void onActivityCreated() {
-        Subscription subscription = findPresenceUseCase
+        Subscription presenceSubscription = findPresenceUseCase
                 .execute(userId)
                 .map(entity -> presencesModelMapper.map(entity))
-                .doOnSuccess(model -> getView().showPresence(model))
-                .flatMap(model -> findUserUseCase.execute(userId).subscribeOn(Schedulers.io()))
+                .subscribeOn(Schedulers.io())
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribe(model -> getView().showPresence(model),
+                        e -> LOGGER.error("Failed to find presence.", e));
+        reusableCompositeSubscription.add(presenceSubscription);
+
+        Subscription userSubscription = findUserUseCase
+                .execute(userId)
                 .map(entity -> userModelMapper.map(entity))
-                .doOnSuccess(model -> getView().showProfile(model))
-                .flatMap(model -> findConfigsUseCase.execute().subscribeOn(Schedulers.io()))
+                .subscribeOn(Schedulers.io())
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribe(model -> getView().showProfile(model),
+                        e -> LOGGER.error("Failed to find user.", e));
+        reusableCompositeSubscription.add(userSubscription);
+
+        Subscription configsSubscription = findConfigsUseCase
+                .execute()
                 .map(entity -> entity.isCmLinkEnabled)
-                .doOnSuccess(isCmLinkEnabled -> {
+                .subscribeOn(Schedulers.io())
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribe(isCmLinkEnabled -> {
                     isCmLinkClicked = isCmLinkEnabled;
                     getView().initializeOptionMenu();
-                })
-                .flatMap(aBoolean -> findLineUrlUseCase.execute(userId).subscribeOn(Schedulers.io()))
+                }, e -> LOGGER.error("Failed to find configs.", e));
+        reusableCompositeSubscription.add(configsSubscription);
+
+        Subscription lineLinkSubscription = findLineLinkUseCase
+                .execute(userId)
                 .map(entity -> {
                     if (entity == null) return StringUtils.EMPTY;
                     return entity.url;
@@ -90,10 +110,9 @@ public final class FavoritePresenter extends BasePresenter<FavoriteView> {
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribe(lineUrl -> getView().showLineUrl(lineUrl),
-                        e -> LOGGER.error("Failed to find user data.", e)
+                        e -> LOGGER.error("Failed to find LINE links.", e)
                 );
-
-        reusableCompositeSubscription.add(subscription);
+        reusableCompositeSubscription.add(lineLinkSubscription);
     }
 
     public void setUserData(String userId, String userName) {
@@ -129,7 +148,7 @@ public final class FavoritePresenter extends BasePresenter<FavoriteView> {
         Subscription subscription = findCMJidUseCase
                 .execute(userId)
                 .map(jid -> cmFavoritesDataMapper.map(jid))
-                .flatMap(data -> saveCMFavoritesUseCase.execute(data).subscribeOn(Schedulers.io()))
+                .flatMap(this::saveCMFavorites)
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribe(o -> getView().showSnackBar(R.string.message_added),
@@ -138,5 +157,9 @@ public final class FavoritePresenter extends BasePresenter<FavoriteView> {
                             getView().showSnackBar(R.string.error_not_added);
                         });
         reusableCompositeSubscription.add(subscription);
+    }
+    
+    Single<Timestamp> saveCMFavorites(CmFavoriteData data) {
+        return saveCMFavoritesUseCase.execute(data).subscribeOn(Schedulers.io());
     }
 }

@@ -3,15 +3,16 @@ package com.lakeel.altla.vision.nearby.presentation.presenter.history;
 import android.support.annotation.IntRange;
 
 import com.lakeel.altla.vision.nearby.R;
+import com.lakeel.altla.vision.nearby.data.entity.HistoryEntity;
 import com.lakeel.altla.vision.nearby.data.entity.UserEntity;
 import com.lakeel.altla.vision.nearby.domain.usecase.FindFavoriteUseCase;
-import com.lakeel.altla.vision.nearby.domain.usecase.FindRecentlyUseCase;
+import com.lakeel.altla.vision.nearby.domain.usecase.FindHistoryUseCase;
 import com.lakeel.altla.vision.nearby.domain.usecase.FindUserUseCase;
 import com.lakeel.altla.vision.nearby.domain.usecase.SaveFavoriteUseCase;
 import com.lakeel.altla.vision.nearby.presentation.firebase.MyUser;
 import com.lakeel.altla.vision.nearby.presentation.presenter.BaseItemPresenter;
 import com.lakeel.altla.vision.nearby.presentation.presenter.BasePresenter;
-import com.lakeel.altla.vision.nearby.presentation.presenter.mapper.RecentlyModelMapper;
+import com.lakeel.altla.vision.nearby.presentation.presenter.mapper.HistoryModelMapper;
 import com.lakeel.altla.vision.nearby.presentation.presenter.model.HistoryModel;
 import com.lakeel.altla.vision.nearby.presentation.presenter.model.LocationModel;
 import com.lakeel.altla.vision.nearby.presentation.view.HistoryItemView;
@@ -36,25 +37,25 @@ import rx.schedulers.Schedulers;
 public final class HistoryListPresenter extends BasePresenter<HistoryListView> {
 
     @Inject
-    FindUserUseCase mFindUserUseCase;
+    FindUserUseCase findUserUseCase;
 
     @Inject
-    FindFavoriteUseCase mFindFavoriteUseCase;
+    FindFavoriteUseCase findFavoriteUseCase;
 
     @Inject
-    FindRecentlyUseCase mFindRecentlyUseCase;
+    FindHistoryUseCase findHistoryUseCase;
 
     @Inject
-    SaveFavoriteUseCase mSaveFavoriteUseCase;
+    SaveFavoriteUseCase saveFavoriteUseCase;
 
     private static final Logger LOGGER = LoggerFactory.getLogger(HistoryListPresenter.class);
 
-    private RecentlyModelMapper mRecentlyModelMapper = new RecentlyModelMapper();
+    private HistoryModelMapper historyModelMapper = new HistoryModelMapper();
 
-    private final List<HistoryModel> mHistoryModels = new ArrayList<>();
+    private final List<HistoryModel> historyModels = new ArrayList<>();
 
     public List<HistoryModel> getItems() {
-        return mHistoryModels;
+        return historyModels;
     }
 
     @Inject
@@ -63,28 +64,26 @@ public final class HistoryListPresenter extends BasePresenter<HistoryListView> {
 
     @Override
     public void onResume() {
-        Subscription subscription = mFindRecentlyUseCase
+        Subscription subscription = findHistoryUseCase
                 .execute(MyUser.getUid())
                 .flatMap(entity -> {
-                    Observable<UserEntity> userObservable = mFindUserUseCase.execute(entity.userId).subscribeOn(Schedulers.io()).toObservable();
-                    return Observable.zip(Observable.just(entity), userObservable, (historyEntity, userEntity) ->
-                            mRecentlyModelMapper.map(historyEntity, userEntity));
+                    Observable<HistoryEntity> historyObservable = Observable.just(entity);
+                    Observable<UserEntity> userObservable = findUser(entity.userId);
+                    return Observable.zip(historyObservable, userObservable, (historyEntity, userEntity) ->
+                            historyModelMapper.map(historyEntity, userEntity));
                 })
                 .toList()
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribe(historyItemModels -> {
                     Collections.reverse(historyItemModels);
-
-                    mHistoryModels.clear();
-                    mHistoryModels.addAll(historyItemModels);
-
+                    historyModels.clear();
+                    historyModels.addAll(historyItemModels);
                     getView().updateItems();
                 }, e -> {
-                    LOGGER.error("Failed to find recent nearby items", e);
+                    LOGGER.error("Failed to find history.", e);
                     getView().showSnackBar(R.string.error_process);
                 });
-
         reusableCompositeSubscription.add(subscription);
     }
 
@@ -98,7 +97,7 @@ public final class HistoryListPresenter extends BasePresenter<HistoryListView> {
 
         @Override
         public void onBind(@IntRange(from = 0) int position) {
-            getItemView().showItem(mHistoryModels.get(position));
+            getItemView().showItem(historyModels.get(position));
         }
 
         public void onClick(HistoryModel model) {
@@ -131,7 +130,7 @@ public final class HistoryListPresenter extends BasePresenter<HistoryListView> {
         }
 
         public void onAdd(String otherUserId) {
-            Subscription subscription = mSaveFavoriteUseCase
+            Subscription subscription = saveFavoriteUseCase
                     .execute(MyUser.getUid(), otherUserId)
                     .subscribeOn(Schedulers.io())
                     .observeOn(AndroidSchedulers.mainThread())
@@ -139,11 +138,15 @@ public final class HistoryListPresenter extends BasePresenter<HistoryListView> {
                         getItemView().closeItem();
                         getView().showSnackBar(R.string.message_added);
                     }, e -> {
-                        LOGGER.error("Failed to add favorite", e);
+                        LOGGER.error("Failed to add to favorites.", e);
                         getView().showSnackBar(R.string.error_not_added);
                     });
 
             reusableCompositeSubscription.add(subscription);
         }
+    }
+
+    Observable<UserEntity> findUser(String userId) {
+        return findUserUseCase.execute(userId).subscribeOn(Schedulers.io()).toObservable();
     }
 }

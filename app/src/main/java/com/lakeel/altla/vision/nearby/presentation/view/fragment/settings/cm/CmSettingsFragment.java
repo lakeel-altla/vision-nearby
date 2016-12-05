@@ -1,11 +1,5 @@
 package com.lakeel.altla.vision.nearby.presentation.view.fragment.settings.cm;
 
-import com.lakeel.altla.vision.nearby.R;
-import com.lakeel.altla.vision.nearby.presentation.presenter.settings.cm.CmSettingsPresenter;
-import com.lakeel.altla.vision.nearby.presentation.presenter.model.CMLinksModel;
-import com.lakeel.altla.vision.nearby.presentation.view.CmSettingsView;
-import com.lakeel.altla.vision.nearby.presentation.view.activity.MainActivity;
-
 import android.os.Bundle;
 import android.support.annotation.StringRes;
 import android.support.design.widget.Snackbar;
@@ -14,16 +8,18 @@ import android.support.v7.preference.PreferenceFragmentCompat;
 import android.view.MenuItem;
 import android.view.View;
 
+import com.lakeel.altla.vision.nearby.R;
+import com.lakeel.altla.vision.nearby.presentation.presenter.model.CMLinksModel;
+import com.lakeel.altla.vision.nearby.presentation.presenter.settings.cm.CmSettingsPresenter;
+import com.lakeel.altla.vision.nearby.presentation.view.CmSettingsView;
+import com.lakeel.altla.vision.nearby.presentation.view.activity.MainActivity;
+
 import javax.inject.Inject;
 
 public final class CmSettingsFragment extends PreferenceFragmentCompat implements CmSettingsView {
 
-    public static CmSettingsFragment newInstance() {
-        return new CmSettingsFragment();
-    }
-
     @Inject
-    CmSettingsPresenter mPresenter;
+    CmSettingsPresenter presenter;
 
     private static final String KEY_CM_API_KEY = "cmApiKey";
 
@@ -31,11 +27,15 @@ public final class CmSettingsFragment extends PreferenceFragmentCompat implement
 
     private static final String KEY_CM_JID = "cmJidKey";
 
-    private EditTextPreference mCMApiPreference;
+    private EditTextPreference CMApiPreference;
 
-    private EditTextPreference mCMSecretPreference;
+    private EditTextPreference CMSecretPreference;
 
-    private EditTextPreference mCMJidPreference;
+    private EditTextPreference CMJidPreference;
+
+    public static CmSettingsFragment newInstance() {
+        return new CmSettingsFragment();
+    }
 
     @Override
     public void onCreatePreferences(Bundle savedInstanceState, String rootKey) {
@@ -50,26 +50,26 @@ public final class CmSettingsFragment extends PreferenceFragmentCompat implement
         // Dagger
         MainActivity.getUserComponent(this).inject(this);
 
-        mPresenter.onCreateView(this);
+        presenter.onCreateView(this);
 
-        mCMApiPreference = (EditTextPreference) findPreference(KEY_CM_API_KEY);
-        mCMApiPreference.setOnPreferenceChangeListener((preference, newValue) -> {
+        CMApiPreference = (EditTextPreference) findPreference(KEY_CM_API_KEY);
+        CMApiPreference.setOnPreferenceChangeListener((preference, newValue) -> {
             String apiKey = (String) newValue;
-            mPresenter.onSaveCMApiKey(apiKey);
+            presenter.onSaveCMApiKey(apiKey);
             return false;
         });
 
-        mCMSecretPreference = (EditTextPreference) findPreference(KEY_CM_SECRET_KEY);
-        mCMSecretPreference.setOnPreferenceChangeListener((preference, newValue) -> {
+        CMSecretPreference = (EditTextPreference) findPreference(KEY_CM_SECRET_KEY);
+        CMSecretPreference.setOnPreferenceChangeListener((preference, newValue) -> {
             String secretKey = (String) newValue;
-            mPresenter.onSaveCMSecretKey(secretKey);
+            presenter.onSaveCMSecretKey(secretKey);
             return false;
         });
 
-        mCMJidPreference = (EditTextPreference) findPreference(KEY_CM_JID);
-        mCMJidPreference.setOnPreferenceChangeListener((preference, newValue) -> {
+        CMJidPreference = (EditTextPreference) findPreference(KEY_CM_JID);
+        CMJidPreference.setOnPreferenceChangeListener((preference, newValue) -> {
             String jid = (String) newValue;
-            mPresenter.onSaveCMJid(jid);
+            presenter.onSaveCMJid(jid);
             return false;
         });
     }
@@ -77,13 +77,13 @@ public final class CmSettingsFragment extends PreferenceFragmentCompat implement
     @Override
     public void onActivityCreated(Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
-        mPresenter.onActivityCreated();
+        presenter.onActivityCreated();
     }
 
     @Override
     public void onStop() {
         super.onStop();
-        mPresenter.onStop();
+        presenter.onStop();
     }
 
     @Override
@@ -100,24 +100,24 @@ public final class CmSettingsFragment extends PreferenceFragmentCompat implement
 
     @Override
     public void showCMPreferences(CMLinksModel model) {
-        mCMApiPreference.setSummary(model.mApiKey);
-        mCMSecretPreference.setSummary(model.mSecretKey);
-        mCMJidPreference.setSummary(model.mJid);
+        CMApiPreference.setSummary(model.mApiKey);
+        CMSecretPreference.setSummary(model.mSecretKey);
+        CMJidPreference.setSummary(model.mJid);
     }
 
     @Override
     public void updateCMApiKeyPreference(String apiKey) {
-        mCMApiPreference.setSummary(apiKey);
+        CMApiPreference.setSummary(apiKey);
     }
 
     @Override
     public void updateCMSecretKeyPreference(String secretKey) {
-        mCMSecretPreference.setSummary(secretKey);
+        CMSecretPreference.setSummary(secretKey);
     }
 
     @Override
     public void updateCMJidPreference(String jid) {
-        mCMJidPreference.setSummary(jid);
+        CMJidPreference.setSummary(jid);
     }
 
     @Override

@@ -28,37 +28,24 @@
 
             </FrameLayout>
 
-            <RelativeLayout
-                android:id="@+id/presenceFragment"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content" />
+            <!-- State -->
+            <include
+                android:id="@+id/presenceLayout"
+                layout="@layout/layout_presence" />
 
             <include layout="@layout/item_divider" />
 
-            <RelativeLayout
-                android:id="@+id/profileFragment"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content" />
+            <!-- Profile -->
+            <include
+                android:id="@+id/profileLayout"
+                layout="@layout/layout_profile" />
 
             <include layout="@layout/item_divider" />
 
-            <RelativeLayout
-                android:id="@+id/snsFragment"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content" />
-
-            <!--&lt;!&ndash; State &ndash;&gt;-->
-            <!--<include layout="@layout/layout_presence" android:id="@+id/presenceLayout"/>-->
-
-            <!--<include layout="@layout/item_divider"/>-->
-
-            <!--&lt;!&ndash; Profile &ndash;&gt;-->
-            <!--<include layout="@layout/layout_profile" android:id="@+id/profileLayout"/>-->
-
-            <!--<include layout="@layout/item_divider"/>-->
-
-            <!--&lt;!&ndash; SNS &ndash;&gt;-->
-            <!--<include layout="@layout/layout_sns" android:id="@+id/snsLayout"/>-->
+            <!-- SNS -->
+            <include
+                android:id="@+id/snsLayout"
+                layout="@layout/layout_sns" />
 
         </LinearLayout>
     </ScrollView>

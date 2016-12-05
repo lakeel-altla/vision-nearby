@@ -10,23 +10,23 @@ import static android.content.Context.ACTIVITY_SERVICE;
 
 public final class ServiceManager {
 
-    private final Class mClass;
+    private final Class clazz;
 
-    private final Context mContext;
+    private final Context context;
 
     public ServiceManager(Context context, Class clazz) {
-        mClass = clazz;
-        mContext = context;
+        this.clazz = clazz;
+        this.context = context;
     }
 
     public void stopService() {
-        ActivityManager am = (ActivityManager) mContext.getSystemService(ACTIVITY_SERVICE);
+        ActivityManager am = (ActivityManager) context.getSystemService(ACTIVITY_SERVICE);
         List<ActivityManager.RunningServiceInfo> services = am.getRunningServices(Integer.MAX_VALUE);
 
         for (ActivityManager.RunningServiceInfo runningService : services) {
-            if (runningService.service.getClassName().equals(mClass.getName())) {
-                Intent intent = new Intent(mContext, mClass);
-                mContext.stopService(intent);
+            if (runningService.service.getClassName().equals(clazz.getName())) {
+                Intent intent = new Intent(context, clazz);
+                context.stopService(intent);
             }
         }
     }

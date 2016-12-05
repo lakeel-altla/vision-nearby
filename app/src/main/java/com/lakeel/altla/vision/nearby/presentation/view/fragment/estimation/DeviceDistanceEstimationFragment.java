@@ -51,19 +51,19 @@ public final class DeviceDistanceEstimationFragment extends Fragment implements 
     }
 
     @Inject
-    DeviceDistanceEstimationPresenter mPresenter;
+    DeviceDistanceEstimationPresenter presenter;
 
     @BindView(R.id.textViewDescription)
-    TextView mDistanceDescriptionText;
+    TextView distanceDescriptionText;
 
     @BindView(R.id.textViewDistance)
-    TextView mDistanceText;
+    TextView distanceText;
 
     @BindView(R.id.imageView_user)
-    ImageView mUserImageView;
+    ImageView userImageView;
 
     @BindView(R.id.imageViewCircle)
-    ImageView mCircleImage;
+    ImageView circleImage;
 
     private static final Logger LOGGER = LoggerFactory.getLogger(DeviceDistanceEstimationFragment.class);
 
@@ -80,7 +80,7 @@ public final class DeviceDistanceEstimationFragment extends Fragment implements 
         // Dagger
         MainActivity.getUserComponent(this).inject(this);
 
-        mPresenter.onCreateView(this);
+        presenter.onCreateView(this);
 
         return view;
     }
@@ -89,41 +89,41 @@ public final class DeviceDistanceEstimationFragment extends Fragment implements 
     public void onActivityCreated(Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
 
-        mPresenter.onActivityCreated();
+        presenter.onActivityCreated();
 
         getActivity().setTitle(R.string.title_find_nearby_device);
 
         ((MainActivity) getActivity()).setDrawerIndicatorEnabled(false);
 
         ImageLoader imageLoader = ImageLoader.getInstance();
-        imageLoader.displayImage(MyUser.getUserData().imageUri, mUserImageView);
+        imageLoader.displayImage(MyUser.getUserData().imageUri, userImageView);
 
         Bundle bundle = getArguments();
         List<String> beaconIds = bundle.getStringArrayList(BundleKey.BEACON_IDS.getValue());
         String beaconName = bundle.getString(BundleKey.TARGET_NAME.getValue());
 
         String message = getResources().getString(R.string.message_finding_for_nearby_device_format, beaconName);
-        mDistanceDescriptionText.setText(message);
+        distanceDescriptionText.setText(message);
 
-        mPresenter.setSubscriber(beaconIds);
+        presenter.setSubscriber(beaconIds);
     }
 
     @Override
     public void onResume() {
         super.onResume();
-        mPresenter.onResume();
+        presenter.onResume();
 
-        mCircleImage.setImageDrawable(ResourcesCompat.getDrawable(getResources(), R.drawable.circle, null));
+        circleImage.setImageDrawable(ResourcesCompat.getDrawable(getResources(), R.drawable.circle, null));
         ScaleAnimation animation = new ScaleAnimation(1, 3.0f, 1, 3.0f, Animation.RELATIVE_TO_SELF, 0.5f, Animation.RELATIVE_TO_SELF, 0.5f);
         animation.setDuration(2000);
         animation.setRepeatCount(INFINITE);
-        mCircleImage.startAnimation(animation);
+        circleImage.startAnimation(animation);
     }
 
     @Override
     public void onStop() {
         super.onStop();
-        mPresenter.onStop();
+        presenter.onStop();
     }
 
     @Override
@@ -141,7 +141,7 @@ public final class DeviceDistanceEstimationFragment extends Fragment implements 
     @Override
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
         if (REQUEST_CODE_SUBSCRIBE_RESULT == requestCode && resultCode == RESULT_OK) {
-            mPresenter.onSubscribe();
+            presenter.onSubscribe();
         } else {
             super.onActivityResult(requestCode, resultCode, data);
         }
@@ -151,7 +151,7 @@ public final class DeviceDistanceEstimationFragment extends Fragment implements 
     public void showDistance(String meters) {
         if (isResumed()) {
             String message = getResources().getString(R.string.message_device_distance_format, meters);
-            mDistanceText.setText(message);
+            distanceText.setText(message);
         }
     }
 

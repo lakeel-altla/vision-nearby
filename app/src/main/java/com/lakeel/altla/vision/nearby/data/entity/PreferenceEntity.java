@@ -6,7 +6,7 @@ public final class PreferenceEntity {
 
     public String instanceId;
 
-    public boolean isPublishInBackgroundEnabled;
+    public boolean isAdvertiseInBackgroundEnabled;
 
     public boolean isSubscribeInBackgroundEnabled;
 }

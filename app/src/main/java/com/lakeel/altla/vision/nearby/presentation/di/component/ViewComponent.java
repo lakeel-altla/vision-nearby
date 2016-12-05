@@ -13,7 +13,6 @@ import com.lakeel.altla.vision.nearby.presentation.view.fragment.favorites.Favor
 import com.lakeel.altla.vision.nearby.presentation.view.fragment.history.HistoryFragment;
 import com.lakeel.altla.vision.nearby.presentation.view.fragment.history.HistoryListFragment;
 import com.lakeel.altla.vision.nearby.presentation.view.fragment.nearby.NearbyListFragment;
-import com.lakeel.altla.vision.nearby.presentation.view.fragment.search.SearchFragment;
 import com.lakeel.altla.vision.nearby.presentation.view.fragment.settings.SettingsFragment;
 import com.lakeel.altla.vision.nearby.presentation.view.fragment.settings.bluetooth.BleSettingsFragment;
 import com.lakeel.altla.vision.nearby.presentation.view.fragment.settings.cm.CmSettingsFragment;
@@ -47,8 +46,6 @@ public interface ViewComponent {
     void inject(LineSettingsFragment fragment);
 
     void inject(CmSettingsFragment fragment);
-
-    void inject(SearchFragment fragment);
 
     void inject(TrackingFragment fragment);
 

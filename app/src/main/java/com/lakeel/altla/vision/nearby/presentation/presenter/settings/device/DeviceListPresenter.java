@@ -2,9 +2,10 @@ package com.lakeel.altla.vision.nearby.presentation.presenter.settings.device;
 
 import android.support.annotation.IntRange;
 
-import com.lakeel.altla.vision.nearby.domain.usecase.FindBeaconsUseCase;
-import com.lakeel.altla.vision.nearby.domain.usecase.FindUserUseCase;
+import com.lakeel.altla.vision.nearby.data.entity.BeaconEntity;
+import com.lakeel.altla.vision.nearby.domain.usecase.FindBeaconUseCase;
 import com.lakeel.altla.vision.nearby.domain.usecase.FindUserBeaconsUseCase;
+import com.lakeel.altla.vision.nearby.domain.usecase.FindUserUseCase;
 import com.lakeel.altla.vision.nearby.presentation.firebase.MyUser;
 import com.lakeel.altla.vision.nearby.presentation.presenter.BaseItemPresenter;
 import com.lakeel.altla.vision.nearby.presentation.presenter.BasePresenter;
@@ -22,25 +23,26 @@ import java.util.List;
 
 import javax.inject.Inject;
 
+import rx.Observable;
 import rx.Subscription;
 import rx.schedulers.Schedulers;
 
 public class DeviceListPresenter extends BasePresenter<DeviceView> {
 
     @Inject
-    FindUserUseCase mFindUserUseCase;
+    FindUserUseCase findUserUseCase;
 
     @Inject
     FindUserBeaconsUseCase findUserBeaconsUseCase;
 
     @Inject
-    FindBeaconsUseCase findBeaconsUseCase;
+    FindBeaconUseCase findBeaconUseCase;
 
     private static final Logger LOGGER = LoggerFactory.getLogger(DeviceListPresenter.class);
 
-    private final BeaconModelMapper mMapper = new BeaconModelMapper();
+    private final BeaconModelMapper modelMapper = new BeaconModelMapper();
 
-    private List<BeaconModel> mModels = new ArrayList<>();
+    private List<BeaconModel> itemModels = new ArrayList<>();
 
     @Inject
     DeviceListPresenter() {
@@ -50,14 +52,14 @@ public class DeviceListPresenter extends BasePresenter<DeviceView> {
     public void onResume() {
         Subscription subscription = findUserBeaconsUseCase
                 .execute(MyUser.getUid())
-                .flatMap(beaconId -> findBeaconsUseCase.execute(beaconId).subscribeOn(Schedulers.io()).toObservable())
+                .flatMap(this::findBeacon)
                 .filter(entity -> entity != null)
-                .map(mMapper::map)
+                .map(modelMapper::map)
                 .toList()
                 .subscribeOn(Schedulers.io())
                 .subscribe(models -> {
-                    mModels.clear();
-                    mModels.addAll(models);
+                    itemModels.clear();
+                    itemModels.addAll(models);
                     getView().updateItems();
                 }, e -> {
                     LOGGER.error("Failed to find user beacons.", e);
@@ -66,7 +68,7 @@ public class DeviceListPresenter extends BasePresenter<DeviceView> {
     }
 
     public int getItemCount() {
-        return mModels.size();
+        return itemModels.size();
     }
 
     public void onCreateItemView(DeviceAdapter.DeviceViewHolder viewHolder) {
@@ -79,11 +81,15 @@ public class DeviceListPresenter extends BasePresenter<DeviceView> {
 
         @Override
         public void onBind(@IntRange(from = 0) int position) {
-            getItemView().showItem(mModels.get(position));
+            getItemView().showItem(itemModels.get(position));
         }
 
         public void onClick(BeaconModel model) {
             getView().showTrackingFragment(model.mBeaconId, model.mName);
         }
+    }
+
+    Observable<BeaconEntity> findBeacon(String beaconId) {
+        return findBeaconUseCase.execute(beaconId).subscribeOn(Schedulers.io()).toObservable();
     }
 }

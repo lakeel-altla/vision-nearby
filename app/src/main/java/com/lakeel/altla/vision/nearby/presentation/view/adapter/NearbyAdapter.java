@@ -1,13 +1,5 @@
 package com.lakeel.altla.vision.nearby.presentation.view.adapter;
 
-import com.amulyakhare.textdrawable.TextDrawable;
-import com.lakeel.altla.vision.nearby.R;
-import com.lakeel.altla.vision.nearby.core.StringUtils;
-import com.lakeel.altla.vision.nearby.presentation.presenter.model.NearbyItemModel;
-import com.lakeel.altla.vision.nearby.presentation.presenter.nearby.NearbyListPresenter;
-import com.lakeel.altla.vision.nearby.presentation.view.NearbyItemView;
-import com.nostra13.universalimageloader.core.ImageLoader;
-
 import android.graphics.Color;
 import android.support.annotation.IntRange;
 import android.support.v7.widget.RecyclerView;
@@ -18,22 +10,30 @@ import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
+import com.amulyakhare.textdrawable.TextDrawable;
+import com.lakeel.altla.vision.nearby.R;
+import com.lakeel.altla.vision.nearby.core.StringUtils;
+import com.lakeel.altla.vision.nearby.presentation.presenter.model.NearbyItemModel;
+import com.lakeel.altla.vision.nearby.presentation.presenter.nearby.NearbyListPresenter;
+import com.lakeel.altla.vision.nearby.presentation.view.NearbyItemView;
+import com.nostra13.universalimageloader.core.ImageLoader;
+
 import butterknife.BindView;
 import butterknife.ButterKnife;
 
 public final class NearbyAdapter extends RecyclerView.Adapter<NearbyAdapter.NearbyViewHolder> {
 
-    private NearbyListPresenter mNearbyListPresenter;
+    private NearbyListPresenter nearbyListPresenter;
 
     public NearbyAdapter(NearbyListPresenter presenter) {
-        mNearbyListPresenter = presenter;
+        nearbyListPresenter = presenter;
     }
 
     @Override
     public NearbyViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
         View itemView = LayoutInflater.from(parent.getContext()).inflate(R.layout.nearby_item, parent, false);
         NearbyViewHolder nearbyViewHolder = new NearbyViewHolder(itemView);
-        mNearbyListPresenter.onCreateItemView(nearbyViewHolder);
+        nearbyListPresenter.onCreateItemView(nearbyViewHolder);
         return nearbyViewHolder;
     }
 
@@ -44,21 +44,21 @@ public final class NearbyAdapter extends RecyclerView.Adapter<NearbyAdapter.Near
 
     @Override
     public int getItemCount() {
-        return mNearbyListPresenter.getItemCount();
+        return nearbyListPresenter.getItemCount();
     }
 
     final class NearbyViewHolder extends RecyclerView.ViewHolder implements NearbyItemView {
 
-        private NearbyListPresenter.NearbyItemPresenter mNearbyItemPresenter;
+        private NearbyListPresenter.NearbyItemPresenter itemPresenter;
 
         @BindView(R.id.layout)
-        LinearLayout mLayout;
+        LinearLayout itemLayout;
 
         @BindView(R.id.textView_user_item)
-        TextView mUserName;
+        TextView userName;
 
         @BindView(R.id.imageView_user_profile)
-        ImageView mImageView;
+        ImageView userImage;
 
         NearbyViewHolder(View itemView) {
             super(itemView);
@@ -67,47 +67,47 @@ public final class NearbyAdapter extends RecyclerView.Adapter<NearbyAdapter.Near
 
         @Override
         public void setItemPresenter(NearbyListPresenter.NearbyItemPresenter nearbyItemPresenter) {
-            mNearbyItemPresenter = nearbyItemPresenter;
+            itemPresenter = nearbyItemPresenter;
         }
 
         @Override
         public void onBind(@IntRange(from = 0) int position) {
-            mNearbyItemPresenter.onBind(position);
+            itemPresenter.onBind(position);
         }
 
         @Override
         public void showItem(NearbyItemModel model) {
-            String displayName = model.mName;
-            mUserName.setText(displayName);
+            String displayName = model.name;
+            userName.setText(displayName);
 
-            if (StringUtils.isEmpty(model.mImageUri)) {
+            if (StringUtils.isEmpty(model.imageUri)) {
                 String initial = displayName.substring(0, 1);
                 TextDrawable drawable = TextDrawable.builder()
                         .buildRound(initial, Color.RED);
-                mImageView.post(() -> mImageView.setImageDrawable(drawable));
+                userImage.post(() -> userImage.setImageDrawable(drawable));
             } else {
                 ImageLoader imageLoader = ImageLoader.getInstance();
-                imageLoader.displayImage(model.mImageUri, mImageView);
+                imageLoader.displayImage(model.imageUri, userImage);
             }
 
-            mLayout.setOnLongClickListener(view -> {
-                boolean isAlreadyChecked = model.mChecked;
+            itemLayout.setOnLongClickListener(view -> {
+                boolean isAlreadyChecked = model.isChecked;
 
                 if (isAlreadyChecked) {
-                    if (StringUtils.isEmpty(model.mImageUri)) {
+                    if (StringUtils.isEmpty(model.imageUri)) {
                         String initial = displayName.substring(0, 1);
                         TextDrawable drawable = TextDrawable.builder()
                                 .buildRound(initial, Color.RED);
-                        mImageView.post(() -> mImageView.setImageDrawable(drawable));
+                        userImage.post(() -> userImage.setImageDrawable(drawable));
                     } else {
                         ImageLoader imageLoader = ImageLoader.getInstance();
-                        imageLoader.displayImage(model.mImageUri, mImageView);
+                        imageLoader.displayImage(model.imageUri, userImage);
                     }
                 } else {
-                    mImageView.setImageResource(R.drawable.ic_check);
+                    userImage.setImageResource(R.drawable.ic_check);
                 }
 
-                mNearbyItemPresenter.onCheck(model);
+                itemPresenter.onCheck(model);
 
                 return false;
             });

@@ -2,7 +2,7 @@ package com.lakeel.altla.vision.nearby.presentation.presenter.history;
 
 import com.lakeel.altla.vision.nearby.R;
 import com.lakeel.altla.vision.nearby.domain.usecase.FindFavoriteUseCase;
-import com.lakeel.altla.vision.nearby.domain.usecase.FindLineUrlUseCase;
+import com.lakeel.altla.vision.nearby.domain.usecase.FindLineLinkUseCase;
 import com.lakeel.altla.vision.nearby.domain.usecase.FindLocationTextUseCase;
 import com.lakeel.altla.vision.nearby.domain.usecase.FindPresenceUseCase;
 import com.lakeel.altla.vision.nearby.domain.usecase.FindTimesUseCase;
@@ -48,7 +48,7 @@ public final class HistoryPresenter extends BasePresenter<HistoryView> {
     SaveLocationTextUseCase saveLocationTextUseCase;
 
     @Inject
-    FindLineUrlUseCase findLineUrlUseCase;
+    FindLineLinkUseCase findLineLinkUseCase;
 
     private static final Logger LOGGER = LoggerFactory.getLogger(HistoryPresenter.class);
 
@@ -68,29 +68,48 @@ public final class HistoryPresenter extends BasePresenter<HistoryView> {
 
     @Override
     public void onActivityCreated() {
-        Subscription subscription = findPresenceUseCase
+        Subscription presenceSubscription = findPresenceUseCase
                 .execute(otherUserId)
                 .map(entity -> presencesModelMapper.map(entity))
-                .doOnSuccess(model -> getView().showPresence(model))
-                .flatMap(presenceModel -> findTimesUseCase.execute(MyUser.getUid(), otherUserId).subscribeOn(Schedulers.io()))
-                .doOnSuccess(times -> getView().showTimes(times))
-                .flatMap(times -> findUserUseCase.execute(otherUserId).subscribeOn(Schedulers.io()))
+                .subscribeOn(Schedulers.io())
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribe(model -> getView().showPresence(model),
+                        e -> LOGGER.error("Failed to find presence.", e));
+        reusableCompositeSubscription.add(presenceSubscription);
+
+        Subscription timesSubscription = findTimesUseCase.execute(MyUser.getUid(), otherUserId)
+                .subscribeOn(Schedulers.io())
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribe(times -> getView().showTimes(times),
+                        e -> LOGGER.error("Failed to find times.", e));
+        reusableCompositeSubscription.add(timesSubscription);
+
+        Subscription userSubscription = findUserUseCase.execute(otherUserId)
                 .map(entity -> userModelMapper.map(entity))
-                .doOnSuccess(model -> getView().showProfile(model))
-                .flatMap(model -> findLineUrlUseCase.execute(otherUserId).subscribeOn(Schedulers.io()))
+                .subscribeOn(Schedulers.io())
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribe(model -> getView().showProfile(model),
+                        e -> LOGGER.error("Failed to find user.", e));
+        reusableCompositeSubscription.add(userSubscription);
+
+        Subscription lineLinkSubscription = findLineLinkUseCase
+                .execute(otherUserId)
                 .map(lineLinksEntity -> lineLinksEntity.url)
-                .doOnSuccess(lineUrl -> getView().showLineUrl(lineUrl))
-                .flatMapObservable(s -> findFavoriteUseCase.execute(MyUser.getUid(), otherUserId).subscribeOn(Schedulers.io()).toObservable())
+                .subscribeOn(Schedulers.io())
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribe(lineUrl -> getView().showLineUrl(lineUrl),
+                        e -> LOGGER.error("Failed to find LINE link.", e));
+        reusableCompositeSubscription.add(lineLinkSubscription);
+
+        Subscription favoriteSubscription = findFavoriteUseCase
+                .execute(MyUser.getUid(), otherUserId)
+                .toObservable()
                 .filter(entity -> entity == null)
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
-                .subscribe(entity -> {
-                    getView().showAddButton();
-                }, e -> {
-                    LOGGER.error("Failed to find the user data.", e);
-                });
-
-        reusableCompositeSubscription.add(subscription);
+                .subscribe(entity -> getView().showAddButton(),
+                        e -> LOGGER.error("Failed to find the user data.", e));
+        reusableCompositeSubscription.add(favoriteSubscription);
     }
 
     public void setUserLocationData(String userId, String latitude, String longitude) {

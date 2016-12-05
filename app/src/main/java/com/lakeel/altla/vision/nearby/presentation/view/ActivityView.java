@@ -19,11 +19,11 @@ public interface ActivityView extends BaseView {
 
     void showSnackBar(@StringRes int resId);
 
-    void showPublishDisableDialog();
+    void showAdvertiseDisableDialog();
 
     void showBleEnabledActivity();
 
-    void startPublishService(PreferenceModel model);
+    void startAdvertiseService(PreferenceModel model);
 
     void showAccessFineLocationPermissionSystemDialog();
 

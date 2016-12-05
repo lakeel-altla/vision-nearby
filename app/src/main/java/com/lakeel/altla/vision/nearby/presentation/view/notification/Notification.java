@@ -18,40 +18,40 @@ public final class Notification {
 
     public static class Builder {
 
-        private Context mContext;
+        private Context context;
 
-        private String mTitle;
+        private String title;
 
-        private String mText;
+        private String text;
 
-        private PendingIntent mIntent;
+        private PendingIntent intent;
 
         public Builder(Context context) {
-            mContext = context;
+            this.context = context;
         }
 
         public Builder title(@StringRes int resId) {
-            mTitle = mContext.getResources().getString(resId);
+            title = context.getResources().getString(resId);
             return this;
         }
 
         public Builder title(String title) {
-            mTitle = title;
+            this.title = title;
             return this;
         }
 
         public Builder text(String text) {
-            mText = text;
+            this.text = text;
             return this;
         }
 
         public Builder text(@StringRes int resId, Object... formatArgs) {
-            mText = mContext.getResources().getString(resId, formatArgs);
+            text = context.getResources().getString(resId, formatArgs);
             return this;
         }
 
         public Builder intent(PendingIntent intent) {
-            mIntent = intent;
+            this.intent = intent;
             return this;
         }
 
@@ -61,17 +61,17 @@ public final class Notification {
     }
 
     public Notification(Builder builder) {
-        notification = new NotificationCompat.Builder(builder.mContext)
-                .setContentTitle(builder.mTitle)
-                .setTicker(builder.mText)
-                .setContentText(builder.mText)
+        notification = new NotificationCompat.Builder(builder.context)
+                .setContentTitle(builder.title)
+                .setTicker(builder.text)
+                .setContentText(builder.text)
                 .setSmallIcon(R.mipmap.ic_nearby)
                 .setVibrate(new long[]{0, 200, 100, 200, 100, 200})
                 .setAutoCancel(true)
-                .setContentIntent(builder.mIntent)
-                .setColor(ContextCompat.getColor(builder.mContext, R.color.colorPrimary))
+                .setContentIntent(builder.intent)
+                .setColor(ContextCompat.getColor(builder.context, R.color.colorPrimary))
                 .build();
-        notificationManager = (android.app.NotificationManager) builder.mContext.getSystemService(Context.NOTIFICATION_SERVICE);
+        notificationManager = (android.app.NotificationManager) builder.context.getSystemService(Context.NOTIFICATION_SERVICE);
     }
 
     public void notifyNotification() {

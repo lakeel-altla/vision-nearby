@@ -6,7 +6,7 @@ import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.iid.FirebaseInstanceId;
 import com.google.firebase.iid.FirebaseInstanceIdService;
 import com.lakeel.altla.vision.nearby.data.execption.DataStoreException;
-import com.lakeel.altla.vision.nearby.domain.usecase.SaveTokensUseCase;
+import com.lakeel.altla.vision.nearby.domain.usecase.SaveTokenUseCase;
 import com.lakeel.altla.vision.nearby.presentation.firebase.MyUser;
 
 import org.slf4j.Logger;
@@ -20,7 +20,7 @@ import rx.schedulers.Schedulers;
 public final class RefreshTokenService extends FirebaseInstanceIdService {
 
     @Inject
-    SaveTokensUseCase saveTokensUseCase;
+    SaveTokenUseCase saveTokenUseCase;
 
     private static final Logger LOGGER = LoggerFactory.getLogger(RefreshTokenService.class);
 

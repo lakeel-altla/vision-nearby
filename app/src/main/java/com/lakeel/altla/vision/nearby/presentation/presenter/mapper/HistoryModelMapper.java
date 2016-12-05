@@ -13,7 +13,7 @@ import com.lakeel.altla.vision.nearby.presentation.presenter.model.WeatherModel;
 import java.util.List;
 import java.util.Map;
 
-public final class RecentlyModelMapper {
+public final class HistoryModelMapper {
 
     public HistoryModel map(@NonNull HistoryEntity historyEntity, @NonNull UserEntity userEntity) {
         HistoryModel model = new HistoryModel();

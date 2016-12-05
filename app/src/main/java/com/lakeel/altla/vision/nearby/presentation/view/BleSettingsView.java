@@ -4,7 +4,7 @@ import com.lakeel.altla.vision.nearby.presentation.presenter.model.BeaconIdModel
 
 public interface BleSettingsView {
 
-    void startPublish(BeaconIdModel model);
+    void startAdvertise(BeaconIdModel model);
 
-    void disablePublishSettings();
+    void disableAdvertiseSettings();
 }

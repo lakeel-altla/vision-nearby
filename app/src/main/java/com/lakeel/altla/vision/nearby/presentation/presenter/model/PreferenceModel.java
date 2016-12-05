@@ -2,11 +2,11 @@ package com.lakeel.altla.vision.nearby.presentation.presenter.model;
 
 public final class PreferenceModel {
 
-    public String mNamespaceId;
+    public String namespaceId;
 
-    public String mInstanceId;
+    public String instanceId;
 
-    public boolean mPublishInBackgroundEnabled;
+    public boolean isAdvertiseInBackgroundEnabled;
 
-    public boolean mSubscribeInBackgroundEnabled;
+    public boolean isSubscribeInBackgroundEnabled;
 }

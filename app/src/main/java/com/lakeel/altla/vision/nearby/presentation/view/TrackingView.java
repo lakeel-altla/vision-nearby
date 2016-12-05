@@ -10,7 +10,7 @@ public interface TrackingView {
 
     void showEmptyView();
 
-    void showDetectedDate(String detectedTime);
+    void showDetectedDate(long detectedTime);
 
     void launchGoogleMapApp(String latitude, String longitude);
 

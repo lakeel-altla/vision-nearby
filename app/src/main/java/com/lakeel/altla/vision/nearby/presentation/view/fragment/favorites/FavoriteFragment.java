@@ -53,16 +53,16 @@ public final class FavoriteFragment extends Fragment implements FavoriteView {
     }
 
     @Inject
-    FavoritePresenter mPresenter;
+    FavoritePresenter presenter;
 
     @BindView(R.id.mainLayout)
-    LinearLayout mLayout;
+    LinearLayout mainLayout;
 
     @BindView(R.id.shareSheet)
-    BottomSheetLayout mShareSheet;
+    BottomSheetLayout shareSheet;
 
     @BindView(R.id.imageViewUser)
-    ImageView mUserImageView;
+    ImageView userImageView;
 
     private PresenceLayout presenceLayout = new PresenceLayout();
 
@@ -86,7 +86,7 @@ public final class FavoriteFragment extends Fragment implements FavoriteView {
         // Dagger
         MainActivity.getUserComponent(this).inject(this);
 
-        mPresenter.onCreateView(this);
+        presenter.onCreateView(this);
 
         return view;
     }
@@ -103,16 +103,16 @@ public final class FavoriteFragment extends Fragment implements FavoriteView {
 
         getActivity().setTitle(userName);
 
-        mPresenter.setUserData(userId, userName);
+        presenter.setUserData(userId, userName);
 
-        mPresenter.onActivityCreated();
+        presenter.onActivityCreated();
     }
 
     @Override
     public void onPrepareOptionsMenu(Menu menu) {
         super.onPrepareOptionsMenu(menu);
 
-        boolean isCmLinkEnabled = mPresenter.isCmLinkEnabled();
+        boolean isCmLinkEnabled = presenter.isCmLinkEnabled();
         MenuItem menuItem = menu.findItem(R.id.share);
         menuItem.setVisible(isCmLinkEnabled);
     }
@@ -129,10 +129,10 @@ public final class FavoriteFragment extends Fragment implements FavoriteView {
                 getActivity().getSupportFragmentManager().popBackStack();
                 break;
             case share:
-                mPresenter.onShare();
+                presenter.onShare();
                 break;
             case find:
-                mPresenter.onNearbyDeviceMenuClicked();
+                presenter.onNearbyDeviceMenuClicked();
                 break;
             default:
                 break;
@@ -142,7 +142,7 @@ public final class FavoriteFragment extends Fragment implements FavoriteView {
 
     @Override
     public void showSnackBar(@StringRes int resId) {
-        Snackbar.make(mLayout, resId, Snackbar.LENGTH_SHORT).show();
+        Snackbar.make(mainLayout, resId, Snackbar.LENGTH_SHORT).show();
     }
 
     @Override
@@ -162,7 +162,7 @@ public final class FavoriteFragment extends Fragment implements FavoriteView {
     @Override
     public void showProfile(UserModel model) {
         ImageLoader imageLoader = ImageLoader.getInstance();
-        imageLoader.displayImage(model.imageUri, mUserImageView);
+        imageLoader.displayImage(model.imageUri, userImageView);
 
         profileLayout.textViewName.setText(model.name);
         profileLayout.textViewEmail.setAutoLinkMask(Linkify.EMAIL_ADDRESSES);
@@ -171,15 +171,15 @@ public final class FavoriteFragment extends Fragment implements FavoriteView {
 
     @Override
     public void showShareSheet() {
-        GridShareSheet shareSheet = new GridShareSheet(getContext(), mShareSheet, R.menu.menu_share);
+        GridShareSheet shareSheet = new GridShareSheet(getContext(), this.shareSheet, R.menu.menu_share);
         shareSheet.setOnMenuItemClickListener(item -> {
             if (item.getItemId() == R.id.menu_cm_favorites) {
-                mPresenter.onCmMenuClicked();
+                presenter.onCmMenuClicked();
             }
             return true;
         });
 
-        if (!mPresenter.isCmLinkEnabled()) {
+        if (!presenter.isCmLinkEnabled()) {
             shareSheet.hideMenuItem(R.id.menu_cm_favorites);
         }
         shareSheet.show();

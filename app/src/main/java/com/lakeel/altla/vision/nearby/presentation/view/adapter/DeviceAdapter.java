@@ -18,17 +18,17 @@ import butterknife.ButterKnife;
 
 public final class DeviceAdapter extends RecyclerView.Adapter<DeviceAdapter.DeviceViewHolder> {
 
-    private DeviceListPresenter mDeviceListPresenter;
+    private DeviceListPresenter deviceListPresenter;
 
     public DeviceAdapter(DeviceListPresenter presenter) {
-        mDeviceListPresenter = presenter;
+        deviceListPresenter = presenter;
     }
 
     @Override
     public DeviceViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
         View itemView = LayoutInflater.from(parent.getContext()).inflate(R.layout.beacon_item, parent, false);
         DeviceAdapter.DeviceViewHolder viewHolder = new DeviceAdapter.DeviceViewHolder(itemView);
-        mDeviceListPresenter.onCreateItemView(viewHolder);
+        deviceListPresenter.onCreateItemView(viewHolder);
         return viewHolder;
     }
 
@@ -39,18 +39,18 @@ public final class DeviceAdapter extends RecyclerView.Adapter<DeviceAdapter.Devi
 
     @Override
     public int getItemCount() {
-        return mDeviceListPresenter.getItemCount();
+        return deviceListPresenter.getItemCount();
     }
 
     public final class DeviceViewHolder extends RecyclerView.ViewHolder implements DeviceItemView {
 
         @BindView(R.id.layout)
-        LinearLayout mLayout;
+        LinearLayout itemLayout;
 
         @BindView(R.id.textName)
-        TextView mBeaconName;
+        TextView beaconName;
 
-        private DeviceListPresenter.DeviceItemPresenter mItemPresenter;
+        private DeviceListPresenter.DeviceItemPresenter itemPresenter;
 
         DeviceViewHolder(View itemView) {
             super(itemView);
@@ -59,18 +59,18 @@ public final class DeviceAdapter extends RecyclerView.Adapter<DeviceAdapter.Devi
 
         @Override
         public void onBind(@IntRange(from = 0) int position) {
-            mItemPresenter.onBind(position);
+            itemPresenter.onBind(position);
         }
 
         @Override
         public void setItemPresenter(DeviceListPresenter.DeviceItemPresenter itemPresenter) {
-            mItemPresenter = itemPresenter;
+            this.itemPresenter = itemPresenter;
         }
 
         @Override
         public void showItem(BeaconModel model) {
-            mBeaconName.setText(model.mName);
-            mLayout.setOnClickListener(view -> mItemPresenter.onClick(model));
+            beaconName.setText(model.mName);
+            itemLayout.setOnClickListener(view -> itemPresenter.onClick(model));
         }
     }
 }

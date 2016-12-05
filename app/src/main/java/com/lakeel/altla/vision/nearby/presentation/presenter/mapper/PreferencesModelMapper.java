@@ -7,10 +7,10 @@ public final class PreferencesModelMapper {
 
     public PreferenceModel map(PreferenceEntity entity) {
         PreferenceModel model = new PreferenceModel();
-        model.mNamespaceId = entity.namespaceId;
-        model.mInstanceId = entity.instanceId;
-        model.mPublishInBackgroundEnabled = entity.isPublishInBackgroundEnabled;
-        model.mSubscribeInBackgroundEnabled = entity.isSubscribeInBackgroundEnabled;
+        model.namespaceId = entity.namespaceId;
+        model.instanceId = entity.instanceId;
+        model.isAdvertiseInBackgroundEnabled = entity.isAdvertiseInBackgroundEnabled;
+        model.isSubscribeInBackgroundEnabled = entity.isSubscribeInBackgroundEnabled;
         return model;
     }
 }

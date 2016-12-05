@@ -16,10 +16,9 @@ import rx.schedulers.Schedulers;
 public final class SettingsPresenter extends BasePresenter<SettingsView> {
 
     @Inject
-    FindConfigsUseCase mFindConfigsUseCase;
+    FindConfigsUseCase findConfigsUseCase;
 
     private static final Logger LOGGER = LoggerFactory.getLogger(SettingsPresenter.class);
-
 
     @Inject
     SettingsPresenter() {
@@ -27,7 +26,7 @@ public final class SettingsPresenter extends BasePresenter<SettingsView> {
 
     @Override
     public void onActivityCreated() {
-        Subscription subscription = mFindConfigsUseCase
+        Subscription subscription = findConfigsUseCase
                 .execute()
                 .toObservable()
                 .filter(entity -> entity.isCmLinkEnabled)
@@ -38,7 +37,6 @@ public final class SettingsPresenter extends BasePresenter<SettingsView> {
                 }, e -> {
                     LOGGER.error("Failed to find CM links settings.", e);
                 });
-
         reusableCompositeSubscription.add(subscription);
     }
 }

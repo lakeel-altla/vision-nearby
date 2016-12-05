@@ -6,17 +6,17 @@ import android.support.v4.content.ContextCompat;
 
 public final class StatusBarColor {
 
-    private final Activity mActivity;
+    private final Activity activity;
 
-    private final int mColorInt;
+    private final int colorInt;
 
     public StatusBarColor(Activity activity, @ColorRes int colorInt) {
-        mActivity = activity;
-        mColorInt = colorInt;
+        this.activity = activity;
+        this.colorInt = colorInt;
     }
 
     public void draw() {
-        mActivity.getWindow().setStatusBarColor(
-                ContextCompat.getColor(mActivity.getApplicationContext(), mColorInt));
+        activity.getWindow().setStatusBarColor(
+                ContextCompat.getColor(activity.getApplicationContext(), colorInt));
     }
 }

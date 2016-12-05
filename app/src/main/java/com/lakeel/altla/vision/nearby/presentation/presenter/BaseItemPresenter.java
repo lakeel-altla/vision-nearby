@@ -6,14 +6,14 @@ import android.support.annotation.NonNull;
 
 public abstract class BaseItemPresenter<IV extends ItemView> implements ItemPresenter<IV> {
 
-    private IV mItemView;
+    private IV itemView;
 
     @Override
     public void onCreateItemView(@NonNull IV itemView) {
-        mItemView = itemView;
+        this.itemView = itemView;
     }
 
     public IV getItemView() {
-        return mItemView;
+        return itemView;
     }
 }

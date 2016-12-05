@@ -1,13 +1,5 @@
 package com.lakeel.altla.vision.nearby.presentation.view.fragment.settings.device;
 
-import com.lakeel.altla.vision.nearby.R;
-import com.lakeel.altla.vision.nearby.presentation.presenter.settings.device.DeviceListPresenter;
-import com.lakeel.altla.vision.nearby.presentation.view.DeviceView;
-import com.lakeel.altla.vision.nearby.presentation.view.activity.MainActivity;
-import com.lakeel.altla.vision.nearby.presentation.view.adapter.DeviceAdapter;
-import com.lakeel.altla.vision.nearby.presentation.view.divider.DividerItemDecoration;
-import com.lakeel.altla.vision.nearby.presentation.view.transaction.FragmentController;
-
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v7.widget.LinearLayoutManager;
@@ -17,6 +9,14 @@ import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 
+import com.lakeel.altla.vision.nearby.R;
+import com.lakeel.altla.vision.nearby.presentation.presenter.settings.device.DeviceListPresenter;
+import com.lakeel.altla.vision.nearby.presentation.view.DeviceView;
+import com.lakeel.altla.vision.nearby.presentation.view.activity.MainActivity;
+import com.lakeel.altla.vision.nearby.presentation.view.adapter.DeviceAdapter;
+import com.lakeel.altla.vision.nearby.presentation.view.divider.DividerItemDecoration;
+import com.lakeel.altla.vision.nearby.presentation.view.transaction.FragmentController;
+
 import javax.inject.Inject;
 
 import butterknife.BindView;
@@ -24,15 +24,15 @@ import butterknife.ButterKnife;
 
 public final class DeviceListFragment extends Fragment implements DeviceView {
 
+    @Inject
+    DeviceListPresenter presenter;
+
+    @BindView(R.id.recycler_view)
+    RecyclerView recyclerView;
+
     public static DeviceListFragment newInstance() {
         return new DeviceListFragment();
     }
-
-    @Inject
-    DeviceListPresenter mPresenter;
-
-    @BindView(R.id.recycler_view)
-    RecyclerView mRecyclerView;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -45,7 +45,7 @@ public final class DeviceListFragment extends Fragment implements DeviceView {
 
         MainActivity.getUserComponent(this).inject(this);
 
-        mPresenter.onCreateView(this);
+        presenter.onCreateView(this);
 
         return view;
     }
@@ -59,24 +59,24 @@ public final class DeviceListFragment extends Fragment implements DeviceView {
 
         getActivity().setTitle(R.string.title_devices);
 
-        mRecyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
-        mRecyclerView.setHasFixedSize(false);
-        mRecyclerView.addItemDecoration(new DividerItemDecoration(getContext()));
+        recyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
+        recyclerView.setHasFixedSize(false);
+        recyclerView.addItemDecoration(new DividerItemDecoration(getContext()));
 
-        DeviceAdapter adapter = new DeviceAdapter(mPresenter);
-        mRecyclerView.setAdapter(adapter);
+        DeviceAdapter adapter = new DeviceAdapter(presenter);
+        recyclerView.setAdapter(adapter);
     }
 
     @Override
     public void onResume() {
         super.onResume();
-        mPresenter.onResume();
+        presenter.onResume();
     }
 
     @Override
     public void onStop() {
         super.onStop();
-        mPresenter.onStop();
+        presenter.onStop();
     }
 
     @Override
@@ -93,7 +93,7 @@ public final class DeviceListFragment extends Fragment implements DeviceView {
 
     @Override
     public void updateItems() {
-        mRecyclerView.getAdapter().notifyDataSetChanged();
+        recyclerView.getAdapter().notifyDataSetChanged();
     }
 
     @Override

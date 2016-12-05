@@ -11,11 +11,11 @@ import android.view.ViewGroup;
 import android.widget.RelativeLayout;
 
 import com.lakeel.altla.vision.nearby.R;
-import com.lakeel.altla.vision.nearby.presentation.view.bundle.HistoryBundle;
 import com.lakeel.altla.vision.nearby.presentation.presenter.history.HistoryListPresenter;
 import com.lakeel.altla.vision.nearby.presentation.view.HistoryListView;
 import com.lakeel.altla.vision.nearby.presentation.view.activity.MainActivity;
 import com.lakeel.altla.vision.nearby.presentation.view.adapter.RecentlyAdapter;
+import com.lakeel.altla.vision.nearby.presentation.view.bundle.HistoryBundle;
 import com.lakeel.altla.vision.nearby.presentation.view.divider.DividerItemDecoration;
 import com.lakeel.altla.vision.nearby.presentation.view.transaction.FragmentController;
 import com.marshalchen.ultimaterecyclerview.UltimateRecyclerView;
@@ -30,13 +30,13 @@ import butterknife.ButterKnife;
 public final class HistoryListFragment extends Fragment implements HistoryListView {
 
     @Inject
-    HistoryListPresenter mPresenter;
+    HistoryListPresenter presenter;
 
     @BindView(R.id.layout)
-    RelativeLayout mRelativeLayout;
+    RelativeLayout mainLayout;
 
     @BindView(R.id.recycler_view)
-    UltimateRecyclerView mUltimateRecyclerView;
+    UltimateRecyclerView recyclerView;
 
     public static HistoryListFragment newInstance() {
         return new HistoryListFragment();
@@ -51,7 +51,7 @@ public final class HistoryListFragment extends Fragment implements HistoryListVi
         // Dagger
         MainActivity.getUserComponent(this).inject(this);
 
-        mPresenter.onCreateView(this);
+        presenter.onCreateView(this);
 
         return view;
     }
@@ -65,37 +65,37 @@ public final class HistoryListFragment extends Fragment implements HistoryListVi
         ((MainActivity) getActivity()).setDrawerIndicatorEnabled(true);
 
         RecyclerView.LayoutManager mLayoutManager = new ScrollSmoothLineaerLayoutManager(getContext(), LinearLayoutManager.VERTICAL, false, 500);
-        mUltimateRecyclerView.setLayoutManager(mLayoutManager);
+        recyclerView.setLayoutManager(mLayoutManager);
 
-        RecentlyAdapter adapter = new RecentlyAdapter(mPresenter);
+        RecentlyAdapter adapter = new RecentlyAdapter(presenter);
         adapter.setMode(SwipeItemManagerInterface.Mode.Single);
 
-        mUltimateRecyclerView.addItemDecoration(new DividerItemDecoration(getContext()));
-        mUltimateRecyclerView.setAdapter(adapter);
+        recyclerView.addItemDecoration(new DividerItemDecoration(getContext()));
+        recyclerView.setAdapter(adapter);
     }
 
     @Override
     public void onResume() {
         super.onResume();
-        mPresenter.onResume();
+        presenter.onResume();
     }
 
     @Override
     public void onStop() {
         super.onStop();
-        mPresenter.onStop();
+        presenter.onStop();
     }
 
     @Override
     public void updateItems() {
-        RecentlyAdapter adapter = ((RecentlyAdapter) mUltimateRecyclerView.getAdapter());
+        RecentlyAdapter adapter = ((RecentlyAdapter) recyclerView.getAdapter());
         adapter.removeAll();
-        adapter.insert(mPresenter.getItems());
+        adapter.insert(presenter.getItems());
     }
 
     @Override
     public void showSnackBar(int resId) {
-        Snackbar.make(mRelativeLayout, resId, Snackbar.LENGTH_SHORT).show();
+        Snackbar.make(mainLayout, resId, Snackbar.LENGTH_SHORT).show();
     }
 
     @Override

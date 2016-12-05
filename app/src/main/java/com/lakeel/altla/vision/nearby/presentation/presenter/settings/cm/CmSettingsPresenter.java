@@ -1,6 +1,7 @@
 package com.lakeel.altla.vision.nearby.presentation.presenter.settings.cm;
 
 import com.lakeel.altla.vision.nearby.R;
+import com.lakeel.altla.vision.nearby.data.entity.CMLinkEntity;
 import com.lakeel.altla.vision.nearby.domain.usecase.FindCMLinkUseCase;
 import com.lakeel.altla.vision.nearby.domain.usecase.FindConfigsUseCase;
 import com.lakeel.altla.vision.nearby.domain.usecase.SaveCMApiKeyUseCase;
@@ -16,6 +17,7 @@ import org.slf4j.LoggerFactory;
 
 import javax.inject.Inject;
 
+import rx.Observable;
 import rx.Subscription;
 import rx.android.schedulers.AndroidSchedulers;
 import rx.schedulers.Schedulers;
@@ -47,20 +49,20 @@ public final class CmSettingsPresenter extends BasePresenter<CmSettingsView> {
 
     @Override
     public void onActivityCreated() {
-        Subscription subscription1 = findConfigsUseCase
+        Subscription subscription = findConfigsUseCase
                 .execute()
                 .toObservable()
                 .filter(entity -> entity.isCmLinkEnabled)
-                .flatMap(entity -> findCMLinkUseCase.execute(MyUser.getUid()).subscribeOn(Schedulers.io()).toObservable())
+                .flatMap(entity -> findCMLink(MyUser.getUid()))
                 .map(entity -> CMLinksModelMapper.map(entity))
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribe(model -> {
                     getView().showCMPreferences(model);
                 }, e -> {
-                    LOGGER.error("Failed to find CM links settings.", e);
+                    LOGGER.error("Failed to find CM links.", e);
                 });
-        reusableCompositeSubscription.add(subscription1);
+        reusableCompositeSubscription.add(subscription);
     }
 
     public void onSaveCMApiKey(String apiKey) {
@@ -72,7 +74,7 @@ public final class CmSettingsPresenter extends BasePresenter<CmSettingsView> {
                     getView().showSnackBar(R.string.message_saved);
                     getView().updateCMApiKeyPreference(apiKey);
                 }, e -> {
-                    LOGGER.error("Failed to save CM API key.", e);
+                    LOGGER.error("Failed to save API key.", e);
                     getView().showSnackBar(R.string.error_not_saved);
                 });
         reusableCompositeSubscription.add(subscription);
@@ -87,7 +89,7 @@ public final class CmSettingsPresenter extends BasePresenter<CmSettingsView> {
                     getView().showSnackBar(R.string.message_saved);
                     getView().updateCMSecretKeyPreference(secretKey);
                 }, e -> {
-                    LOGGER.error("Failed to save CM secret key.", e);
+                    LOGGER.error("Failed to save secret key.", e);
                     getView().showSnackBar(R.string.error_not_saved);
                 });
         reusableCompositeSubscription.add(subscription);
@@ -102,9 +104,13 @@ public final class CmSettingsPresenter extends BasePresenter<CmSettingsView> {
                     getView().showSnackBar(R.string.message_saved);
                     getView().updateCMJidPreference(jid);
                 }, e -> {
-                    LOGGER.error("Failed to save CM JID.", e);
+                    LOGGER.error("Failed to save jid.", e);
                     getView().showSnackBar(R.string.error_not_saved);
                 });
         reusableCompositeSubscription.add(subscription);
+    }
+
+    Observable<CMLinkEntity> findCMLink(String userId) {
+        return findCMLinkUseCase.execute(userId).subscribeOn(Schedulers.io()).toObservable();
     }
 }

@@ -10,13 +10,13 @@ import rx.Single;
 public final class FindConfigsUseCase {
 
     @Inject
-    FirebaseConfigsRepository mFirebaseConfigsRepository;
+    FirebaseConfigsRepository repository;
 
     @Inject
     FindConfigsUseCase() {
     }
 
     public Single<ConfigsEntity> execute() {
-        return mFirebaseConfigsRepository.find();
+        return repository.find();
     }
 }

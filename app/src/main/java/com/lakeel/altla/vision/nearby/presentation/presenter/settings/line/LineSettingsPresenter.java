@@ -1,7 +1,7 @@
 package com.lakeel.altla.vision.nearby.presentation.presenter.settings.line;
 
 import com.lakeel.altla.vision.nearby.R;
-import com.lakeel.altla.vision.nearby.domain.usecase.FindLineUrlUseCase;
+import com.lakeel.altla.vision.nearby.domain.usecase.FindLineLinkUseCase;
 import com.lakeel.altla.vision.nearby.domain.usecase.SaveLineUrlUseCase;
 import com.lakeel.altla.vision.nearby.presentation.firebase.MyUser;
 import com.lakeel.altla.vision.nearby.presentation.presenter.BasePresenter;
@@ -19,10 +19,10 @@ import rx.schedulers.Schedulers;
 public final class LineSettingsPresenter extends BasePresenter<LineSettingsView> {
 
     @Inject
-    SaveLineUrlUseCase mSaveLineUrlUseCase;
+    SaveLineUrlUseCase saveLineUrlUseCase;
 
     @Inject
-    FindLineUrlUseCase mFindLineUrlUseCase;
+    FindLineLinkUseCase findLineLinkUseCase;
 
     private static final Logger LOGGER = LoggerFactory.getLogger(LineSettingsPresenter.class);
 
@@ -32,7 +32,7 @@ public final class LineSettingsPresenter extends BasePresenter<LineSettingsView>
 
     @Override
     public void onActivityCreated() {
-        Subscription subscription = mFindLineUrlUseCase
+        Subscription subscription = findLineLinkUseCase
                 .execute(MyUser.getUid())
                 .toObservable()
                 .filter(entity -> entity != null)
@@ -45,7 +45,7 @@ public final class LineSettingsPresenter extends BasePresenter<LineSettingsView>
     }
 
     public void onSaveLineUrl(String url) {
-        Subscription subscription = mSaveLineUrlUseCase
+        Subscription subscription = saveLineUrlUseCase
                 .execute(MyUser.getUid(), url)
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
@@ -57,7 +57,6 @@ public final class LineSettingsPresenter extends BasePresenter<LineSettingsView>
                             LOGGER.error("Failed to save line URL.", e);
                             getView().showSnackBar(R.string.error_not_added);
                         });
-
         reusableCompositeSubscription.add(subscription);
     }
 }

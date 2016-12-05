@@ -7,13 +7,13 @@ import javax.inject.Inject;
 
 import rx.Observable;
 
-public final class FindRecentlyUseCase {
+public final class FindHistoryUseCase {
 
     @Inject
     FirebaseHistoryRepository repository;
 
     @Inject
-    FindRecentlyUseCase() {
+    FindHistoryUseCase() {
     }
 
     public Observable<HistoryEntity> execute(String userId) {

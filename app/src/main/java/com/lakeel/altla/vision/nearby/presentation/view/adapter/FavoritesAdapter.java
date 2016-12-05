@@ -26,11 +26,11 @@ import butterknife.ButterKnife;
 
 public final class FavoritesAdapter extends SwipeableUltimateViewAdapter<FavoriteModel> {
 
-    private FavoriteListPresenter mFavoriteListPresenter;
+    private FavoriteListPresenter favoriteListPresenter;
 
     public FavoritesAdapter(FavoriteListPresenter presenter) {
         super(new ArrayList<>());
-        mFavoriteListPresenter = presenter;
+        favoriteListPresenter = presenter;
     }
 
     @Override
@@ -41,7 +41,7 @@ public final class FavoritesAdapter extends SwipeableUltimateViewAdapter<Favorit
     @Override
     protected UltimateRecyclerviewViewHolder newViewHolder(View view) {
         FavoritesListViewHolder viewHolder = new FavoritesListViewHolder(view, true);
-        mFavoriteListPresenter.onCreateItemView(viewHolder);
+        favoriteListPresenter.onCreateItemView(viewHolder);
         return viewHolder;
     }
 
@@ -53,59 +53,59 @@ public final class FavoritesAdapter extends SwipeableUltimateViewAdapter<Favorit
 
     public final class FavoritesListViewHolder extends UltimateRecyclerviewViewHolder implements FavoriteItemView {
 
-        private FavoriteListPresenter.FavoritesItemPresenter mFavoritesItemPresenter;
+        private FavoriteListPresenter.FavoritesItemPresenter itemPresenter;
 
         @BindView(R.id.layout_row)
-        LinearLayout mLinearLayout;
+        LinearLayout itemLayout;
 
         @BindView(R.id.textView_user_item)
-        TextView mUserName;
+        TextView userName;
 
         @BindView(R.id.imageView_user_profile)
-        ImageView mImageView;
+        ImageView imageViewUser;
 
         @BindView(R.id.button_remove)
-        Button removeButton;
+        Button buttonRemove;
 
         @BindView(R.id.swipe_layout)
-        SwipeLayout mSwipeLayout;
+        SwipeLayout swipeLayout;
 
         public FavoritesListViewHolder(View itemView, boolean bind) {
             super(itemView);
             if (bind) {
                 ButterKnife.bind(this, itemView);
-                mSwipeLayout.setDragEdge(SwipeLayout.DragEdge.Right);
-                mSwipeLayout.setShowMode(SwipeLayout.ShowMode.PullOut);
+                swipeLayout.setDragEdge(SwipeLayout.DragEdge.Right);
+                swipeLayout.setShowMode(SwipeLayout.ShowMode.PullOut);
             }
         }
 
         @Override
         public void setItemPresenter(FavoriteListPresenter.FavoritesItemPresenter itemPresenter) {
-            mFavoritesItemPresenter = itemPresenter;
+            this.itemPresenter = itemPresenter;
         }
 
         @Override
         public void showItem(FavoriteModel model) {
             String displayName = model.name;
-            mUserName.setText(displayName);
+            userName.setText(displayName);
 
             if (StringUtils.isEmpty(model.imageUri)) {
                 String initial = displayName.substring(0, 1);
                 TextDrawable drawable = TextDrawable.builder()
                         .buildRound(initial, Color.RED);
-                mImageView.post(() -> mImageView.setImageDrawable(drawable));
+                imageViewUser.post(() -> imageViewUser.setImageDrawable(drawable));
             } else {
                 ImageLoader imageLoader = ImageLoader.getInstance();
-                imageLoader.displayImage(model.imageUri, mImageView);
+                imageLoader.displayImage(model.imageUri, imageViewUser);
             }
 
-            removeButton.setOnClickListener(v -> mFavoritesItemPresenter.onRemove(model));
-            mLinearLayout.setOnClickListener(view -> mFavoritesItemPresenter.onClick(model));
+            buttonRemove.setOnClickListener(v -> itemPresenter.onRemove(model));
+            itemLayout.setOnClickListener(view -> itemPresenter.onClick(model));
         }
 
         @Override
         public void onBind(@IntRange(from = 0) int position) {
-            mFavoritesItemPresenter.onBind(position);
+            itemPresenter.onBind(position);
         }
     }
 }

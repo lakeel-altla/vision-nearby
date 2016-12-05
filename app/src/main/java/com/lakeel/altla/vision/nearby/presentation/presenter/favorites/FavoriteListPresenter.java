@@ -4,6 +4,7 @@ import android.support.annotation.IntRange;
 
 import com.lakeel.altla.vision.nearby.R;
 import com.lakeel.altla.vision.nearby.core.CollectionUtils;
+import com.lakeel.altla.vision.nearby.data.entity.FavoriteEntity;
 import com.lakeel.altla.vision.nearby.data.entity.UserEntity;
 import com.lakeel.altla.vision.nearby.domain.usecase.FindFavoritesUseCase;
 import com.lakeel.altla.vision.nearby.domain.usecase.FindUserUseCase;
@@ -32,19 +33,19 @@ import rx.schedulers.Schedulers;
 public final class FavoriteListPresenter extends BasePresenter<FavoriteListView> {
 
     @Inject
-    FindUserUseCase mFindUserUseCase;
+    FindUserUseCase findUserUseCase;
 
     @Inject
-    FindFavoritesUseCase mFindFavoritesUseCase;
+    FindFavoritesUseCase findFavoritesUseCase;
 
     @Inject
-    RemoveFavoriteUseCase mRemoveFavoriteUseCase;
+    RemoveFavoriteUseCase removeFavoriteUseCase;
 
     private static final Logger LOGGER = LoggerFactory.getLogger(FavoriteListPresenter.class);
 
-    private FavoriteModelMapper mFavoriteModelMapper = new FavoriteModelMapper();
+    private FavoriteModelMapper favoriteModelMapper = new FavoriteModelMapper();
 
-    private final List<FavoriteModel> mFavoriteModels = new ArrayList<>();
+    private final List<FavoriteModel> favoriteModels = new ArrayList<>();
 
     @Inject
     FavoriteListPresenter() {
@@ -52,24 +53,22 @@ public final class FavoriteListPresenter extends BasePresenter<FavoriteListView>
 
     @Override
     public void onResume() {
-        Subscription subscription = mFindFavoritesUseCase
+        Subscription subscription = findFavoritesUseCase
                 .execute(MyUser.getUid())
                 .flatMap(entity -> {
-                    String userId = entity.key;
-                    Observable<UserEntity> itemsSingle = mFindUserUseCase.execute(userId).toObservable();
-
-                    return Observable.zip(Observable.just(entity), itemsSingle, (favoritesEntity, itemsEntity) ->
-                            mFavoriteModelMapper.map(favoritesEntity, itemsEntity));
+                    Observable<FavoriteEntity> favoriteObservable = Observable.just(entity);
+                    Observable<UserEntity> userObservable = findUser(entity.key);
+                    return Observable.zip(favoriteObservable, userObservable, (favoriteEntity, userEntity) ->
+                            favoriteModelMapper.map(favoriteEntity, userEntity));
                 })
                 .toList()
                 .subscribe(favoritesModels -> {
-                    mFavoriteModels.clear();
-                    mFavoriteModels.addAll(favoritesModels);
-                    getView().updateItems(mFavoriteModels);
+                    favoriteModels.clear();
+                    favoriteModels.addAll(favoritesModels);
+                    getView().updateItems(favoriteModels);
                 }, e -> {
                     getView().showSnackBar(R.string.error_process);
                 });
-
         reusableCompositeSubscription.add(subscription);
     }
 
@@ -83,7 +82,7 @@ public final class FavoriteListPresenter extends BasePresenter<FavoriteListView>
 
         @Override
         public void onBind(@IntRange(from = 0) int position) {
-            getItemView().showItem(mFavoriteModels.get(position));
+            getItemView().showItem(favoriteModels.get(position));
         }
 
         public void onClick(FavoriteModel model) {
@@ -92,27 +91,32 @@ public final class FavoriteListPresenter extends BasePresenter<FavoriteListView>
             getView().showFavoritesUserActivity(userId, userName);
         }
 
-        public void onRemove(FavoriteModel favoriteModel) {
-            Subscription subscription = mRemoveFavoriteUseCase.execute(MyUser.getUid(), favoriteModel.userId)
+        public void onRemove(FavoriteModel model) {
+            Subscription subscription = removeFavoriteUseCase
+                    .execute(MyUser.getUid(), model.userId)
                     .subscribeOn(Schedulers.io())
                     .observeOn(AndroidSchedulers.mainThread())
-                    .subscribe(throwable -> {
-                                LOGGER.error("Failed to remove favorite", throwable);
+                    .subscribe(e -> {
+                                LOGGER.error("Failed to remove favorite.", e);
                                 getView().showSnackBar(R.string.error_not_deleted);
                             },
                             () -> {
-                                int size = mFavoriteModels.size();
-                                mFavoriteModels.remove(favoriteModel);
+                                int size = favoriteModels.size();
+                                favoriteModels.remove(model);
 
-                                if (CollectionUtils.isEmpty(mFavoriteModels)) {
+                                if (CollectionUtils.isEmpty(favoriteModels)) {
                                     getView().removeAll(size);
                                 } else {
-                                    getView().updateItems(mFavoriteModels);
+                                    getView().updateItems(favoriteModels);
                                 }
 
                                 getView().showSnackBar(R.string.message_removed);
                             });
             reusableCompositeSubscription.add(subscription);
         }
+    }
+
+    Observable<UserEntity> findUser(String userId) {
+        return findUserUseCase.execute(userId).toObservable();
     }
 }

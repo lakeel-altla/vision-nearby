@@ -3,19 +3,19 @@
 
 
     <SwitchPreferenceCompat
-            android:key="publishInBackground"
-            android:title="@string/title_publish_in_background"
-            android:summary="@string/preference_summary_publish_in_background"
-            android:switchTextOff="OFF"
-            android:switchTextOn="ON"
-            android:defaultValue="true"/>
+        android:defaultValue="true"
+        android:key="advertiseInBackground"
+        android:summary="@string/preference_summary_advertise_in_background"
+        android:switchTextOff="OFF"
+        android:switchTextOn="ON"
+        android:title="@string/title_advertise_in_background" />
 
     <SwitchPreferenceCompat
-            android:key="subscribeInBackground"
-            android:title="@string/title_subscribe_in_background"
-            android:summary="@string/preference_summary_subscribe_in_background"
-            android:switchTextOff="OFF"
-            android:switchTextOn="ON"
-            android:defaultValue="true"/>
+        android:defaultValue="true"
+        android:key="subscribeInBackground"
+        android:summary="@string/preference_summary_subscribe_in_background"
+        android:switchTextOff="OFF"
+        android:switchTextOn="ON"
+        android:title="@string/title_subscribe_in_background" />
 
 </PreferenceScreen>

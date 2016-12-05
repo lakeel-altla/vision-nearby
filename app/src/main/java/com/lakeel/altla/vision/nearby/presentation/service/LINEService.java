@@ -14,7 +14,7 @@ import com.lakeel.altla.vision.nearby.presentation.di.component.DaggerServiceCom
 import com.lakeel.altla.vision.nearby.presentation.di.component.ServiceComponent;
 import com.lakeel.altla.vision.nearby.presentation.intent.IntentKey;
 import com.lakeel.altla.vision.nearby.presentation.intent.UriPendingIntent;
-import com.lakeel.altla.vision.nearby.presentation.view.notification.NotificationNotifier;
+import com.lakeel.altla.vision.nearby.presentation.view.notification.Notification;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -69,7 +69,7 @@ public class LineService extends IntentService {
                     UriPendingIntent creator = new UriPendingIntent(getApplicationContext(), Uri.parse(lineUrl));
                     PendingIntent pendingIntent = creator.create();
 
-                    NotificationNotifier notifier = new NotificationNotifier.Builder(getApplicationContext())
+                    Notification notifier = new Notification.Builder(getApplicationContext())
                             .intent(pendingIntent)
                             .title(R.string.message_line_user_found)
                             .text(R.string.message_user_using_line, entity.name)

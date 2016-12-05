@@ -21,14 +21,14 @@ import com.lakeel.altla.cm.CMApplication;
 import com.lakeel.altla.cm.config.AccessConfig;
 import com.lakeel.altla.library.ResolutionResultCallback;
 import com.lakeel.altla.vision.nearby.R;
-import com.lakeel.altla.vision.nearby.domain.usecase.FindPreferenceBeaconIdUseCase;
 import com.lakeel.altla.vision.nearby.domain.usecase.FindCMLinkUseCase;
+import com.lakeel.altla.vision.nearby.domain.usecase.FindPreferenceBeaconIdUseCase;
 import com.lakeel.altla.vision.nearby.domain.usecase.FindPreferencesUseCase;
 import com.lakeel.altla.vision.nearby.domain.usecase.FindTokenUseCase;
 import com.lakeel.altla.vision.nearby.domain.usecase.ObservePresenceUseCase;
-import com.lakeel.altla.vision.nearby.domain.usecase.SavePreferenceBeaconIdUseCase;
 import com.lakeel.altla.vision.nearby.domain.usecase.SaveBeaconUseCase;
-import com.lakeel.altla.vision.nearby.domain.usecase.SaveTokensUseCase;
+import com.lakeel.altla.vision.nearby.domain.usecase.SavePreferenceBeaconIdUseCase;
+import com.lakeel.altla.vision.nearby.domain.usecase.SaveTokenUseCase;
 import com.lakeel.altla.vision.nearby.domain.usecase.SaveUserBeaconUseCase;
 import com.lakeel.altla.vision.nearby.presentation.checker.BluetoothChecker;
 import com.lakeel.altla.vision.nearby.presentation.checker.BluetoothChecker.BleState;
@@ -36,7 +36,7 @@ import com.lakeel.altla.vision.nearby.presentation.firebase.MyUser;
 import com.lakeel.altla.vision.nearby.presentation.presenter.BasePresenter;
 import com.lakeel.altla.vision.nearby.presentation.presenter.mapper.CMAuthConfigMapper;
 import com.lakeel.altla.vision.nearby.presentation.presenter.mapper.PreferencesModelMapper;
-import com.lakeel.altla.vision.nearby.presentation.service.PublishService;
+import com.lakeel.altla.vision.nearby.presentation.service.AdvertiseService;
 import com.lakeel.altla.vision.nearby.presentation.service.ServiceManager;
 import com.lakeel.altla.vision.nearby.presentation.subscriber.BackgroundSubscriber;
 import com.lakeel.altla.vision.nearby.presentation.subscriber.Subscriber;
@@ -82,7 +82,7 @@ public final class ActivityPresenter extends BasePresenter<ActivityView> impleme
     FindTokenUseCase findTokenUseCase;
 
     @Inject
-    SaveTokensUseCase saveTokensUseCase;
+    SaveTokenUseCase saveTokenUseCase;
 
     private static final Logger LOGGER = LoggerFactory.getLogger(ActivityPresenter.class);
 
@@ -98,11 +98,11 @@ public final class ActivityPresenter extends BasePresenter<ActivityView> impleme
 
     private final Subscriber subscriber;
 
-    private boolean accessLocationGranted;
+    private boolean isAccessLocationGranted;
 
-    private boolean alreadySubscribed;
+    private boolean isAlreadySubscribed;
 
-    private boolean publishAvailability = true;
+    private boolean isAdvertiseAvailability = true;
 
     @Inject
     ActivityPresenter(Activity activity) {
@@ -177,40 +177,35 @@ public final class ActivityPresenter extends BasePresenter<ActivityView> impleme
     public void onSignedIn() {
         getView().showFavoritesListFragment();
 
-        observePresenceUseCase.execute(MyUser.getUid());
-
-        MyUser.UserData userData = MyUser.getUserData();
-        getView().showProfile(userData.displayName, userData.email, userData.imageUri);
-
         if (ActivityCompat.checkSelfPermission(context, Manifest.permission.ACCESS_FINE_LOCATION) == PackageManager.PERMISSION_GRANTED) {
             onAccessLocationGranted();
         } else {
             getView().showAccessFineLocationPermissionSystemDialog();
         }
 
+        MyUser.UserData userData = MyUser.getUserData();
+        getView().showProfile(userData.displayName, userData.email, userData.imageUri);
+
         BluetoothChecker checker = new BluetoothChecker(context);
         BleState state = checker.getState();
         if (state == BleState.OFF) {
             getView().showBleEnabledActivity();
         } else if (state == BleState.SUBSCRIBE_ONLY) {
-            publishAvailability = false;
-            getView().showPublishDisableDialog();
+            isAdvertiseAvailability = false;
+            getView().showAdvertiseDisableDialog();
         }
+
+        observePresenceUseCase.execute(MyUser.getUid());
 
         Subscription beaconSubscription = findPreferenceBeaconIdUseCase
                 .execute()
                 .flatMap(entity -> {
-                    if (entity == null) {
-                        return savePreferenceBeaconIdUseCase.execute().subscribeOn(Schedulers.io());
-                    }
+                    if (entity == null) return savePreferenceBeaconId();
                     return Single.just(entity.namespaceId + entity.instanceId);
                 })
-                .flatMap(beaconId -> saveUserBeaconUseCase.execute(MyUser.getUid(), beaconId).subscribeOn(Schedulers.io()))
-                .flatMap(beaconId -> saveBeaconUseCase.execute(beaconId, MyUser.getUid(), Build.MODEL).subscribeOn(Schedulers.io()))
-                .flatMap(beaconId -> {
-                    String token = instanceId.getToken();
-                    return saveTokensUseCase.execute(MyUser.getUid(), beaconId, token).subscribeOn(Schedulers.io());
-                })
+                .flatMap(this::saveUserBeacon)
+                .flatMap(this::saveBeacon)
+                .flatMap(this::saveToken)
                 .subscribeOn(Schedulers.io())
                 .doOnError(e -> LOGGER.error("Failed to save beacon data.", e))
                 .subscribe();
@@ -221,30 +216,28 @@ public final class ActivityPresenter extends BasePresenter<ActivityView> impleme
                 .map(entity -> preferencesModelMapper.map(entity))
                 .subscribeOn(Schedulers.io())
                 .subscribe(model -> {
-                    if (model.mPublishInBackgroundEnabled && publishAvailability) {
-                        getView().startPublishService(model);
+                    if (model.isAdvertiseInBackgroundEnabled && isAdvertiseAvailability) {
+                        getView().startAdvertiseService(model);
                     }
                 }, e -> LOGGER.error("Failed to find preferences.", e));
         reusableCompositeSubscription.add(preferenceSubscription);
 
         Subscription cmLinksSubscription = findCMLinkUseCase
                 .execute(MyUser.getUid())
-                .subscribeOn(Schedulers.io())
                 .map(entity -> cmAuthConfigMapper.map(entity))
                 .subscribeOn(Schedulers.io())
-                .observeOn(AndroidSchedulers.mainThread())
                 .subscribe(authConfig -> CMApplication.initialize(authConfig, accessConfig),
                         e -> LOGGER.error("Failed to initialize CM settings.", e));
         reusableCompositeSubscription.add(cmLinksSubscription);
     }
 
     public void onAccessLocationGranted() {
-        accessLocationGranted = true;
+        isAccessLocationGranted = true;
         onConnect();
     }
 
     public boolean isAccessLocationGranted() {
-        return accessLocationGranted;
+        return isAccessLocationGranted;
     }
 
     public void onConnect() {
@@ -252,19 +245,19 @@ public final class ActivityPresenter extends BasePresenter<ActivityView> impleme
     }
 
     public void onSubscribeInBackground() {
-        if (alreadySubscribed) {
+        if (isAlreadySubscribed) {
             return;
         }
 
         subscriber.subscribe(new ResolutionResultCallback() {
             @Override
             protected void onResolution(Status status) {
-                alreadySubscribed = false;
+                isAlreadySubscribed = false;
                 getView().showResolutionSystemDialog(status);
             }
         });
 
-        alreadySubscribed = true;
+        isAlreadySubscribed = true;
     }
 
     public void onUnSubscribeInBackground() {
@@ -275,7 +268,7 @@ public final class ActivityPresenter extends BasePresenter<ActivityView> impleme
             }
         });
 
-        alreadySubscribed = false;
+        isAlreadySubscribed = false;
     }
 
     public void onSignOut(@NonNull Activity activity) {
@@ -288,7 +281,7 @@ public final class ActivityPresenter extends BasePresenter<ActivityView> impleme
             if (task1.isSuccessful()) {
                 onUnSubscribeInBackground();
 
-                ServiceManager manager = new ServiceManager(context, PublishService.class);
+                ServiceManager manager = new ServiceManager(context, AdvertiseService.class);
                 manager.stopService();
 
                 getView().showSignInFragment();
@@ -297,5 +290,22 @@ public final class ActivityPresenter extends BasePresenter<ActivityView> impleme
                 getView().showSnackBar(R.string.error_not_signed_out);
             }
         });
+    }
+
+    Single<String> savePreferenceBeaconId() {
+        return savePreferenceBeaconIdUseCase.execute().subscribeOn(Schedulers.io());
+    }
+
+    Single<String> saveUserBeacon(String beaconId) {
+        return saveUserBeaconUseCase.execute(MyUser.getUid(), beaconId).subscribeOn(Schedulers.io());
+    }
+
+    Single<String> saveBeacon(String beaconId) {
+        return saveBeaconUseCase.execute(beaconId, MyUser.getUid(), Build.MODEL).subscribeOn(Schedulers.io());
+    }
+
+    Single<String> saveToken(String beaconId) {
+        String token = instanceId.getToken();
+        return saveTokenUseCase.execute(MyUser.getUid(), beaconId, token).subscribeOn(Schedulers.io());
     }
 }

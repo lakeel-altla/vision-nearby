@@ -12,16 +12,16 @@ import com.lakeel.altla.cm.resource.Timestamp;
 import com.lakeel.altla.library.AttachmentListener;
 import com.lakeel.altla.library.ResolutionResultCallback;
 import com.lakeel.altla.vision.nearby.R;
-import com.lakeel.altla.vision.nearby.presentation.presenter.mapper.CmFavoritesDataMapper;
-import com.lakeel.altla.vision.nearby.presentation.presenter.data.CmFavoriteData;
-import com.lakeel.altla.vision.nearby.domain.usecase.FindConfigsUseCase;
 import com.lakeel.altla.vision.nearby.domain.usecase.FindCMJidUseCase;
+import com.lakeel.altla.vision.nearby.domain.usecase.FindConfigsUseCase;
 import com.lakeel.altla.vision.nearby.domain.usecase.FindUserUseCase;
 import com.lakeel.altla.vision.nearby.domain.usecase.SaveCMFavoritesUseCase;
 import com.lakeel.altla.vision.nearby.presentation.constants.BeaconAttachment;
 import com.lakeel.altla.vision.nearby.presentation.firebase.MyUser;
 import com.lakeel.altla.vision.nearby.presentation.presenter.BaseItemPresenter;
 import com.lakeel.altla.vision.nearby.presentation.presenter.BasePresenter;
+import com.lakeel.altla.vision.nearby.presentation.presenter.data.CmFavoriteData;
+import com.lakeel.altla.vision.nearby.presentation.presenter.mapper.CmFavoritesDataMapper;
 import com.lakeel.altla.vision.nearby.presentation.presenter.mapper.NearbyItemsModelMapper;
 import com.lakeel.altla.vision.nearby.presentation.presenter.model.NearbyItemModel;
 import com.lakeel.altla.vision.nearby.presentation.subscriber.ForegroundSubscriber;
@@ -44,7 +44,6 @@ import javax.inject.Inject;
 import rx.Observable;
 import rx.Subscription;
 import rx.android.schedulers.AndroidSchedulers;
-import rx.functions.Func1;
 import rx.schedulers.Schedulers;
 
 public final class NearbyListPresenter extends BasePresenter<NearbyListView> implements GoogleApiClient.ConnectionCallbacks {
@@ -65,15 +64,16 @@ public final class NearbyListPresenter extends BasePresenter<NearbyListView> imp
                     .toObservable()
                     .filter(entity -> entity != null)
                     .subscribeOn(Schedulers.io())
-                    .map(itemsEntity -> mMapper.map(itemsEntity))
+                    .map(itemsEntity -> nearbyItemsModelMapper.map(itemsEntity))
+                    .subscribeOn(Schedulers.io())
                     .observeOn(AndroidSchedulers.mainThread())
                     .subscribe(scannedModel -> {
-                        for (NearbyItemModel model : mNearbyItemModels) {
-                            if (model.mId.equals(scannedModel.mId)) {
+                        for (NearbyItemModel model : nearbyItemModels) {
+                            if (model.userId.equals(scannedModel.userId)) {
                                 return;
                             }
                         }
-                        mNearbyItemModels.add(scannedModel);
+                        nearbyItemModels.add(scannedModel);
                         getView().updateItems();
                     }, e -> LOGGER.error("Failed to find nearby item.", e));
 
@@ -95,25 +95,25 @@ public final class NearbyListPresenter extends BasePresenter<NearbyListView> imp
 
     private static Logger LOGGER = LoggerFactory.getLogger(NearbyListPresenter.class);
 
-    private final GoogleApiClient mGoogleApiClient;
+    private final GoogleApiClient googleApiClient;
 
-    private final Subscriber mSubscriber;
+    private final Subscriber subscriber;
 
-    private final List<NearbyItemModel> mNearbyItemModels = new ArrayList<>();
+    private final List<NearbyItemModel> nearbyItemModels = new ArrayList<>();
 
-    private final List<NearbyItemModel> mCheckedModels = new LinkedList<>();
+    private final List<NearbyItemModel> checkedModels = new LinkedList<>();
 
-    private NearbyItemsModelMapper mMapper = new NearbyItemsModelMapper();
+    private NearbyItemsModelMapper nearbyItemsModelMapper = new NearbyItemsModelMapper();
 
     private CmFavoritesDataMapper cmFavoritesDataMapper = new CmFavoritesDataMapper();
 
-    private ScheduledThreadPoolExecutor mExecutor = new ScheduledThreadPoolExecutor(1);
+    private ScheduledThreadPoolExecutor executor = new ScheduledThreadPoolExecutor(1);
 
-    private boolean mScanning;
+    private boolean isScanning;
 
-    private boolean mCmLinkEnabled;
+    private boolean isCMLinkEnabled;
 
-    private ResolutionResultCallback mResultCallback = new ResolutionResultCallback() {
+    private ResolutionResultCallback resultCallback = new ResolutionResultCallback() {
         @Override
         protected void onResolution(Status status) {
             getView().showResolutionSystemDialog(status);
@@ -122,39 +122,37 @@ public final class NearbyListPresenter extends BasePresenter<NearbyListView> imp
 
     @Inject
     NearbyListPresenter(Activity activity) {
-        mGoogleApiClient = new GoogleApiClient.Builder(activity)
+        googleApiClient = new GoogleApiClient.Builder(activity)
                 .addApi(Nearby.MESSAGES_API)
                 .build();
-
-        mSubscriber = new ForegroundSubscriber(mGoogleApiClient, new NearbyMessagesListener());
+        subscriber = new ForegroundSubscriber(googleApiClient, new NearbyMessagesListener());
     }
 
     @Override
     public void onResume() {
-        mGoogleApiClient.registerConnectionCallbacks(this);
-        mGoogleApiClient.connect();
+        googleApiClient.registerConnectionCallbacks(this);
+        googleApiClient.connect();
 
         Subscription subscription = findConfigsUseCase
                 .execute()
                 .map(entity -> entity.isCmLinkEnabled)
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
-                .subscribe(bool -> mCmLinkEnabled = bool,
+                .subscribe(bool -> isCMLinkEnabled = bool,
                         e -> LOGGER.error("Failed to find config settings.", e));
-
         reusableCompositeSubscription.add(subscription);
     }
 
     @Override
     public void onPause() {
-        mGoogleApiClient.unregisterConnectionCallbacks(this);
+        googleApiClient.unregisterConnectionCallbacks(this);
     }
 
     @Override
     public void onStop() {
         super.onStop();
 
-        mSubscriber.unSubscribe(mResultCallback);
+        subscriber.unSubscribe(resultCallback);
 
         getView().hideIndicator();
         getView().drawNormalActionBarColor();
@@ -171,7 +169,7 @@ public final class NearbyListPresenter extends BasePresenter<NearbyListView> imp
     }
 
     public void onRefresh() {
-        if (mScanning) {
+        if (isScanning) {
             return;
         }
         onSubscribe();
@@ -184,7 +182,7 @@ public final class NearbyListPresenter extends BasePresenter<NearbyListView> imp
     }
 
     public int getItemCount() {
-        return mNearbyItemModels.size();
+        return nearbyItemModels.size();
     }
 
     public void onShareSelected() {
@@ -192,31 +190,25 @@ public final class NearbyListPresenter extends BasePresenter<NearbyListView> imp
     }
 
     public void onAddToCmFavorite() {
-        List<String> nearbyIds = new ArrayList<>(mCheckedModels.size());
+        List<String> nearbyIds = new ArrayList<>(checkedModels.size());
 
-        for (NearbyItemModel model : mCheckedModels) {
-            nearbyIds.add(model.mId);
+        for (NearbyItemModel model : checkedModels) {
+            nearbyIds.add(model.userId);
         }
 
         Subscription subscription = Observable
                 .from(nearbyIds)
-                .flatMap(userId -> findCMJidUseCase.execute(userId).subscribeOn(Schedulers.io()).toObservable())
+                .flatMap(this::findCMJid)
                 .toList()
                 .map(userIds -> cmFavoritesDataMapper.map(userIds))
-                .flatMap(new Func1<CmFavoriteData, Observable<Timestamp>>() {
-                    @Override
-                    public Observable<Timestamp> call(CmFavoriteData data) {
-                        return saveCMFavoritesUseCase.execute(data).subscribeOn(Schedulers.io()).toObservable();
-                    }
-                })
+                .flatMap(this::saveCMFavorites)
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribe(timestamp -> {
-                    for (NearbyItemModel model : mCheckedModels) {
-                        model.mChecked = false;
+                    for (NearbyItemModel model : checkedModels) {
+                        model.isChecked = false;
                     }
-
-                    mCheckedModels.clear();
+                    checkedModels.clear();
 
                     getView().hideOptionMenu();
                     getView().drawNormalActionBarColor();
@@ -231,19 +223,19 @@ public final class NearbyListPresenter extends BasePresenter<NearbyListView> imp
     }
 
     public void onSubscribe() {
-        mSubscriber.subscribe(mResultCallback);
+        subscriber.subscribe(resultCallback);
 
-        mScanning = true;
+        isScanning = true;
 
-        mExecutor.schedule(() -> {
+        executor.schedule(() -> {
             // Stop to scanning after 10 seconds.
-            mSubscriber.unSubscribe(mResultCallback);
+            subscriber.unSubscribe(resultCallback);
 
-            mScanning = false;
+            isScanning = false;
 
             getView().hideIndicator();
 
-            if (mNearbyItemModels.size() == 0) {
+            if (nearbyItemModels.size() == 0) {
                 getView().showSnackBar(R.string.message_not_found);
             }
 
@@ -252,33 +244,33 @@ public final class NearbyListPresenter extends BasePresenter<NearbyListView> imp
     }
 
     public boolean isCmLinkEnabled() {
-        return mCmLinkEnabled;
+        return isCMLinkEnabled;
     }
 
     public final class NearbyItemPresenter extends BaseItemPresenter<NearbyItemView> {
 
         @Override
         public void onBind(@IntRange(from = 0) int position) {
-            getItemView().showItem(mNearbyItemModels.get(position));
+            getItemView().showItem(nearbyItemModels.get(position));
         }
 
         public void onCheck(NearbyItemModel model) {
-            if (model.mChecked) {
-                Iterator<NearbyItemModel> iterator = mCheckedModels.iterator();
+            if (model.isChecked) {
+                Iterator<NearbyItemModel> iterator = checkedModels.iterator();
                 while (iterator.hasNext()) {
                     NearbyItemModel nearbyItemModel = iterator.next();
-                    if (nearbyItemModel.mId.equals(model.mId)) {
+                    if (nearbyItemModel.userId.equals(model.userId)) {
                         iterator.remove();
                     }
                 }
             } else {
-                mCheckedModels.add(model);
+                checkedModels.add(model);
             }
 
-            model.mChecked = !model.mChecked;
+            model.isChecked = !model.isChecked;
 
-            if (0 < mCheckedModels.size()) {
-                if (mCmLinkEnabled) {
+            if (0 < checkedModels.size()) {
+                if (isCMLinkEnabled) {
                     getView().showOptionMenu();
                 }
                 getView().drawEditableActionBarColor();
@@ -287,5 +279,13 @@ public final class NearbyListPresenter extends BasePresenter<NearbyListView> imp
                 getView().drawNormalActionBarColor();
             }
         }
+    }
+
+    Observable<String> findCMJid(String userId) {
+        return findCMJidUseCase.execute(userId).subscribeOn(Schedulers.io()).toObservable();
+    }
+
+    Observable<Timestamp> saveCMFavorites(CmFavoriteData data) {
+        return saveCMFavoritesUseCase.execute(data).subscribeOn(Schedulers.io()).toObservable();
     }
 }

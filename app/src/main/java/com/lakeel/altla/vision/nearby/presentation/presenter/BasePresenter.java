@@ -6,15 +6,15 @@ public class BasePresenter<V> {
 
     protected ReusableCompositeSubscription reusableCompositeSubscription = new ReusableCompositeSubscription();
 
-    protected V mV;
+    protected V view;
 
     protected V getView() {
-        return mV;
+        return view;
     }
 
     @CallSuper
     public void onCreateView(V v) {
-        mV = v;
+        view = v;
     }
 
     public void onActivityCreated() {

@@ -28,12 +28,12 @@ public final class SettingsFragment extends PreferenceFragmentCompat implements 
 
     private static final String KEY_TRACKING_SCREEN = "trackingScreen";
 
-    private PreferenceCategory mSnsCategory;
+    private PreferenceCategory snsCategory;
 
-    private PreferenceScreen mCmScreen;
+    private PreferenceScreen cmScreen;
 
     @Inject
-    SettingsPresenter mPresenter;
+    SettingsPresenter presenter;
 
     public static SettingsFragment newInstance() {
         return new SettingsFragment();
@@ -46,7 +46,7 @@ public final class SettingsFragment extends PreferenceFragmentCompat implements 
         // Dagger
         MainActivity.getUserComponent(this).inject(this);
 
-        mPresenter.onCreateView(this);
+        presenter.onCreateView(this);
 
         // BLE
         PreferenceScreen bleScreen = (PreferenceScreen) findPreference(KEY_BLUETOOTH_SCREEN);
@@ -65,16 +65,16 @@ public final class SettingsFragment extends PreferenceFragmentCompat implements 
         });
 
         // COMPANY Messenger
-        mCmScreen = (PreferenceScreen) findPreference(KEY_CM_SCREEN);
-        mCmScreen.setOnPreferenceClickListener(preference -> {
+        cmScreen = (PreferenceScreen) findPreference(KEY_CM_SCREEN);
+        cmScreen.setOnPreferenceClickListener(preference -> {
             FragmentController controller = new FragmentController(getActivity().getSupportFragmentManager());
             controller.showCmSettingsFragment();
             return false;
         });
 
         // Once, hide the menu of COMPANY Messenger.
-        mSnsCategory = (PreferenceCategory) findPreference(KEY_SNS_CATEGORY);
-        mSnsCategory.removePreference(mCmScreen);
+        snsCategory = (PreferenceCategory) findPreference(KEY_SNS_CATEGORY);
+        snsCategory.removePreference(cmScreen);
 
         // Tracking
         PreferenceScreen trackingScreen = (PreferenceScreen) findPreference(KEY_TRACKING_SCREEN);
@@ -96,18 +96,18 @@ public final class SettingsFragment extends PreferenceFragmentCompat implements 
         MainActivity activity = (MainActivity) getActivity();
         activity.setDrawerIndicatorEnabled(true);
 
-        mPresenter.onActivityCreated();
+        presenter.onActivityCreated();
     }
 
     @Override
     public void onStop() {
         super.onStop();
-        mPresenter.onStop();
+        presenter.onStop();
     }
 
     @Override
     public void showCMPreferences() {
-        mSnsCategory.addPreference(mCmScreen);
+        snsCategory.addPreference(cmScreen);
     }
 
     @Override

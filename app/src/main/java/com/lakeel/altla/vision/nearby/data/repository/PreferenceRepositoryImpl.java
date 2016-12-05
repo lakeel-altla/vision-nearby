@@ -22,7 +22,7 @@ public class PreferenceRepositoryImpl implements PreferenceRepository {
 
     private static final String KEY_INSTANCE_ID = "instanceId";
 
-    private static final String KEY_PUBLISH_IN_BACKGROUND = "publishInBackground";
+    private static final String KEY_ADVERTISE_IN_BACKGROUND = "advertiseInBackground";
 
     private static final String KEY_SUBSCRIBE_IN_BACKGROUND = "subscribeInBackground";
 
@@ -38,11 +38,11 @@ public class PreferenceRepositoryImpl implements PreferenceRepository {
         return Single.create(subscriber -> {
             String namespaceId = preference.getString(KEY_NAMESPACE_ID, StringUtils.EMPTY);
             String instanceId = preference.getString(KEY_INSTANCE_ID, StringUtils.EMPTY);
-            boolean isPublishInBackground = preference.getBoolean(KEY_PUBLISH_IN_BACKGROUND, true);
+            boolean isAdvertiseInBackground = preference.getBoolean(KEY_ADVERTISE_IN_BACKGROUND, true);
             boolean isSubscribeInBackground = preference.getBoolean(KEY_SUBSCRIBE_IN_BACKGROUND, true);
 
             PreferenceEntity entity = new PreferenceEntity();
-            entity.isPublishInBackgroundEnabled = isPublishInBackground;
+            entity.isAdvertiseInBackgroundEnabled = isAdvertiseInBackground;
             entity.isSubscribeInBackgroundEnabled = isSubscribeInBackground;
             entity.namespaceId = namespaceId;
             entity.instanceId = instanceId;

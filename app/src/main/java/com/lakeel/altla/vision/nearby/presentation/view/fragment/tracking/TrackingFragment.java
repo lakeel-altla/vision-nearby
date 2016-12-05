@@ -1,25 +1,5 @@
 package com.lakeel.altla.vision.nearby.presentation.view.fragment.tracking;
 
-import com.google.android.gms.maps.CameraUpdate;
-import com.google.android.gms.maps.CameraUpdateFactory;
-import com.google.android.gms.maps.GoogleMap;
-import com.google.android.gms.maps.OnMapReadyCallback;
-import com.google.android.gms.maps.SupportMapFragment;
-import com.google.android.gms.maps.model.CircleOptions;
-import com.google.android.gms.maps.model.LatLng;
-import com.google.android.gms.maps.model.MarkerOptions;
-
-import com.firebase.geofire.GeoLocation;
-import com.lakeel.altla.vision.nearby.R;
-import com.lakeel.altla.vision.nearby.presentation.constants.BundleKey;
-import com.lakeel.altla.vision.nearby.presentation.constants.AppColor;
-import com.lakeel.altla.vision.nearby.presentation.constants.Radius;
-import com.lakeel.altla.vision.nearby.presentation.intent.GoogleMapDirectionIntent;
-import com.lakeel.altla.vision.nearby.presentation.presenter.tracking.TrackingPresenter;
-import com.lakeel.altla.vision.nearby.presentation.view.TrackingView;
-import com.lakeel.altla.vision.nearby.presentation.view.activity.MainActivity;
-import com.lakeel.altla.vision.nearby.presentation.view.transaction.FragmentController;
-
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
@@ -33,6 +13,26 @@ import android.view.ViewGroup;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
+import com.firebase.geofire.GeoLocation;
+import com.google.android.gms.maps.CameraUpdate;
+import com.google.android.gms.maps.CameraUpdateFactory;
+import com.google.android.gms.maps.GoogleMap;
+import com.google.android.gms.maps.OnMapReadyCallback;
+import com.google.android.gms.maps.SupportMapFragment;
+import com.google.android.gms.maps.model.CircleOptions;
+import com.google.android.gms.maps.model.LatLng;
+import com.google.android.gms.maps.model.MarkerOptions;
+import com.lakeel.altla.vision.nearby.R;
+import com.lakeel.altla.vision.nearby.presentation.constants.AppColor;
+import com.lakeel.altla.vision.nearby.presentation.constants.BundleKey;
+import com.lakeel.altla.vision.nearby.presentation.constants.Radius;
+import com.lakeel.altla.vision.nearby.presentation.intent.GoogleMapDirectionIntent;
+import com.lakeel.altla.vision.nearby.presentation.presenter.tracking.TrackingPresenter;
+import com.lakeel.altla.vision.nearby.presentation.view.DateFormatter;
+import com.lakeel.altla.vision.nearby.presentation.view.TrackingView;
+import com.lakeel.altla.vision.nearby.presentation.view.activity.MainActivity;
+import com.lakeel.altla.vision.nearby.presentation.view.transaction.FragmentController;
+
 import java.util.ArrayList;
 
 import javax.inject.Inject;
@@ -41,6 +41,21 @@ import butterknife.BindView;
 import butterknife.ButterKnife;
 
 public final class TrackingFragment extends Fragment implements TrackingView, OnMapReadyCallback {
+
+    @Inject
+    TrackingPresenter presenter;
+
+    @BindView(R.id.trackingLayout)
+    LinearLayout mainLayout;
+
+    @BindView(R.id.textView_detected_date)
+    TextView detectedDateText;
+
+    private View mapView;
+
+    private GoogleMap map;
+
+    private SupportMapFragment supportMapFragment;
 
     public static TrackingFragment newInstance(String id, String name) {
         Bundle bundle = new Bundle();
@@ -52,21 +67,6 @@ public final class TrackingFragment extends Fragment implements TrackingView, On
         return fragment;
     }
 
-    @Inject
-    TrackingPresenter mPresenter;
-
-    @BindView(R.id.trackingLayout)
-    LinearLayout mLayout;
-
-    @BindView(R.id.textView_detected_date)
-    TextView mDetectedDateText;
-
-    private View mMapView;
-
-    private GoogleMap mMap;
-
-    private SupportMapFragment mSupportMapFragment;
-
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_tracking, container, false);
@@ -77,7 +77,7 @@ public final class TrackingFragment extends Fragment implements TrackingView, On
 
         MainActivity.getUserComponent(this).inject(this);
 
-        mPresenter.onCreateView(this);
+        presenter.onCreateView(this);
 
         return view;
     }
@@ -91,41 +91,41 @@ public final class TrackingFragment extends Fragment implements TrackingView, On
         ((MainActivity) getActivity()).setDrawerIndicatorEnabled(false);
 
         FragmentManager fm = getChildFragmentManager();
-        mSupportMapFragment = (SupportMapFragment) fm.findFragmentById(R.id.tracking_map_layout);
-        if (mSupportMapFragment == null) {
-            mSupportMapFragment = SupportMapFragment.newInstance();
-            fm.beginTransaction().replace(R.id.tracking_map_layout, mSupportMapFragment).commit();
+        supportMapFragment = (SupportMapFragment) fm.findFragmentById(R.id.tracking_map_layout);
+        if (supportMapFragment == null) {
+            supportMapFragment = SupportMapFragment.newInstance();
+            fm.beginTransaction().replace(R.id.tracking_map_layout, supportMapFragment).commit();
         }
-        mSupportMapFragment.getMapAsync(this);
+        supportMapFragment.getMapAsync(this);
 
         Bundle bundle = getArguments();
         String beaconId = (String) bundle.get(BundleKey.BEACON_ID.getValue());
         String beaconName = (String) bundle.get(BundleKey.TARGET_NAME.getValue());
-        mPresenter.setBeaconData(beaconId, beaconName);
+        presenter.setBeaconData(beaconId, beaconName);
     }
 
     @Override
     public void onResume() {
         super.onResume();
 
-        mMapView = mSupportMapFragment.getView();
-        if (mMapView != null) {
-            mMapView.setVisibility(View.INVISIBLE);
+        mapView = supportMapFragment.getView();
+        if (mapView != null) {
+            mapView.setVisibility(View.INVISIBLE);
         }
 
-        mPresenter.onResume();
+        presenter.onResume();
     }
 
     @Override
     public void onStop() {
         super.onStop();
-        mPresenter.onStop();
+        presenter.onStop();
     }
 
     @Override
     public void onPrepareOptionsMenu(Menu menu) {
         boolean isMenuEnabled = false;
-        if (mPresenter.isMenuEnabled()) {
+        if (presenter.isMenuEnabled()) {
             isMenuEnabled = true;
         }
 
@@ -148,10 +148,10 @@ public final class TrackingFragment extends Fragment implements TrackingView, On
                 getActivity().getSupportFragmentManager().popBackStack();
                 return true;
             case R.id.find:
-                mPresenter.onFindNearbyDeviceMenuClicked();
+                presenter.onFindNearbyDeviceMenuClicked();
                 break;
             case R.id.directions:
-                mPresenter.onDirectionMenuClicked();
+                presenter.onDirectionMenuClicked();
                 break;
             default:
                 break;
@@ -161,18 +161,18 @@ public final class TrackingFragment extends Fragment implements TrackingView, On
 
     @Override
     public void onMapReady(GoogleMap googleMap) {
-        mMap = googleMap;
-        mMap.setMapType(GoogleMap.MAP_TYPE_NORMAL);
+        map = googleMap;
+        map.setMapType(GoogleMap.MAP_TYPE_NORMAL);
 
         CameraUpdate cameraUpdate = CameraUpdateFactory.zoomTo(14);
-        mMap.moveCamera(cameraUpdate);
+        map.moveCamera(cameraUpdate);
 
-        mPresenter.onMapReady();
+        presenter.onMapReady();
     }
 
     @Override
     public void showLocationMap(GeoLocation location) {
-        mMapView.setVisibility(View.VISIBLE);
+        mapView.setVisibility(View.VISIBLE);
 
         LatLng latLng = new LatLng(location.latitude, location.longitude);
         CircleOptions circleOptions = new CircleOptions()
@@ -180,26 +180,28 @@ public final class TrackingFragment extends Fragment implements TrackingView, On
                 .strokeColor(AppColor.PRIMARY)
                 .radius(Radius.GOOGLE_MAP);
 
-        mMap.addMarker(new MarkerOptions()
+        map.addMarker(new MarkerOptions()
                 .position(latLng));
-        mMap.addCircle(circleOptions);
-        mMap.moveCamera(CameraUpdateFactory.newLatLng(latLng));
+        map.addCircle(circleOptions);
+        map.moveCamera(CameraUpdateFactory.newLatLng(latLng));
     }
 
     @Override
     public void showEmptyView() {
-        mLayout.removeAllViews();
+        mainLayout.removeAllViews();
 
         LayoutInflater inflater = getActivity().getLayoutInflater();
-        View emptyView = inflater.inflate(R.layout.not_detected_view, mLayout, false);
+        View emptyView = inflater.inflate(R.layout.not_detected_view, mainLayout, false);
 
-        mLayout.addView(emptyView);
+        mainLayout.addView(emptyView);
     }
 
     @Override
-    public void showDetectedDate(String detectedDate) {
-        String time = getContext().getResources().getString(R.string.message_detected_date_format, detectedDate);
-        mDetectedDateText.setText(time);
+    public void showDetectedDate(long detectedTime) {
+        DateFormatter formatter = new DateFormatter(detectedTime);
+        String formattedDate = formatter.format();
+        String time = getContext().getResources().getString(R.string.message_detected_date_format, formattedDate);
+        detectedDateText.setText(time);
     }
 
     @Override

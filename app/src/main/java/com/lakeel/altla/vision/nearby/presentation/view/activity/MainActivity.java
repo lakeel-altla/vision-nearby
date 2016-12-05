@@ -1,25 +1,5 @@
 package com.lakeel.altla.vision.nearby.presentation.view.activity;
 
-import com.google.android.gms.common.ConnectionResult;
-import com.google.android.gms.common.api.Status;
-
-import com.lakeel.altla.vision.nearby.R;
-import com.lakeel.altla.vision.nearby.android.ConfirmDialog;
-import com.lakeel.altla.vision.nearby.presentation.application.App;
-import com.lakeel.altla.vision.nearby.presentation.di.component.ViewComponent;
-import com.lakeel.altla.vision.nearby.presentation.di.module.ActivityModule;
-import com.lakeel.altla.vision.nearby.presentation.intent.IntentKey;
-import com.lakeel.altla.vision.nearby.presentation.presenter.activity.ActivityPresenter;
-import com.lakeel.altla.vision.nearby.presentation.presenter.model.PreferenceModel;
-import com.lakeel.altla.vision.nearby.presentation.service.PublishService;
-import com.lakeel.altla.vision.nearby.presentation.view.ActivityView;
-import com.lakeel.altla.vision.nearby.presentation.view.layout.DrawerHeaderLayout;
-import com.lakeel.altla.vision.nearby.presentation.view.transaction.FragmentController;
-import com.nostra13.universalimageloader.core.ImageLoader;
-
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-
 import android.Manifest;
 import android.annotation.TargetApi;
 import android.bluetooth.BluetoothAdapter;
@@ -42,6 +22,25 @@ import android.view.MenuItem;
 import android.view.View;
 import android.widget.RelativeLayout;
 
+import com.google.android.gms.common.ConnectionResult;
+import com.google.android.gms.common.api.Status;
+import com.lakeel.altla.vision.nearby.R;
+import com.lakeel.altla.vision.nearby.android.ConfirmDialog;
+import com.lakeel.altla.vision.nearby.presentation.application.App;
+import com.lakeel.altla.vision.nearby.presentation.di.component.ViewComponent;
+import com.lakeel.altla.vision.nearby.presentation.di.module.ActivityModule;
+import com.lakeel.altla.vision.nearby.presentation.intent.IntentKey;
+import com.lakeel.altla.vision.nearby.presentation.presenter.activity.ActivityPresenter;
+import com.lakeel.altla.vision.nearby.presentation.presenter.model.PreferenceModel;
+import com.lakeel.altla.vision.nearby.presentation.service.AdvertiseService;
+import com.lakeel.altla.vision.nearby.presentation.view.ActivityView;
+import com.lakeel.altla.vision.nearby.presentation.view.layout.DrawerHeaderLayout;
+import com.lakeel.altla.vision.nearby.presentation.view.transaction.FragmentController;
+import com.nostra13.universalimageloader.core.ImageLoader;
+
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 import javax.inject.Inject;
 
 import butterknife.ButterKnife;
@@ -59,18 +58,18 @@ public class MainActivity extends AppCompatActivity
 
     private static final int REQUEST_CODE_ACCESS_LOCATION = 4;
 
-    private DrawerHeaderLayout mDrawerHeaderLayout = new DrawerHeaderLayout();
+    private DrawerHeaderLayout drawerHeaderLayout = new DrawerHeaderLayout();
 
-    private ViewComponent mViewComponent;
+    private ViewComponent viewComponent;
 
-    private ActionBarDrawerToggle mToggle;
+    private ActionBarDrawerToggle toggle;
 
     private DrawerLayout drawerLayout;
 
     private RelativeLayout mainLayout;
 
     @Inject
-    ActivityPresenter mPresenter;
+    ActivityPresenter presenter;
 
     @TargetApi(Build.VERSION_CODES.M)
     @Override
@@ -82,9 +81,9 @@ public class MainActivity extends AppCompatActivity
         // because the NullPointerException occurs, create an instance of the Dagger before super#onCreate().
 
         // Dagger
-        mViewComponent = App.getApplicationComponent(this)
+        viewComponent = App.getApplicationComponent(this)
                 .viewComponent(new ActivityModule(this));
-        mViewComponent.inject(this);
+        viewComponent.inject(this);
 
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
@@ -95,53 +94,53 @@ public class MainActivity extends AppCompatActivity
         setSupportActionBar(toolbar);
 
         drawerLayout = (DrawerLayout) findViewById(R.id.drawer_layout);
-        mToggle = new ActionBarDrawerToggle(
+        toggle = new ActionBarDrawerToggle(
                 this, drawerLayout, R.string.navigation_drawer_open, R.string.navigation_drawer_close);
-        mToggle.syncState();
-        drawerLayout.addDrawerListener(mToggle);
+        toggle.syncState();
+        drawerLayout.addDrawerListener(toggle);
 
         NavigationView navigationView = (NavigationView) findViewById(R.id.nav_view);
         navigationView.setNavigationItemSelectedListener(this);
         View headerView = navigationView.inflateHeaderView(R.layout.nav_header_main);
-        ButterKnife.bind(mDrawerHeaderLayout, headerView);
+        ButterKnife.bind(drawerHeaderLayout, headerView);
 
-        mPresenter.onCreateView(this);
+        presenter.onCreateView(this);
     }
 
     @Override
     public void onResume() {
         super.onResume();
-        mPresenter.onResume();
+        presenter.onResume();
     }
 
     @Override
     public void onPause() {
         super.onPause();
-        mPresenter.onPause();
+        presenter.onPause();
     }
 
     @Override
     public void onStart() {
         super.onStart();
-        mPresenter.onStart();
+        presenter.onStart();
     }
 
     @Override
     public void onStop() {
         super.onStop();
-        mPresenter.onStop();
+        presenter.onStop();
     }
 
     @Override
     protected void onActivityResult(final int requestCode, final int resultCode, final Intent data) {
         if (REQUEST_CODE_RESOLVE_CONNECTION == requestCode && resultCode == RESULT_OK) {
-            if (mPresenter.isAccessLocationGranted()) {
-                mPresenter.onConnect();
+            if (presenter.isAccessLocationGranted()) {
+                presenter.onConnect();
             } else {
                 LOGGER.warn("Can not connect to nearby. Not granted for location permission.");
             }
         } else if (REQUEST_CODE_SUBSCRIBE_RESULT == requestCode && resultCode == RESULT_OK) {
-            mPresenter.onSubscribeInBackground();
+            presenter.onSubscribeInBackground();
         } else {
             super.onActivityResult(requestCode, resultCode, data);
         }
@@ -151,7 +150,7 @@ public class MainActivity extends AppCompatActivity
     public void onRequestPermissionsResult(int requestCode, @NonNull String permissions[], @NonNull int[] grantResults) {
         if (REQUEST_CODE_ACCESS_LOCATION == requestCode && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
             LOGGER.info("Location permission is granted.");
-            mPresenter.onAccessLocationGranted();
+            presenter.onAccessLocationGranted();
         } else {
             super.onRequestPermissionsResult(requestCode, permissions, grantResults);
         }
@@ -169,7 +168,7 @@ public class MainActivity extends AppCompatActivity
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
-        return mToggle.onOptionsItemSelected(item) || super.onOptionsItemSelected(item);
+        return toggle.onOptionsItemSelected(item) || super.onOptionsItemSelected(item);
     }
 
 
@@ -200,7 +199,7 @@ public class MainActivity extends AppCompatActivity
                 break;
             }
             case R.id.nav_sign_out:
-                mPresenter.onSignOut(this);
+                presenter.onSignOut(this);
                 break;
             default:
                 break;
@@ -236,10 +235,10 @@ public class MainActivity extends AppCompatActivity
     @Override
     public void showProfile(String displayName, String email, String imageUri) {
         ImageLoader imageLoader = ImageLoader.getInstance();
-        imageLoader.displayImage(imageUri, mDrawerHeaderLayout.userImageView);
+        imageLoader.displayImage(imageUri, drawerHeaderLayout.userImageView);
 
-        mDrawerHeaderLayout.textViewUserName.setText(displayName);
-        mDrawerHeaderLayout.textViewEmail.setText(email);
+        drawerHeaderLayout.textViewUserName.setText(displayName);
+        drawerHeaderLayout.textViewEmail.setText(email);
     }
 
     @Override
@@ -248,7 +247,7 @@ public class MainActivity extends AppCompatActivity
     }
 
     @Override
-    public void showPublishDisableDialog() {
+    public void showAdvertiseDisableDialog() {
         ConfirmDialog dialog = new ConfirmDialog(MainActivity.this, R.string.message_advertise_disable);
         dialog.show();
     }
@@ -260,10 +259,10 @@ public class MainActivity extends AppCompatActivity
     }
 
     @Override
-    public void startPublishService(PreferenceModel model) {
-        Intent intent = new Intent(getApplicationContext(), PublishService.class);
-        intent.putExtra(IntentKey.NAMESPACE_ID.name(), model.mNamespaceId);
-        intent.putExtra(IntentKey.INSTANCE_ID.name(), model.mInstanceId);
+    public void startAdvertiseService(PreferenceModel model) {
+        Intent intent = new Intent(getApplicationContext(), AdvertiseService.class);
+        intent.putExtra(IntentKey.NAMESPACE_ID.name(), model.namespaceId);
+        intent.putExtra(IntentKey.INSTANCE_ID.name(), model.instanceId);
         getApplicationContext().startService(intent);
     }
 
@@ -289,7 +288,7 @@ public class MainActivity extends AppCompatActivity
             actionBar.setDisplayHomeAsUpEnabled(true);
         }
 
-        mToggle.setDrawerIndicatorEnabled(true);
+        toggle.setDrawerIndicatorEnabled(true);
         drawerLayout.setDrawerLockMode(DrawerLayout.LOCK_MODE_UNLOCKED);
 
         FragmentController fragmentController = new FragmentController(getSupportFragmentManager());
@@ -297,22 +296,22 @@ public class MainActivity extends AppCompatActivity
     }
 
     public static ViewComponent getUserComponent(@NonNull Fragment fragment) {
-        return ((MainActivity) fragment.getActivity()).mViewComponent;
+        return ((MainActivity) fragment.getActivity()).viewComponent;
     }
 
     public void setDrawerIndicatorEnabled(boolean enabled) {
-        mToggle.setDrawerIndicatorEnabled(enabled);
+        toggle.setDrawerIndicatorEnabled(enabled);
     }
 
     public void onSubscribeInBackground() {
-        mPresenter.onSubscribeInBackground();
+        presenter.onSubscribeInBackground();
     }
 
     public void onUnSubscribeInBackground() {
-        mPresenter.onUnSubscribeInBackground();
+        presenter.onUnSubscribeInBackground();
     }
 
     public void onSignedIn() {
-        mPresenter.onSignedIn();
+        presenter.onSignedIn();
     }
 }

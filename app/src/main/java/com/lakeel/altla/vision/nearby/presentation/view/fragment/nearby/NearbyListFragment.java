@@ -43,16 +43,16 @@ import static com.lakeel.altla.vision.nearby.R.id.share;
 public final class NearbyListFragment extends Fragment implements NearbyListView {
 
     @Inject
-    NearbyListPresenter mPresenter;
+    NearbyListPresenter presenter;
 
     @BindView(R.id.shareSheet)
-    BottomSheetLayout mShareSheet;
+    BottomSheetLayout shareSheet;
 
     @BindView(R.id.layout)
-    SwipeRefreshLayout mSwipeRefreshLayout;
+    SwipeRefreshLayout swipeRefreshLayout;
 
     @BindView(R.id.recycler_view)
-    RecyclerView mRecyclerView;
+    RecyclerView recyclerView;
 
     private static final Logger LOGGER = LoggerFactory.getLogger(NearbyListFragment.class);
 
@@ -70,7 +70,7 @@ public final class NearbyListFragment extends Fragment implements NearbyListView
 
         MainActivity.getUserComponent(this).inject(this);
 
-        mPresenter.onCreateView(this);
+        presenter.onCreateView(this);
 
         hideOptionMenu();
         drawNormalActionBarColor();
@@ -86,18 +86,18 @@ public final class NearbyListFragment extends Fragment implements NearbyListView
 
         ((MainActivity) getActivity()).setDrawerIndicatorEnabled(true);
 
-        mSwipeRefreshLayout.setColorSchemeResources(R.color.colorPrimary, R.color.colorPrimary, R.color.colorPrimary, R.color.colorPrimary);
-        mSwipeRefreshLayout.setOnRefreshListener(() -> {
-            new Handler().postDelayed(() -> mSwipeRefreshLayout.setRefreshing(false), 1000);
-            mPresenter.onRefresh();
+        swipeRefreshLayout.setColorSchemeResources(R.color.colorPrimary, R.color.colorPrimary, R.color.colorPrimary, R.color.colorPrimary);
+        swipeRefreshLayout.setOnRefreshListener(() -> {
+            new Handler().postDelayed(() -> swipeRefreshLayout.setRefreshing(false), 1000);
+            presenter.onRefresh();
         });
 
-        mRecyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
-        mRecyclerView.setHasFixedSize(true);
-        mRecyclerView.addItemDecoration(new DividerItemDecoration(getContext()));
+        recyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
+        recyclerView.setHasFixedSize(true);
+        recyclerView.addItemDecoration(new DividerItemDecoration(getContext()));
 
-        NearbyAdapter adapter = new NearbyAdapter(mPresenter);
-        mRecyclerView.setAdapter(adapter);
+        NearbyAdapter adapter = new NearbyAdapter(presenter);
+        recyclerView.setAdapter(adapter);
     }
 
     @Override
@@ -109,7 +109,7 @@ public final class NearbyListFragment extends Fragment implements NearbyListView
     public boolean onOptionsItemSelected(MenuItem item) {
         switch (item.getItemId()) {
             case share:
-                mPresenter.onShareSelected();
+                presenter.onShareSelected();
                 break;
             default:
                 break;
@@ -121,19 +121,19 @@ public final class NearbyListFragment extends Fragment implements NearbyListView
     @Override
     public void onResume() {
         super.onResume();
-        mPresenter.onResume();
+        presenter.onResume();
     }
 
     @Override
     public void onStop() {
         super.onStop();
-        mPresenter.onStop();
+        presenter.onStop();
     }
 
     @Override
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
         if (REQUEST_CODE_SUBSCRIBE_RESULT == requestCode && resultCode == RESULT_OK) {
-            mPresenter.onSubscribe();
+            presenter.onSubscribe();
         } else {
             super.onActivityResult(requestCode, resultCode, data);
         }
@@ -141,22 +141,22 @@ public final class NearbyListFragment extends Fragment implements NearbyListView
 
     @Override
     public void updateItems() {
-        mRecyclerView.getAdapter().notifyDataSetChanged();
+        recyclerView.getAdapter().notifyDataSetChanged();
     }
 
     @Override
     public void showSnackBar(int resId) {
-        Snackbar.make(mRecyclerView, resId, Snackbar.LENGTH_SHORT).show();
+        Snackbar.make(recyclerView, resId, Snackbar.LENGTH_SHORT).show();
     }
 
     @Override
     public void showIndicator() {
-        mSwipeRefreshLayout.setRefreshing(true);
+        swipeRefreshLayout.setRefreshing(true);
     }
 
     @Override
     public void hideIndicator() {
-        mSwipeRefreshLayout.post(() -> mSwipeRefreshLayout.setRefreshing(false));
+        swipeRefreshLayout.post(() -> swipeRefreshLayout.setRefreshing(false));
     }
 
     @Override
@@ -192,15 +192,15 @@ public final class NearbyListFragment extends Fragment implements NearbyListView
 
     @Override
     public void showShareSheet() {
-        GridShareSheet shareSheet = new GridShareSheet(getContext(), mShareSheet, R.menu.menu_share);
+        GridShareSheet shareSheet = new GridShareSheet(getContext(), this.shareSheet, R.menu.menu_share);
         shareSheet.setOnMenuItemClickListener(item -> {
             if (item.getItemId() == R.id.menu_cm_favorites) {
-                mPresenter.onAddToCmFavorite();
+                presenter.onAddToCmFavorite();
             }
             return true;
         });
 
-        if (!mPresenter.isCmLinkEnabled()) {
+        if (!presenter.isCmLinkEnabled()) {
             shareSheet.hideMenuItem(R.id.menu_cm_favorites);
         }
 

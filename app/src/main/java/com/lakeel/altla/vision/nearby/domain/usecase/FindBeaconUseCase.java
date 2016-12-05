@@ -7,13 +7,13 @@ import javax.inject.Inject;
 
 import rx.Single;
 
-public final class FindBeaconsUseCase {
+public final class FindBeaconUseCase {
 
     @Inject
     FirebaseBeaconsRepository repository;
 
     @Inject
-    FindBeaconsUseCase() {
+    FindBeaconUseCase() {
     }
 
     public Single<BeaconEntity> execute(String beaconId) {

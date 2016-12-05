@@ -1,35 +1,35 @@
 package com.lakeel.altla.vision.nearby.presentation.view.fragment.settings.bluetooth;
 
-import com.lakeel.altla.vision.nearby.R;
-import com.lakeel.altla.vision.nearby.presentation.intent.IntentKey;
-import com.lakeel.altla.vision.nearby.presentation.presenter.settings.bluetooth.BleSettingsPresenter;
-import com.lakeel.altla.vision.nearby.presentation.presenter.model.BeaconIdModel;
-import com.lakeel.altla.vision.nearby.presentation.service.PublishService;
-import com.lakeel.altla.vision.nearby.presentation.view.BleSettingsView;
-import com.lakeel.altla.vision.nearby.presentation.view.activity.MainActivity;
-
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.v7.preference.PreferenceFragmentCompat;
 import android.support.v7.preference.SwitchPreferenceCompat;
 import android.view.MenuItem;
 
+import com.lakeel.altla.vision.nearby.R;
+import com.lakeel.altla.vision.nearby.presentation.intent.IntentKey;
+import com.lakeel.altla.vision.nearby.presentation.presenter.model.BeaconIdModel;
+import com.lakeel.altla.vision.nearby.presentation.presenter.settings.bluetooth.BleSettingsPresenter;
+import com.lakeel.altla.vision.nearby.presentation.service.AdvertiseService;
+import com.lakeel.altla.vision.nearby.presentation.view.BleSettingsView;
+import com.lakeel.altla.vision.nearby.presentation.view.activity.MainActivity;
+
 import javax.inject.Inject;
 
 public final class BleSettingsFragment extends PreferenceFragmentCompat implements BleSettingsView {
 
-    public static BleSettingsFragment newInstance() {
-        return new BleSettingsFragment();
-    }
-
     @Inject
-    BleSettingsPresenter mPresenter;
+    BleSettingsPresenter presenter;
 
-    private static final String KEY_PUBLISH_IN_BACKGROUND = "publishInBackground";
+    private static final String KEY_ADVERTISE_IN_BACKGROUND = "advertiseInBackground";
 
     private static final String KEY_SUBSCRIBE_IN_BACKGROUND = "subscribeInBackground";
 
-    private SwitchPreferenceCompat mPublishPreference;
+    private SwitchPreferenceCompat advertisePreference;
+
+    public static BleSettingsFragment newInstance() {
+        return new BleSettingsFragment();
+    }
 
     @Override
     public void onCreatePreferences(Bundle savedInstanceState, String rootKey) {
@@ -44,15 +44,15 @@ public final class BleSettingsFragment extends PreferenceFragmentCompat implemen
         // Dagger
         MainActivity.getUserComponent(this).inject(this);
 
-        mPresenter.onCreateView(this);
+        presenter.onCreateView(this);
 
-        mPublishPreference = (SwitchPreferenceCompat) findPreference(KEY_PUBLISH_IN_BACKGROUND);
-        mPublishPreference.setOnPreferenceChangeListener((preference, newValue) -> {
+        advertisePreference = (SwitchPreferenceCompat) findPreference(KEY_ADVERTISE_IN_BACKGROUND);
+        advertisePreference.setOnPreferenceChangeListener((preference, newValue) -> {
             Boolean booleanValue = (Boolean) newValue;
             if (booleanValue) {
-                mPresenter.onStartPublish();
+                presenter.onStartAdvertise();
             } else {
-                mPresenter.onStopPublishing();
+                presenter.onStopAdvertise();
             }
             return true;
         });
@@ -72,13 +72,13 @@ public final class BleSettingsFragment extends PreferenceFragmentCompat implemen
     @Override
     public void onResume() {
         super.onResume();
-        mPresenter.onResume();
+        presenter.onResume();
     }
 
     @Override
     public void onStop() {
         super.onStop();
-        mPresenter.onStop();
+        presenter.onStop();
     }
 
     @Override
@@ -94,15 +94,15 @@ public final class BleSettingsFragment extends PreferenceFragmentCompat implemen
     }
 
     @Override
-    public void startPublish(BeaconIdModel model) {
-        Intent intent = new Intent(getContext(), PublishService.class);
+    public void startAdvertise(BeaconIdModel model) {
+        Intent intent = new Intent(getContext(), AdvertiseService.class);
         intent.putExtra(IntentKey.NAMESPACE_ID.name(), model.mNamespaceId);
         intent.putExtra(IntentKey.INSTANCE_ID.name(), model.mInstanceId);
         getContext().startService(intent);
     }
 
     @Override
-    public void disablePublishSettings() {
-        mPublishPreference.setEnabled(false);
+    public void disableAdvertiseSettings() {
+        advertisePreference.setEnabled(false);
     }
 }

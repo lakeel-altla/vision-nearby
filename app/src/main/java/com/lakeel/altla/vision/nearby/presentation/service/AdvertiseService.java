@@ -21,9 +21,9 @@ import org.slf4j.LoggerFactory;
 
 import java.util.UUID;
 
-public final class PublishService extends Service {
+public final class AdvertiseService extends Service {
 
-    private static final Logger LOGGER = LoggerFactory.getLogger(PublishService.class);
+    private static final Logger LOGGER = LoggerFactory.getLogger(AdvertiseService.class);
 
     @Override
     public int onStartCommand(Intent intent, int flags, int startId) {

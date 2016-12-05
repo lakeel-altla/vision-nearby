@@ -6,13 +6,13 @@ import javax.inject.Inject;
 
 import rx.Single;
 
-public final class SaveTokensUseCase {
+public final class SaveTokenUseCase {
 
     @Inject
     FirebaseTokensRepository repository;
 
     @Inject
-    SaveTokensUseCase() {
+    SaveTokenUseCase() {
     }
 
     public Single<String> execute(String userId, String beaconId, String token) {

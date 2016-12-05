@@ -1,5 +1,13 @@
 package com.lakeel.altla.vision.nearby.presentation.view.adapter;
 
+import android.graphics.Color;
+import android.support.annotation.IntRange;
+import android.view.View;
+import android.widget.Button;
+import android.widget.ImageView;
+import android.widget.LinearLayout;
+import android.widget.TextView;
+
 import com.amulyakhare.textdrawable.TextDrawable;
 import com.lakeel.altla.vision.nearby.R;
 import com.lakeel.altla.vision.nearby.core.StringUtils;
@@ -12,14 +20,6 @@ import com.marshalchen.ultimaterecyclerview.UltimateRecyclerviewViewHolder;
 import com.marshalchen.ultimaterecyclerview.swipe.SwipeLayout;
 import com.nostra13.universalimageloader.core.ImageLoader;
 
-import android.graphics.Color;
-import android.support.annotation.IntRange;
-import android.view.View;
-import android.widget.Button;
-import android.widget.ImageView;
-import android.widget.LinearLayout;
-import android.widget.TextView;
-
 import java.util.ArrayList;
 
 import butterknife.BindView;
@@ -27,11 +27,11 @@ import butterknife.ButterKnife;
 
 public final class RecentlyAdapter extends SwipeableUltimateViewAdapter<HistoryModel> {
 
-    private HistoryListPresenter mHistoryListPresenter;
+    private HistoryListPresenter historyListPresenter;
 
     public RecentlyAdapter(HistoryListPresenter historyListPresenter) {
         super(new ArrayList<>());
-        mHistoryListPresenter = historyListPresenter;
+        this.historyListPresenter = historyListPresenter;
     }
 
     @Override
@@ -42,7 +42,7 @@ public final class RecentlyAdapter extends SwipeableUltimateViewAdapter<HistoryM
     @Override
     protected UltimateRecyclerviewViewHolder newViewHolder(View view) {
         HistoryItemsViewHolder viewHolder = new HistoryItemsViewHolder(view, true);
-        mHistoryListPresenter.onCreateItemView(viewHolder);
+        historyListPresenter.onCreateItemView(viewHolder);
         return viewHolder;
     }
 
@@ -55,37 +55,37 @@ public final class RecentlyAdapter extends SwipeableUltimateViewAdapter<HistoryM
     public static class HistoryItemsViewHolder extends UltimateRecyclerviewViewHolder implements HistoryItemView {
 
         @BindView(R.id.layout_row)
-        LinearLayout mLinearLayout;
+        LinearLayout itemLayout;
 
         @BindView(R.id.textView_user_item)
-        TextView mUserName;
+        TextView userName;
 
         @BindView(R.id.imageView_user_profile)
-        ImageView mImageView;
+        ImageView userImage;
 
         @BindView(R.id.timestamp)
-        TextView mTimestamp;
+        TextView passingTime;
 
         @BindView(R.id.button_add)
-        Button mAddButton;
+        Button addButton;
 
         @BindView(R.id.swipe_layout)
-        SwipeLayout mSwipeLayout;
+        SwipeLayout swipeLayout;
 
-        private HistoryListPresenter.HistoryItemPresenter mHistoryItemPresenter;
+        private HistoryListPresenter.HistoryItemPresenter itemPresenter;
 
         public HistoryItemsViewHolder(View itemView, boolean bind) {
             super(itemView);
             if (bind) {
                 ButterKnife.bind(this, itemView);
-                mSwipeLayout.setDragEdge(SwipeLayout.DragEdge.Right);
-                mSwipeLayout.setShowMode(SwipeLayout.ShowMode.PullOut);
+                swipeLayout.setDragEdge(SwipeLayout.DragEdge.Right);
+                swipeLayout.setShowMode(SwipeLayout.ShowMode.PullOut);
             }
         }
 
         @Override
         public void setItemPresenter(HistoryListPresenter.HistoryItemPresenter itemPresenter) {
-            mHistoryItemPresenter = itemPresenter;
+            this.itemPresenter = itemPresenter;
         }
 
         @Override
@@ -94,34 +94,34 @@ public final class RecentlyAdapter extends SwipeableUltimateViewAdapter<HistoryM
             String userName = model.name;
             String imageUri = model.imageUri;
 
-            mUserName.setText(userName);
+            this.userName.setText(userName);
 
             String initial = userName.substring(0, 1);
             if (StringUtils.isEmpty(imageUri)) {
                 TextDrawable drawable = TextDrawable.builder()
                         .buildRound(initial, Color.RED);
-                mImageView.post(() -> mImageView.setImageDrawable(drawable));
+                userImage.post(() -> userImage.setImageDrawable(drawable));
             } else {
                 // Show profile on async.
                 ImageLoader imageLoader = ImageLoader.getInstance();
-                imageLoader.displayImage(imageUri, mImageView);
+                imageLoader.displayImage(imageUri, userImage);
             }
 
             DateFormatter dateFormatter = new DateFormatter(model.passingTime);
-            mTimestamp.setText(dateFormatter.format());
+            passingTime.setText(dateFormatter.format());
 
-            mLinearLayout.setOnClickListener(view -> mHistoryItemPresenter.onClick(model));
-            mAddButton.setOnClickListener(v -> mHistoryItemPresenter.onAdd(id));
+            itemLayout.setOnClickListener(view -> itemPresenter.onClick(model));
+            addButton.setOnClickListener(v -> itemPresenter.onAdd(id));
         }
 
         @Override
         public void closeItem() {
-            mSwipeLayout.close();
+            swipeLayout.close();
         }
 
         @Override
         public void onBind(@IntRange(from = 0) int position) {
-            mHistoryItemPresenter.onBind(position);
+            itemPresenter.onBind(position);
         }
     }
 }

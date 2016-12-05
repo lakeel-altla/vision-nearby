@@ -48,7 +48,7 @@
     <string name="title_cm_api_key">API Key</string>
     <string name="title_cm_secret_key">Secret Key</string>
     <string name="title_cm_jid">Jid</string>
-    <string name="title_publish_in_background">Publish in background</string>
+    <string name="title_advertise_in_background">Advertise in background</string>
     <string name="title_subscribe_in_background">Subscribe in background</string>
     <string name="title_confirm">Confirm</string>
     <string name="title_share">Share</string>
@@ -61,7 +61,7 @@
     <string name="notification_title_advertise_ble">Advertising as a beacon.</string>
     <string name="notification_title_device_found">Device Found.</string>
 
-    <string name="preference_summary_publish_in_background">Allow advertise data when the app becomes
+    <string name="preference_summary_advertise_in_background">Allow advertise data when the app becomes
         inactive.
     </string>
     <string name="preference_summary_subscribe_in_background">Allow get data when the app becomes inactive.

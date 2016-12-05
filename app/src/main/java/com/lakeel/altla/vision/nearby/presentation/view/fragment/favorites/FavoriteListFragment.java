@@ -31,13 +31,13 @@ import butterknife.ButterKnife;
 public final class FavoriteListFragment extends Fragment implements FavoriteListView {
 
     @BindView(R.id.layout)
-    RelativeLayout mRelativeLayout;
+    RelativeLayout mainLayout;
 
     @BindView(R.id.recycler_view)
-    UltimateRecyclerView mUltimateRecyclerView;
+    UltimateRecyclerView recyclerView;
 
     @Inject
-    FavoriteListPresenter mPresenter;
+    FavoriteListPresenter presenter;
 
     public static FavoriteListFragment newInstance() {
         return new FavoriteListFragment();
@@ -51,7 +51,7 @@ public final class FavoriteListFragment extends Fragment implements FavoriteList
 
         MainActivity.getUserComponent(this).inject(this);
 
-        mPresenter.onCreateView(this);
+        presenter.onCreateView(this);
 
         return view;
     }
@@ -68,41 +68,41 @@ public final class FavoriteListFragment extends Fragment implements FavoriteList
         activity.setDrawerIndicatorEnabled(true);
 
         RecyclerView.LayoutManager mLayoutManager = new ScrollSmoothLineaerLayoutManager(getContext(), LinearLayoutManager.VERTICAL, false, 500);
-        mUltimateRecyclerView.setLayoutManager(mLayoutManager);
-        mUltimateRecyclerView.setHasFixedSize(false);
-        mUltimateRecyclerView.addItemDecoration(new DividerItemDecoration(getContext()));
+        recyclerView.setLayoutManager(mLayoutManager);
+        recyclerView.setHasFixedSize(false);
+        recyclerView.addItemDecoration(new DividerItemDecoration(getContext()));
 
-        FavoritesAdapter favoritesRecyclerAdapter = new FavoritesAdapter(mPresenter);
-        mUltimateRecyclerView.setAdapter(favoritesRecyclerAdapter);
+        FavoritesAdapter favoritesRecyclerAdapter = new FavoritesAdapter(presenter);
+        recyclerView.setAdapter(favoritesRecyclerAdapter);
     }
 
     @Override
     public void onResume() {
         super.onResume();
-        mPresenter.onResume();
+        presenter.onResume();
     }
 
     @Override
     public void onStop() {
         super.onStop();
-        mPresenter.onStop();
+        presenter.onStop();
     }
 
     @Override
     public void updateItems(List<FavoriteModel> models) {
-        FavoritesAdapter adapter = ((FavoritesAdapter) mUltimateRecyclerView.getAdapter());
+        FavoritesAdapter adapter = ((FavoritesAdapter) recyclerView.getAdapter());
         adapter.removeAll();
         adapter.insert(models);
     }
 
     @Override
     public void removeAll(int size) {
-        mUltimateRecyclerView.getAdapter().notifyItemRangeRemoved(0, size);
+        recyclerView.getAdapter().notifyItemRangeRemoved(0, size);
     }
 
     @Override
     public void showSnackBar(int resId) {
-        Snackbar.make(mRelativeLayout, resId, Snackbar.LENGTH_SHORT).show();
+        Snackbar.make(mainLayout, resId, Snackbar.LENGTH_SHORT).show();
     }
 
     @Override

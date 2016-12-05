@@ -5,7 +5,6 @@ import com.lakeel.altla.vision.nearby.data.entity.LocationDataEntity;
 import com.lakeel.altla.vision.nearby.domain.usecase.FindLocationDataUseCase;
 import com.lakeel.altla.vision.nearby.domain.usecase.FindLocationUseCase;
 import com.lakeel.altla.vision.nearby.presentation.presenter.BasePresenter;
-import com.lakeel.altla.vision.nearby.presentation.view.DateFormatter;
 import com.lakeel.altla.vision.nearby.presentation.view.TrackingView;
 
 import org.slf4j.Logger;
@@ -24,22 +23,22 @@ import rx.schedulers.Schedulers;
 public final class TrackingPresenter extends BasePresenter<TrackingView> {
 
     @Inject
-    FindLocationDataUseCase mFindLocationDataUseCase;
+    FindLocationDataUseCase findLocationDataUseCase;
 
     @Inject
-    FindLocationUseCase mFindLocationUseCase;
+    FindLocationUseCase findLocationUseCase;
 
     private static final Logger LOGGER = LoggerFactory.getLogger(TrackingPresenter.class);
 
-    private String mBeaconId;
+    private String beaconId;
 
-    private String mBeaconName;
+    private String beaconName;
 
-    private GeoLocation mGeoLocation;
+    private GeoLocation geoLocation;
 
-    private boolean mMapReady;
+    private boolean isMapReadied;
 
-    private boolean mMenuEnabled;
+    private boolean isMenuEnabled;
 
     @Inject
     TrackingPresenter() {
@@ -47,23 +46,16 @@ public final class TrackingPresenter extends BasePresenter<TrackingView> {
 
     @Override
     public void onResume() {
-        Subscription subscription = mFindLocationDataUseCase
-                .execute(mBeaconId)
+        Subscription subscription = findLocationDataUseCase
+                .execute(beaconId)
+                .doOnSuccess(entity -> {
+                    if (entity != null) getView().showDetectedDate(entity.passingTime);
+                })
                 .flatMap(new Func1<LocationDataEntity, Single<GeoLocation>>() {
                     @Override
                     public Single<GeoLocation> call(LocationDataEntity entity) {
-                        if (entity == null) {
-                            return Single.just(null);
-                        }
-
-                        long detectedTime = entity.passingTime;
-                        DateFormatter formatter = new DateFormatter(detectedTime);
-                        String formattedDate = formatter.format();
-                        getView().showDetectedDate(formattedDate);
-
-                        return mFindLocationUseCase
-                                .execute(entity.key)
-                                .subscribeOn(Schedulers.io());
+                        if (entity == null) return Single.just(null);
+                        return findLocation(entity.key);
                     }
                 })
                 .subscribeOn(Schedulers.io())
@@ -71,47 +63,47 @@ public final class TrackingPresenter extends BasePresenter<TrackingView> {
                 .subscribe(location -> {
                     if (location == null) {
                         getView().showEmptyView();
-                        return;
-                    }
-
-                    mGeoLocation = location;
-
-                    if (mMapReady) {
-                        mMenuEnabled = true;
-
-                        getView().showLocationMap(location);
-                        getView().showOptionMenu();
+                    } else {
+                        geoLocation = location;
+                        if (isMapReadied) {
+                            isMenuEnabled = true;
+                            getView().showLocationMap(location);
+                            getView().showOptionMenu();
+                        }
                     }
                 }, e -> LOGGER.error("Failed to find location.", e));
-
         reusableCompositeSubscription.add(subscription);
     }
 
     public void setBeaconData(String beaconId, String beaconName) {
-        mBeaconId = beaconId;
-        mBeaconName = beaconName;
+        this.beaconId = beaconId;
+        this.beaconName = beaconName;
     }
 
     public void onMapReady() {
-        mMapReady = true;
-        if (mGeoLocation != null) {
-            getView().showLocationMap(mGeoLocation);
+        isMapReadied = true;
+        if (geoLocation != null) {
+            getView().showLocationMap(geoLocation);
         }
     }
 
     public boolean isMenuEnabled() {
-        return mMenuEnabled;
+        return isMenuEnabled;
     }
 
     public void onFindNearbyDeviceMenuClicked() {
         ArrayList<String> beaconIds = new ArrayList<>();
-        beaconIds.add(mBeaconId);
-        getView().showFindNearbyDeviceFragment(beaconIds, mBeaconName);
+        beaconIds.add(beaconId);
+        getView().showFindNearbyDeviceFragment(beaconIds, beaconName);
     }
 
     public void onDirectionMenuClicked() {
-        String latitude = String.valueOf(mGeoLocation.latitude);
-        String longitude = String.valueOf(mGeoLocation.longitude);
+        String latitude = String.valueOf(geoLocation.latitude);
+        String longitude = String.valueOf(geoLocation.longitude);
         getView().launchGoogleMapApp(latitude, longitude);
+    }
+
+    Single<GeoLocation> findLocation(String uniqueKey) {
+        return findLocationUseCase.execute(uniqueKey).subscribeOn(Schedulers.io());
     }
 }
