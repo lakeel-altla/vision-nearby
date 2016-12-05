@@ -13,7 +13,7 @@ import dagger.Component;
 @Component(modules = ApplicationModule.class)
 public interface ApplicationComponent {
 
-    ViewComponent userComponent(ActivityModule module);
+    ViewComponent viewComponent(ActivityModule module);
 
     Context context();
 }
