@@ -29,7 +29,7 @@ import rx.Subscription;
 import rx.android.schedulers.AndroidSchedulers;
 import rx.schedulers.Schedulers;
 
-public final class FavoritesListPresenter extends BasePresenter<FavoriteListView> {
+public final class FavoriteListPresenter extends BasePresenter<FavoriteListView> {
 
     @Inject
     FindUserUseCase mFindUserUseCase;
@@ -40,14 +40,14 @@ public final class FavoritesListPresenter extends BasePresenter<FavoriteListView
     @Inject
     RemoveFavoriteUseCase mRemoveFavoriteUseCase;
 
-    private static final Logger LOGGER = LoggerFactory.getLogger(FavoritesListPresenter.class);
+    private static final Logger LOGGER = LoggerFactory.getLogger(FavoriteListPresenter.class);
 
     private FavoriteModelMapper mFavoriteModelMapper = new FavoriteModelMapper();
 
     private final List<FavoriteModel> mFavoriteModels = new ArrayList<>();
 
     @Inject
-    FavoritesListPresenter() {
+    FavoriteListPresenter() {
     }
 
     @Override

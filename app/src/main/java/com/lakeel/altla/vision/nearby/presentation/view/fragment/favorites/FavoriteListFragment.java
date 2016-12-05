@@ -11,7 +11,7 @@ import android.view.ViewGroup;
 import android.widget.RelativeLayout;
 
 import com.lakeel.altla.vision.nearby.R;
-import com.lakeel.altla.vision.nearby.presentation.presenter.favorites.FavoritesListPresenter;
+import com.lakeel.altla.vision.nearby.presentation.presenter.favorites.FavoriteListPresenter;
 import com.lakeel.altla.vision.nearby.presentation.presenter.model.FavoriteModel;
 import com.lakeel.altla.vision.nearby.presentation.view.FavoriteListView;
 import com.lakeel.altla.vision.nearby.presentation.view.activity.MainActivity;
@@ -28,7 +28,7 @@ import javax.inject.Inject;
 import butterknife.BindView;
 import butterknife.ButterKnife;
 
-public final class FavoritesListFragment extends Fragment implements FavoriteListView {
+public final class FavoriteListFragment extends Fragment implements FavoriteListView {
 
     @BindView(R.id.layout)
     RelativeLayout mRelativeLayout;
@@ -37,10 +37,10 @@ public final class FavoritesListFragment extends Fragment implements FavoriteLis
     UltimateRecyclerView mUltimateRecyclerView;
 
     @Inject
-    FavoritesListPresenter mPresenter;
+    FavoriteListPresenter mPresenter;
 
-    public static FavoritesListFragment newInstance() {
-        return new FavoritesListFragment();
+    public static FavoriteListFragment newInstance() {
+        return new FavoriteListFragment();
     }
 
     @Override

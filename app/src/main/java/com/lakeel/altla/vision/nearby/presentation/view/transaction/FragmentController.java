@@ -8,7 +8,7 @@ import android.support.v4.app.FragmentTransaction;
 import com.lakeel.altla.vision.nearby.R;
 import com.lakeel.altla.vision.nearby.presentation.intent.RecentlyBundleData;
 import com.lakeel.altla.vision.nearby.presentation.view.fragment.estimation.DeviceDistanceEstimationFragment;
-import com.lakeel.altla.vision.nearby.presentation.view.fragment.favorites.FavoritesListFragment;
+import com.lakeel.altla.vision.nearby.presentation.view.fragment.favorites.FavoriteListFragment;
 import com.lakeel.altla.vision.nearby.presentation.view.fragment.nearby.NearbyListFragment;
 import com.lakeel.altla.vision.nearby.presentation.view.fragment.favorites.FavoriteFragment;
 import com.lakeel.altla.vision.nearby.presentation.view.fragment.recently.RecentlyFragment;
@@ -27,7 +27,7 @@ public final class FragmentController {
 
     private final String SIGN_IN_FRAGMENT_TAG = SignInFragment.class.getSimpleName();
 
-    private final String USER_LIST_FRAGMENT_TAG = FavoritesListFragment.class.getSimpleName();
+    private final String USER_LIST_FRAGMENT_TAG = FavoriteListFragment.class.getSimpleName();
 
     private final String RECENTLY_LIST_FRAGMENT_TAG = RecentlyListFragment.class.getSimpleName();
 
@@ -61,7 +61,7 @@ public final class FragmentController {
     }
 
     public void showFavoritesListFragment() {
-        FavoritesListFragment fragment = FavoritesListFragment.newInstance();
+        FavoriteListFragment fragment = FavoriteListFragment.newInstance();
         replaceFragment(R.id.fragmentPlaceholder, fragment, USER_LIST_FRAGMENT_TAG);
     }
 

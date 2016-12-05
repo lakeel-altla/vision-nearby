@@ -9,7 +9,7 @@ import com.lakeel.altla.vision.nearby.presentation.service.LineService;
 import com.lakeel.altla.vision.nearby.presentation.view.activity.MainActivity;
 import com.lakeel.altla.vision.nearby.presentation.view.fragment.estimation.DeviceDistanceEstimationFragment;
 import com.lakeel.altla.vision.nearby.presentation.view.fragment.favorites.FavoriteFragment;
-import com.lakeel.altla.vision.nearby.presentation.view.fragment.favorites.FavoritesListFragment;
+import com.lakeel.altla.vision.nearby.presentation.view.fragment.favorites.FavoriteListFragment;
 import com.lakeel.altla.vision.nearby.presentation.view.fragment.nearby.NearbyListFragment;
 import com.lakeel.altla.vision.nearby.presentation.view.fragment.recently.RecentlyFragment;
 import com.lakeel.altla.vision.nearby.presentation.view.fragment.recently.RecentlyListFragment;
@@ -32,7 +32,7 @@ public interface ViewComponent {
 
     void inject(SignInFragment fragment);
 
-    void inject(FavoritesListFragment fragment);
+    void inject(FavoriteListFragment fragment);
 
     void inject(NearbyListFragment fragment);
 

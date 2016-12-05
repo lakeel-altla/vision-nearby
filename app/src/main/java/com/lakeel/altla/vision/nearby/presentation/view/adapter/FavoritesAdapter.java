@@ -11,7 +11,7 @@ import android.widget.TextView;
 import com.amulyakhare.textdrawable.TextDrawable;
 import com.lakeel.altla.vision.nearby.R;
 import com.lakeel.altla.vision.nearby.core.StringUtils;
-import com.lakeel.altla.vision.nearby.presentation.presenter.favorites.FavoritesListPresenter;
+import com.lakeel.altla.vision.nearby.presentation.presenter.favorites.FavoriteListPresenter;
 import com.lakeel.altla.vision.nearby.presentation.presenter.model.FavoriteModel;
 import com.lakeel.altla.vision.nearby.presentation.view.FavoriteItemView;
 import com.marshalchen.ultimaterecyclerview.SwipeableUltimateViewAdapter;
@@ -26,11 +26,11 @@ import butterknife.ButterKnife;
 
 public final class FavoritesAdapter extends SwipeableUltimateViewAdapter<FavoriteModel> {
 
-    private FavoritesListPresenter mFavoritesListPresenter;
+    private FavoriteListPresenter mFavoriteListPresenter;
 
-    public FavoritesAdapter(FavoritesListPresenter presenter) {
+    public FavoritesAdapter(FavoriteListPresenter presenter) {
         super(new ArrayList<>());
-        mFavoritesListPresenter = presenter;
+        mFavoriteListPresenter = presenter;
     }
 
     @Override
@@ -41,7 +41,7 @@ public final class FavoritesAdapter extends SwipeableUltimateViewAdapter<Favorit
     @Override
     protected UltimateRecyclerviewViewHolder newViewHolder(View view) {
         FavoritesListViewHolder viewHolder = new FavoritesListViewHolder(view, true);
-        mFavoritesListPresenter.onCreateItemView(viewHolder);
+        mFavoriteListPresenter.onCreateItemView(viewHolder);
         return viewHolder;
     }
 
@@ -53,7 +53,7 @@ public final class FavoritesAdapter extends SwipeableUltimateViewAdapter<Favorit
 
     public final class FavoritesListViewHolder extends UltimateRecyclerviewViewHolder implements FavoriteItemView {
 
-        private FavoritesListPresenter.FavoritesItemPresenter mFavoritesItemPresenter;
+        private FavoriteListPresenter.FavoritesItemPresenter mFavoritesItemPresenter;
 
         @BindView(R.id.layout_row)
         LinearLayout mLinearLayout;
@@ -80,7 +80,7 @@ public final class FavoritesAdapter extends SwipeableUltimateViewAdapter<Favorit
         }
 
         @Override
-        public void setItemPresenter(FavoritesListPresenter.FavoritesItemPresenter itemPresenter) {
+        public void setItemPresenter(FavoriteListPresenter.FavoritesItemPresenter itemPresenter) {
             mFavoritesItemPresenter = itemPresenter;
         }
 
