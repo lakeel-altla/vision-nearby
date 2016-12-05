@@ -6,7 +6,7 @@ public final class LocationDataEntityMapper {
 
     public LocationDataEntity map(String id) {
         LocationDataEntity entity = new LocationDataEntity();
-        entity.id = id;
+        entity.beaconId = id;
         return entity;
     }
 }

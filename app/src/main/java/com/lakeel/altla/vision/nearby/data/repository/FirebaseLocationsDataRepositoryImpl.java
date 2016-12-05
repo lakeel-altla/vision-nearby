@@ -19,7 +19,7 @@ import rx.Single;
 
 public final class FirebaseLocationsDataRepositoryImpl implements FirebaseLocationsDataRepository {
 
-    private static final String KEY_ID = "userId";
+    private static final String KEY_BEACON_ID = "beaconId";
 
     private DatabaseReference databaseReference;
 
@@ -34,7 +34,7 @@ public final class FirebaseLocationsDataRepositoryImpl implements FirebaseLocati
     public Single<LocationDataEntity> findLocationsDataById(String id) {
         return Single.create(subscriber ->
                 databaseReference
-                        .orderByChild(KEY_ID)
+                        .orderByChild(KEY_BEACON_ID)
                         .equalTo(id)
                         .limitToFirst(1)
                         .addListenerForSingleValueEvent(new ValueEventListener() {

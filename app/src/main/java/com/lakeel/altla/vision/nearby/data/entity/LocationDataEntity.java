@@ -7,13 +7,13 @@ import java.util.Map;
 
 public final class LocationDataEntity extends BaseEntity {
 
-    public String id;
+    public String beaconId;
 
     public long passingTime;
 
     public Map<String, Object> toMap() {
         Map<String, Object> map = new HashMap<>();
-        map.put("userId", id);
+        map.put("beaconId", beaconId);
         map.put("passingTime", ServerValue.TIMESTAMP);
         return map;
     }
