@@ -7,8 +7,7 @@ public enum BundleKey {
     USER_ID("userId"),
     USER_NAME("userName"),
     TARGET_NAME("targetName"),
-    RECENTLY("recently"),
-    JSON_UNIQUE_KEY("jsonUniqueKey");
+    RECENTLY("recently");
 
     private String value;
 

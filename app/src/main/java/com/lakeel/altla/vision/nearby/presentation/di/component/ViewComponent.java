@@ -11,9 +11,6 @@ import com.lakeel.altla.vision.nearby.presentation.view.fragment.estimation.Devi
 import com.lakeel.altla.vision.nearby.presentation.view.fragment.favorites.FavoriteFragment;
 import com.lakeel.altla.vision.nearby.presentation.view.fragment.favorites.FavoritesListFragment;
 import com.lakeel.altla.vision.nearby.presentation.view.fragment.nearby.NearbyListFragment;
-import com.lakeel.altla.vision.nearby.presentation.view.fragment.passing.PassingFragment;
-import com.lakeel.altla.vision.nearby.presentation.view.fragment.presence.PresenceFragment;
-import com.lakeel.altla.vision.nearby.presentation.view.fragment.profile.ProfileFragment;
 import com.lakeel.altla.vision.nearby.presentation.view.fragment.recently.RecentlyFragment;
 import com.lakeel.altla.vision.nearby.presentation.view.fragment.recently.RecentlyListFragment;
 import com.lakeel.altla.vision.nearby.presentation.view.fragment.search.SearchFragment;
@@ -23,7 +20,6 @@ import com.lakeel.altla.vision.nearby.presentation.view.fragment.settings.cm.CmS
 import com.lakeel.altla.vision.nearby.presentation.view.fragment.settings.device.DeviceListFragment;
 import com.lakeel.altla.vision.nearby.presentation.view.fragment.settings.line.LineSettingsFragment;
 import com.lakeel.altla.vision.nearby.presentation.view.fragment.signin.SignInFragment;
-import com.lakeel.altla.vision.nearby.presentation.view.fragment.sns.SnsFragment;
 import com.lakeel.altla.vision.nearby.presentation.view.fragment.tracking.TrackingFragment;
 
 import dagger.Subcomponent;
@@ -61,14 +57,6 @@ public interface ViewComponent {
     void inject(DeviceDistanceEstimationFragment fragment);
 
     void inject(FavoriteFragment fragment);
-
-    void inject(PresenceFragment fragment);
-
-    void inject(PassingFragment fragment);
-
-    void inject(ProfileFragment fragment);
-
-    void inject(SnsFragment fragment);
 
     void inject(LineService service);
 }
