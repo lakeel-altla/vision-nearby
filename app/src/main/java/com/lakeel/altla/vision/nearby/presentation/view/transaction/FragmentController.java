@@ -10,7 +10,7 @@ import com.lakeel.altla.vision.nearby.presentation.intent.RecentlyBundleData;
 import com.lakeel.altla.vision.nearby.presentation.view.fragment.estimation.DeviceDistanceEstimationFragment;
 import com.lakeel.altla.vision.nearby.presentation.view.fragment.favorites.FavoritesListFragment;
 import com.lakeel.altla.vision.nearby.presentation.view.fragment.nearby.NearbyListFragment;
-import com.lakeel.altla.vision.nearby.presentation.view.fragment.profile.ProfileFragment;
+import com.lakeel.altla.vision.nearby.presentation.view.fragment.favorites.FavoriteFragment;
 import com.lakeel.altla.vision.nearby.presentation.view.fragment.recently.RecentlyFragment;
 import com.lakeel.altla.vision.nearby.presentation.view.fragment.recently.RecentlyListFragment;
 import com.lakeel.altla.vision.nearby.presentation.view.fragment.settings.SettingsFragment;
@@ -39,7 +39,7 @@ public final class FragmentController {
 
     private final String DISTANCE_ESTIMATION_FRAGMENT_TAG = DeviceDistanceEstimationFragment.class.getSimpleName();
 
-    private final String PROFILE_FRAGMENT_TAG = ProfileFragment.class.getSimpleName();
+    private final String PROFILE_FRAGMENT_TAG = FavoriteFragment.class.getSimpleName();
 
     private final String SETTINGS_FRAGMENT_TAG = SettingsFragment.class.getSimpleName();
 
@@ -96,7 +96,7 @@ public final class FragmentController {
     }
 
     public void showProfileFragment(String userId, String userName) {
-        ProfileFragment fragment = ProfileFragment.newInstance(userId, userName);
+        FavoriteFragment fragment = FavoriteFragment.newInstance(userId, userName);
         replaceFragment(R.id.fragmentPlaceholder, fragment, PROFILE_FRAGMENT_TAG);
     }
 

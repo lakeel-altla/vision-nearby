@@ -2,8 +2,8 @@
 <LinearLayout
     xmlns:android="http://schemas.android.com/apk/res/android"
     android:orientation="vertical"
-    android:layout_width="wrap_content"
-    android:layout_height="wrap_content">
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
 
     <LinearLayout
         android:orientation="vertical"
@@ -18,7 +18,7 @@
             android:gravity="center_vertical"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:text="@string/textView_profile"/>
+            android:text="@string/textView_sns"/>
 
     </LinearLayout>
 
@@ -35,32 +35,10 @@
             android:layout_height="wrap_content"
             android:paddingBottom="4dp"
             android:textAppearance="?android:attr/textAppearanceMedium"
-            android:text="@string/textView_name"/>
+            android:text="@string/textView_line_url"/>
 
         <TextView
-            android:id="@+id/nameText"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"/>
-
-    </LinearLayout>
-
-    <LinearLayout
-        android:orientation="vertical"
-        android:gravity="center"
-        android:paddingStart="16dp"
-        android:paddingEnd="16dp"
-        android:layout_width="match_parent"
-        android:layout_height="72dp">
-
-        <TextView
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:paddingBottom="4dp"
-            android:textAppearance="?android:attr/textAppearanceMedium"
-            android:text="@string/textView_email"/>
-
-        <TextView
-            android:id="@+id/emailText"
+            android:id="@+id/lineUrlText"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"/>
 

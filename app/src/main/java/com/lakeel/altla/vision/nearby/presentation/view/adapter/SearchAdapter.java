@@ -3,7 +3,7 @@ package com.lakeel.altla.vision.nearby.presentation.view.adapter;
 import com.amulyakhare.textdrawable.TextDrawable;
 import com.lakeel.altla.vision.nearby.R;
 import com.lakeel.altla.vision.nearby.core.StringUtils;
-import com.lakeel.altla.vision.nearby.presentation.presenter.model.ItemModel;
+import com.lakeel.altla.vision.nearby.presentation.presenter.model.UserModel;
 import com.lakeel.altla.vision.nearby.presentation.presenter.search.SearchPresenter;
 import com.lakeel.altla.vision.nearby.presentation.view.SearchItemView;
 import com.nostra13.universalimageloader.core.ImageLoader;
@@ -71,18 +71,18 @@ public final class SearchAdapter extends RecyclerView.Adapter<SearchAdapter.Sear
         }
 
         @Override
-        public void showItem(ItemModel model) {
-            String displayName = model.mName;
+        public void showItem(UserModel model) {
+            String displayName = model.name;
             mUserName.setText(displayName);
 
-            if (StringUtils.isEmpty(model.mImageUri)) {
+            if (StringUtils.isEmpty(model.imageUri)) {
                 String initial = displayName.substring(0, 1);
                 TextDrawable drawable = TextDrawable.builder()
                         .buildRound(initial, Color.RED);
                 mImageView.post(() -> mImageView.setImageDrawable(drawable));
             } else {
                 ImageLoader imageLoader = ImageLoader.getInstance();
-                imageLoader.displayImage(model.mImageUri, mImageView);
+                imageLoader.displayImage(model.imageUri, mImageView);
             }
 
             mLinearLayout.setOnClickListener(view -> mSearchItemPresenter.onClick(model));

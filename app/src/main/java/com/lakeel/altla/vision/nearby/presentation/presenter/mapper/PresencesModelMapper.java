@@ -7,8 +7,8 @@ public final class PresencesModelMapper {
 
     public PresenceModel map(PresenceEntity entity) {
         PresenceModel model = new PresenceModel();
-        model.mConnected = entity.isConnected;
-        model.mLastOnline = entity.lastOnline;
+        model.isConnected = entity.isConnected;
+        model.lastOnlineTime = entity.lastOnline;
         return model;
     }
 

@@ -1,0 +1,65 @@
+<?xml version="1.0" encoding="utf-8"?>
+<com.flipboard.bottomsheet.BottomSheetLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/shareSheet"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
+
+    <ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+
+        <LinearLayout
+            android:id="@+id/mainLayout"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical">
+
+            <FrameLayout
+                android:layout_width="match_parent"
+                android:layout_height="256dp"
+                android:background="@drawable/example">
+
+                <de.hdodenhof.circleimageview.CircleImageView
+                    android:id="@+id/imageViewUser"
+                    android:layout_width="70dp"
+                    android:layout_height="70dp"
+                    android:layout_gravity="bottom|start"
+                    android:layout_margin="20dp" />
+
+            </FrameLayout>
+
+            <RelativeLayout
+                android:id="@+id/presenceFragment"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content" />
+
+            <include layout="@layout/item_divider" />
+
+            <RelativeLayout
+                android:id="@+id/profileFragment"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content" />
+
+            <include layout="@layout/item_divider" />
+
+            <RelativeLayout
+                android:id="@+id/snsFragment"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content" />
+
+            <!--&lt;!&ndash; State &ndash;&gt;-->
+            <!--<include layout="@layout/layout_presence" android:id="@+id/presenceLayout"/>-->
+
+            <!--<include layout="@layout/item_divider"/>-->
+
+            <!--&lt;!&ndash; Profile &ndash;&gt;-->
+            <!--<include layout="@layout/layout_profile" android:id="@+id/profileLayout"/>-->
+
+            <!--<include layout="@layout/item_divider"/>-->
+
+            <!--&lt;!&ndash; SNS &ndash;&gt;-->
+            <!--<include layout="@layout/layout_sns" android:id="@+id/snsLayout"/>-->
+
+        </LinearLayout>
+    </ScrollView>
+</com.flipboard.bottomsheet.BottomSheetLayout>

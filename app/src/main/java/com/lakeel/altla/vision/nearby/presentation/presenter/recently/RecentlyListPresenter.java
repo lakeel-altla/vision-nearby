@@ -12,9 +12,9 @@ import com.lakeel.altla.vision.nearby.presentation.firebase.MyUser;
 import com.lakeel.altla.vision.nearby.presentation.intent.RecentlyBundleData;
 import com.lakeel.altla.vision.nearby.presentation.presenter.BaseItemPresenter;
 import com.lakeel.altla.vision.nearby.presentation.presenter.BasePresenter;
-import com.lakeel.altla.vision.nearby.presentation.presenter.mapper.RecentlyItemModelMapper;
+import com.lakeel.altla.vision.nearby.presentation.presenter.mapper.RecentlyModelMapper;
 import com.lakeel.altla.vision.nearby.presentation.presenter.model.LocationModel;
-import com.lakeel.altla.vision.nearby.presentation.presenter.model.RecentlyItemModel;
+import com.lakeel.altla.vision.nearby.presentation.presenter.model.RecentlyModel;
 import com.lakeel.altla.vision.nearby.presentation.view.RecentlyItemView;
 import com.lakeel.altla.vision.nearby.presentation.view.RecentlyListView;
 
@@ -48,12 +48,12 @@ public final class RecentlyListPresenter extends BasePresenter<RecentlyListView>
 
     private static final Logger LOGGER = LoggerFactory.getLogger(RecentlyListPresenter.class);
 
-    private RecentlyItemModelMapper mRecentlyItemModelMapper = new RecentlyItemModelMapper();
+    private RecentlyModelMapper mRecentlyModelMapper = new RecentlyModelMapper();
 
-    private final List<RecentlyItemModel> mRecentlyItemModels = new ArrayList<>();
+    private final List<RecentlyModel> mRecentlyModels = new ArrayList<>();
 
-    public List<RecentlyItemModel> getItems() {
-        return mRecentlyItemModels;
+    public List<RecentlyModel> getItems() {
+        return mRecentlyModels;
     }
 
     @Inject
@@ -67,7 +67,7 @@ public final class RecentlyListPresenter extends BasePresenter<RecentlyListView>
                 .flatMap(entity -> {
                     Observable<UserEntity> itemsObservable = mFindUserUseCase.execute(entity.userId).subscribeOn(Schedulers.io()).toObservable();
                     return Observable.zip(Observable.just(entity), itemsObservable, (recentlyEntity, itemsEntity) ->
-                            mRecentlyItemModelMapper.map(recentlyEntity, itemsEntity));
+                            mRecentlyModelMapper.map(recentlyEntity, itemsEntity));
                 })
                 .toList()
                 .subscribeOn(Schedulers.io())
@@ -75,8 +75,8 @@ public final class RecentlyListPresenter extends BasePresenter<RecentlyListView>
                 .subscribe(recentlyItemModels -> {
                     Collections.reverse(recentlyItemModels);
 
-                    mRecentlyItemModels.clear();
-                    mRecentlyItemModels.addAll(recentlyItemModels);
+                    mRecentlyModels.clear();
+                    mRecentlyModels.addAll(recentlyItemModels);
 
                     getView().updateItems();
                 }, e -> {
@@ -97,18 +97,18 @@ public final class RecentlyListPresenter extends BasePresenter<RecentlyListView>
 
         @Override
         public void onBind(@IntRange(from = 0) int position) {
-            getItemView().showItem(mRecentlyItemModels.get(position));
+            getItemView().showItem(mRecentlyModels.get(position));
         }
 
-        public void onClick(RecentlyItemModel model) {
+        public void onClick(RecentlyModel model) {
             RecentlyBundleData data = new RecentlyBundleData();
             data.userId = model.userId;
             data.userName = model.name;
 
             LocationModel locationModel = model.locationModel;
             if (locationModel != null) {
-                data.latitude = locationModel.mLatitude;
-                data.longitude = locationModel.mLongitude;
+                data.latitude = locationModel.latitude;
+                data.longitude = locationModel.longitude;
             }
 
             if (model.detectedActivity != null) {

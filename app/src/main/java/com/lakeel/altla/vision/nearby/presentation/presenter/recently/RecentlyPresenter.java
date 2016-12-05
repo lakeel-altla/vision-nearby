@@ -11,7 +11,7 @@ import com.lakeel.altla.vision.nearby.domain.usecase.SaveFavoriteUseCase;
 import com.lakeel.altla.vision.nearby.domain.usecase.SaveLocationTextUseCase;
 import com.lakeel.altla.vision.nearby.presentation.firebase.MyUser;
 import com.lakeel.altla.vision.nearby.presentation.presenter.BasePresenter;
-import com.lakeel.altla.vision.nearby.presentation.presenter.mapper.ItemModelMapper;
+import com.lakeel.altla.vision.nearby.presentation.presenter.mapper.UserModelMapper;
 import com.lakeel.altla.vision.nearby.presentation.presenter.mapper.PresencesModelMapper;
 import com.lakeel.altla.vision.nearby.presentation.view.RecentlyView;
 
@@ -54,7 +54,7 @@ public final class RecentlyPresenter extends BasePresenter<RecentlyView> {
 
     private PresencesModelMapper presencesModelMapper = new PresencesModelMapper();
 
-    private ItemModelMapper itemModelMapper = new ItemModelMapper();
+    private UserModelMapper userModelMapper = new UserModelMapper();
 
     private String otherUserId;
 
@@ -75,7 +75,7 @@ public final class RecentlyPresenter extends BasePresenter<RecentlyView> {
                 .flatMap(presenceModel -> findTimesUseCase.execute(MyUser.getUid(), otherUserId).subscribeOn(Schedulers.io()))
                 .doOnSuccess(times -> getView().showTimes(times))
                 .flatMap(times -> findUserUseCase.execute(otherUserId).subscribeOn(Schedulers.io()))
-                .map(entity -> itemModelMapper.map(entity))
+                .map(entity -> userModelMapper.map(entity))
                 .doOnSuccess(model -> getView().showProfile(model))
                 .flatMap(model -> findLineUrlUseCase.execute(otherUserId).subscribeOn(Schedulers.io()))
                 .map(lineLinksEntity -> lineLinksEntity.url)

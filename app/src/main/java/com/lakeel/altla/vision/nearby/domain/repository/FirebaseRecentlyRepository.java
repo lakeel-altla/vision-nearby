@@ -13,9 +13,11 @@ public interface FirebaseRecentlyRepository {
 
     Observable<RecentlyEntity> findRecentlyByUserId(String userId);
 
+    Single<RecentlyEntity> findHistoryByUserIdAndUniqueKey(String userId, String uniqueKey);
+
     Single<Long> findPassingTimes(String userId, String otherId);
 
-    Single<String> saveRecently(String userId);
+    Single<String> saveRecently(String myUserId, String otherUserId);
 
     Single<RecentlyEntity> saveDetectedActivity(String uniqueId, String userId, DetectedActivity detectedActivity);
 

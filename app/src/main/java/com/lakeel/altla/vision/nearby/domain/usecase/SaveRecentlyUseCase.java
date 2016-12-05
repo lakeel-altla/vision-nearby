@@ -15,7 +15,7 @@ public final class SaveRecentlyUseCase {
     SaveRecentlyUseCase() {
     }
 
-    public Single<String> execute(String userId) {
-        return repository.saveRecently(userId);
+    public Single<String> execute(String myUserId, String otherUserId) {
+        return repository.saveRecently(myUserId, otherUserId);
     }
 }

@@ -4,9 +4,9 @@ import java.util.Map;
 
 public final class LocationModel {
 
-    public String mLatitude;
+    public String latitude;
 
-    public String mLongitude;
+    public String longitude;
 
     public LocationTextModel mLocationTextModel;
 

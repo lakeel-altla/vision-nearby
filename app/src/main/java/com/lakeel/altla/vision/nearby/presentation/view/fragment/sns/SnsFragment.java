@@ -1,4 +1,4 @@
-package com.lakeel.altla.vision.nearby.presentation.view.fragment.profile;
+package com.lakeel.altla.vision.nearby.presentation.view.fragment.sns;
 
 import android.os.Bundle;
 import android.support.annotation.Nullable;
@@ -10,9 +10,8 @@ import android.widget.TextView;
 
 import com.lakeel.altla.vision.nearby.R;
 import com.lakeel.altla.vision.nearby.presentation.constants.BundleKey;
-import com.lakeel.altla.vision.nearby.presentation.presenter.model.UserModel;
-import com.lakeel.altla.vision.nearby.presentation.presenter.profile.ProfilePresenter;
-import com.lakeel.altla.vision.nearby.presentation.view.ProfileView;
+import com.lakeel.altla.vision.nearby.presentation.presenter.sns.SnsPresenter;
+import com.lakeel.altla.vision.nearby.presentation.view.SnsView;
 import com.lakeel.altla.vision.nearby.presentation.view.activity.MainActivity;
 
 import javax.inject.Inject;
@@ -20,30 +19,26 @@ import javax.inject.Inject;
 import butterknife.BindView;
 import butterknife.ButterKnife;
 
-public final class ProfileFragment extends Fragment implements ProfileView {
+public final class SnsFragment extends Fragment implements SnsView {
 
-    public static ProfileFragment newInstance(String userId) {
+    public static SnsFragment newInstance(String userId) {
         Bundle args = new Bundle();
         args.getString(BundleKey.USER_ID.getValue(), userId);
 
-        ProfileFragment fragment = new ProfileFragment();
+        SnsFragment fragment = new SnsFragment();
         fragment.setArguments(args);
         return fragment;
     }
 
     @Inject
-    ProfilePresenter presenter;
+    SnsPresenter presenter;
 
-    @BindView(R.id.nameText)
-    public TextView textViewName;
+    @BindView(R.id.lineUrlText)
+    TextView textViewLineUrl;
 
-    @BindView(R.id.emailText)
-    public TextView textViewEmail;
-
-    @Nullable
     @Override
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
-        View view = inflater.inflate(R.layout.fragment_profile, container, false);
+        View view = inflater.inflate(R.layout.fragment_sns, container, false);
 
         ButterKnife.bind(this, view);
 
@@ -66,8 +61,7 @@ public final class ProfileFragment extends Fragment implements ProfileView {
     }
 
     @Override
-    public void showProfile(UserModel model) {
-        textViewName.setText(model.name);
-        textViewEmail.setText(model.email);
+    public void showLineUrl(String url) {
+        textViewLineUrl.setText(url);
     }
 }

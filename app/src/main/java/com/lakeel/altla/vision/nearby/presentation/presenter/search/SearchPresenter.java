@@ -3,8 +3,8 @@ package com.lakeel.altla.vision.nearby.presentation.presenter.search;
 import com.lakeel.altla.vision.nearby.domain.usecase.FindItemNameUseCase;
 import com.lakeel.altla.vision.nearby.presentation.presenter.BaseItemPresenter;
 import com.lakeel.altla.vision.nearby.presentation.presenter.BasePresenter;
-import com.lakeel.altla.vision.nearby.presentation.presenter.mapper.ItemModelMapper;
-import com.lakeel.altla.vision.nearby.presentation.presenter.model.ItemModel;
+import com.lakeel.altla.vision.nearby.presentation.presenter.mapper.UserModelMapper;
+import com.lakeel.altla.vision.nearby.presentation.presenter.model.UserModel;
 import com.lakeel.altla.vision.nearby.presentation.view.SearchItemView;
 import com.lakeel.altla.vision.nearby.presentation.view.SearchView;
 import com.lakeel.altla.vision.nearby.presentation.view.adapter.SearchAdapter;
@@ -30,9 +30,9 @@ public final class SearchPresenter extends BasePresenter<SearchView> {
 
     private static final Logger LOGGER = LoggerFactory.getLogger(SearchPresenter.class);
 
-    private ItemModelMapper mMapper = new ItemModelMapper();
+    private UserModelMapper mMapper = new UserModelMapper();
 
-    private List<ItemModel> mItemModels = new ArrayList<>();
+    private List<UserModel> mUserModels = new ArrayList<>();
 
     @Inject
     SearchPresenter() {
@@ -45,15 +45,15 @@ public final class SearchPresenter extends BasePresenter<SearchView> {
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribe(model -> {
-                    mItemModels.clear();
-                    mItemModels.add(model);
-                    LOGGER.debug("Searched user is " + model.mName);
+                    mUserModels.clear();
+                    mUserModels.add(model);
+                    LOGGER.debug("Searched user is " + model.name);
                 }, e -> LOGGER.error("Failed to search.", e));
         reusableCompositeSubscription.add(subscription);
     }
 
     public int getItemCount() {
-        return mItemModels.size();
+        return mUserModels.size();
     }
 
     public void onCreateItemView(SearchAdapter.SearchViewHolder viewHolder) {
@@ -66,11 +66,11 @@ public final class SearchPresenter extends BasePresenter<SearchView> {
 
         @Override
         public void onBind(@IntRange(from = 0) int position) {
-            getItemView().showItem(mItemModels.get(position));
+            getItemView().showItem(mUserModels.get(position));
         }
 
-        public void onClick(ItemModel model) {
-            getView().showTrackingFragment(model.mId);
+        public void onClick(UserModel model) {
+            getView().showTrackingFragment(model.userId);
         }
     }
 }

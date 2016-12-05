@@ -1,12 +1,6 @@
 package com.lakeel.altla.vision.nearby.presentation.presenter.model;
 
-public final class RecentlyModel {
-
-    public String userId;
-
-    public String imageUri;
-
-    public String name;
+public final class PassingModel {
 
     public LocationModel locationModel;
 

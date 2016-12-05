@@ -35,7 +35,7 @@ public class FirebaseRecentlyRepositoryImpl implements FirebaseRecentlyRepositor
 
     private static final String TEXT_KEY = "text";
 
-    private DatabaseReference databaseReference;
+    private DatabaseReference reference;
 
     private RecentlyEntityMapper entityMapper = new RecentlyEntityMapper();
 
@@ -44,7 +44,7 @@ public class FirebaseRecentlyRepositoryImpl implements FirebaseRecentlyRepositor
 
     @Inject
     public FirebaseRecentlyRepositoryImpl(String url) {
-        databaseReference = FirebaseDatabase.getInstance().getReferenceFromUrl(url);
+        reference = FirebaseDatabase.getInstance().getReferenceFromUrl(url);
     }
 
     @Override
@@ -53,7 +53,7 @@ public class FirebaseRecentlyRepositoryImpl implements FirebaseRecentlyRepositor
 
             @Override
             public void call(Subscriber<? super RecentlyEntity> subscriber) {
-                databaseReference
+                reference
                         .child(userId)
                         .orderByChild(TIMESTAMP_KEY)
                         .addListenerForSingleValueEvent(new ValueEventListener() {
@@ -77,9 +77,33 @@ public class FirebaseRecentlyRepositoryImpl implements FirebaseRecentlyRepositor
     }
 
     @Override
+    public Single<RecentlyEntity> findHistoryByUserIdAndUniqueKey(String userId, String uniqueKey) {
+        return Single.create(new Single.OnSubscribe<RecentlyEntity>() {
+            @Override
+            public void call(SingleSubscriber<? super RecentlyEntity> subscriber) {
+                reference
+                        .child(userId)
+                        .child(uniqueKey)
+                        .addListenerForSingleValueEvent(new ValueEventListener() {
+                            @Override
+                            public void onDataChange(DataSnapshot dataSnapshot) {
+                                RecentlyEntity entity = dataSnapshot.getValue(RecentlyEntity.class);
+                                subscriber.onSuccess(entity);
+                            }
+
+                            @Override
+                            public void onCancelled(DatabaseError databaseError) {
+                                subscriber.onError(databaseError.toException());
+                            }
+                        });
+            }
+        });
+    }
+
+    @Override
     public Single<Long> findPassingTimes(String myUserId, String otherUserId) {
         return Single.create(subscriber ->
-                databaseReference
+                reference
                         .child(myUserId)
                         .orderByChild(ID_KEY)
                         .equalTo(otherUserId)
@@ -97,13 +121,13 @@ public class FirebaseRecentlyRepositoryImpl implements FirebaseRecentlyRepositor
     }
 
     @Override
-    public Single<String> saveRecently(String userId) {
+    public Single<String> saveRecently(String myUserId, String otherUserId) {
         return Single.create(new Single.OnSubscribe<String>() {
             @Override
             public void call(SingleSubscriber<? super String> subscriber) {
-                RecentlyEntity entity = entityMapper.map(userId);
+                RecentlyEntity entity = entityMapper.map(otherUserId);
 
-                DatabaseReference pushedReference = databaseReference.child(userId).push();
+                DatabaseReference pushedReference = reference.child(myUserId).push();
                 String uniqueId = pushedReference.getKey();
 
                 Task<Void> task = pushedReference
@@ -124,7 +148,7 @@ public class FirebaseRecentlyRepositoryImpl implements FirebaseRecentlyRepositor
         return Single.create(subscriber -> {
             RecentlyEntity entity = entityMapper.map(detectedActivity);
 
-            Task<Void> task = databaseReference
+            Task<Void> task = reference
                     .child(userId)
                     .child(uniqueId)
                     .updateChildren(entity.toUserActivityMap())
@@ -143,7 +167,7 @@ public class FirebaseRecentlyRepositoryImpl implements FirebaseRecentlyRepositor
         return Single.create(subscriber -> {
             RecentlyEntity entity = entityMapper.map(location);
 
-            Task<Void> task = databaseReference
+            Task<Void> task = reference
                     .child(userId)
                     .child(uniqueId)
                     .updateChildren(entity.toLocationMap())
@@ -162,7 +186,7 @@ public class FirebaseRecentlyRepositoryImpl implements FirebaseRecentlyRepositor
         return Single.create(subscriber -> {
             RecentlyEntity entity = entityMapper.map(weather);
 
-            Task<Void> task = databaseReference
+            Task<Void> task = reference
                     .child(userId)
                     .child(uniqueId)
                     .updateChildren(entity.toWeatherMap())
@@ -182,7 +206,7 @@ public class FirebaseRecentlyRepositoryImpl implements FirebaseRecentlyRepositor
             HashMap<String, Object> value = new HashMap<>();
             value.put(language, locationText);
 
-            Task task = databaseReference
+            Task task = reference
                     .child(userId)
                     .child(key)
                     .child(LOCATION_KEY)

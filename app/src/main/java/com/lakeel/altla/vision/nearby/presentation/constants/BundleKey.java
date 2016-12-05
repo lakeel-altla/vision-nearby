@@ -2,7 +2,13 @@ package com.lakeel.altla.vision.nearby.presentation.constants;
 
 public enum BundleKey {
 
-    BEACON_IDS("beaconIds"), BEACON_ID("beaconId"), USER_ID("userId"), USER_NAME("userName"), TARGET_NAME("targetName"), RECENTLY("recently");
+    BEACON_IDS("beaconIds"),
+    BEACON_ID("beaconId"),
+    USER_ID("userId"),
+    USER_NAME("userName"),
+    TARGET_NAME("targetName"),
+    RECENTLY("recently"),
+    JSON_UNIQUE_KEY("jsonUniqueKey");
 
     private String value;
 

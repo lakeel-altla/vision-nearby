@@ -2,38 +2,31 @@ package com.lakeel.altla.vision.nearby.presentation.presenter.mapper;
 
 import android.support.annotation.NonNull;
 
-import com.lakeel.altla.vision.nearby.data.entity.UserEntity;
 import com.lakeel.altla.vision.nearby.data.entity.RecentlyEntity;
-import com.lakeel.altla.vision.nearby.data.entity.RecentlyEntity.LocationEntity;
 import com.lakeel.altla.vision.nearby.presentation.presenter.model.LocationModel;
-import com.lakeel.altla.vision.nearby.presentation.presenter.model.LocationModel.LocationTextModel;
-import com.lakeel.altla.vision.nearby.presentation.presenter.model.RecentlyItemModel;
-import com.lakeel.altla.vision.nearby.presentation.presenter.model.RecentlyItemModel.Weather;
+import com.lakeel.altla.vision.nearby.presentation.presenter.model.PassingModel;
+import com.lakeel.altla.vision.nearby.presentation.presenter.model.WeatherModel;
 
 import java.util.List;
 import java.util.Map;
 
-public final class RecentlyItemModelMapper {
+public final class PassingModelMapper {
 
-    @NonNull
-    public RecentlyItemModel map(@NonNull RecentlyEntity recentlyEntity, @NonNull UserEntity userEntity) {
-        RecentlyItemModel model = new RecentlyItemModel();
+    public PassingModel map(@NonNull RecentlyEntity recentlyEntity) {
+        PassingModel model = new PassingModel();
 
-        model.userId = recentlyEntity.userId;
-        model.name = userEntity.name;
-        model.imageUri = userEntity.imageUri;
         model.detectedActivity = recentlyEntity.userActivity;
         model.passingTime = recentlyEntity.passingTime;
 
-        LocationEntity locationEntity = recentlyEntity.location;
+        RecentlyEntity.LocationEntity locationEntity = recentlyEntity.location;
         if (locationEntity != null) {
             LocationModel locationModel = new LocationModel();
-            locationModel.mLatitude = locationEntity.latitude;
-            locationModel.mLongitude = locationEntity.longitude;
+            locationModel.latitude = locationEntity.latitude;
+            locationModel.longitude = locationEntity.longitude;
 
             Map<String, String> textMap = locationEntity.text;
             if (textMap != null && !textMap.isEmpty()) {
-                LocationTextModel locationTextModel = new LocationTextModel();
+                LocationModel.LocationTextModel locationTextModel = new LocationModel.LocationTextModel();
                 locationTextModel.mTextMap = textMap;
                 locationModel.mLocationTextModel = locationTextModel;
             }
@@ -47,7 +40,7 @@ public final class RecentlyItemModelMapper {
             for (int count = 0; count < conditionList.size(); count++) {
                 conditionArray[count] = conditionList.get(count);
             }
-            Weather weather = new Weather();
+            WeatherModel weather = new WeatherModel();
             weather.conditions = conditionArray;
             weather.humidity = recentlyEntity.weather.humidity;
             weather.temperature = recentlyEntity.weather.temperature;

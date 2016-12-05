@@ -3,7 +3,7 @@ package com.lakeel.altla.vision.nearby.presentation.view.adapter;
 import com.amulyakhare.textdrawable.TextDrawable;
 import com.lakeel.altla.vision.nearby.R;
 import com.lakeel.altla.vision.nearby.core.StringUtils;
-import com.lakeel.altla.vision.nearby.presentation.presenter.model.RecentlyItemModel;
+import com.lakeel.altla.vision.nearby.presentation.presenter.model.RecentlyModel;
 import com.lakeel.altla.vision.nearby.presentation.presenter.recently.RecentlyListPresenter;
 import com.lakeel.altla.vision.nearby.presentation.view.DateFormatter;
 import com.lakeel.altla.vision.nearby.presentation.view.RecentlyItemView;
@@ -25,7 +25,7 @@ import java.util.ArrayList;
 import butterknife.BindView;
 import butterknife.ButterKnife;
 
-public final class RecentlyAdapter extends SwipeableUltimateViewAdapter<RecentlyItemModel> {
+public final class RecentlyAdapter extends SwipeableUltimateViewAdapter<RecentlyModel> {
 
     private RecentlyListPresenter mRecentlyListPresenter;
 
@@ -47,7 +47,7 @@ public final class RecentlyAdapter extends SwipeableUltimateViewAdapter<Recently
     }
 
     @Override
-    protected void withBindHolder(UltimateRecyclerviewViewHolder bindHolder, RecentlyItemModel model, int position) {
+    protected void withBindHolder(UltimateRecyclerviewViewHolder bindHolder, RecentlyModel model, int position) {
         RecentlyItemsViewHolder holder = (RecentlyItemsViewHolder) bindHolder;
         holder.onBind(position);
     }
@@ -89,7 +89,7 @@ public final class RecentlyAdapter extends SwipeableUltimateViewAdapter<Recently
         }
 
         @Override
-        public void showItem(RecentlyItemModel model) {
+        public void showItem(RecentlyModel model) {
             String id = model.userId;
             String userName = model.name;
             String imageUri = model.imageUri;

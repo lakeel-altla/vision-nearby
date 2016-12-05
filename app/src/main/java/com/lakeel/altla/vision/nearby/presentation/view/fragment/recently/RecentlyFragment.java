@@ -29,7 +29,7 @@ import com.lakeel.altla.vision.nearby.presentation.constants.DetectedActivityTyp
 import com.lakeel.altla.vision.nearby.presentation.constants.Radius;
 import com.lakeel.altla.vision.nearby.presentation.constants.WeatherCondition;
 import com.lakeel.altla.vision.nearby.presentation.intent.RecentlyBundleData;
-import com.lakeel.altla.vision.nearby.presentation.presenter.model.ItemModel;
+import com.lakeel.altla.vision.nearby.presentation.presenter.model.UserModel;
 import com.lakeel.altla.vision.nearby.presentation.presenter.model.PresenceModel;
 import com.lakeel.altla.vision.nearby.presentation.presenter.recently.RecentlyPresenter;
 import com.lakeel.altla.vision.nearby.presentation.view.DateFormatter;
@@ -159,7 +159,7 @@ public final class RecentlyFragment extends Fragment implements RecentlyView, On
             passingLayout.textViewWeather.setText(builder.toString());
         }
 
-        passingLayout.textViewDetectedActivity.setText(DetectedActivityType.toUserActivity(bundleData.detectedActivity).getActivity());
+        passingLayout.textViewDetectedActivity.setText(DetectedActivityType.toUserActivity(bundleData.detectedActivity).getValue());
 
         presenter.onActivityCreated();
     }
@@ -205,14 +205,14 @@ public final class RecentlyFragment extends Fragment implements RecentlyView, On
     @Override
     public void showPresence(PresenceModel model) {
         int resId;
-        if (model.mConnected) {
+        if (model.isConnected) {
             resId = R.string.textView_connected;
         } else {
             resId = R.string.textView_disconnected;
         }
         presenceLayout.textViewPresence.setText(resId);
 
-        DateFormatter dateFormatter = new DateFormatter(model.mLastOnline);
+        DateFormatter dateFormatter = new DateFormatter(model.lastOnlineTime);
         presenceLayout.textViewLastOnline.setText(dateFormatter.format());
     }
 
@@ -248,13 +248,13 @@ public final class RecentlyFragment extends Fragment implements RecentlyView, On
     }
 
     @Override
-    public void showProfile(ItemModel model) {
+    public void showProfile(UserModel model) {
         ImageLoader imageLoader = ImageLoader.getInstance();
-        imageLoader.displayImage(model.mImageUri, mImageView);
+        imageLoader.displayImage(model.imageUri, mImageView);
 
-        profileLayout.textViewName.setText(model.mName);
+        profileLayout.textViewName.setText(model.name);
         profileLayout.textViewEmail.setAutoLinkMask(Linkify.EMAIL_ADDRESSES);
-        profileLayout.textViewEmail.setText(model.mEmail);
+        profileLayout.textViewEmail.setText(model.email);
     }
 
     @Override

@@ -83,7 +83,7 @@ public class RecentlyService extends IntentService {
                     public void onConnected(@Nullable Bundle bundle) {
                         findUserUseCase
                                 .execute(userId)
-                                .flatMap(userEntity -> saveRecentlyUseCase.execute(userEntity.key).subscribeOn(Schedulers.io()))
+                                .flatMap(userEntity -> saveRecentlyUseCase.execute(MyUser.getUid(), userEntity.key).subscribeOn(Schedulers.io()))
                                 .subscribeOn(Schedulers.io())
                                 .subscribe(uniqueKey -> {
                                     getUserCurrentActivity()

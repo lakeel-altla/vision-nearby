@@ -61,7 +61,7 @@ public final class SearchFragment extends Fragment implements SearchView {
 
         MainActivity.getUserComponent(this).inject(this);
 
-//        mSearchView = (MaterialSearchView) getActivity().findViewById(R.userId.search_view);
+//        mSearchView = (MaterialSearchView) getValue().findViewById(R.userId.search_view);
 //        mSearchView.setEllipsize(true);
 //        mSearchView.setVoiceSearch(true);
 //        mSearchView.setOnQueryTextListener(new MaterialSearchView.OnQueryTextListener() {
@@ -144,6 +144,6 @@ public final class SearchFragment extends Fragment implements SearchView {
 
     @Override
     public void showTrackingFragment(String id) {
-//        ((MainActivity) getActivity()).showTrackingFragment(userId);
+//        ((MainActivity) getValue()).showTrackingFragment(userId);
     }
 }

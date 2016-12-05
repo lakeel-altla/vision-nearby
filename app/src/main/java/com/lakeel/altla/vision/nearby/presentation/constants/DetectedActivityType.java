@@ -21,7 +21,7 @@ public enum DetectedActivityType {
         this.stringValue = stringValue;
     }
 
-    public String getActivity() {
+    public String getValue() {
         return stringValue;
     }
 
