@@ -18,7 +18,7 @@ public final class SaveCurrentLocationUseCase {
     SaveCurrentLocationUseCase() {
     }
 
-    public Single<RecentlyEntity> execute(String uniqueId, Location location) {
-        return repository.saveCurrentLocation(uniqueId, location);
+    public Single<RecentlyEntity> execute(String uniqueId, String userId, Location location) {
+        return repository.saveCurrentLocation(uniqueId, userId, location);
     }
 }

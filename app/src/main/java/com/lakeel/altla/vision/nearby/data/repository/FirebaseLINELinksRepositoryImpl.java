@@ -31,13 +31,13 @@ public class FirebaseLineLinksRepositoryImpl implements FirebaseLineLinksReposit
     }
 
     @Override
-    public Single<String> saveUrl(String url) {
+    public Single<String> saveUrl(String userId, String url) {
         return Single.create(subscriber -> {
             LineLinkEntity entity = new LineLinkEntity();
             entity.url = url;
 
             Task<Void> task = mReference
-                    .child(MyUser.getUid())
+                    .child(userId)
                     .setValue(entity)
                     .addOnSuccessListener(aVoid -> subscriber.onSuccess(url))
                     .addOnFailureListener(subscriber::onError);

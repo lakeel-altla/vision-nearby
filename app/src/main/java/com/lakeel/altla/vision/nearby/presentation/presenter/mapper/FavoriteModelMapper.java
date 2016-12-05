@@ -11,10 +11,10 @@ public final class FavoriteModelMapper {
     @NonNull
     public FavoriteModel map(@NonNull FavoriteEntity favoriteEntity, @NonNull UserEntity userEntity) {
         FavoriteModel model = new FavoriteModel();
-        model.mId = userEntity.key;
-        model.mName = userEntity.name;
-        model.mImageUri = userEntity.imageUri;
-        model.mAddedTime = favoriteEntity.addedTime;
+        model.userId = userEntity.key;
+        model.name = userEntity.name;
+        model.imageUri = userEntity.imageUri;
+        model.addedTime = favoriteEntity.addedTime;
         return model;
     }
 }

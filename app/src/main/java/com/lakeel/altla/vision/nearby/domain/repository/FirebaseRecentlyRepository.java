@@ -11,17 +11,17 @@ import rx.Single;
 
 public interface FirebaseRecentlyRepository {
 
-    Observable<RecentlyEntity> findRecently();
+    Observable<RecentlyEntity> findRecentlyByUserId(String userId);
 
-    Single<Long> findTimes(String id);
+    Single<Long> findPassingTimes(String userId, String otherId);
 
     Single<String> saveRecently(String userId);
 
-    Single<RecentlyEntity> saveDetectedActivity(String uniqueId, DetectedActivity detectedActivity);
+    Single<RecentlyEntity> saveDetectedActivity(String uniqueId, String userId, DetectedActivity detectedActivity);
 
-    Single<RecentlyEntity> saveCurrentLocation(String uniqueId, Location location);
+    Single<RecentlyEntity> saveCurrentLocation(String uniqueId, String userId, Location location);
 
-    Single<RecentlyEntity> saveWeather(String uniqueId, Weather weather);
+    Single<RecentlyEntity> saveWeather(String uniqueId, String userId, Weather weather);
 
-    Single<String> saveLocationText(String key, String language, String locationText);
+    Single<String> saveLocationText(String key, String userId, String language, String locationText);
 }

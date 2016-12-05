@@ -16,7 +16,7 @@ public final class FindCMLinksUseCase {
     FindCMLinksUseCase() {
     }
 
-    public Single<CMLinkEntity> execute() {
-        return mFirebaseCMLinksRepository.findCmLinks();
+    public Single<CMLinkEntity> execute(String userId) {
+        return mFirebaseCMLinksRepository.findCmLinksByUserId(userId);
     }
 }

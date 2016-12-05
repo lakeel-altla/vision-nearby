@@ -3,12 +3,13 @@ package com.lakeel.altla.vision.nearby.presentation.presenter.recently;
 import com.lakeel.altla.vision.nearby.R;
 import com.lakeel.altla.vision.nearby.domain.usecase.FindFavoriteUseCase;
 import com.lakeel.altla.vision.nearby.domain.usecase.FindLineUrlUseCase;
-import com.lakeel.altla.vision.nearby.domain.usecase.FindUserUseCase;
 import com.lakeel.altla.vision.nearby.domain.usecase.FindLocationTextUseCase;
 import com.lakeel.altla.vision.nearby.domain.usecase.FindPresenceUseCase;
 import com.lakeel.altla.vision.nearby.domain.usecase.FindTimesUseCase;
+import com.lakeel.altla.vision.nearby.domain.usecase.FindUserUseCase;
 import com.lakeel.altla.vision.nearby.domain.usecase.SaveFavoriteUseCase;
 import com.lakeel.altla.vision.nearby.domain.usecase.SaveLocationTextUseCase;
+import com.lakeel.altla.vision.nearby.presentation.firebase.MyUser;
 import com.lakeel.altla.vision.nearby.presentation.presenter.BasePresenter;
 import com.lakeel.altla.vision.nearby.presentation.presenter.mapper.ItemModelMapper;
 import com.lakeel.altla.vision.nearby.presentation.presenter.mapper.PresencesModelMapper;
@@ -55,7 +56,7 @@ public final class RecentlyPresenter extends BasePresenter<RecentlyView> {
 
     private ItemModelMapper itemModelMapper = new ItemModelMapper();
 
-    private String userId;
+    private String otherUserId;
 
     private String latitude;
 
@@ -68,19 +69,20 @@ public final class RecentlyPresenter extends BasePresenter<RecentlyView> {
     @Override
     public void onActivityCreated() {
         Subscription subscription = findPresenceUseCase
-                .execute(userId)
+                .execute(otherUserId)
                 .map(entity -> presencesModelMapper.map(entity))
                 .doOnSuccess(model -> getView().showPresence(model))
-                .flatMap(presenceModel -> findTimesUseCase.execute(userId).subscribeOn(Schedulers.io()))
+                .flatMap(presenceModel -> findTimesUseCase.execute(MyUser.getUid(), otherUserId).subscribeOn(Schedulers.io()))
                 .doOnSuccess(times -> getView().showTimes(times))
-                .flatMap(times -> findUserUseCase.execute(userId).subscribeOn(Schedulers.io()))
+                .flatMap(times -> findUserUseCase.execute(otherUserId).subscribeOn(Schedulers.io()))
                 .map(entity -> itemModelMapper.map(entity))
                 .doOnSuccess(model -> getView().showProfile(model))
-                .flatMap(model -> findLineUrlUseCase.execute(userId).subscribeOn(Schedulers.io()))
+                .flatMap(model -> findLineUrlUseCase.execute(otherUserId).subscribeOn(Schedulers.io()))
                 .map(lineLinksEntity -> lineLinksEntity.url)
                 .doOnSuccess(lineUrl -> getView().showLineUrl(lineUrl))
-                .flatMapObservable(s -> findFavoriteUseCase.execute(userId).subscribeOn(Schedulers.io()).toObservable())
+                .flatMapObservable(s -> findFavoriteUseCase.execute(MyUser.getUid(), otherUserId).subscribeOn(Schedulers.io()).toObservable())
                 .filter(entity -> entity == null)
+                .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribe(entity -> {
                     getView().showAddButton();
@@ -92,7 +94,7 @@ public final class RecentlyPresenter extends BasePresenter<RecentlyView> {
     }
 
     public void setUserLocationData(String userId, String latitude, String longitude) {
-        this.userId = userId;
+        this.otherUserId = userId;
         this.latitude = latitude;
         this.longitude = longitude;
     }
@@ -107,7 +109,7 @@ public final class RecentlyPresenter extends BasePresenter<RecentlyView> {
 
     public void onAdd() {
         Subscription subscription = saveFavoriteUseCase
-                .execute(userId)
+                .execute(MyUser.getUid(), otherUserId)
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribe(entity -> {

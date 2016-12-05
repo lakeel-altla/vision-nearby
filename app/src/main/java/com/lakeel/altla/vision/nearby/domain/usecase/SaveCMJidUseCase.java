@@ -15,7 +15,7 @@ public final class SaveCMJidUseCase {
     SaveCMJidUseCase() {
     }
 
-    public Single<String> execute(String jid) {
-        return mFirebaseCMLinksRepository.saveCMJid(jid);
+    public Single<String> execute(String userId, String jid) {
+        return mFirebaseCMLinksRepository.saveCMJid(userId, jid);
     }
 }

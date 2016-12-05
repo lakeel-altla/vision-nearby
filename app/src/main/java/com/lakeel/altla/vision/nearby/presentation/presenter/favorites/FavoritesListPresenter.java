@@ -8,6 +8,7 @@ import com.lakeel.altla.vision.nearby.data.entity.UserEntity;
 import com.lakeel.altla.vision.nearby.domain.usecase.FindFavoritesUseCase;
 import com.lakeel.altla.vision.nearby.domain.usecase.FindUserUseCase;
 import com.lakeel.altla.vision.nearby.domain.usecase.RemoveFavoriteUseCase;
+import com.lakeel.altla.vision.nearby.presentation.firebase.MyUser;
 import com.lakeel.altla.vision.nearby.presentation.presenter.BaseItemPresenter;
 import com.lakeel.altla.vision.nearby.presentation.presenter.BasePresenter;
 import com.lakeel.altla.vision.nearby.presentation.presenter.mapper.FavoriteModelMapper;
@@ -52,7 +53,7 @@ public final class FavoritesListPresenter extends BasePresenter<FavoriteListView
     @Override
     public void onResume() {
         Subscription subscription = mFindFavoritesUseCase
-                .execute()
+                .execute(MyUser.getUid())
                 .flatMap(entity -> {
                     String userId = entity.key;
                     Observable<UserEntity> itemsSingle = mFindUserUseCase.execute(userId).toObservable();
@@ -86,13 +87,13 @@ public final class FavoritesListPresenter extends BasePresenter<FavoriteListView
         }
 
         public void onClick(FavoriteModel model) {
-            String userId = model.mId;
-            String userName = model.mName;
+            String userId = model.userId;
+            String userName = model.name;
             getView().showFavoritesUserActivity(userId, userName);
         }
 
         public void onRemove(FavoriteModel favoriteModel) {
-            Subscription subscription = mRemoveFavoriteUseCase.execute(favoriteModel.mId)
+            Subscription subscription = mRemoveFavoriteUseCase.execute(MyUser.getUid(), favoriteModel.userId)
                     .subscribeOn(Schedulers.io())
                     .observeOn(AndroidSchedulers.mainThread())
                     .subscribe(throwable -> {

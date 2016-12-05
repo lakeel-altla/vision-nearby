@@ -86,17 +86,17 @@ public final class FavoritesAdapter extends SwipeableUltimateViewAdapter<Favorit
 
         @Override
         public void showItem(FavoriteModel model) {
-            String displayName = model.mName;
+            String displayName = model.name;
             mUserName.setText(displayName);
 
-            if (StringUtils.isEmpty(model.mImageUri)) {
+            if (StringUtils.isEmpty(model.imageUri)) {
                 String initial = displayName.substring(0, 1);
                 TextDrawable drawable = TextDrawable.builder()
                         .buildRound(initial, Color.RED);
                 mImageView.post(() -> mImageView.setImageDrawable(drawable));
             } else {
                 ImageLoader imageLoader = ImageLoader.getInstance();
-                imageLoader.displayImage(model.mImageUri, mImageView);
+                imageLoader.displayImage(model.imageUri, mImageView);
             }
 
             removeButton.setOnClickListener(v -> mFavoritesItemPresenter.onRemove(model));

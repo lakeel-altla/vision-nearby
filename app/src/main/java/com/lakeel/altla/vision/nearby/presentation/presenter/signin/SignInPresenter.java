@@ -6,6 +6,7 @@ import com.firebase.ui.auth.AuthUI;
 import com.google.firebase.auth.FirebaseAuth;
 import com.lakeel.altla.vision.nearby.R;
 import com.lakeel.altla.vision.nearby.domain.usecase.SaveItemUseCase;
+import com.lakeel.altla.vision.nearby.presentation.firebase.MyUser;
 import com.lakeel.altla.vision.nearby.presentation.presenter.BasePresenter;
 import com.lakeel.altla.vision.nearby.presentation.view.SignInView;
 
@@ -53,7 +54,7 @@ public final class SignInPresenter extends BasePresenter<SignInView> {
 
     public void onSignedIn() {
         Subscription subscription = mSaveItemUseCase
-                .execute()
+                .execute(MyUser.getUid())
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribe(e -> {

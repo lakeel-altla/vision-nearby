@@ -5,7 +5,6 @@ import com.lakeel.altla.vision.nearby.domain.repository.FirebaseRecentlyReposito
 import javax.inject.Inject;
 
 import rx.Single;
-import rx.schedulers.Schedulers;
 
 public final class SaveLocationTextUseCase {
 
@@ -16,7 +15,7 @@ public final class SaveLocationTextUseCase {
     public SaveLocationTextUseCase() {
     }
 
-    public Single<String> execute(String key, String language, String locationText) {
-        return mFirebaseRecentlyRepository.saveLocationText(key, language, locationText);
+    public Single<String> execute(String key, String userId, String language, String locationText) {
+        return mFirebaseRecentlyRepository.saveLocationText(key, userId, language, locationText);
     }
 }

@@ -16,7 +16,7 @@ public final class SaveItemUseCase {
     public SaveItemUseCase() {
     }
 
-    public Completable execute() {
-        return mFirebaseUsersRepository.saveUser();
+    public Completable execute(String userId) {
+        return mFirebaseUsersRepository.saveUser(userId);
     }
 }

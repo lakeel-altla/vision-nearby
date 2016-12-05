@@ -6,7 +6,7 @@ import rx.Single;
 
 public interface FirebaseLineLinksRepository {
 
-    Single<String> saveUrl(String url);
+    Single<String> saveUrl(String userId, String url);
 
     Single<LineLinkEntity> findByUserId(String userId);
 

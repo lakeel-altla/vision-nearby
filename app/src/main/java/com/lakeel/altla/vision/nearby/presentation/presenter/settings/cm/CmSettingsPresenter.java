@@ -1,13 +1,12 @@
 package com.lakeel.altla.vision.nearby.presentation.presenter.settings.cm;
 
 import com.lakeel.altla.vision.nearby.R;
-import com.lakeel.altla.vision.nearby.data.entity.CMLinkEntity;
-import com.lakeel.altla.vision.nearby.data.entity.ConfigsEntity;
 import com.lakeel.altla.vision.nearby.domain.usecase.FindCMLinksUseCase;
 import com.lakeel.altla.vision.nearby.domain.usecase.FindConfigsUseCase;
 import com.lakeel.altla.vision.nearby.domain.usecase.SaveCMApiKeyUseCase;
 import com.lakeel.altla.vision.nearby.domain.usecase.SaveCMJidUseCase;
 import com.lakeel.altla.vision.nearby.domain.usecase.SaveCMSecretKeyUseCase;
+import com.lakeel.altla.vision.nearby.presentation.firebase.MyUser;
 import com.lakeel.altla.vision.nearby.presentation.presenter.BasePresenter;
 import com.lakeel.altla.vision.nearby.presentation.presenter.mapper.CMLinksModelMapper;
 import com.lakeel.altla.vision.nearby.presentation.view.CmSettingsView;
@@ -17,32 +16,30 @@ import org.slf4j.LoggerFactory;
 
 import javax.inject.Inject;
 
-import rx.Observable;
 import rx.Subscription;
 import rx.android.schedulers.AndroidSchedulers;
-import rx.functions.Func1;
 import rx.schedulers.Schedulers;
 
 public final class CmSettingsPresenter extends BasePresenter<CmSettingsView> {
 
     @Inject
-    FindConfigsUseCase mFindConfigsUseCase;
+    FindConfigsUseCase findConfigsUseCase;
 
     @Inject
-    FindCMLinksUseCase mFindCMLinksUseCase;
+    FindCMLinksUseCase findCMLinksUseCase;
 
     @Inject
-    SaveCMApiKeyUseCase mSaveCMApiKeyUseCase;
+    SaveCMApiKeyUseCase saveCMApiKeyUseCase;
 
     @Inject
-    SaveCMSecretKeyUseCase mSaveCMSecretKeyUseCase;
+    SaveCMSecretKeyUseCase saveCMSecretKeyUseCase;
 
     @Inject
-    SaveCMJidUseCase mSaveCMJidUseCase;
+    SaveCMJidUseCase saveCMJidUseCase;
 
     private static final Logger LOGGER = LoggerFactory.getLogger(CmSettingsPresenter.class);
 
-    private CMLinksModelMapper mCMLinksModelMapper = new CMLinksModelMapper();
+    private CMLinksModelMapper CMLinksModelMapper = new CMLinksModelMapper();
 
     @Inject
     CmSettingsPresenter() {
@@ -50,20 +47,12 @@ public final class CmSettingsPresenter extends BasePresenter<CmSettingsView> {
 
     @Override
     public void onActivityCreated() {
-        Subscription subscription1 = mFindConfigsUseCase
+        Subscription subscription1 = findConfigsUseCase
                 .execute()
                 .toObservable()
                 .filter(entity -> entity.isCmLinkEnabled)
-                .flatMap(new Func1<ConfigsEntity, Observable<CMLinkEntity>>() {
-                    @Override
-                    public Observable<CMLinkEntity> call(ConfigsEntity entity) {
-                        return mFindCMLinksUseCase.
-                                execute()
-                                .subscribeOn(Schedulers.io())
-                                .toObservable();
-                    }
-                })
-                .map(entity -> mCMLinksModelMapper.map(entity))
+                .flatMap(entity -> findCMLinksUseCase.execute(MyUser.getUid()).subscribeOn(Schedulers.io()).toObservable())
+                .map(entity -> CMLinksModelMapper.map(entity))
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribe(model -> {
@@ -75,8 +64,8 @@ public final class CmSettingsPresenter extends BasePresenter<CmSettingsView> {
     }
 
     public void onSaveCMApiKey(String apiKey) {
-        Subscription subscription = mSaveCMApiKeyUseCase
-                .execute(apiKey)
+        Subscription subscription = saveCMApiKeyUseCase
+                .execute(MyUser.getUid(), apiKey)
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribe(s -> {
@@ -90,8 +79,8 @@ public final class CmSettingsPresenter extends BasePresenter<CmSettingsView> {
     }
 
     public void onSaveCMSecretKey(String secretKey) {
-        Subscription subscription = mSaveCMSecretKeyUseCase
-                .execute(secretKey)
+        Subscription subscription = saveCMSecretKeyUseCase
+                .execute(MyUser.getUid(), secretKey)
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribe(s -> {
@@ -105,8 +94,8 @@ public final class CmSettingsPresenter extends BasePresenter<CmSettingsView> {
     }
 
     public void onSaveCMJid(String jid) {
-        Subscription subscription = mSaveCMJidUseCase
-                .execute(jid)
+        Subscription subscription = saveCMJidUseCase
+                .execute(MyUser.getUid(), jid)
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribe(s -> {

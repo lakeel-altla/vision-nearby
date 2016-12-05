@@ -176,7 +176,7 @@ public final class ActivityPresenter extends BasePresenter<ActivityView> impleme
     public void onSignedIn() {
         getView().showFavoritesListFragment();
 
-        observePresenceUseCase.execute();
+        observePresenceUseCase.execute(MyUser.getUid());
 
         MyUser.UserData userData = MyUser.getUserData();
         getView().showProfile(userData.displayName, userData.email, userData.imageUri);
@@ -208,7 +208,7 @@ public final class ActivityPresenter extends BasePresenter<ActivityView> impleme
                 .flatMap(beaconId -> saveBeaconUseCase.execute(beaconId).subscribeOn(Schedulers.io()))
                 .flatMap(beaconId -> {
                     String token = instanceId.getToken();
-                    return saveTokensUseCase.execute(beaconId, token).subscribeOn(Schedulers.io());
+                    return saveTokensUseCase.execute(MyUser.getUid(), beaconId, token).subscribeOn(Schedulers.io());
                 })
                 .subscribeOn(Schedulers.io())
                 .doOnError(e -> LOGGER.error("Failed to save beacon data.", e))
@@ -227,7 +227,7 @@ public final class ActivityPresenter extends BasePresenter<ActivityView> impleme
         reusableCompositeSubscription.add(preferenceSubscription);
 
         Subscription cmLinksSubscription = findCMLinksUseCase
-                .execute()
+                .execute(MyUser.getUid())
                 .subscribeOn(Schedulers.io())
                 .map(entity -> cmAuthConfigMapper.map(entity))
                 .subscribeOn(Schedulers.io())

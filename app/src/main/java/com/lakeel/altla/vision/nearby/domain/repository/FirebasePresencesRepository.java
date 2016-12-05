@@ -6,9 +6,9 @@ import rx.Single;
 
 public interface FirebasePresencesRepository {
 
-    void savePresenceOnline();
+    void savePresenceOnline(String userId);
 
-    void savePresenceOfflineOnDisconnected();
+    void savePresenceOfflineOnDisconnected(String userId);
 
     Single<PresenceEntity> findPresenceById(String id);
 }

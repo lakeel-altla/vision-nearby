@@ -15,7 +15,7 @@ public final class RemoveFavoriteUseCase {
     public RemoveFavoriteUseCase() {
     }
 
-    public Completable execute(String uid) {
-        return mFavoritesRepository.removeFavoriteByUid(uid);
+    public Completable execute(String myUserId, String otherUserId) {
+        return mFavoritesRepository.removeFavoriteByUid(myUserId, otherUserId);
     }
 }

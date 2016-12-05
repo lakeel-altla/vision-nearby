@@ -10,7 +10,6 @@ import com.lakeel.altla.vision.nearby.data.entity.UserEntity;
 import com.lakeel.altla.vision.nearby.data.execption.DataStoreException;
 import com.lakeel.altla.vision.nearby.data.mapper.UserEntityMapper;
 import com.lakeel.altla.vision.nearby.domain.repository.FirebaseUsersRepository;
-import com.lakeel.altla.vision.nearby.presentation.firebase.MyUser;
 
 import java.util.HashMap;
 import java.util.Iterator;
@@ -40,10 +39,12 @@ public final class FirebaseUsersRepositoryImpl implements FirebaseUsersRepositor
     }
 
     @Override
-    public Completable saveUser() {
+    public Completable saveUser(String userId) {
         return Completable.create(subscriber -> {
             Map<String, Object> map = entityMapper.map();
-            Task task = reference.child(MyUser.getUid()).updateChildren(map)
+            Task task = reference
+                    .child(userId)
+                    .updateChildren(map)
                     .addOnSuccessListener(aVoid -> subscriber.onCompleted())
                     .addOnFailureListener(subscriber::onError);
 

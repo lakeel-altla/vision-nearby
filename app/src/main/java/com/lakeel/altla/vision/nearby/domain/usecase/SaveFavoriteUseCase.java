@@ -16,7 +16,7 @@ public final class SaveFavoriteUseCase {
     public SaveFavoriteUseCase() {
     }
 
-    public Single<FavoriteEntity> execute(String id) {
-        return mFirebaseFavoritesRepository.saveFavorite(id);
+    public Single<FavoriteEntity> execute(String myUserId, String otherUserId) {
+        return mFirebaseFavoritesRepository.saveFavorite(myUserId, otherUserId);
     }
 }

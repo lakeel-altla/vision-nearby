@@ -9,7 +9,6 @@ import com.google.firebase.database.ValueEventListener;
 import com.lakeel.altla.vision.nearby.data.entity.FavoriteEntity;
 import com.lakeel.altla.vision.nearby.data.execption.DataStoreException;
 import com.lakeel.altla.vision.nearby.domain.repository.FirebaseFavoritesRepository;
-import com.lakeel.altla.vision.nearby.presentation.firebase.MyUser;
 
 import javax.inject.Inject;
 
@@ -19,20 +18,18 @@ import rx.Single;
 
 public class FirebaseFavoritesRepositoryImpl implements FirebaseFavoritesRepository {
 
-    private DatabaseReference mReference;
+    private DatabaseReference reference;
 
     @Inject
     public FirebaseFavoritesRepositoryImpl(String url) {
-        mReference = FirebaseDatabase.getInstance().getReferenceFromUrl(url);
+        reference = FirebaseDatabase.getInstance().getReferenceFromUrl(url);
     }
 
     @Override
-    @SuppressWarnings("unchecked")
-    public Observable<FavoriteEntity> findFavorites() {
-
+    public Observable<FavoriteEntity> findFavoritesByUserId(String userId) {
         return Observable.create(subscriber -> {
-            mReference
-                    .child(MyUser.getUid())
+            reference
+                    .child(userId)
                     .addListenerForSingleValueEvent(new ValueEventListener() {
 
                         @Override
@@ -54,11 +51,11 @@ public class FirebaseFavoritesRepositoryImpl implements FirebaseFavoritesReposit
     }
 
     @Override
-    public Single<FavoriteEntity> findFavoriteById(String id) {
+    public Single<FavoriteEntity> findFavorite(String userId, String otherUserId) {
         return Single.create(subscriber ->
-                mReference
-                        .child(MyUser.getUid())
-                        .child(id)
+                reference
+                        .child(userId)
+                        .child(otherUserId)
                         .addListenerForSingleValueEvent(new ValueEventListener() {
                             @Override
                             public void onDataChange(DataSnapshot dataSnapshot) {
@@ -74,11 +71,14 @@ public class FirebaseFavoritesRepositoryImpl implements FirebaseFavoritesReposit
     }
 
     @Override
-    public Single<FavoriteEntity> saveFavorite(String id) {
+    public Single<FavoriteEntity> saveFavorite(String myUserId, String otherUserId) {
         return Single.create(subscriber -> {
             FavoriteEntity entity = new FavoriteEntity();
 
-            Task<Void> task = mReference.child(MyUser.getUid()).child(id).setValue(entity.toMap())
+            Task<Void> task = reference
+                    .child(myUserId)
+                    .child(otherUserId)
+                    .setValue(entity.toMap())
                     .addOnSuccessListener(aVoid -> subscriber.onSuccess(entity))
                     .addOnFailureListener(subscriber::onError);
 
@@ -90,16 +90,17 @@ public class FirebaseFavoritesRepositoryImpl implements FirebaseFavoritesReposit
     }
 
     @Override
-    public Completable removeFavoriteByUid(String id) {
-        return Completable.create(subscriber -> {
-            mReference.child(MyUser.getUid()).child(id)
-                    .removeValue((databaseError, databaseReference) -> {
-                        if (databaseError == null) {
-                            subscriber.onCompleted();
-                        } else {
-                            subscriber.onError(databaseError.toException());
-                        }
-                    });
-        });
+    public Completable removeFavoriteByUid(String userId, String otherUserId) {
+        return Completable.create(subscriber ->
+                reference
+                        .child(userId)
+                        .child(otherUserId)
+                        .removeValue((databaseError, databaseReference) -> {
+                            if (databaseError == null) {
+                                subscriber.onCompleted();
+                            } else {
+                                subscriber.onError(databaseError.toException());
+                            }
+                        }));
     }
 }

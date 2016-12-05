@@ -8,11 +8,11 @@ import rx.Single;
 
 public interface FirebaseFavoritesRepository {
 
-    Observable<FavoriteEntity> findFavorites();
+    Observable<FavoriteEntity> findFavoritesByUserId(String userId);
 
-    Single<FavoriteEntity> findFavoriteById(String id);
+    Single<FavoriteEntity> findFavorite(String myUserId, String otherUserId);
 
-    Single<FavoriteEntity> saveFavorite(String id);
+    Single<FavoriteEntity> saveFavorite(String myUserId, String otherUserId);
 
-    Completable removeFavoriteByUid(String id);
+    Completable removeFavoriteByUid(String myUserId, String otherUserId);
 }

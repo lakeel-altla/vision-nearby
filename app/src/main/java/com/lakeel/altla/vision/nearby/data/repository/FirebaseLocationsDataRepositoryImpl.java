@@ -10,6 +10,7 @@ import com.lakeel.altla.vision.nearby.data.entity.LocationDataEntity;
 import com.lakeel.altla.vision.nearby.data.execption.DataStoreException;
 import com.lakeel.altla.vision.nearby.data.mapper.LocationDataEntityMapper;
 import com.lakeel.altla.vision.nearby.domain.repository.FirebaseLocationsDataRepository;
+import com.lakeel.altla.vision.nearby.presentation.firebase.MyUser;
 
 import java.util.Iterator;
 
@@ -31,11 +32,11 @@ public final class FirebaseLocationsDataRepositoryImpl implements FirebaseLocati
     }
 
     @Override
-    public Single<LocationDataEntity> findLocationsDataById(String id) {
+    public Single<LocationDataEntity> findLocationsDataByBeaconId(String beaconId) {
         return Single.create(subscriber ->
                 databaseReference
                         .orderByChild(KEY_BEACON_ID)
-                        .equalTo(id)
+                        .equalTo(beaconId)
                         .limitToFirst(1)
                         .addListenerForSingleValueEvent(new ValueEventListener() {
                             @Override

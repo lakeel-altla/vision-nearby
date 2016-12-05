@@ -15,7 +15,7 @@ public final class SaveTokensUseCase {
     SaveTokensUseCase() {
     }
 
-    public Single<String> execute(String beaconId, String token) {
-        return firebaseTokensRepository.saveTokenByBeaconId(beaconId, token);
+    public Single<String> execute(String userId, String beaconId, String token) {
+        return firebaseTokensRepository.saveToken(userId, beaconId, token);
     }
 }

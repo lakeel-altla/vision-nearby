@@ -17,7 +17,7 @@ public final class SaveDetectedActivityUseCase {
     SaveDetectedActivityUseCase() {
     }
 
-    public Single<RecentlyEntity> execute(String uniqueKey, DetectedActivity detectedActivity) {
-        return repository.saveDetectedActivity(uniqueKey, detectedActivity);
+    public Single<RecentlyEntity> execute(String uniqueKey, String userId, DetectedActivity detectedActivity) {
+        return repository.saveDetectedActivity(uniqueKey, userId, detectedActivity);
     }
 }

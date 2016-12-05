@@ -23,6 +23,7 @@ import com.lakeel.altla.vision.nearby.domain.usecase.SaveWeatherUseCase;
 import com.lakeel.altla.vision.nearby.presentation.di.component.DaggerServiceComponent;
 import com.lakeel.altla.vision.nearby.presentation.di.component.ServiceComponent;
 import com.lakeel.altla.vision.nearby.presentation.exception.AwarenessException;
+import com.lakeel.altla.vision.nearby.presentation.firebase.MyUser;
 import com.lakeel.altla.vision.nearby.presentation.intent.IntentKey;
 
 import org.slf4j.Logger;
@@ -82,23 +83,23 @@ public class RecentlyService extends IntentService {
                     public void onConnected(@Nullable Bundle bundle) {
                         findUserUseCase
                                 .execute(userId)
-                                .flatMap(itemEntity -> saveRecentlyUseCase.execute(itemEntity.key).subscribeOn(Schedulers.io()))
+                                .flatMap(userEntity -> saveRecentlyUseCase.execute(userEntity.key).subscribeOn(Schedulers.io()))
                                 .subscribeOn(Schedulers.io())
                                 .subscribe(uniqueKey -> {
                                     getUserCurrentActivity()
-                                            .flatMap(detectedActivity -> saveDetectedActivityUseCase.execute(uniqueKey, detectedActivity).subscribeOn(Schedulers.io()))
+                                            .flatMap(detectedActivity -> saveDetectedActivityUseCase.execute(uniqueKey, MyUser.getUid(), detectedActivity).subscribeOn(Schedulers.io()))
                                             .subscribeOn(Schedulers.io())
                                             .doOnError(e -> LOGGER.error("Failed to save user activity.", e))
                                             .subscribe();
 
                                     getUserCurrentLocation(context)
-                                            .flatMap(location -> saveCurrentLocationUseCase.execute(uniqueKey, location).subscribeOn(Schedulers.io()))
+                                            .flatMap(location -> saveCurrentLocationUseCase.execute(uniqueKey, MyUser.getUid(), location).subscribeOn(Schedulers.io()))
                                             .subscribeOn(Schedulers.io())
                                             .doOnError(e -> LOGGER.error("Failed to save user current location.", e))
                                             .subscribe();
 
                                     getWeather(context)
-                                            .flatMap(weather -> saveWeatherUseCase.execute(uniqueKey, weather).subscribeOn(Schedulers.io()))
+                                            .flatMap(weather -> saveWeatherUseCase.execute(uniqueKey, MyUser.getUid(), weather).subscribeOn(Schedulers.io()))
                                             .subscribeOn(Schedulers.io())
                                             .doOnError(e -> LOGGER.error("Failed to save weather.", e))
                                             .subscribe();

@@ -12,7 +12,7 @@ public interface FirebaseUsersRepository {
 
     Single<UserEntity> findUserByName(String name);
 
-    Completable saveUser();
+    Completable saveUser(String userId);
 
     Single<String> saveBeacon(String userId, String beaconId);
 

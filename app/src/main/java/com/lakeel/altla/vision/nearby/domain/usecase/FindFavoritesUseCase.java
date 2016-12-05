@@ -16,7 +16,7 @@ public final class FindFavoritesUseCase {
     FindFavoritesUseCase() {
     }
 
-    public Observable<FavoriteEntity> execute() {
-        return mFavoritesRepository.findFavorites();
+    public Observable<FavoriteEntity> execute(String userId) {
+        return mFavoritesRepository.findFavoritesByUserId(userId);
     }
 }

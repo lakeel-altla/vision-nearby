@@ -16,7 +16,7 @@ public final class FindRecentlyUseCase {
     FindRecentlyUseCase() {
     }
 
-    public Observable<RecentlyEntity> execute() {
-        return mFirebaseRecentlyRepository.findRecently();
+    public Observable<RecentlyEntity> execute(String userId) {
+        return mFirebaseRecentlyRepository.findRecentlyByUserId(userId);
     }
 }

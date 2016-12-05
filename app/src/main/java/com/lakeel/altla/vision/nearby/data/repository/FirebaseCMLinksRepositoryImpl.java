@@ -6,8 +6,6 @@ import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
-
-import com.lakeel.altla.vision.nearby.presentation.firebase.MyUser;
 import com.lakeel.altla.vision.nearby.data.entity.CMLinkEntity;
 import com.lakeel.altla.vision.nearby.data.execption.DataStoreException;
 import com.lakeel.altla.vision.nearby.domain.repository.FirebaseCMLinksRepository;
@@ -33,8 +31,8 @@ public final class FirebaseCMLinksRepositoryImpl implements FirebaseCMLinksRepos
     }
 
     @Override
-    public Single<String> findCmJidByItemId(String itemId) {
-        return Single.create(subscriber -> mReference.child(itemId).addListenerForSingleValueEvent(new ValueEventListener() {
+    public Single<String> findCmJidByItemId(String userId) {
+        return Single.create(subscriber -> mReference.child(userId).addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
                 CMLinkEntity entity = dataSnapshot.getValue(CMLinkEntity.class);
@@ -49,9 +47,9 @@ public final class FirebaseCMLinksRepositoryImpl implements FirebaseCMLinksRepos
     }
 
     @Override
-    public Single<CMLinkEntity> findCmLinks() {
+    public Single<CMLinkEntity> findCmLinksByUserId(String userId) {
         return Single.create(subscriber ->
-                mReference.child(MyUser.getUid()).addListenerForSingleValueEvent(new ValueEventListener() {
+                mReference.child(userId).addListenerForSingleValueEvent(new ValueEventListener() {
                     @Override
                     public void onDataChange(DataSnapshot dataSnapshot) {
                         CMLinkEntity entity = dataSnapshot.getValue(CMLinkEntity.class);
@@ -66,12 +64,12 @@ public final class FirebaseCMLinksRepositoryImpl implements FirebaseCMLinksRepos
     }
 
     @Override
-    public Single<String> saveCMApiKey(String apiKey) {
+    public Single<String> saveCMApiKey(String userId, String apiKey) {
         return Single.create(new Single.OnSubscribe<String>() {
             @Override
             public void call(SingleSubscriber<? super String> subscriber) {
                 Task<Void> task = mReference
-                        .child(MyUser.getUid())
+                        .child(userId)
                         .child(KEY_API_KEY)
                         .setValue(apiKey)
                         .addOnSuccessListener(aVoid -> subscriber.onSuccess(apiKey))
@@ -86,12 +84,12 @@ public final class FirebaseCMLinksRepositoryImpl implements FirebaseCMLinksRepos
     }
 
     @Override
-    public Single<String> saveCMSecretKey(String secretKey) {
+    public Single<String> saveCMSecretKey(String userId, String secretKey) {
         return Single.create(new Single.OnSubscribe<String>() {
             @Override
             public void call(SingleSubscriber<? super String> subscriber) {
                 Task<Void> task = mReference
-                        .child(MyUser.getUid())
+                        .child(userId)
                         .child(KEY_SECRET_KEY)
                         .setValue(secretKey)
                         .addOnSuccessListener(aVoid -> subscriber.onSuccess(secretKey))
@@ -106,12 +104,12 @@ public final class FirebaseCMLinksRepositoryImpl implements FirebaseCMLinksRepos
     }
 
     @Override
-    public Single<String> saveCMJid(String jid) {
+    public Single<String> saveCMJid(String userId, String jid) {
         return Single.create(new Single.OnSubscribe<String>() {
             @Override
             public void call(SingleSubscriber<? super String> subscriber) {
                 Task<Void> task = mReference
-                        .child(MyUser.getUid())
+                        .child(userId)
                         .child(KEY_JID_KEY)
                         .setValue(jid)
                         .addOnSuccessListener(aVoid -> subscriber.onSuccess(jid))

@@ -46,7 +46,7 @@ public final class LineSettingsPresenter extends BasePresenter<LineSettingsView>
 
     public void onSaveLineUrl(String url) {
         Subscription subscription = mSaveLineUrlUseCase
-                .execute(url)
+                .execute(MyUser.getUid(), url)
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribe(s -> {

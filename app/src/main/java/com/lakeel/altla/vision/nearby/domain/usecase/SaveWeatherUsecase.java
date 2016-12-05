@@ -17,7 +17,7 @@ public final class SaveWeatherUseCase {
     SaveWeatherUseCase() {
     }
 
-    public Single<RecentlyEntity> execute(String uniqueId, Weather weather) {
-        return repository.saveWeather(uniqueId, weather);
+    public Single<RecentlyEntity> execute(String uniqueId, String userId, Weather weather) {
+        return repository.saveWeather(uniqueId, userId, weather);
     }
 }

@@ -5,7 +5,7 @@ import rx.Single;
 
 public interface FirebaseTokensRepository {
 
-    Single<String> saveTokenByBeaconId(String beaconId, String token);
+    Single<String> saveToken(String userId, String beaconId, String token);
 
     Single<String> findTokenByUserId(String userId);
 

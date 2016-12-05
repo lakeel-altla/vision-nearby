@@ -15,7 +15,7 @@ public final class SaveLineUrlUseCase {
     SaveLineUrlUseCase() {
     }
 
-    public Single<String> execute(String url) {
-        return mFirebaseLineLinksRepository.saveUrl(url);
+    public Single<String> execute(String userId, String url) {
+        return mFirebaseLineLinksRepository.saveUrl(userId, url);
     }
 }

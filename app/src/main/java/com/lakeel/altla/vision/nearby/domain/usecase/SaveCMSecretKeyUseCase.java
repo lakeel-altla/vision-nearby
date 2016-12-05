@@ -15,7 +15,7 @@ public final class SaveCMSecretKeyUseCase {
     SaveCMSecretKeyUseCase() {
     }
 
-    public Single<String> execute(String secretKey) {
-        return mFirebaseCMLinksRepository.saveCMSecretKey(secretKey);
+    public Single<String> execute(String userId, String secretKey) {
+        return mFirebaseCMLinksRepository.saveCMSecretKey(userId, secretKey);
     }
 }

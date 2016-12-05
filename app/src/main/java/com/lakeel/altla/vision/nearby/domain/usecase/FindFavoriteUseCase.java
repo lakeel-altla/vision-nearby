@@ -1,7 +1,7 @@
 package com.lakeel.altla.vision.nearby.domain.usecase;
 
-import com.lakeel.altla.vision.nearby.domain.repository.FirebaseFavoritesRepository;
 import com.lakeel.altla.vision.nearby.data.entity.FavoriteEntity;
+import com.lakeel.altla.vision.nearby.domain.repository.FirebaseFavoritesRepository;
 
 import javax.inject.Inject;
 
@@ -16,7 +16,7 @@ public final class FindFavoriteUseCase {
     FindFavoriteUseCase() {
     }
 
-    public Single<FavoriteEntity> execute(String id) {
-        return mFirebaseFavoritesRepository.findFavoriteById(id);
+    public Single<FavoriteEntity> execute(String myUserId, String otherUserId) {
+        return mFirebaseFavoritesRepository.findFavorite(myUserId, otherUserId);
     }
 }

@@ -15,7 +15,7 @@ public final class SaveCMApiKeyUseCase {
     SaveCMApiKeyUseCase() {
     }
 
-    public Single<String> execute(String apiKey) {
-        return mFirebaseCMLinksRepository.saveCMApiKey(apiKey);
+    public Single<String> execute(String userId, String apiKey) {
+        return mFirebaseCMLinksRepository.saveCMApiKey(userId, apiKey);
     }
 }

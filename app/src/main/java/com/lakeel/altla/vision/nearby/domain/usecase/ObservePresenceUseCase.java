@@ -19,16 +19,16 @@ public final class ObservePresenceUseCase {
     public ObservePresenceUseCase() {
     }
 
-    public void execute() {
+    public void execute(String userId) {
         mConnectionRepository
                 .observeConnected()
                 .subscribeOn(Schedulers.io())
                 .subscribe(o -> {
                     // Called when connected to firebase. Change presence to online.
-                    mPresenceRepository.savePresenceOnline();
+                    mPresenceRepository.savePresenceOnline(userId);
                 });
 
         // Change presence to offline when disconnect to firebase.
-        mPresenceRepository.savePresenceOfflineOnDisconnected();
+        mPresenceRepository.savePresenceOfflineOnDisconnected(userId);
     }
 }

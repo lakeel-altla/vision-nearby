@@ -2,11 +2,11 @@ package com.lakeel.altla.vision.nearby.presentation.presenter.model;
 
 public final class FavoriteModel {
 
-    public String mId;
+    public String userId;
 
-    public String mName;
+    public String name;
 
-    public String mImageUri;
+    public String imageUri;
 
-    public long mAddedTime;
+    public long addedTime;
 }

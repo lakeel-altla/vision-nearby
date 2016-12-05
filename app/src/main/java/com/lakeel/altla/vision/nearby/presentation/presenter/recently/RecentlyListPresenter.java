@@ -5,9 +5,10 @@ import android.support.annotation.IntRange;
 import com.lakeel.altla.vision.nearby.R;
 import com.lakeel.altla.vision.nearby.data.entity.UserEntity;
 import com.lakeel.altla.vision.nearby.domain.usecase.FindFavoriteUseCase;
-import com.lakeel.altla.vision.nearby.domain.usecase.FindUserUseCase;
 import com.lakeel.altla.vision.nearby.domain.usecase.FindRecentlyUseCase;
+import com.lakeel.altla.vision.nearby.domain.usecase.FindUserUseCase;
 import com.lakeel.altla.vision.nearby.domain.usecase.SaveFavoriteUseCase;
+import com.lakeel.altla.vision.nearby.presentation.firebase.MyUser;
 import com.lakeel.altla.vision.nearby.presentation.intent.RecentlyBundleData;
 import com.lakeel.altla.vision.nearby.presentation.presenter.BaseItemPresenter;
 import com.lakeel.altla.vision.nearby.presentation.presenter.BasePresenter;
@@ -62,7 +63,7 @@ public final class RecentlyListPresenter extends BasePresenter<RecentlyListView>
     @Override
     public void onResume() {
         Subscription subscription = mFindRecentlyUseCase
-                .execute()
+                .execute(MyUser.getUid())
                 .flatMap(entity -> {
                     Observable<UserEntity> itemsObservable = mFindUserUseCase.execute(entity.userId).subscribeOn(Schedulers.io()).toObservable();
                     return Observable.zip(Observable.just(entity), itemsObservable, (recentlyEntity, itemsEntity) ->
@@ -127,9 +128,9 @@ public final class RecentlyListPresenter extends BasePresenter<RecentlyListView>
             getView().showRecentlyUserActivity(data);
         }
 
-        public void onAdd(String id) {
+        public void onAdd(String otherUserId) {
             Subscription subscription = mSaveFavoriteUseCase
-                    .execute(id)
+                    .execute(MyUser.getUid(), otherUserId)
                     .subscribeOn(Schedulers.io())
                     .observeOn(AndroidSchedulers.mainThread())
                     .subscribe(entity -> {

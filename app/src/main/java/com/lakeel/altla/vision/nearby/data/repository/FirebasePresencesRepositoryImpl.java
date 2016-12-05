@@ -29,18 +29,18 @@ public class FirebasePresencesRepositoryImpl implements FirebasePresencesReposit
     }
 
     @Override
-    public void savePresenceOnline() {
+    public void savePresenceOnline(String userId) {
         // Check user authentication because when user sign out, this method is called and FirebaseUser instance become null.
         if (MyUser.isAuthenticated()) {
-            mReference.child(MyUser.getUid()).child(IS_CONNECTED_KEY).setValue(true);
-            mReference.child(MyUser.getUid()).child(LAST_ONLINE_KEY).setValue(ServerValue.TIMESTAMP);
+            mReference.child(userId).child(IS_CONNECTED_KEY).setValue(true);
+            mReference.child(userId).child(LAST_ONLINE_KEY).setValue(ServerValue.TIMESTAMP);
         }
     }
 
     @Override
-    public void savePresenceOfflineOnDisconnected() {
+    public void savePresenceOfflineOnDisconnected(String userId) {
         mReference
-                .child(MyUser.getUid())
+                .child(userId)
                 .child(IS_CONNECTED_KEY)
                 .onDisconnect()
                 .setValue(false);

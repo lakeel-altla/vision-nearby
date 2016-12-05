@@ -16,7 +16,7 @@ public final class FindLocationDataUseCase {
     FindLocationDataUseCase() {
     }
 
-    public Single<LocationDataEntity> execute(String id) {
-        return mFirebaseLocationsDataRepository.findLocationsDataById(id);
+    public Single<LocationDataEntity> execute(String beaconId) {
+        return mFirebaseLocationsDataRepository.findLocationsDataByBeaconId(beaconId);
     }
 }

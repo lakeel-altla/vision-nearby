@@ -15,7 +15,7 @@ public final class FindTimesUseCase {
     public FindTimesUseCase() {
     }
 
-    public Single<Long> execute(String id) {
-        return mFirebaseRecentlyRepository.findTimes(id);
+    public Single<Long> execute(String myUserId, String otherUserId) {
+        return mFirebaseRecentlyRepository.findPassingTimes(myUserId, otherUserId);
     }
 }
