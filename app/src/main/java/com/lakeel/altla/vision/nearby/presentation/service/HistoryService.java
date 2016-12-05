@@ -35,7 +35,7 @@ import rx.Single;
 import rx.SingleSubscriber;
 import rx.schedulers.Schedulers;
 
-public class RecentlyService extends IntentService {
+public class HistoryService extends IntentService {
 
     @Inject
     FindUserUseCase findUserUseCase;
@@ -52,15 +52,15 @@ public class RecentlyService extends IntentService {
     @Inject
     SaveWeatherUseCase saveWeatherUseCase;
 
-    private static final Logger LOGGER = LoggerFactory.getLogger(RecentlyService.class);
+    private static final Logger LOGGER = LoggerFactory.getLogger(HistoryService.class);
 
     private GoogleApiClient googleApiClient;
 
-    public RecentlyService() {
-        super(RecentlyService.class.getSimpleName());
+    public HistoryService() {
+        super(HistoryService.class.getSimpleName());
     }
 
-    public RecentlyService(String name) {
+    public HistoryService(String name) {
         super(name);
     }
 

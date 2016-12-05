@@ -1,11 +1,11 @@
 package com.lakeel.altla.vision.nearby.presentation.attachment;
 
-import com.lakeel.altla.vision.nearby.presentation.firebase.MyUser;
-import com.lakeel.altla.vision.nearby.presentation.intent.IntentKey;
-import com.lakeel.altla.vision.nearby.presentation.service.RecentlyService;
-
 import android.content.Context;
 import android.content.Intent;
+
+import com.lakeel.altla.vision.nearby.presentation.firebase.MyUser;
+import com.lakeel.altla.vision.nearby.presentation.intent.IntentKey;
+import com.lakeel.altla.vision.nearby.presentation.service.HistoryService;
 
 public class UserIdAttachmentState implements AttachmentState {
 
@@ -21,8 +21,8 @@ public class UserIdAttachmentState implements AttachmentState {
             return;
         }
 
-        Intent recentlyServiceIntent = new Intent(context, RecentlyService.class);
-        recentlyServiceIntent.putExtra(IntentKey.USER_ID.name(), value);
-        context.startService(recentlyServiceIntent);
+        Intent historyServiceIntent = new Intent(context, HistoryService.class);
+        historyServiceIntent.putExtra(IntentKey.USER_ID.name(), value);
+        context.startService(historyServiceIntent);
     }
 }

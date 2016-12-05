@@ -4,7 +4,7 @@ import com.lakeel.altla.vision.nearby.presentation.intent.RecentlyBundleData;
 
 import android.support.annotation.StringRes;
 
-public interface RecentlyListView extends BaseView {
+public interface HistoryListView extends BaseView {
 
     void updateItems();
 

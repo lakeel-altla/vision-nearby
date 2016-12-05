@@ -1,8 +1,8 @@
 package com.lakeel.altla.vision.nearby.domain.usecase;
 
 import com.google.android.gms.awareness.state.Weather;
-import com.lakeel.altla.vision.nearby.data.entity.RecentlyEntity;
-import com.lakeel.altla.vision.nearby.domain.repository.FirebaseRecentlyRepository;
+import com.lakeel.altla.vision.nearby.data.entity.HistoryEntity;
+import com.lakeel.altla.vision.nearby.domain.repository.FirebaseHistoryRepository;
 
 import javax.inject.Inject;
 
@@ -11,13 +11,13 @@ import rx.Single;
 public final class SaveWeatherUseCase {
 
     @Inject
-    FirebaseRecentlyRepository repository;
+    FirebaseHistoryRepository repository;
 
     @Inject
     SaveWeatherUseCase() {
     }
 
-    public Single<RecentlyEntity> execute(String uniqueId, String userId, Weather weather) {
+    public Single<HistoryEntity> execute(String uniqueId, String userId, Weather weather) {
         return repository.saveWeather(uniqueId, userId, weather);
     }
 }

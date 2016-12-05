@@ -3,10 +3,10 @@ package com.lakeel.altla.vision.nearby.presentation.view.adapter;
 import com.amulyakhare.textdrawable.TextDrawable;
 import com.lakeel.altla.vision.nearby.R;
 import com.lakeel.altla.vision.nearby.core.StringUtils;
-import com.lakeel.altla.vision.nearby.presentation.presenter.model.RecentlyModel;
-import com.lakeel.altla.vision.nearby.presentation.presenter.recently.RecentlyListPresenter;
+import com.lakeel.altla.vision.nearby.presentation.presenter.history.HistoryListPresenter;
+import com.lakeel.altla.vision.nearby.presentation.presenter.model.HistoryModel;
 import com.lakeel.altla.vision.nearby.presentation.view.DateFormatter;
-import com.lakeel.altla.vision.nearby.presentation.view.RecentlyItemView;
+import com.lakeel.altla.vision.nearby.presentation.view.HistoryItemView;
 import com.marshalchen.ultimaterecyclerview.SwipeableUltimateViewAdapter;
 import com.marshalchen.ultimaterecyclerview.UltimateRecyclerviewViewHolder;
 import com.marshalchen.ultimaterecyclerview.swipe.SwipeLayout;
@@ -25,13 +25,13 @@ import java.util.ArrayList;
 import butterknife.BindView;
 import butterknife.ButterKnife;
 
-public final class RecentlyAdapter extends SwipeableUltimateViewAdapter<RecentlyModel> {
+public final class RecentlyAdapter extends SwipeableUltimateViewAdapter<HistoryModel> {
 
-    private RecentlyListPresenter mRecentlyListPresenter;
+    private HistoryListPresenter mHistoryListPresenter;
 
-    public RecentlyAdapter(RecentlyListPresenter recentlyListPresenter) {
+    public RecentlyAdapter(HistoryListPresenter historyListPresenter) {
         super(new ArrayList<>());
-        mRecentlyListPresenter = recentlyListPresenter;
+        mHistoryListPresenter = historyListPresenter;
     }
 
     @Override
@@ -41,18 +41,18 @@ public final class RecentlyAdapter extends SwipeableUltimateViewAdapter<Recently
 
     @Override
     protected UltimateRecyclerviewViewHolder newViewHolder(View view) {
-        RecentlyItemsViewHolder viewHolder = new RecentlyItemsViewHolder(view, true);
-        mRecentlyListPresenter.onCreateItemView(viewHolder);
+        HistoryItemsViewHolder viewHolder = new HistoryItemsViewHolder(view, true);
+        mHistoryListPresenter.onCreateItemView(viewHolder);
         return viewHolder;
     }
 
     @Override
-    protected void withBindHolder(UltimateRecyclerviewViewHolder bindHolder, RecentlyModel model, int position) {
-        RecentlyItemsViewHolder holder = (RecentlyItemsViewHolder) bindHolder;
+    protected void withBindHolder(UltimateRecyclerviewViewHolder bindHolder, HistoryModel model, int position) {
+        HistoryItemsViewHolder holder = (HistoryItemsViewHolder) bindHolder;
         holder.onBind(position);
     }
 
-    public static class RecentlyItemsViewHolder extends UltimateRecyclerviewViewHolder implements RecentlyItemView {
+    public static class HistoryItemsViewHolder extends UltimateRecyclerviewViewHolder implements HistoryItemView {
 
         @BindView(R.id.layout_row)
         LinearLayout mLinearLayout;
@@ -72,9 +72,9 @@ public final class RecentlyAdapter extends SwipeableUltimateViewAdapter<Recently
         @BindView(R.id.swipe_layout)
         SwipeLayout mSwipeLayout;
 
-        private RecentlyListPresenter.RecentlyItemPresenter mRecentlyItemPresenter;
+        private HistoryListPresenter.HistoryItemPresenter mHistoryItemPresenter;
 
-        public RecentlyItemsViewHolder(View itemView, boolean bind) {
+        public HistoryItemsViewHolder(View itemView, boolean bind) {
             super(itemView);
             if (bind) {
                 ButterKnife.bind(this, itemView);
@@ -84,12 +84,12 @@ public final class RecentlyAdapter extends SwipeableUltimateViewAdapter<Recently
         }
 
         @Override
-        public void setItemPresenter(RecentlyListPresenter.RecentlyItemPresenter itemPresenter) {
-            mRecentlyItemPresenter = itemPresenter;
+        public void setItemPresenter(HistoryListPresenter.HistoryItemPresenter itemPresenter) {
+            mHistoryItemPresenter = itemPresenter;
         }
 
         @Override
-        public void showItem(RecentlyModel model) {
+        public void showItem(HistoryModel model) {
             String id = model.userId;
             String userName = model.name;
             String imageUri = model.imageUri;
@@ -110,8 +110,8 @@ public final class RecentlyAdapter extends SwipeableUltimateViewAdapter<Recently
             DateFormatter dateFormatter = new DateFormatter(model.passingTime);
             mTimestamp.setText(dateFormatter.format());
 
-            mLinearLayout.setOnClickListener(view -> mRecentlyItemPresenter.onClick(model));
-            mAddButton.setOnClickListener(v -> mRecentlyItemPresenter.onAdd(id));
+            mLinearLayout.setOnClickListener(view -> mHistoryItemPresenter.onClick(model));
+            mAddButton.setOnClickListener(v -> mHistoryItemPresenter.onAdd(id));
         }
 
         @Override
@@ -121,7 +121,7 @@ public final class RecentlyAdapter extends SwipeableUltimateViewAdapter<Recently
 
         @Override
         public void onBind(@IntRange(from = 0) int position) {
-            mRecentlyItemPresenter.onBind(position);
+            mHistoryItemPresenter.onBind(position);
         }
     }
 }

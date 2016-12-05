@@ -5,7 +5,7 @@ import android.support.annotation.StringRes;
 import com.lakeel.altla.vision.nearby.presentation.presenter.model.UserModel;
 import com.lakeel.altla.vision.nearby.presentation.presenter.model.PresenceModel;
 
-public interface RecentlyView {
+public interface HistoryView {
 
     void showSnackBar(@StringRes int resId);
 

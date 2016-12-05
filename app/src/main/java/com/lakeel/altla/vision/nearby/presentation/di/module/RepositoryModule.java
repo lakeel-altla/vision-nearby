@@ -10,7 +10,7 @@ import com.lakeel.altla.vision.nearby.data.repository.FirebaseLocationsDataRepos
 import com.lakeel.altla.vision.nearby.data.repository.FirebaseLocationsRepositoryImpl;
 import com.lakeel.altla.vision.nearby.data.repository.FirebaseNotificationsRepositoryImpl;
 import com.lakeel.altla.vision.nearby.data.repository.FirebasePresencesRepositoryImpl;
-import com.lakeel.altla.vision.nearby.data.repository.FirebaseRecentlyRepositoryImpl;
+import com.lakeel.altla.vision.nearby.data.repository.FirebaseHistoryRepositoryImpl;
 import com.lakeel.altla.vision.nearby.data.repository.FirebaseTokensRepositoryImpl;
 import com.lakeel.altla.vision.nearby.data.repository.FirebaseUsersRepositoryImpl;
 import com.lakeel.altla.vision.nearby.data.repository.PreferenceRepositoryImpl;
@@ -26,7 +26,7 @@ import com.lakeel.altla.vision.nearby.domain.repository.FirebaseLocationsDataRep
 import com.lakeel.altla.vision.nearby.domain.repository.FirebaseLocationsRepository;
 import com.lakeel.altla.vision.nearby.domain.repository.FirebaseNotificationsRepository;
 import com.lakeel.altla.vision.nearby.domain.repository.FirebasePresencesRepository;
-import com.lakeel.altla.vision.nearby.domain.repository.FirebaseRecentlyRepository;
+import com.lakeel.altla.vision.nearby.domain.repository.FirebaseHistoryRepository;
 import com.lakeel.altla.vision.nearby.domain.repository.FirebaseTokensRepository;
 import com.lakeel.altla.vision.nearby.domain.repository.FirebaseUsersRepository;
 import com.lakeel.altla.vision.nearby.domain.repository.PreferenceRepository;
@@ -54,8 +54,8 @@ public class RepositoryModule {
 
     @InjectScope
     @Provides
-    FirebaseRecentlyRepository provideRecentlyRepository(@Named("recentlyUrl") String url) {
-        return new FirebaseRecentlyRepositoryImpl(url);
+    FirebaseHistoryRepository provideRecentlyRepository(@Named("historyUrl") String url) {
+        return new FirebaseHistoryRepositoryImpl(url);
     }
 
     @InjectScope

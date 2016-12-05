@@ -1,4 +1,4 @@
-package com.lakeel.altla.vision.nearby.presentation.view.fragment.recently;
+package com.lakeel.altla.vision.nearby.presentation.view.fragment.history;
 
 import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
@@ -29,11 +29,11 @@ import com.lakeel.altla.vision.nearby.presentation.constants.DetectedActivityTyp
 import com.lakeel.altla.vision.nearby.presentation.constants.Radius;
 import com.lakeel.altla.vision.nearby.presentation.constants.WeatherCondition;
 import com.lakeel.altla.vision.nearby.presentation.intent.RecentlyBundleData;
+import com.lakeel.altla.vision.nearby.presentation.presenter.history.HistoryPresenter;
 import com.lakeel.altla.vision.nearby.presentation.presenter.model.UserModel;
 import com.lakeel.altla.vision.nearby.presentation.presenter.model.PresenceModel;
-import com.lakeel.altla.vision.nearby.presentation.presenter.recently.RecentlyPresenter;
 import com.lakeel.altla.vision.nearby.presentation.view.DateFormatter;
-import com.lakeel.altla.vision.nearby.presentation.view.RecentlyView;
+import com.lakeel.altla.vision.nearby.presentation.view.HistoryView;
 import com.lakeel.altla.vision.nearby.presentation.view.activity.MainActivity;
 import com.lakeel.altla.vision.nearby.presentation.view.layout.PassingLayout;
 import com.lakeel.altla.vision.nearby.presentation.view.layout.PresenceLayout;
@@ -49,19 +49,19 @@ import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
 
-public final class RecentlyFragment extends Fragment implements RecentlyView, OnMapReadyCallback {
+public final class HistoryFragment extends Fragment implements HistoryView, OnMapReadyCallback {
 
-    public static RecentlyFragment newInstance(RecentlyBundleData data) {
+    public static HistoryFragment newInstance(RecentlyBundleData data) {
         Bundle args = new Bundle();
         args.putSerializable(BundleKey.RECENTLY.getValue(), data);
 
-        RecentlyFragment fragment = new RecentlyFragment();
+        HistoryFragment fragment = new HistoryFragment();
         fragment.setArguments(args);
         return fragment;
     }
 
     @Inject
-    RecentlyPresenter presenter;
+    HistoryPresenter presenter;
 
     @BindView(R.id.mainLayout)
     RelativeLayout mMainLayout;
@@ -92,7 +92,7 @@ public final class RecentlyFragment extends Fragment implements RecentlyView, On
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
-        View view = inflater.inflate(R.layout.fragment_recently, container, false);
+        View view = inflater.inflate(R.layout.fragment_history, container, false);
 
         ButterKnife.bind(this, view);
         ButterKnife.bind(presenceLayout, view.findViewById(R.id.presenceLayout));

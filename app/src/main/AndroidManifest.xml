@@ -43,7 +43,7 @@
 
         <service android:name=".presentation.service.LocationService" />
         <service android:name=".presentation.service.LineService" />
-        <service android:name=".presentation.service.RecentlyService" />
+        <service android:name=".presentation.service.HistoryService" />
         <service android:name=".presentation.service.NotificationService" />
 
         <service

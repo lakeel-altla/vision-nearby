@@ -1,4 +1,4 @@
-package com.lakeel.altla.vision.nearby.presentation.view.fragment.recently;
+package com.lakeel.altla.vision.nearby.presentation.view.fragment.history;
 
 import android.os.Bundle;
 import android.support.design.widget.Snackbar;
@@ -12,8 +12,8 @@ import android.widget.RelativeLayout;
 
 import com.lakeel.altla.vision.nearby.R;
 import com.lakeel.altla.vision.nearby.presentation.intent.RecentlyBundleData;
-import com.lakeel.altla.vision.nearby.presentation.presenter.recently.RecentlyListPresenter;
-import com.lakeel.altla.vision.nearby.presentation.view.RecentlyListView;
+import com.lakeel.altla.vision.nearby.presentation.presenter.history.HistoryListPresenter;
+import com.lakeel.altla.vision.nearby.presentation.view.HistoryListView;
 import com.lakeel.altla.vision.nearby.presentation.view.activity.MainActivity;
 import com.lakeel.altla.vision.nearby.presentation.view.adapter.RecentlyAdapter;
 import com.lakeel.altla.vision.nearby.presentation.view.divider.DividerItemDecoration;
@@ -27,10 +27,10 @@ import javax.inject.Inject;
 import butterknife.BindView;
 import butterknife.ButterKnife;
 
-public final class RecentlyListFragment extends Fragment implements RecentlyListView {
+public final class HistoryListFragment extends Fragment implements HistoryListView {
 
     @Inject
-    RecentlyListPresenter mPresenter;
+    HistoryListPresenter mPresenter;
 
     @BindView(R.id.layout)
     RelativeLayout mRelativeLayout;
@@ -38,8 +38,8 @@ public final class RecentlyListFragment extends Fragment implements RecentlyList
     @BindView(R.id.recycler_view)
     UltimateRecyclerView mUltimateRecyclerView;
 
-    public static RecentlyListFragment newInstance() {
-        return new RecentlyListFragment();
+    public static HistoryListFragment newInstance() {
+        return new HistoryListFragment();
     }
 
     @Override

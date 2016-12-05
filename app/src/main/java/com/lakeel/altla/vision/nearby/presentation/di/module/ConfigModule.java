@@ -20,9 +20,9 @@ public final class ConfigModule {
 
     @InjectScope
     @Provides
-    @Named("recentlyUrl")
+    @Named("historyUrl")
     String provideRecentlyUrl() {
-        return "https://profile-notification-95441.firebaseio.com/recently";
+        return "https://profile-notification-95441.firebaseio.com/history";
     }
 
     @InjectScope

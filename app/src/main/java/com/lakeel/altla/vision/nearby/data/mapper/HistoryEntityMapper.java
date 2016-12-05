@@ -3,34 +3,34 @@ package com.lakeel.altla.vision.nearby.data.mapper;
 import com.google.android.gms.awareness.state.Weather;
 import com.google.android.gms.location.DetectedActivity;
 
-import com.lakeel.altla.vision.nearby.data.entity.RecentlyEntity;
+import com.lakeel.altla.vision.nearby.data.entity.HistoryEntity;
 
 import android.location.Location;
 
 import java.util.ArrayList;
 import java.util.List;
 
-import static com.lakeel.altla.vision.nearby.data.entity.RecentlyEntity.LocationEntity;
-import static com.lakeel.altla.vision.nearby.data.entity.RecentlyEntity.WeatherEntity;
+import static com.lakeel.altla.vision.nearby.data.entity.HistoryEntity.LocationEntity;
+import static com.lakeel.altla.vision.nearby.data.entity.HistoryEntity.WeatherEntity;
 
-public final class RecentlyEntityMapper {
+public final class HistoryEntityMapper {
 
-    public RecentlyEntity map(String userId) {
-        RecentlyEntity entity = new RecentlyEntity();
+    public HistoryEntity map(String userId) {
+        HistoryEntity entity = new HistoryEntity();
         entity.userId = userId;
         return entity;
     }
 
-    public RecentlyEntity map(DetectedActivity detectedActivity) {
-        RecentlyEntity entity = new RecentlyEntity();
+    public HistoryEntity map(DetectedActivity detectedActivity) {
+        HistoryEntity entity = new HistoryEntity();
         if (detectedActivity != null) {
             entity.userActivity = detectedActivity.getType();
         }
         return entity;
     }
 
-    public RecentlyEntity map(Location location) {
-        RecentlyEntity entity = new RecentlyEntity();
+    public HistoryEntity map(Location location) {
+        HistoryEntity entity = new HistoryEntity();
         if (location != null) {
             LocationEntity locationEntity = new LocationEntity();
             locationEntity.latitude = String.valueOf(location.getLatitude());
@@ -40,8 +40,8 @@ public final class RecentlyEntityMapper {
         return entity;
     }
 
-    public RecentlyEntity map(Weather weather) {
-        RecentlyEntity entity = new RecentlyEntity();
+    public HistoryEntity map(Weather weather) {
+        HistoryEntity entity = new HistoryEntity();
         if (weather != null) {
             entity.weather = new WeatherEntity();
             entity.weather.humidity = weather.getHumidity();

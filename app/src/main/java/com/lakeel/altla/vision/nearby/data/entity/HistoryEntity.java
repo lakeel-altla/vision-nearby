@@ -6,7 +6,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-public final class RecentlyEntity extends BaseEntity {
+public final class HistoryEntity extends BaseEntity {
 
     public String userId;
 

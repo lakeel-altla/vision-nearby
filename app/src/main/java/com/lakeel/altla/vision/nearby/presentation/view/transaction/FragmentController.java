@@ -9,10 +9,10 @@ import com.lakeel.altla.vision.nearby.R;
 import com.lakeel.altla.vision.nearby.presentation.intent.RecentlyBundleData;
 import com.lakeel.altla.vision.nearby.presentation.view.fragment.estimation.DeviceDistanceEstimationFragment;
 import com.lakeel.altla.vision.nearby.presentation.view.fragment.favorites.FavoriteListFragment;
+import com.lakeel.altla.vision.nearby.presentation.view.fragment.history.HistoryFragment;
+import com.lakeel.altla.vision.nearby.presentation.view.fragment.history.HistoryListFragment;
 import com.lakeel.altla.vision.nearby.presentation.view.fragment.nearby.NearbyListFragment;
 import com.lakeel.altla.vision.nearby.presentation.view.fragment.favorites.FavoriteFragment;
-import com.lakeel.altla.vision.nearby.presentation.view.fragment.recently.RecentlyFragment;
-import com.lakeel.altla.vision.nearby.presentation.view.fragment.recently.RecentlyListFragment;
 import com.lakeel.altla.vision.nearby.presentation.view.fragment.settings.SettingsFragment;
 import com.lakeel.altla.vision.nearby.presentation.view.fragment.settings.bluetooth.BleSettingsFragment;
 import com.lakeel.altla.vision.nearby.presentation.view.fragment.settings.cm.CmSettingsFragment;
@@ -29,9 +29,9 @@ public final class FragmentController {
 
     private final String USER_LIST_FRAGMENT_TAG = FavoriteListFragment.class.getSimpleName();
 
-    private final String RECENTLY_LIST_FRAGMENT_TAG = RecentlyListFragment.class.getSimpleName();
+    private final String RECENTLY_LIST_FRAGMENT_TAG = HistoryListFragment.class.getSimpleName();
 
-    private final String RECENTLY_FRAGMENT_TAG = RecentlyFragment.class.getSimpleName();
+    private final String RECENTLY_FRAGMENT_TAG = HistoryFragment.class.getSimpleName();
 
     private final String TRACKING_FRAGMENT_TAG = TrackingFragment.class.getSimpleName();
 
@@ -71,12 +71,12 @@ public final class FragmentController {
     }
 
     public void showRecentlyListFragment() {
-        RecentlyListFragment fragment = RecentlyListFragment.newInstance();
+        HistoryListFragment fragment = HistoryListFragment.newInstance();
         replaceFragment(R.id.fragmentPlaceholder, fragment, RECENTLY_LIST_FRAGMENT_TAG);
     }
 
     public void showRecentlyFragment(RecentlyBundleData data) {
-        RecentlyFragment fragment = RecentlyFragment.newInstance(data);
+        HistoryFragment fragment = HistoryFragment.newInstance(data);
         replaceFragment(R.id.fragmentPlaceholder, fragment, RECENTLY_FRAGMENT_TAG);
     }
 

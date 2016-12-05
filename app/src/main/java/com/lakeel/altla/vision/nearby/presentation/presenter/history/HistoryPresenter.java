@@ -1,4 +1,4 @@
-package com.lakeel.altla.vision.nearby.presentation.presenter.recently;
+package com.lakeel.altla.vision.nearby.presentation.presenter.history;
 
 import com.lakeel.altla.vision.nearby.R;
 import com.lakeel.altla.vision.nearby.domain.usecase.FindFavoriteUseCase;
@@ -11,9 +11,9 @@ import com.lakeel.altla.vision.nearby.domain.usecase.SaveFavoriteUseCase;
 import com.lakeel.altla.vision.nearby.domain.usecase.SaveLocationTextUseCase;
 import com.lakeel.altla.vision.nearby.presentation.firebase.MyUser;
 import com.lakeel.altla.vision.nearby.presentation.presenter.BasePresenter;
-import com.lakeel.altla.vision.nearby.presentation.presenter.mapper.UserModelMapper;
 import com.lakeel.altla.vision.nearby.presentation.presenter.mapper.PresencesModelMapper;
-import com.lakeel.altla.vision.nearby.presentation.view.RecentlyView;
+import com.lakeel.altla.vision.nearby.presentation.presenter.mapper.UserModelMapper;
+import com.lakeel.altla.vision.nearby.presentation.view.HistoryView;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -24,7 +24,7 @@ import rx.Subscription;
 import rx.android.schedulers.AndroidSchedulers;
 import rx.schedulers.Schedulers;
 
-public final class RecentlyPresenter extends BasePresenter<RecentlyView> {
+public final class HistoryPresenter extends BasePresenter<HistoryView> {
 
     @Inject
     FindUserUseCase findUserUseCase;
@@ -50,7 +50,7 @@ public final class RecentlyPresenter extends BasePresenter<RecentlyView> {
     @Inject
     FindLineUrlUseCase findLineUrlUseCase;
 
-    private static final Logger LOGGER = LoggerFactory.getLogger(RecentlyPresenter.class);
+    private static final Logger LOGGER = LoggerFactory.getLogger(HistoryPresenter.class);
 
     private PresencesModelMapper presencesModelMapper = new PresencesModelMapper();
 
@@ -63,7 +63,7 @@ public final class RecentlyPresenter extends BasePresenter<RecentlyView> {
     private String longitude;
 
     @Inject
-    RecentlyPresenter() {
+    HistoryPresenter() {
     }
 
     @Override

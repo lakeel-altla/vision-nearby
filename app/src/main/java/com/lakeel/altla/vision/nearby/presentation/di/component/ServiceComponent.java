@@ -6,7 +6,7 @@ import com.lakeel.altla.vision.nearby.presentation.di.module.RepositoryModule;
 import com.lakeel.altla.vision.nearby.presentation.service.LineService;
 import com.lakeel.altla.vision.nearby.presentation.service.LocationService;
 import com.lakeel.altla.vision.nearby.presentation.service.NotificationService;
-import com.lakeel.altla.vision.nearby.presentation.service.RecentlyService;
+import com.lakeel.altla.vision.nearby.presentation.service.HistoryService;
 
 import dagger.Component;
 
@@ -18,7 +18,7 @@ public interface ServiceComponent {
 
     void inject(LocationService service);
 
-    void inject(RecentlyService service);
+    void inject(HistoryService service);
 
     void inject(NotificationService service);
 }
