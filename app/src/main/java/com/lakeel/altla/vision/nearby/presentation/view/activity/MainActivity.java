@@ -235,7 +235,7 @@ public class MainActivity extends AppCompatActivity
     }
 
     @Override
-    public void showAdvertiseDisableDialog() {
+    public void showAdvertiseDisableConfirmDialog() {
         ConfirmDialog dialog = new ConfirmDialog(MainActivity.this, R.string.message_advertise_disable);
         dialog.show();
     }

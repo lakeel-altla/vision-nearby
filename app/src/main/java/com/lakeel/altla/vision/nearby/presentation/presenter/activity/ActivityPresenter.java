@@ -190,7 +190,7 @@ public final class ActivityPresenter extends BasePresenter<ActivityView> impleme
             getView().showBleEnabledActivity();
         } else if (state == BleState.SUBSCRIBE_ONLY) {
             isAdvertiseAvailability = false;
-            getView().showAdvertiseDisableDialog();
+            getView().showAdvertiseDisableConfirmDialog();
         }
 
         observePresenceUseCase.execute(MyUser.getUid());

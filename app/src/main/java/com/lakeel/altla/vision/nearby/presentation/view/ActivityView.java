@@ -19,7 +19,7 @@ public interface ActivityView extends BaseView {
 
     void showSnackBar(@StringRes int resId);
 
-    void showAdvertiseDisableDialog();
+    void showAdvertiseDisableConfirmDialog();
 
     void showBleEnabledActivity();
 
