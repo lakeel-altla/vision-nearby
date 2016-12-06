@@ -11,7 +11,7 @@ public interface ActivityView extends BaseView {
 
     void showConnectedResolutionSystemDialog(ConnectionResult connectionResult);
 
-    void showFavoritesListFragment();
+    void showFavoriteListFragment();
 
     void showSignInFragment();
 

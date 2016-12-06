@@ -168,7 +168,7 @@ public class MainActivity extends AppCompatActivity
         switch (id) {
             case R.id.nav_favorites: {
                 FragmentController controller = new FragmentController(getSupportFragmentManager());
-                controller.showFavoritesListFragment();
+                controller.showFavoriteListFragment();
                 break;
             }
             case R.id.nav_recently: {
@@ -270,7 +270,7 @@ public class MainActivity extends AppCompatActivity
     }
 
     @Override
-    public void showFavoritesListFragment() {
+    public void showFavoriteListFragment() {
         ActionBar actionBar = getSupportActionBar();
         if (actionBar != null) {
             actionBar.setDisplayHomeAsUpEnabled(true);
@@ -280,7 +280,7 @@ public class MainActivity extends AppCompatActivity
         drawerLayout.setDrawerLockMode(DrawerLayout.LOCK_MODE_UNLOCKED);
 
         FragmentController fragmentController = new FragmentController(getSupportFragmentManager());
-        fragmentController.showFavoritesListFragment();
+        fragmentController.showFavoriteListFragment();
     }
 
     public static ViewComponent getUserComponent(@NonNull Fragment fragment) {

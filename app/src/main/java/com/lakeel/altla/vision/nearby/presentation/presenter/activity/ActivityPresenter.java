@@ -173,7 +173,7 @@ public final class ActivityPresenter extends BasePresenter<ActivityView> impleme
     }
 
     public void onSignedIn() {
-        getView().showFavoritesListFragment();
+        getView().showFavoriteListFragment();
 
         if (ActivityCompat.checkSelfPermission(context, Manifest.permission.ACCESS_FINE_LOCATION) == PackageManager.PERMISSION_GRANTED) {
             onAccessLocationGranted();

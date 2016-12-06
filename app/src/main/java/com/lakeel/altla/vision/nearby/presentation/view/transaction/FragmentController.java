@@ -60,7 +60,7 @@ public final class FragmentController {
         replaceFragment(R.id.fragmentPlaceholder, fragment, SIGN_IN_FRAGMENT_TAG);
     }
 
-    public void showFavoritesListFragment() {
+    public void showFavoriteListFragment() {
         FavoriteListFragment fragment = FavoriteListFragment.newInstance();
         replaceFragment(R.id.fragmentPlaceholder, fragment, USER_LIST_FRAGMENT_TAG);
     }
