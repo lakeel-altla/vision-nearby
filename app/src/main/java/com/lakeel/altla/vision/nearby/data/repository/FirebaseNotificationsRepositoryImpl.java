@@ -6,6 +6,8 @@ import com.lakeel.altla.vision.nearby.data.entity.NotificationEntity;
 import com.lakeel.altla.vision.nearby.data.mapper.NotificationEntityMapper;
 import com.lakeel.altla.vision.nearby.domain.repository.FirebaseNotificationsRepository;
 
+import java.util.Map;
+
 import javax.inject.Inject;
 
 import rx.Single;
@@ -25,10 +27,11 @@ public class FirebaseNotificationsRepositoryImpl implements FirebaseNotification
     public Single<NotificationEntity> saveNotification(String to, String title, String message) {
         return Single.create(subscriber -> {
             NotificationEntity entity = entityMapper.map(to, title, message);
+            Map<String, Object> map = entity.toMap();
 
             reference
                     .push()
-                    .setValue(entity)
+                    .setValue(map)
                     .addOnSuccessListener(aVoid -> subscriber.onSuccess(entity))
                     .addOnFailureListener(subscriber::onError);
         });
