@@ -106,7 +106,7 @@ public final class SettingsFragment extends PreferenceFragmentCompat implements 
     }
 
     @Override
-    public void showCMPreferences() {
+    public void showCmPreferences() {
         snsCategory.addPreference(cmScreen);
     }
 

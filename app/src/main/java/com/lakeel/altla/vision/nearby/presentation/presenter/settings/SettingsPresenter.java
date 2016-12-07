@@ -32,7 +32,7 @@ public final class SettingsPresenter extends BasePresenter<SettingsView> {
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribe(model -> {
-                    getView().showCMPreferences();
+                    getView().showCmPreferences();
                 }, e -> {
                     LOGGER.error("Failed to find CM links settings.", e);
                 });

@@ -17,11 +17,11 @@ import com.google.android.gms.common.api.Status;
 import com.google.android.gms.nearby.Nearby;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.iid.FirebaseInstanceId;
-import com.lakeel.altla.cm.CMApplication;
+import com.lakeel.altla.cm.CmApplication;
 import com.lakeel.altla.cm.config.AccessConfig;
 import com.lakeel.altla.library.ResolutionResultCallback;
 import com.lakeel.altla.vision.nearby.R;
-import com.lakeel.altla.vision.nearby.domain.usecase.FindCMLinkUseCase;
+import com.lakeel.altla.vision.nearby.domain.usecase.FindCmLinkUseCase;
 import com.lakeel.altla.vision.nearby.domain.usecase.FindPreferenceBeaconIdUseCase;
 import com.lakeel.altla.vision.nearby.domain.usecase.FindPreferencesUseCase;
 import com.lakeel.altla.vision.nearby.domain.usecase.FindTokenUseCase;
@@ -34,7 +34,7 @@ import com.lakeel.altla.vision.nearby.presentation.checker.BluetoothChecker;
 import com.lakeel.altla.vision.nearby.presentation.checker.BluetoothChecker.BleState;
 import com.lakeel.altla.vision.nearby.presentation.firebase.MyUser;
 import com.lakeel.altla.vision.nearby.presentation.presenter.BasePresenter;
-import com.lakeel.altla.vision.nearby.presentation.presenter.mapper.CMAuthConfigMapper;
+import com.lakeel.altla.vision.nearby.presentation.presenter.mapper.CmAuthConfigMapper;
 import com.lakeel.altla.vision.nearby.presentation.presenter.mapper.PreferencesModelMapper;
 import com.lakeel.altla.vision.nearby.presentation.service.AdvertiseService;
 import com.lakeel.altla.vision.nearby.presentation.service.RunningService;
@@ -64,7 +64,7 @@ public final class ActivityPresenter extends BasePresenter<ActivityView> impleme
     ObservePresenceUseCase observePresenceUseCase;
 
     @Inject
-    FindCMLinkUseCase findCMLinkUseCase;
+    FindCmLinkUseCase findCmLinkUseCase;
 
     @Inject
     FindPreferenceBeaconIdUseCase findPreferenceBeaconIdUseCase;
@@ -90,7 +90,7 @@ public final class ActivityPresenter extends BasePresenter<ActivityView> impleme
 
     private PreferencesModelMapper preferencesModelMapper = new PreferencesModelMapper();
 
-    private CMAuthConfigMapper cmAuthConfigMapper = new CMAuthConfigMapper();
+    private CmAuthConfigMapper cmAuthConfigMapper = new CmAuthConfigMapper();
 
     private final Context context;
 
@@ -220,11 +220,11 @@ public final class ActivityPresenter extends BasePresenter<ActivityView> impleme
                 }, e -> LOGGER.error("Failed to find preferences.", e));
         reusableSubscriptions.add(preferenceSubscription);
 
-        Subscription cmLinksSubscription = findCMLinkUseCase
+        Subscription cmLinksSubscription = findCmLinkUseCase
                 .execute(MyUser.getUid())
                 .map(entity -> cmAuthConfigMapper.map(entity))
                 .subscribeOn(Schedulers.io())
-                .subscribe(authConfig -> CMApplication.initialize(authConfig, accessConfig),
+                .subscribe(authConfig -> CmApplication.initialize(authConfig, accessConfig),
                         e -> LOGGER.error("Failed to initialize CM settings.", e));
         reusableSubscriptions.add(cmLinksSubscription);
     }

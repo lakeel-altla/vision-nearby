@@ -4,7 +4,7 @@ import android.support.annotation.StringRes;
 
 public interface SettingsView extends BaseView {
 
-    void showCMPreferences();
+    void showCmPreferences();
 
     void showSnackBar(@StringRes int resId);
 }

@@ -69,8 +69,8 @@ public final class ConfigModule {
 
     @InjectScope
     @Provides
-    @Named("CMLinksUrl")
-    String provideCMLinksUrl() {
+    @Named("cmLinksUrl")
+    String provideCmLinksUrl() {
         return "https://profile-notification-95441.firebaseio.com/links/cm";
     }
 
@@ -119,21 +119,21 @@ public final class ConfigModule {
 
     @InjectScope
     @Provides
-    @Named("CMHost")
-    String provideCMHost() {
+    @Named("cmHost")
+    String provideCmHost() {
         return "172.16.10.237";
     }
 
     @InjectScope
     @Provides
-    @Named("CMPort")
-    int provideCMPort() {
+    @Named("cmPort")
+    int provideCmPort() {
         return 9080;
     }
 
     @InjectScope
     @Provides
-    AccessConfig provideAccessConfig(@Named("CMHost") String host, @Named("CMPort") int port) {
+    AccessConfig provideAccessConfig(@Named("cmHost") String host, @Named("cmPort") int port) {
         return new AccessConfig(host, port);
     }
 }

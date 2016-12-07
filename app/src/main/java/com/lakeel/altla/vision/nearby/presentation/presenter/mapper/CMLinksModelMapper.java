@@ -1,12 +1,12 @@
 package com.lakeel.altla.vision.nearby.presentation.presenter.mapper;
 
-import com.lakeel.altla.vision.nearby.data.entity.CMLinkEntity;
-import com.lakeel.altla.vision.nearby.presentation.presenter.model.CMLinksModel;
+import com.lakeel.altla.vision.nearby.data.entity.CmLinkEntity;
+import com.lakeel.altla.vision.nearby.presentation.presenter.model.CmLinksModel;
 
-public final class CMLinksModelMapper {
+public final class CmLinksModelMapper {
 
-    public CMLinksModel map(CMLinkEntity entity) {
-        CMLinksModel model = new CMLinksModel();
+    public CmLinksModel map(CmLinkEntity entity) {
+        CmLinksModel model = new CmLinksModel();
         model.mApiKey = entity.apiKey;
         model.mSecretKey = entity.secretKey;
         model.mJid = entity.jid;

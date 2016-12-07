@@ -1,6 +1,6 @@
 package com.lakeel.altla.vision.nearby.data.entity;
 
-public final class CMLinkEntity {
+public final class CmLinkEntity {
 
     public String jid;
 

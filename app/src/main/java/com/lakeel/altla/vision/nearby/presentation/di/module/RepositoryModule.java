@@ -1,7 +1,7 @@
 package com.lakeel.altla.vision.nearby.presentation.di.module;
 
 import com.lakeel.altla.vision.nearby.data.repository.FirebaseBeaconsRepositoryImpl;
-import com.lakeel.altla.vision.nearby.data.repository.FirebaseCMLinksRepositoryImpl;
+import com.lakeel.altla.vision.nearby.data.repository.FirebaseCmLinksRepositoryImpl;
 import com.lakeel.altla.vision.nearby.data.repository.FirebaseConfigsRepositoryImpl;
 import com.lakeel.altla.vision.nearby.data.repository.FirebaseConnectionRepositoryImpl;
 import com.lakeel.altla.vision.nearby.data.repository.FirebaseFavoritesRepositoryImpl;
@@ -17,7 +17,7 @@ import com.lakeel.altla.vision.nearby.data.repository.PreferenceRepositoryImpl;
 import com.lakeel.altla.vision.nearby.data.repository.RestCmRepositoryImpl;
 import com.lakeel.altla.vision.nearby.data.repository.RestGeocodeRepositoryImpl;
 import com.lakeel.altla.vision.nearby.domain.repository.FirebaseBeaconsRepository;
-import com.lakeel.altla.vision.nearby.domain.repository.FirebaseCMLinksRepository;
+import com.lakeel.altla.vision.nearby.domain.repository.FirebaseCmLinksRepository;
 import com.lakeel.altla.vision.nearby.domain.repository.FirebaseConfigsRepository;
 import com.lakeel.altla.vision.nearby.domain.repository.FirebaseConnectionRepository;
 import com.lakeel.altla.vision.nearby.domain.repository.FirebaseFavoritesRepository;
@@ -102,8 +102,8 @@ public class RepositoryModule {
 
     @InjectScope
     @Provides
-    FirebaseCMLinksRepository provideCMLinksRepository(@Named("CMLinksUrl") String url) {
-        return new FirebaseCMLinksRepositoryImpl(url);
+    FirebaseCmLinksRepository provideCmLinksRepository(@Named("cmLinksUrl") String url) {
+        return new FirebaseCmLinksRepositoryImpl(url);
     }
 
     @InjectScope

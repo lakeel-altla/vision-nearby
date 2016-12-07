@@ -9,7 +9,7 @@ import android.view.MenuItem;
 import android.view.View;
 
 import com.lakeel.altla.vision.nearby.R;
-import com.lakeel.altla.vision.nearby.presentation.presenter.model.CMLinksModel;
+import com.lakeel.altla.vision.nearby.presentation.presenter.model.CmLinksModel;
 import com.lakeel.altla.vision.nearby.presentation.presenter.settings.cm.CmSettingsPresenter;
 import com.lakeel.altla.vision.nearby.presentation.view.CmSettingsView;
 import com.lakeel.altla.vision.nearby.presentation.view.activity.MainActivity;
@@ -27,11 +27,11 @@ public final class CmSettingsFragment extends PreferenceFragmentCompat implement
 
     private static final String KEY_CM_JID = "cmJidKey";
 
-    private EditTextPreference CMApiPreference;
+    private EditTextPreference cmApiPreference;
 
-    private EditTextPreference CMSecretPreference;
+    private EditTextPreference cmSecretPreference;
 
-    private EditTextPreference CMJidPreference;
+    private EditTextPreference cmJidPreference;
 
     public static CmSettingsFragment newInstance() {
         return new CmSettingsFragment();
@@ -52,24 +52,24 @@ public final class CmSettingsFragment extends PreferenceFragmentCompat implement
 
         presenter.onCreateView(this);
 
-        CMApiPreference = (EditTextPreference) findPreference(KEY_CM_API_KEY);
-        CMApiPreference.setOnPreferenceChangeListener((preference, newValue) -> {
+        cmApiPreference = (EditTextPreference) findPreference(KEY_CM_API_KEY);
+        cmApiPreference.setOnPreferenceChangeListener((preference, newValue) -> {
             String apiKey = (String) newValue;
-            presenter.onSaveCMApiKey(apiKey);
+            presenter.onSaveCmApiKey(apiKey);
             return false;
         });
 
-        CMSecretPreference = (EditTextPreference) findPreference(KEY_CM_SECRET_KEY);
-        CMSecretPreference.setOnPreferenceChangeListener((preference, newValue) -> {
+        cmSecretPreference = (EditTextPreference) findPreference(KEY_CM_SECRET_KEY);
+        cmSecretPreference.setOnPreferenceChangeListener((preference, newValue) -> {
             String secretKey = (String) newValue;
-            presenter.onSaveCMSecretKey(secretKey);
+            presenter.onSaveCmSecretKey(secretKey);
             return false;
         });
 
-        CMJidPreference = (EditTextPreference) findPreference(KEY_CM_JID);
-        CMJidPreference.setOnPreferenceChangeListener((preference, newValue) -> {
+        cmJidPreference = (EditTextPreference) findPreference(KEY_CM_JID);
+        cmJidPreference.setOnPreferenceChangeListener((preference, newValue) -> {
             String jid = (String) newValue;
-            presenter.onSaveCMJid(jid);
+            presenter.onSaveCmJid(jid);
             return false;
         });
     }
@@ -99,25 +99,25 @@ public final class CmSettingsFragment extends PreferenceFragmentCompat implement
     }
 
     @Override
-    public void showCMPreferences(CMLinksModel model) {
-        CMApiPreference.setSummary(model.mApiKey);
-        CMSecretPreference.setSummary(model.mSecretKey);
-        CMJidPreference.setSummary(model.mJid);
+    public void showCmPreferences(CmLinksModel model) {
+        cmApiPreference.setSummary(model.mApiKey);
+        cmSecretPreference.setSummary(model.mSecretKey);
+        cmJidPreference.setSummary(model.mJid);
     }
 
     @Override
-    public void updateCMApiKeyPreference(String apiKey) {
-        CMApiPreference.setSummary(apiKey);
+    public void updateCmApiKeyPreference(String apiKey) {
+        cmApiPreference.setSummary(apiKey);
     }
 
     @Override
-    public void updateCMSecretKeyPreference(String secretKey) {
-        CMSecretPreference.setSummary(secretKey);
+    public void updateCmSecretKeyPreference(String secretKey) {
+        cmSecretPreference.setSummary(secretKey);
     }
 
     @Override
-    public void updateCMJidPreference(String jid) {
-        CMJidPreference.setSummary(jid);
+    public void updateCmJidPreference(String jid) {
+        cmJidPreference.setSummary(jid);
     }
 
     @Override

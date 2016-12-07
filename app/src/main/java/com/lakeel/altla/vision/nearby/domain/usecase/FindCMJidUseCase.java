@@ -1,22 +1,22 @@
 package com.lakeel.altla.vision.nearby.domain.usecase;
 
-import com.lakeel.altla.vision.nearby.domain.repository.FirebaseCMLinksRepository;
+import com.lakeel.altla.vision.nearby.domain.repository.FirebaseCmLinksRepository;
 
 import javax.inject.Inject;
 
 import rx.Single;
 
-public final class FindCMJidUseCase {
+public final class FindCmJidUseCase {
 
     @Inject
-    FirebaseCMLinksRepository repository;
+    FirebaseCmLinksRepository repository;
 
     @Inject
-    FindCMJidUseCase() {
+    FindCmJidUseCase() {
     }
 
     public Single<String> execute(String userId) {
-        return repository.findCmJidByItemId(userId);
+        return repository.findJidByItemId(userId);
     }
 
 }

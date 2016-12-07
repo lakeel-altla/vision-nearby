@@ -3,13 +3,13 @@ package com.lakeel.altla.vision.nearby.presentation.presenter.favorites;
 import com.lakeel.altla.cm.resource.Timestamp;
 import com.lakeel.altla.vision.nearby.R;
 import com.lakeel.altla.vision.nearby.core.StringUtils;
-import com.lakeel.altla.vision.nearby.domain.usecase.FindCMJidUseCase;
+import com.lakeel.altla.vision.nearby.domain.usecase.FindCmJidUseCase;
 import com.lakeel.altla.vision.nearby.domain.usecase.FindConfigsUseCase;
 import com.lakeel.altla.vision.nearby.domain.usecase.FindLineLinkUseCase;
 import com.lakeel.altla.vision.nearby.domain.usecase.FindPresenceUseCase;
 import com.lakeel.altla.vision.nearby.domain.usecase.FindUserBeaconsUseCase;
 import com.lakeel.altla.vision.nearby.domain.usecase.FindUserUseCase;
-import com.lakeel.altla.vision.nearby.domain.usecase.SaveCMFavoritesUseCase;
+import com.lakeel.altla.vision.nearby.domain.usecase.SaveCmFavoritesUseCase;
 import com.lakeel.altla.vision.nearby.presentation.presenter.BasePresenter;
 import com.lakeel.altla.vision.nearby.presentation.presenter.data.CmFavoriteData;
 import com.lakeel.altla.vision.nearby.presentation.presenter.mapper.CmFavoritesDataMapper;
@@ -47,10 +47,10 @@ public final class FavoritePresenter extends BasePresenter<FavoriteView> {
     FindUserBeaconsUseCase findUserBeaconsUseCase;
 
     @Inject
-    FindCMJidUseCase findCMJidUseCase;
+    FindCmJidUseCase findCmJidUseCase;
 
     @Inject
-    SaveCMFavoritesUseCase saveCMFavoritesUseCase;
+    SaveCmFavoritesUseCase saveCmFavoritesUseCase;
 
     private static final Logger LOGGER = LoggerFactory.getLogger(FavoritePresenter.class);
 
@@ -144,10 +144,10 @@ public final class FavoritePresenter extends BasePresenter<FavoriteView> {
     }
 
     public void onCmMenuClicked() {
-        Subscription subscription = findCMJidUseCase
+        Subscription subscription = findCmJidUseCase
                 .execute(userId)
                 .map(jid -> cmFavoritesDataMapper.map(jid))
-                .flatMap(this::saveCMFavorites)
+                .flatMap(this::saveCmFavorites)
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribe(o -> getView().showSnackBar(R.string.message_added),
@@ -158,7 +158,7 @@ public final class FavoritePresenter extends BasePresenter<FavoriteView> {
         reusableSubscriptions.add(subscription);
     }
 
-    Single<Timestamp> saveCMFavorites(CmFavoriteData data) {
-        return saveCMFavoritesUseCase.execute(data).subscribeOn(Schedulers.io());
+    Single<Timestamp> saveCmFavorites(CmFavoriteData data) {
+        return saveCmFavoritesUseCase.execute(data).subscribeOn(Schedulers.io());
     }
 }

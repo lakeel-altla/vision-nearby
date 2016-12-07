@@ -29,7 +29,7 @@ public final class FragmentController {
 
     private final String USER_LIST_FRAGMENT_TAG = FavoriteListFragment.class.getSimpleName();
 
-    private final String RECENTLY_LIST_FRAGMENT_TAG = HistoryListFragment.class.getSimpleName();
+    private final String HISTORY_LIST_FRAGMENT_TAG = HistoryListFragment.class.getSimpleName();
 
     private final String HISTORY_FRAGMENT_TAG = HistoryFragment.class.getSimpleName();
 
@@ -49,10 +49,10 @@ public final class FragmentController {
 
     private final String SETTINGS_CM_FRAGMENT_TAG = CmSettingsFragment.class.getSimpleName();
 
-    private FragmentManager mFragmentManager;
+    private FragmentManager fragmentManager;
 
     public FragmentController(FragmentManager fragmentManager) {
-        mFragmentManager = fragmentManager;
+        this.fragmentManager = fragmentManager;
     }
 
     public void showSignInFragment() {
@@ -72,7 +72,7 @@ public final class FragmentController {
 
     public void showRecentlyListFragment() {
         HistoryListFragment fragment = HistoryListFragment.newInstance();
-        replaceFragment(R.id.fragmentPlaceholder, fragment, RECENTLY_LIST_FRAGMENT_TAG);
+        replaceFragment(R.id.fragmentPlaceholder, fragment, HISTORY_LIST_FRAGMENT_TAG);
     }
 
     public void showHistoryFragment(HistoryBundle data) {
@@ -121,7 +121,7 @@ public final class FragmentController {
     }
 
     public void replaceFragment(@IdRes int containerViewId, Fragment fragment, String tag) {
-        FragmentTransaction fragmentTransaction = mFragmentManager.beginTransaction();
+        FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
         fragmentTransaction.addToBackStack(tag);
         fragmentTransaction.replace(containerViewId, fragment, tag);
         fragmentTransaction.commit();

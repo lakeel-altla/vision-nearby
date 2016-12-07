@@ -12,10 +12,10 @@ import com.lakeel.altla.cm.resource.Timestamp;
 import com.lakeel.altla.library.AttachmentListener;
 import com.lakeel.altla.library.ResolutionResultCallback;
 import com.lakeel.altla.vision.nearby.R;
-import com.lakeel.altla.vision.nearby.domain.usecase.FindCMJidUseCase;
+import com.lakeel.altla.vision.nearby.domain.usecase.FindCmJidUseCase;
 import com.lakeel.altla.vision.nearby.domain.usecase.FindConfigsUseCase;
 import com.lakeel.altla.vision.nearby.domain.usecase.FindUserUseCase;
-import com.lakeel.altla.vision.nearby.domain.usecase.SaveCMFavoritesUseCase;
+import com.lakeel.altla.vision.nearby.domain.usecase.SaveCmFavoritesUseCase;
 import com.lakeel.altla.vision.nearby.presentation.constants.BeaconAttachment;
 import com.lakeel.altla.vision.nearby.presentation.firebase.MyUser;
 import com.lakeel.altla.vision.nearby.presentation.presenter.BaseItemPresenter;
@@ -88,10 +88,10 @@ public final class NearbyListPresenter extends BasePresenter<NearbyListView> imp
     FindConfigsUseCase findConfigsUseCase;
 
     @Inject
-    FindCMJidUseCase findCMJidUseCase;
+    FindCmJidUseCase findCmJidUseCase;
 
     @Inject
-    SaveCMFavoritesUseCase saveCMFavoritesUseCase;
+    SaveCmFavoritesUseCase saveCmFavoritesUseCase;
 
     private static Logger LOGGER = LoggerFactory.getLogger(NearbyListPresenter.class);
 
@@ -111,7 +111,7 @@ public final class NearbyListPresenter extends BasePresenter<NearbyListView> imp
 
     private boolean isScanning;
 
-    private boolean isCMLinkEnabled;
+    private boolean isCmLinkEnabled;
 
     private ResolutionResultCallback resultCallback = new ResolutionResultCallback() {
         @Override
@@ -137,7 +137,7 @@ public final class NearbyListPresenter extends BasePresenter<NearbyListView> imp
                 .map(entity -> entity.isCmLinkEnabled)
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
-                .subscribe(bool -> isCMLinkEnabled = bool,
+                .subscribe(bool -> isCmLinkEnabled = bool,
                         e -> LOGGER.error("Failed to find config settings.", e));
         reusableSubscriptions.add(subscription);
     }
@@ -196,10 +196,10 @@ public final class NearbyListPresenter extends BasePresenter<NearbyListView> imp
 
         Subscription subscription = Observable
                 .from(nearbyIds)
-                .flatMap(this::findCMJid)
+                .flatMap(this::findCmJid)
                 .toList()
                 .map(userIds -> cmFavoritesDataMapper.map(userIds))
-                .flatMap(this::saveCMFavorites)
+                .flatMap(this::saveCmFavorites)
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribe(timestamp -> {
@@ -242,7 +242,7 @@ public final class NearbyListPresenter extends BasePresenter<NearbyListView> imp
     }
 
     public boolean isCmLinkEnabled() {
-        return isCMLinkEnabled;
+        return isCmLinkEnabled;
     }
 
     public final class NearbyItemPresenter extends BaseItemPresenter<NearbyItemView> {
@@ -268,7 +268,7 @@ public final class NearbyListPresenter extends BasePresenter<NearbyListView> imp
             model.isChecked = !model.isChecked;
 
             if (0 < checkedModels.size()) {
-                if (isCMLinkEnabled) {
+                if (isCmLinkEnabled) {
                     getView().showOptionMenu();
                 }
                 getView().drawEditableActionBarColor();
@@ -279,11 +279,11 @@ public final class NearbyListPresenter extends BasePresenter<NearbyListView> imp
         }
     }
 
-    Observable<String> findCMJid(String userId) {
-        return findCMJidUseCase.execute(userId).subscribeOn(Schedulers.io()).toObservable();
+    Observable<String> findCmJid(String userId) {
+        return findCmJidUseCase.execute(userId).subscribeOn(Schedulers.io()).toObservable();
     }
 
-    Observable<Timestamp> saveCMFavorites(CmFavoriteData data) {
-        return saveCMFavoritesUseCase.execute(data).subscribeOn(Schedulers.io()).toObservable();
+    Observable<Timestamp> saveCmFavorites(CmFavoriteData data) {
+        return saveCmFavoritesUseCase.execute(data).subscribeOn(Schedulers.io()).toObservable();
     }
 }

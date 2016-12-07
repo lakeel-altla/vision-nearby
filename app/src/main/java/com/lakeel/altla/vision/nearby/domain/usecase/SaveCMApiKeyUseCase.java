@@ -1,21 +1,21 @@
 package com.lakeel.altla.vision.nearby.domain.usecase;
 
-import com.lakeel.altla.vision.nearby.domain.repository.FirebaseCMLinksRepository;
+import com.lakeel.altla.vision.nearby.domain.repository.FirebaseCmLinksRepository;
 
 import javax.inject.Inject;
 
 import rx.Single;
 
-public final class SaveCMApiKeyUseCase {
+public final class SaveCmApiKeyUseCase {
 
     @Inject
-    FirebaseCMLinksRepository repository;
+    FirebaseCmLinksRepository repository;
 
     @Inject
-    SaveCMApiKeyUseCase() {
+    SaveCmApiKeyUseCase() {
     }
 
     public Single<String> execute(String userId, String apiKey) {
-        return repository.saveCMApiKey(userId, apiKey);
+        return repository.saveApiKey(userId, apiKey);
     }
 }

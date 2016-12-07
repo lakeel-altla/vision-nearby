@@ -8,13 +8,13 @@ import javax.inject.Inject;
 
 import rx.Single;
 
-public final class SaveCMFavoritesUseCase {
+public final class SaveCmFavoritesUseCase {
 
     @Inject
     RestCmRepository repository;
 
     @Inject
-    SaveCMFavoritesUseCase() {
+    SaveCmFavoritesUseCase() {
     }
 
     public Single<Timestamp> execute(CmFavoriteData data) {

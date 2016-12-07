@@ -1,21 +1,21 @@
 package com.lakeel.altla.vision.nearby.domain.usecase;
 
-import com.lakeel.altla.vision.nearby.domain.repository.FirebaseCMLinksRepository;
+import com.lakeel.altla.vision.nearby.domain.repository.FirebaseCmLinksRepository;
 
 import javax.inject.Inject;
 
 import rx.Single;
 
-public final class SaveCMSecretKeyUseCase {
+public final class SaveCmSecretKeyUseCase {
 
     @Inject
-    FirebaseCMLinksRepository repository;
+    FirebaseCmLinksRepository repository;
 
     @Inject
-    SaveCMSecretKeyUseCase() {
+    SaveCmSecretKeyUseCase() {
     }
 
     public Single<String> execute(String userId, String secretKey) {
-        return repository.saveCMSecretKey(userId, secretKey);
+        return repository.saveSecretKey(userId, secretKey);
     }
 }
