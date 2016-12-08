@@ -3,12 +3,10 @@ package com.lakeel.altla.vision.nearby.presentation.presenter.history;
 import com.lakeel.altla.vision.nearby.R;
 import com.lakeel.altla.vision.nearby.domain.usecase.FindFavoriteUseCase;
 import com.lakeel.altla.vision.nearby.domain.usecase.FindLineLinkUseCase;
-import com.lakeel.altla.vision.nearby.domain.usecase.FindLocationTextUseCase;
 import com.lakeel.altla.vision.nearby.domain.usecase.FindPresenceUseCase;
 import com.lakeel.altla.vision.nearby.domain.usecase.FindTimesUseCase;
 import com.lakeel.altla.vision.nearby.domain.usecase.FindUserUseCase;
 import com.lakeel.altla.vision.nearby.domain.usecase.SaveFavoriteUseCase;
-import com.lakeel.altla.vision.nearby.domain.usecase.SaveLocationTextUseCase;
 import com.lakeel.altla.vision.nearby.presentation.firebase.MyUser;
 import com.lakeel.altla.vision.nearby.presentation.presenter.BasePresenter;
 import com.lakeel.altla.vision.nearby.presentation.presenter.mapper.PresencesModelMapper;
@@ -39,13 +37,7 @@ public final class HistoryPresenter extends BasePresenter<HistoryView> {
     FindPresenceUseCase findPresenceUseCase;
 
     @Inject
-    FindLocationTextUseCase findLocationTextUseCase;
-
-    @Inject
     FindFavoriteUseCase findFavoriteUseCase;
-
-    @Inject
-    SaveLocationTextUseCase saveLocationTextUseCase;
 
     @Inject
     FindLineLinkUseCase findLineLinkUseCase;
