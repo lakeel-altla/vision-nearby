@@ -7,14 +7,13 @@ import android.net.Uri;
 
 import com.lakeel.altla.vision.nearby.R;
 import com.lakeel.altla.vision.nearby.data.entity.UserEntity;
-import com.lakeel.altla.vision.nearby.data.entity.LineLinkEntity;
-import com.lakeel.altla.vision.nearby.domain.usecase.FindUserUseCase;
 import com.lakeel.altla.vision.nearby.domain.usecase.FindUserIdByLineUrlUseCase;
+import com.lakeel.altla.vision.nearby.domain.usecase.FindUserUseCase;
 import com.lakeel.altla.vision.nearby.presentation.di.component.DaggerServiceComponent;
 import com.lakeel.altla.vision.nearby.presentation.di.component.ServiceComponent;
 import com.lakeel.altla.vision.nearby.presentation.intent.IntentKey;
 import com.lakeel.altla.vision.nearby.presentation.intent.UriPendingIntent;
-import com.lakeel.altla.vision.nearby.presentation.view.notification.Notification;
+import com.lakeel.altla.vision.nearby.presentation.notification.LocalNotification;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -23,7 +22,6 @@ import javax.inject.Inject;
 
 import rx.Single;
 import rx.android.schedulers.AndroidSchedulers;
-import rx.functions.Func1;
 import rx.schedulers.Schedulers;
 
 public class LineService extends IntentService {
@@ -56,26 +54,22 @@ public class LineService extends IntentService {
 
         findUserIdByLineUrlUseCase
                 .execute(lineUrl)
-                .flatMap(new Func1<LineLinkEntity, Single<UserEntity>>() {
-                    @Override
-                    public Single<UserEntity> call(LineLinkEntity lineLinkEntity) {
-                        return findUserUseCase.execute(lineLinkEntity.key).subscribeOn(Schedulers.io());
-                    }
-                }).subscribeOn(Schedulers.io())
+                .flatMap(entity -> findUser(entity.key))
+                .subscribeOn(AndroidSchedulers.mainThread())
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribe(entity -> {
+                    String title = getString(R.string.notification_title_line_user_found);
+                    String message = getString(R.string.notification_message_user_using_line, entity.name);
 
-                    // Notify a notification.
                     UriPendingIntent creator = new UriPendingIntent(getApplicationContext(), Uri.parse(lineUrl));
                     PendingIntent pendingIntent = creator.create();
 
-                    Notification notifier = new Notification.Builder(getApplicationContext())
-                            .intent(pendingIntent)
-                            .title(R.string.message_line_user_found)
-                            .text(R.string.message_user_using_line, entity.name)
-                            .build();
-                    notifier.notifyNotification();
-
+                    LocalNotification notification = new LocalNotification(getApplicationContext(), title, message, pendingIntent);
+                    notification.show();
                 }, e -> LOGGER.error("Failed to notify a LINE notification.", e));
+    }
+
+    Single<UserEntity> findUser(String jsonKey) {
+        return findUserUseCase.execute(jsonKey).subscribeOn(Schedulers.io());
     }
 }
