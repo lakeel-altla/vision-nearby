@@ -1,5 +1,6 @@
 package com.lakeel.altla.vision.nearby.data.repository;
 
+import com.google.android.gms.tasks.Task;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.lakeel.altla.vision.nearby.data.entity.NotificationEntity;
@@ -29,11 +30,16 @@ public class FirebaseNotificationsRepositoryImpl implements FirebaseNotification
             NotificationEntity entity = entityMapper.map(to, title, message);
             Map<String, Object> map = entity.toMap();
 
-            reference
+            Task task = reference
                     .push()
                     .setValue(map)
                     .addOnSuccessListener(aVoid -> subscriber.onSuccess(entity))
                     .addOnFailureListener(subscriber::onError);
+
+            Exception exception = task.getException();
+            if (exception != null) {
+                subscriber.onError(exception);
+            }
         });
     }
 }
