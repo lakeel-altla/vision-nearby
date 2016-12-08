@@ -23,10 +23,11 @@ import com.lakeel.altla.vision.nearby.R;
 import com.lakeel.altla.vision.nearby.presentation.presenter.nearby.NearbyListPresenter;
 import com.lakeel.altla.vision.nearby.presentation.view.GridShareSheet;
 import com.lakeel.altla.vision.nearby.presentation.view.NearbyListView;
+import com.lakeel.altla.vision.nearby.presentation.view.actionBar.ActionBarColor;
+import com.lakeel.altla.vision.nearby.presentation.view.actionBar.BarColor;
+import com.lakeel.altla.vision.nearby.presentation.view.actionBar.ToolBarColor;
 import com.lakeel.altla.vision.nearby.presentation.view.activity.MainActivity;
 import com.lakeel.altla.vision.nearby.presentation.view.adapter.NearbyAdapter;
-import com.lakeel.altla.vision.nearby.presentation.view.color.ActionBarColor;
-import com.lakeel.altla.vision.nearby.presentation.view.color.StatusBarColor;
 import com.lakeel.altla.vision.nearby.presentation.view.divider.DividerItemDecoration;
 
 import org.slf4j.Logger;
@@ -161,22 +162,24 @@ public final class NearbyListFragment extends Fragment implements NearbyListView
 
     @Override
     public void drawEditableActionBarColor() {
+        BarColor barColor;
         if (Build.VERSION.SDK_INT >= 21) {
-            StatusBarColor statusBarColor = new StatusBarColor(getActivity(), R.color.darkgray);
-            statusBarColor.draw();
+            barColor = new ToolBarColor(getActivity(), R.color.darkgray, R.color.darkgray);
+        } else {
+            barColor = new ActionBarColor(getActivity(), R.color.darkgray);
         }
-        ActionBarColor actionBarColor = new ActionBarColor(getActivity(), R.color.darkgray);
-        actionBarColor.draw();
+        barColor.draw();
     }
 
     @Override
     public void drawNormalActionBarColor() {
+        BarColor barColor;
         if (Build.VERSION.SDK_INT >= 21) {
-            StatusBarColor statusBarColor = new StatusBarColor(getActivity(), R.color.colorPrimaryDark);
-            statusBarColor.draw();
+            barColor = new ToolBarColor(getActivity(), R.color.colorPrimary, R.color.colorPrimaryDark);
+        } else {
+            barColor = new ActionBarColor(getActivity(), R.color.colorPrimary);
         }
-        ActionBarColor actionBarColor = new ActionBarColor(getActivity(), R.color.colorPrimary);
-        actionBarColor.draw();
+        barColor.draw();
     }
 
     @Override
