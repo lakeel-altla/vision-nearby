@@ -5,7 +5,7 @@ import android.app.PendingIntent;
 import com.google.firebase.messaging.FirebaseMessagingService;
 import com.google.firebase.messaging.RemoteMessage;
 import com.lakeel.altla.vision.nearby.presentation.intent.DefaultPendingIntent;
-import com.lakeel.altla.vision.nearby.presentation.view.notification.Notification;
+import com.lakeel.altla.vision.nearby.presentation.notification.LocalNotification;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -18,26 +18,20 @@ public class NotificationMessagingService extends FirebaseMessagingService {
     public void onMessageReceived(RemoteMessage remoteMessage) {
         super.onMessageReceived(remoteMessage);
 
-        RemoteMessage.Notification notification = remoteMessage.getNotification();
-        if (notification == null) {
+        RemoteMessage.Notification payload = remoteMessage.getNotification();
+        if (payload == null) {
             LOGGER.error("Notification payload was empty.");
             return;
         }
 
-        String title = notification.getTitle();
-        String message = notification.getBody();
-
-        LOGGER.debug("Notification message is " + message);
-
         DefaultPendingIntent defaultPendingIntent = new DefaultPendingIntent(getApplicationContext());
         PendingIntent pendingIntent = defaultPendingIntent.create();
 
-        Notification notifier = new Notification.Builder(getApplicationContext())
-                .title(title)
-                .text(message)
-                .intent(pendingIntent)
-                .build();
-        notifier.notifyNotification();
+        String title = payload.getTitle();
+        String message = payload.getBody();
+
+        LocalNotification localNotification = new LocalNotification(getApplicationContext(), title, message, pendingIntent);
+        localNotification.show();
     }
 
     @Override
