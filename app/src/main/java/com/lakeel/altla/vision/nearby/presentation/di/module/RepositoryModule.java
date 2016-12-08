@@ -1,5 +1,8 @@
 package com.lakeel.altla.vision.nearby.presentation.di.module;
 
+import android.content.Context;
+import android.preference.PreferenceManager;
+
 import com.lakeel.altla.vision.nearby.data.repository.FirebaseBeaconsRepositoryImpl;
 import com.lakeel.altla.vision.nearby.data.repository.FirebaseCmLinksRepositoryImpl;
 import com.lakeel.altla.vision.nearby.data.repository.FirebaseConfigsRepositoryImpl;
@@ -96,8 +99,8 @@ public class RepositoryModule {
 
     @InjectScope
     @Provides
-    PreferenceRepository providePreferenceRepository(PreferenceRepositoryImpl repository) {
-        return repository;
+    PreferenceRepository providePreferenceRepository(Context context) {
+        return new PreferenceRepositoryImpl(PreferenceManager.getDefaultSharedPreferences(context));
     }
 
     @InjectScope

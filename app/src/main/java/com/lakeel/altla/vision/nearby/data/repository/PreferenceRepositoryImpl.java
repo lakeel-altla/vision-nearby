@@ -29,8 +29,8 @@ public class PreferenceRepositoryImpl implements PreferenceRepository {
     private SharedPreferences preference;
 
     @Inject
-    PreferenceRepositoryImpl(Context context) {
-        preference = PreferenceManager.getDefaultSharedPreferences(context);
+    public PreferenceRepositoryImpl(SharedPreferences preference) {
+        this.preference = preference;
     }
 
     @Override
