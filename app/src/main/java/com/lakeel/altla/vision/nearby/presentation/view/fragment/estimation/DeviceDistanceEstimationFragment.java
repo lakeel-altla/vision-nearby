@@ -113,9 +113,11 @@ public final class DeviceDistanceEstimationFragment extends Fragment implements 
         presenter.onResume();
 
         circleImage.setImageDrawable(ResourcesCompat.getDrawable(getResources(), R.drawable.circle, null));
+
         ScaleAnimation animation = new ScaleAnimation(1, 3.0f, 1, 3.0f, Animation.RELATIVE_TO_SELF, 0.5f, Animation.RELATIVE_TO_SELF, 0.5f);
         animation.setDuration(2000);
         animation.setRepeatCount(INFINITE);
+
         circleImage.startAnimation(animation);
     }
 
