@@ -6,5 +6,5 @@ import rx.Single;
 
 public interface RestGeocodeRepository {
 
-    Single<Geocode> findLocationByGeocode(String language, String latitude, String longitude);
+    Single<Geocode> findLocationText(String language, String latitude, String longitude);
 }

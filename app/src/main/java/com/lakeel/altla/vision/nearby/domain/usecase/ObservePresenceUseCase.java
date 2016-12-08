@@ -16,12 +16,12 @@ public final class ObservePresenceUseCase {
     FirebasePresencesRepository presencesRepository;
 
     @Inject
-    public ObservePresenceUseCase() {
+    ObservePresenceUseCase() {
     }
 
     public void execute(String userId) {
         connectionRepository
-                .observeConnected()
+                .observePresence()
                 .subscribeOn(Schedulers.io())
                 .subscribe(o -> {
                     // Called when connected to firebase. Change presence to online.

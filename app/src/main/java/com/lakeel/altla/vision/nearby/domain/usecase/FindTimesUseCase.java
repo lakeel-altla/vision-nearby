@@ -12,10 +12,10 @@ public final class FindTimesUseCase {
     FirebaseHistoryRepository repository;
 
     @Inject
-    public FindTimesUseCase() {
+    FindTimesUseCase() {
     }
 
     public Single<Long> execute(String myUserId, String otherUserId) {
-        return repository.findPassingTimes(myUserId, otherUserId);
+        return repository.findTimes(myUserId, otherUserId);
     }
 }

@@ -13,7 +13,7 @@ public final class SaveFavoriteUseCase {
     FirebaseFavoritesRepository repository;
 
     @Inject
-    public SaveFavoriteUseCase() {
+    SaveFavoriteUseCase() {
     }
 
     public Single<FavoriteEntity> execute(String myUserId, String otherUserId) {

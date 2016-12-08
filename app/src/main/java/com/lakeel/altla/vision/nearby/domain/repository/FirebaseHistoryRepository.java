@@ -13,9 +13,7 @@ public interface FirebaseHistoryRepository {
 
     Observable<HistoryEntity> findHistoryByUserId(String userId);
 
-    Single<HistoryEntity> findHistoryByUserIdAndUniqueKey(String userId, String uniqueKey);
-
-    Single<Long> findPassingTimes(String userId, String otherId);
+    Single<Long> findTimes(String userId, String otherId);
 
     Single<String> saveHistory(String myUserId, String otherUserId);
 

@@ -52,31 +52,6 @@ public class FirebaseBeaconsRepositoryImpl implements FirebaseBeaconsRepository 
     }
 
     @Override
-    public Observable<BeaconEntity> findBeaconsByUserId(String userId) {
-        return Observable.create(subscriber -> {
-            reference
-                    .child(userId)
-                    .orderByChild(KEY_NAME)
-                    .addListenerForSingleValueEvent(new ValueEventListener() {
-                        @Override
-                        public void onDataChange(DataSnapshot dataSnapshot) {
-                            for (DataSnapshot snapshot : dataSnapshot.getChildren()) {
-                                BeaconEntity entity = snapshot.getValue(BeaconEntity.class);
-                                entity.key = snapshot.getKey();
-                                subscriber.onNext(entity);
-                            }
-                            subscriber.onCompleted();
-                        }
-
-                        @Override
-                        public void onCancelled(DatabaseError databaseError) {
-                            subscriber.onError(databaseError.toException());
-                        }
-                    });
-        });
-    }
-
-    @Override
     public Single<BeaconEntity> findBeacon(String beaconId) {
         return Single.create(subscriber ->
                 reference

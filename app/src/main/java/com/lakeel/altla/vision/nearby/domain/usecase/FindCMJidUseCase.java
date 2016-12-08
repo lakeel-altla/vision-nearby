@@ -16,7 +16,7 @@ public final class FindCmJidUseCase {
     }
 
     public Single<String> execute(String userId) {
-        return repository.findJidByItemId(userId);
+        return repository.findJidByUserId(userId);
     }
 
 }

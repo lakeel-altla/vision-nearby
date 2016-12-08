@@ -14,5 +14,5 @@ public interface FirebaseFavoritesRepository {
 
     Single<FavoriteEntity> saveFavorite(String myUserId, String otherUserId);
 
-    Completable removeFavoriteByUid(String myUserId, String otherUserId);
+    Completable removeFavorite(String myUserId, String otherUserId);
 }

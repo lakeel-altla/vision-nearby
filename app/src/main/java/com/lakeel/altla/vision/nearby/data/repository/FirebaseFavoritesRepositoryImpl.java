@@ -90,7 +90,7 @@ public class FirebaseFavoritesRepositoryImpl implements FirebaseFavoritesReposit
     }
 
     @Override
-    public Completable removeFavoriteByUid(String userId, String otherUserId) {
+    public Completable removeFavorite(String userId, String otherUserId) {
         return Completable.create(subscriber ->
                 reference
                         .child(userId)

@@ -12,7 +12,7 @@ public final class SaveLocationTextUseCase {
     FirebaseHistoryRepository repository;
 
     @Inject
-    public SaveLocationTextUseCase() {
+    SaveLocationTextUseCase() {
     }
 
     public Single<String> execute(String key, String userId, String language, String locationText) {

@@ -13,10 +13,10 @@ public final class FindLocationTextUseCase {
     RestGeocodeRepository repository;
 
     @Inject
-    public FindLocationTextUseCase() {
+    FindLocationTextUseCase() {
     }
 
     public Single<Geocode> execute(String language, String latitude, String longitude) {
-        return repository.findLocationByGeocode(language, latitude, longitude);
+        return repository.findLocationText(language, latitude, longitude);
     }
 }

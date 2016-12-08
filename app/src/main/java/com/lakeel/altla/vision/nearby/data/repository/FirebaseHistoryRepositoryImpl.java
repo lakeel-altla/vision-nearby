@@ -73,31 +73,7 @@ public class FirebaseHistoryRepositoryImpl implements FirebaseHistoryRepository 
     }
 
     @Override
-    public Single<HistoryEntity> findHistoryByUserIdAndUniqueKey(String userId, String uniqueKey) {
-        return Single.create(new Single.OnSubscribe<HistoryEntity>() {
-            @Override
-            public void call(SingleSubscriber<? super HistoryEntity> subscriber) {
-                reference
-                        .child(userId)
-                        .child(uniqueKey)
-                        .addListenerForSingleValueEvent(new ValueEventListener() {
-                            @Override
-                            public void onDataChange(DataSnapshot dataSnapshot) {
-                                HistoryEntity entity = dataSnapshot.getValue(HistoryEntity.class);
-                                subscriber.onSuccess(entity);
-                            }
-
-                            @Override
-                            public void onCancelled(DatabaseError databaseError) {
-                                subscriber.onError(databaseError.toException());
-                            }
-                        });
-            }
-        });
-    }
-
-    @Override
-    public Single<Long> findPassingTimes(String myUserId, String otherUserId) {
+    public Single<Long> findTimes(String myUserId, String otherUserId) {
         return Single.create(subscriber ->
                 reference
                         .child(myUserId)

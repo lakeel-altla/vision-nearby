@@ -12,10 +12,10 @@ public final class RemoveFavoriteUseCase {
     FirebaseFavoritesRepository repository;
 
     @Inject
-    public RemoveFavoriteUseCase() {
+    RemoveFavoriteUseCase() {
     }
 
     public Completable execute(String myUserId, String otherUserId) {
-        return repository.removeFavoriteByUid(myUserId, otherUserId);
+        return repository.removeFavorite(myUserId, otherUserId);
     }
 }

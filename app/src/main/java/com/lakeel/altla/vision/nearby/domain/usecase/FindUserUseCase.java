@@ -13,10 +13,10 @@ public final class FindUserUseCase {
     FirebaseUsersRepository repository;
 
     @Inject
-    public FindUserUseCase() {
+    FindUserUseCase() {
     }
 
     public Single<UserEntity> execute(String userId) {
-        return repository.findUserById(userId);
+        return repository.findUserByUserId(userId);
     }
 }

@@ -6,7 +6,7 @@ import rx.Single;
 
 public interface FirebaseCmLinksRepository {
 
-    Single<String> findJidByItemId(String userId);
+    Single<String> findJidByUserId(String userId);
 
     Single<CmLinkEntity> findCmLinksByUserId(String userId);
 

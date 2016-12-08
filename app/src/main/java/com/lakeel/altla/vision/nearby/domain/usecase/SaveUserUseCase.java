@@ -12,7 +12,7 @@ public final class SaveUserUseCase {
     FirebaseUsersRepository repository;
 
     @Inject
-    public SaveUserUseCase() {
+    SaveUserUseCase() {
     }
 
     public Completable execute(String userId) {

@@ -31,7 +31,7 @@ public final class FirebaseCmLinksRepositoryImpl implements FirebaseCmLinksRepos
     }
 
     @Override
-    public Single<String> findJidByItemId(String userId) {
+    public Single<String> findJidByUserId(String userId) {
         return Single.create(subscriber -> reference.child(userId).addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {

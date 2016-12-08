@@ -13,10 +13,10 @@ public class FindPresenceUseCase {
     FirebasePresencesRepository repository;
 
     @Inject
-    public FindPresenceUseCase() {
+    FindPresenceUseCase() {
     }
 
     public Single<PresenceEntity> execute(String id) {
-        return repository.findPresenceById(id);
+        return repository.findPresenceByUserId(id);
     }
 }

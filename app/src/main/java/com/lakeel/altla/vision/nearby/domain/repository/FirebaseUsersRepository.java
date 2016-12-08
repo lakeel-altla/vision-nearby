@@ -8,9 +8,7 @@ import rx.Single;
 
 public interface FirebaseUsersRepository {
 
-    Single<UserEntity> findUserById(String userId);
-
-    Single<UserEntity> findUserByName(String name);
+    Single<UserEntity> findUserByUserId(String userId);
 
     Completable saveUser(String userId);
 

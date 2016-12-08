@@ -46,9 +46,9 @@ public class FirebasePresencesRepositoryImpl implements FirebasePresencesReposit
     }
 
     @Override
-    public Single<PresenceEntity> findPresenceById(String id) {
+    public Single<PresenceEntity> findPresenceByUserId(String userId) {
         return Single.create(subscriber ->
-                reference.child(id).addListenerForSingleValueEvent(new ValueEventListener() {
+                reference.child(userId).addListenerForSingleValueEvent(new ValueEventListener() {
                     @Override
                     public void onDataChange(DataSnapshot dataSnapshot) {
                         PresenceEntity entity = dataSnapshot.getValue(PresenceEntity.class);

@@ -101,7 +101,7 @@ public final class FirebaseUsersRepositoryImpl implements FirebaseUsersRepositor
     }
 
     @Override
-    public Single<UserEntity> findUserById(String userId) {
+    public Single<UserEntity> findUserByUserId(String userId) {
         return Single.create(new Single.OnSubscribe<UserEntity>() {
 
             @Override
@@ -124,36 +124,5 @@ public final class FirebaseUsersRepositoryImpl implements FirebaseUsersRepositor
                         });
             }
         });
-    }
-
-    @Override
-    public Single<UserEntity> findUserByName(String name) {
-        return Single.create(subscriber ->
-                reference
-                        .orderByChild(KEY_NAME)
-                        .equalTo(name)
-                        .addListenerForSingleValueEvent(new ValueEventListener() {
-                            @Override
-                            public void onDataChange(DataSnapshot dataSnapshot) {
-                                if (!dataSnapshot.hasChildren()) {
-                                    subscriber.onSuccess(null);
-                                    return;
-                                }
-
-                                Iterable<DataSnapshot> iterable = dataSnapshot.getChildren();
-                                Iterator<DataSnapshot> iterator = iterable.iterator();
-                                while (iterator.hasNext()) {
-                                    DataSnapshot snapshot = iterator.next();
-                                    UserEntity entity = snapshot.getValue(UserEntity.class);
-                                    entity.key = snapshot.getKey();
-                                    subscriber.onSuccess(entity);
-                                }
-                            }
-
-                            @Override
-                            public void onCancelled(DatabaseError databaseError) {
-                                subscriber.onError(databaseError.toException());
-                            }
-                        }));
     }
 }

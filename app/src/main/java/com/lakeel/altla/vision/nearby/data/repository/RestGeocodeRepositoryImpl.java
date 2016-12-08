@@ -13,14 +13,14 @@ import rx.Single;
 public final class RestGeocodeRepositoryImpl implements RestGeocodeRepository {
 
     @Inject
-    public Retrofit mRetrofit;
+    Retrofit mRetrofit;
 
     @Inject
-    public RestGeocodeRepositoryImpl() {
+    RestGeocodeRepositoryImpl() {
     }
 
     @Override
-    public Single<Geocode> findLocationByGeocode(String language, String latitude, String longitude) {
+    public Single<Geocode> findLocationText(String language, String latitude, String longitude) {
         return mRetrofit.create(GeocodeApi.class).find(BuildConfig.GEO_CODING_API_KEY, language, latitude + "," + longitude);
     }
 }
