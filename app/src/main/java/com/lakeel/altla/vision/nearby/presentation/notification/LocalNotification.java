@@ -18,10 +18,6 @@ public final class LocalNotification {
 
     private Notification notification;
 
-    public LocalNotification(Context context, @StringRes int titleResId, @StringRes int messageResId, PendingIntent intent) {
-        this(context, context.getString(titleResId), context.getString(messageResId), intent);
-    }
-
     public LocalNotification(Context context, String title, String message, PendingIntent intent) {
         this.context = context;
 

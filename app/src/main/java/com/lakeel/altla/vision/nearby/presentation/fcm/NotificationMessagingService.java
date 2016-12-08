@@ -23,12 +23,11 @@ public class NotificationMessagingService extends FirebaseMessagingService {
             LOGGER.error("Notification payload was empty.");
             return;
         }
+        String title = payload.getTitle();
+        String message = payload.getBody();
 
         DefaultPendingIntent defaultPendingIntent = new DefaultPendingIntent(getApplicationContext());
         PendingIntent pendingIntent = defaultPendingIntent.create();
-
-        String title = payload.getTitle();
-        String message = payload.getBody();
 
         LocalNotification localNotification = new LocalNotification(getApplicationContext(), title, message, pendingIntent);
         localNotification.show();
