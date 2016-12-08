@@ -1,8 +1,6 @@
 package com.lakeel.altla.vision.nearby.data.repository;
 
-import android.content.Context;
 import android.content.SharedPreferences;
-import android.preference.PreferenceManager;
 
 import com.lakeel.altla.vision.nearby.core.StringUtils;
 import com.lakeel.altla.vision.nearby.data.entity.PreferenceBeaconIdEntity;
