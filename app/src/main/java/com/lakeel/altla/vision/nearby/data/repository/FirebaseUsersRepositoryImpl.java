@@ -25,8 +25,6 @@ import rx.Subscriber;
 
 public final class FirebaseUsersRepositoryImpl implements FirebaseUsersRepository {
 
-    private static final String KEY_NAME = "name";
-
     private static final String KEY_BEACONS = "beacons";
 
     private DatabaseReference reference;

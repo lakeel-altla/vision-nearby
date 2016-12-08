@@ -13,13 +13,10 @@ import com.lakeel.altla.vision.nearby.domain.repository.FirebaseBeaconsRepositor
 
 import javax.inject.Inject;
 
-import rx.Observable;
 import rx.Single;
 import rx.SingleSubscriber;
 
 public class FirebaseBeaconsRepositoryImpl implements FirebaseBeaconsRepository {
-
-    private static final String KEY_NAME = "name";
 
     private DatabaseReference reference;
 
