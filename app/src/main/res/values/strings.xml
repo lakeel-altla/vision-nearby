@@ -67,6 +67,17 @@
     <string name="preference_summary_subscribe_in_background">Allow get data when the app becomes inactive.
     </string>
 
+    <string name="weather_condition_clear">Clear</string>
+    <string name="weather_condition_cloudy">Cloudy</string>
+    <string name="weather_condition_foggy">Foggy</string>
+    <string name="weather_condition_hazy">Hazy</string>
+    <string name="weather_condition_icy">Icy</string>
+    <string name="weather_condition_rainy">Rainy</string>
+    <string name="weather_condition_snow">Snow</string>
+    <string name="weather_condition_stormy">Stormy</string>
+    <string name="weather_condition_unknown">Unknown</string>
+    <string name="weather_condition_windy">Windy</string>
+
     <string name="message_added">Added.</string>
     <string name="message_saved">Saved.</string>
     <string name="message_removed">Removed.</string>

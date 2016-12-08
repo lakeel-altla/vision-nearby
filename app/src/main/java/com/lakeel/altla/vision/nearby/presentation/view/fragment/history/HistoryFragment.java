@@ -139,7 +139,8 @@ public final class HistoryFragment extends Fragment implements HistoryView, OnMa
         passingLayout.textViewDate.setText(dateFormatter.format());
 
         if (bundleData.weatherBundle == null) {
-            passingLayout.textViewWeather.setText(WeatherCondition.UNKNOWN.getWeather());
+            int resId = WeatherCondition.UNKNOWN.getResValue();
+            passingLayout.textViewWeather.setText(getContext().getString(resId));
         } else {
             WeatherBundle weatherBundle = bundleData.weatherBundle;
             BigDecimal temperature = new BigDecimal(weatherBundle.temperature);
@@ -150,7 +151,8 @@ public final class HistoryFragment extends Fragment implements HistoryView, OnMa
             StringBuilder builder = new StringBuilder();
             for (int value : conditions) {
                 WeatherCondition type = WeatherCondition.toType(value);
-                builder.append(type.getWeather());
+                int resId = type.getResValue();
+                builder.append(getContext().getString(resId));
                 builder.append("  ");
             }
             builder.append(getString(R.string.message_temperature_format, String.valueOf(roundUppedTemperature)));
