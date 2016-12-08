@@ -1,26 +1,28 @@
 package com.lakeel.altla.vision.nearby.presentation.constants;
 
+import com.lakeel.altla.vision.nearby.R;
+
 public enum DetectedActivity {
-    IN_VEHICLE(com.google.android.gms.location.DetectedActivity.IN_VEHICLE, "Vehicle"),
-    ON_BICYCLE(com.google.android.gms.location.DetectedActivity.ON_BICYCLE, "Bicycle"),
-    ON_FOOT(com.google.android.gms.location.DetectedActivity.ON_FOOT, "Foot"),
-    RUNNING(com.google.android.gms.location.DetectedActivity.RUNNING, "Running"),
-    STILL(com.google.android.gms.location.DetectedActivity.STILL, "Still"),
-    TILTING(com.google.android.gms.location.DetectedActivity.TILTING, "Tilting"),
-    UNKNOWN(com.google.android.gms.location.DetectedActivity.UNKNOWN, "Unknown"),
-    WALKING(com.google.android.gms.location.DetectedActivity.WALKING, "Walking");
+    IN_VEHICLE(com.google.android.gms.location.DetectedActivity.IN_VEHICLE, R.string.detected_activity_vehicle),
+    ON_BICYCLE(com.google.android.gms.location.DetectedActivity.ON_BICYCLE, R.string.detected_activity_bicycle),
+    ON_FOOT(com.google.android.gms.location.DetectedActivity.ON_FOOT, R.string.detected_activity_foot),
+    RUNNING(com.google.android.gms.location.DetectedActivity.RUNNING, R.string.detected_activity_running),
+    STILL(com.google.android.gms.location.DetectedActivity.STILL, R.string.detected_activity_still),
+    TILTING(com.google.android.gms.location.DetectedActivity.TILTING, R.string.detected_activity_tilting),
+    UNKNOWN(com.google.android.gms.location.DetectedActivity.UNKNOWN, R.string.detected_activity_unknown),
+    WALKING(com.google.android.gms.location.DetectedActivity.WALKING, R.string.detected_activity_walking);
 
     private int intValue;
 
-    private String stringValue;
+    private int resValue;
 
-    DetectedActivity(int intValue, String stringValue) {
+    DetectedActivity(int intValue, int resValue) {
         this.intValue = intValue;
-        this.stringValue = stringValue;
+        this.resValue = resValue;
     }
 
-    public String getValue() {
-        return stringValue;
+    public int getResValue() {
+        return resValue;
     }
 
     public static DetectedActivity toUserActivity(int intValue) {

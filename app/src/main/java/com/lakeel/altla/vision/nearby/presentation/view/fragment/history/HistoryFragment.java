@@ -145,6 +145,7 @@ public final class HistoryFragment extends Fragment implements HistoryView, OnMa
             WeatherBundle weatherBundle = bundleData.weatherBundle;
             BigDecimal temperature = new BigDecimal(weatherBundle.temperature);
             BigDecimal roundUppedTemperature = temperature.setScale(0, BigDecimal.ROUND_HALF_UP);
+
             int humidity = weatherBundle.humidity;
             int conditions[] = weatherBundle.conditions;
 
@@ -162,7 +163,8 @@ public final class HistoryFragment extends Fragment implements HistoryView, OnMa
             passingLayout.textViewWeather.setText(builder.toString());
         }
 
-        passingLayout.textViewDetectedActivity.setText(DetectedActivity.toUserActivity(bundleData.detectedActivity).getValue());
+        int resId = DetectedActivity.toUserActivity(bundleData.detectedActivity).getResValue();
+        passingLayout.textViewDetectedActivity.setText(getContext().getString(resId));
 
         presenter.onActivityCreated();
     }
