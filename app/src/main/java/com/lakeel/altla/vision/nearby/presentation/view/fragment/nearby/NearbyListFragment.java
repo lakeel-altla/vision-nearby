@@ -125,6 +125,12 @@ public final class NearbyListFragment extends Fragment implements NearbyListView
     }
 
     @Override
+    public void onPause() {
+        super.onPause();
+        presenter.onPause();
+    }
+
+    @Override
     public void onStop() {
         super.onStop();
         presenter.onStop();

@@ -70,6 +70,11 @@ public final class FavoritePresenter extends BasePresenter<FavoriteView> {
     FavoritePresenter() {
     }
 
+    public void setUserData(String userId, String userName) {
+        this.userId = userId;
+        this.userName = userName;
+    }
+
     public void onActivityCreated() {
         Subscription presenceSubscription = findPresenceUseCase
                 .execute(userId)
@@ -114,11 +119,6 @@ public final class FavoritePresenter extends BasePresenter<FavoriteView> {
         subscriptions.add(lineLinkSubscription);
     }
 
-    public void setUserData(String userId, String userName) {
-        this.userId = userId;
-        this.userName = userName;
-    }
-
     public boolean isCmLinkEnabled() {
         return isCmLinkClicked;
     }
@@ -127,7 +127,7 @@ public final class FavoritePresenter extends BasePresenter<FavoriteView> {
         getView().showShareSheet();
     }
 
-    public void onNearbyDeviceMenuClicked() {
+    public void onFindDeviceMenuClick() {
         Subscription subscription = findUserBeaconsUseCase
                 .execute(userId)
                 .toList()
@@ -143,7 +143,7 @@ public final class FavoritePresenter extends BasePresenter<FavoriteView> {
         subscriptions.add(subscription);
     }
 
-    public void onCmMenuClicked() {
+    public void onCmMenuClick() {
         Subscription subscription = findCmJidUseCase
                 .execute(userId)
                 .map(jid -> cmFavoritesDataMapper.map(jid))

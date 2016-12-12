@@ -10,16 +10,16 @@ import android.view.View;
 
 import com.lakeel.altla.vision.nearby.R;
 import com.lakeel.altla.vision.nearby.presentation.presenter.model.CmLinksModel;
-import com.lakeel.altla.vision.nearby.presentation.presenter.setting.cm.CmSettingsPresenter;
-import com.lakeel.altla.vision.nearby.presentation.view.CmSettingsView;
+import com.lakeel.altla.vision.nearby.presentation.presenter.setting.cm.CmSettingPresenter;
+import com.lakeel.altla.vision.nearby.presentation.view.CmSettingView;
 import com.lakeel.altla.vision.nearby.presentation.view.activity.MainActivity;
 
 import javax.inject.Inject;
 
-public final class CmSettingsFragment extends PreferenceFragmentCompat implements CmSettingsView {
+public final class CmSettingFragment extends PreferenceFragmentCompat implements CmSettingView {
 
     @Inject
-    CmSettingsPresenter presenter;
+    CmSettingPresenter presenter;
 
     private static final String KEY_CM_API_KEY = "cmApiKey";
 
@@ -33,8 +33,8 @@ public final class CmSettingsFragment extends PreferenceFragmentCompat implement
 
     private EditTextPreference cmJidPreference;
 
-    public static CmSettingsFragment newInstance() {
-        return new CmSettingsFragment();
+    public static CmSettingFragment newInstance() {
+        return new CmSettingFragment();
     }
 
     @Override

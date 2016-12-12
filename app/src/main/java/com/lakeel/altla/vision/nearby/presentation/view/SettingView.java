@@ -2,9 +2,9 @@ package com.lakeel.altla.vision.nearby.presentation.view;
 
 import android.support.annotation.StringRes;
 
-public interface LineSettingsView {
+public interface SettingView extends BaseView {
 
-    void showLineUrl(String url);
+    void showCmPreferences();
 
     void showSnackBar(@StringRes int resId);
 }

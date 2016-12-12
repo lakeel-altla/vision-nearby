@@ -4,7 +4,7 @@ import com.lakeel.altla.vision.nearby.presentation.presenter.model.CmLinksModel;
 
 import android.support.annotation.StringRes;
 
-public interface CmSettingsView {
+public interface CmSettingView {
 
     void showCmPreferences(CmLinksModel model);
 

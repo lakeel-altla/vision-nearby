@@ -58,6 +58,12 @@ public final class HistoryPresenter extends BasePresenter<HistoryView> {
     HistoryPresenter() {
     }
 
+    public void setUserLocationData(String userId, String latitude, String longitude) {
+        this.otherUserId = userId;
+        this.latitude = latitude;
+        this.longitude = longitude;
+    }
+
     public void onActivityCreated() {
         Subscription presenceSubscription = findPresenceUseCase
                 .execute(otherUserId)
@@ -101,12 +107,6 @@ public final class HistoryPresenter extends BasePresenter<HistoryView> {
                 .subscribe(entity -> getView().showAddButton(),
                         e -> LOGGER.error("Failed to find the user data.", e));
         subscriptions.add(favoriteSubscription);
-    }
-
-    public void setUserLocationData(String userId, String latitude, String longitude) {
-        this.otherUserId = userId;
-        this.latitude = latitude;
-        this.longitude = longitude;
     }
 
     public void onMapReady() {

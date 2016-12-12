@@ -1,8 +1,8 @@
 package com.lakeel.altla.vision.nearby.presentation.view.fragment.setting;
 
 import com.lakeel.altla.vision.nearby.R;
-import com.lakeel.altla.vision.nearby.presentation.presenter.setting.SettingsPresenter;
-import com.lakeel.altla.vision.nearby.presentation.view.SettingsView;
+import com.lakeel.altla.vision.nearby.presentation.presenter.setting.SettingPresenter;
+import com.lakeel.altla.vision.nearby.presentation.view.SettingView;
 import com.lakeel.altla.vision.nearby.presentation.view.activity.MainActivity;
 import com.lakeel.altla.vision.nearby.presentation.view.transaction.FragmentController;
 
@@ -16,7 +16,7 @@ import android.view.View;
 
 import javax.inject.Inject;
 
-public final class SettingsFragment extends PreferenceFragmentCompat implements SettingsView {
+public final class SettingFragment extends PreferenceFragmentCompat implements SettingView {
 
     private static final String KEY_SNS_CATEGORY = "snsCategory";
 
@@ -33,10 +33,10 @@ public final class SettingsFragment extends PreferenceFragmentCompat implements 
     private PreferenceScreen cmScreen;
 
     @Inject
-    SettingsPresenter presenter;
+    SettingPresenter presenter;
 
-    public static SettingsFragment newInstance() {
-        return new SettingsFragment();
+    public static SettingFragment newInstance() {
+        return new SettingFragment();
     }
 
     @Override

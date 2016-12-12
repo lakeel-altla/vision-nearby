@@ -13,11 +13,11 @@ import com.lakeel.altla.vision.nearby.presentation.view.fragment.favorite.Favori
 import com.lakeel.altla.vision.nearby.presentation.view.fragment.history.HistoryFragment;
 import com.lakeel.altla.vision.nearby.presentation.view.fragment.history.HistoryListFragment;
 import com.lakeel.altla.vision.nearby.presentation.view.fragment.nearby.NearbyListFragment;
-import com.lakeel.altla.vision.nearby.presentation.view.fragment.setting.SettingsFragment;
-import com.lakeel.altla.vision.nearby.presentation.view.fragment.setting.bluetooth.BleSettingsFragment;
-import com.lakeel.altla.vision.nearby.presentation.view.fragment.setting.cm.CmSettingsFragment;
+import com.lakeel.altla.vision.nearby.presentation.view.fragment.setting.SettingFragment;
+import com.lakeel.altla.vision.nearby.presentation.view.fragment.setting.bluetooth.BleSettingFragment;
+import com.lakeel.altla.vision.nearby.presentation.view.fragment.setting.cm.CmSettingFragment;
 import com.lakeel.altla.vision.nearby.presentation.view.fragment.setting.device.DeviceListFragment;
-import com.lakeel.altla.vision.nearby.presentation.view.fragment.setting.line.LineSettingsFragment;
+import com.lakeel.altla.vision.nearby.presentation.view.fragment.setting.line.LineSettingFragment;
 import com.lakeel.altla.vision.nearby.presentation.view.fragment.signin.SignInFragment;
 import com.lakeel.altla.vision.nearby.presentation.view.fragment.tracking.TrackingFragment;
 
@@ -41,13 +41,13 @@ public final class FragmentController {
 
     private final String PROFILE_FRAGMENT_TAG = FavoriteFragment.class.getSimpleName();
 
-    private final String SETTINGS_FRAGMENT_TAG = SettingsFragment.class.getSimpleName();
+    private final String SETTINGS_FRAGMENT_TAG = SettingFragment.class.getSimpleName();
 
-    private final String SETTINGS_BLE_FRAGMENT_TAG = BleSettingsFragment.class.getSimpleName();
+    private final String SETTINGS_BLE_FRAGMENT_TAG = BleSettingFragment.class.getSimpleName();
 
-    private final String SETTINGS_LINE_FRAGMENT_TAG = LineSettingsFragment.class.getSimpleName();
+    private final String SETTINGS_LINE_FRAGMENT_TAG = LineSettingFragment.class.getSimpleName();
 
-    private final String SETTINGS_CM_FRAGMENT_TAG = CmSettingsFragment.class.getSimpleName();
+    private final String SETTINGS_CM_FRAGMENT_TAG = CmSettingFragment.class.getSimpleName();
 
     private FragmentManager fragmentManager;
 
@@ -101,22 +101,22 @@ public final class FragmentController {
     }
 
     public void showBleSettingsFragment() {
-        BleSettingsFragment fragment = BleSettingsFragment.newInstance();
+        BleSettingFragment fragment = BleSettingFragment.newInstance();
         replaceFragment(R.id.fragmentPlaceholder, fragment, SETTINGS_BLE_FRAGMENT_TAG);
     }
 
     public void showLineSettingsFragment() {
-        LineSettingsFragment fragment = LineSettingsFragment.newInstance();
+        LineSettingFragment fragment = LineSettingFragment.newInstance();
         replaceFragment(R.id.fragmentPlaceholder, fragment, SETTINGS_LINE_FRAGMENT_TAG);
     }
 
     public void showCmSettingsFragment() {
-        CmSettingsFragment fragment = CmSettingsFragment.newInstance();
+        CmSettingFragment fragment = CmSettingFragment.newInstance();
         replaceFragment(R.id.fragmentPlaceholder, fragment, SETTINGS_CM_FRAGMENT_TAG);
     }
 
     public void showSettingsFragment() {
-        SettingsFragment fragment = SettingsFragment.newInstance();
+        SettingFragment fragment = SettingFragment.newInstance();
         replaceFragment(R.id.fragmentPlaceholder, fragment, SETTINGS_FRAGMENT_TAG);
     }
 

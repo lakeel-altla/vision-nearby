@@ -10,7 +10,7 @@ import com.lakeel.altla.vision.nearby.domain.usecase.SaveCmSecretKeyUseCase;
 import com.lakeel.altla.vision.nearby.presentation.firebase.MyUser;
 import com.lakeel.altla.vision.nearby.presentation.presenter.BasePresenter;
 import com.lakeel.altla.vision.nearby.presentation.presenter.mapper.CmLinksModelMapper;
-import com.lakeel.altla.vision.nearby.presentation.view.CmSettingsView;
+import com.lakeel.altla.vision.nearby.presentation.view.CmSettingView;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -22,7 +22,7 @@ import rx.Subscription;
 import rx.android.schedulers.AndroidSchedulers;
 import rx.schedulers.Schedulers;
 
-public final class CmSettingsPresenter extends BasePresenter<CmSettingsView> {
+public final class CmSettingPresenter extends BasePresenter<CmSettingView> {
 
     @Inject
     FindConfigsUseCase findConfigsUseCase;
@@ -39,12 +39,12 @@ public final class CmSettingsPresenter extends BasePresenter<CmSettingsView> {
     @Inject
     SaveCmJidUseCase saveCmJidUseCase;
 
-    private static final Logger LOGGER = LoggerFactory.getLogger(CmSettingsPresenter.class);
+    private static final Logger LOGGER = LoggerFactory.getLogger(CmSettingPresenter.class);
 
     private CmLinksModelMapper CmLinksModelMapper = new CmLinksModelMapper();
 
     @Inject
-    CmSettingsPresenter() {
+    CmSettingPresenter() {
     }
 
     public void onActivityCreated() {

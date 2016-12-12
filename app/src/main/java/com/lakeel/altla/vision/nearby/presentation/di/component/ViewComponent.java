@@ -13,11 +13,11 @@ import com.lakeel.altla.vision.nearby.presentation.view.fragment.favorite.Favori
 import com.lakeel.altla.vision.nearby.presentation.view.fragment.history.HistoryFragment;
 import com.lakeel.altla.vision.nearby.presentation.view.fragment.history.HistoryListFragment;
 import com.lakeel.altla.vision.nearby.presentation.view.fragment.nearby.NearbyListFragment;
-import com.lakeel.altla.vision.nearby.presentation.view.fragment.setting.SettingsFragment;
-import com.lakeel.altla.vision.nearby.presentation.view.fragment.setting.bluetooth.BleSettingsFragment;
-import com.lakeel.altla.vision.nearby.presentation.view.fragment.setting.cm.CmSettingsFragment;
+import com.lakeel.altla.vision.nearby.presentation.view.fragment.setting.SettingFragment;
+import com.lakeel.altla.vision.nearby.presentation.view.fragment.setting.bluetooth.BleSettingFragment;
+import com.lakeel.altla.vision.nearby.presentation.view.fragment.setting.cm.CmSettingFragment;
 import com.lakeel.altla.vision.nearby.presentation.view.fragment.setting.device.DeviceListFragment;
-import com.lakeel.altla.vision.nearby.presentation.view.fragment.setting.line.LineSettingsFragment;
+import com.lakeel.altla.vision.nearby.presentation.view.fragment.setting.line.LineSettingFragment;
 import com.lakeel.altla.vision.nearby.presentation.view.fragment.signin.SignInFragment;
 import com.lakeel.altla.vision.nearby.presentation.view.fragment.tracking.TrackingFragment;
 
@@ -39,13 +39,13 @@ public interface ViewComponent {
 
     void inject(HistoryFragment fragment);
 
-    void inject(SettingsFragment fragment);
+    void inject(SettingFragment fragment);
 
-    void inject(BleSettingsFragment fragment);
+    void inject(BleSettingFragment fragment);
 
-    void inject(LineSettingsFragment fragment);
+    void inject(LineSettingFragment fragment);
 
-    void inject(CmSettingsFragment fragment);
+    void inject(CmSettingFragment fragment);
 
     void inject(TrackingFragment fragment);
 

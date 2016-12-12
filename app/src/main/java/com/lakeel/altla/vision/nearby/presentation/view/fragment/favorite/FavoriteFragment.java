@@ -132,7 +132,7 @@ public final class FavoriteFragment extends Fragment implements FavoriteView {
                 presenter.onShare();
                 break;
             case find:
-                presenter.onNearbyDeviceMenuClicked();
+                presenter.onFindDeviceMenuClick();
                 break;
             default:
                 break;
@@ -174,7 +174,7 @@ public final class FavoriteFragment extends Fragment implements FavoriteView {
         GridShareSheet shareSheet = new GridShareSheet(getContext(), this.shareSheet, R.menu.menu_share);
         shareSheet.setOnMenuItemClickListener(item -> {
             if (item.getItemId() == R.id.menu_cm_favorites) {
-                presenter.onCmMenuClicked();
+                presenter.onCmMenuClick();
             }
             return true;
         });
