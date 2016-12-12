@@ -219,6 +219,6 @@ public final class TrackingFragment extends Fragment implements TrackingView, On
     @Override
     public void showFindNearbyDeviceFragment(ArrayList<String> beaconIds, String beaconName) {
         FragmentController controller = new FragmentController(getActivity().getSupportFragmentManager());
-        controller.showDeviceDistanceEstimationFragment(beaconIds, beaconName);
+        controller.showDistanceEstimationFragment(beaconIds, beaconName);
     }
 }

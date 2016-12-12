@@ -7,7 +7,7 @@ import com.lakeel.altla.vision.nearby.presentation.di.module.PresenterModule;
 import com.lakeel.altla.vision.nearby.presentation.di.module.RepositoryModule;
 import com.lakeel.altla.vision.nearby.presentation.service.LineService;
 import com.lakeel.altla.vision.nearby.presentation.view.activity.MainActivity;
-import com.lakeel.altla.vision.nearby.presentation.view.fragment.estimation.DeviceDistanceEstimationFragment;
+import com.lakeel.altla.vision.nearby.presentation.view.fragment.estimation.DistanceEstimationFragment;
 import com.lakeel.altla.vision.nearby.presentation.view.fragment.favorite.FavoriteFragment;
 import com.lakeel.altla.vision.nearby.presentation.view.fragment.favorite.FavoriteListFragment;
 import com.lakeel.altla.vision.nearby.presentation.view.fragment.history.HistoryFragment;
@@ -51,7 +51,7 @@ public interface ViewComponent {
 
     void inject(DeviceListFragment fragment);
 
-    void inject(DeviceDistanceEstimationFragment fragment);
+    void inject(DistanceEstimationFragment fragment);
 
     void inject(FavoriteFragment fragment);
 

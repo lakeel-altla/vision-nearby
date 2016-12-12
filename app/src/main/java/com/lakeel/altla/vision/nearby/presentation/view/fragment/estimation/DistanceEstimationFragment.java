@@ -18,8 +18,8 @@ import com.google.android.gms.common.api.Status;
 import com.lakeel.altla.vision.nearby.R;
 import com.lakeel.altla.vision.nearby.presentation.constants.BundleKey;
 import com.lakeel.altla.vision.nearby.presentation.firebase.MyUser;
-import com.lakeel.altla.vision.nearby.presentation.presenter.estimation.DeviceDistanceEstimationPresenter;
-import com.lakeel.altla.vision.nearby.presentation.view.DeviceDistanceEstimationView;
+import com.lakeel.altla.vision.nearby.presentation.presenter.estimation.DistanceEstimationPresenter;
+import com.lakeel.altla.vision.nearby.presentation.view.DistanceEstimationView;
 import com.lakeel.altla.vision.nearby.presentation.view.activity.MainActivity;
 import com.nostra13.universalimageloader.core.ImageLoader;
 
@@ -37,21 +37,21 @@ import butterknife.ButterKnife;
 import static android.app.Activity.RESULT_OK;
 import static android.view.animation.Animation.INFINITE;
 
-public final class DeviceDistanceEstimationFragment extends Fragment implements DeviceDistanceEstimationView {
+public final class DistanceEstimationFragment extends Fragment implements DistanceEstimationView {
 
-    public static DeviceDistanceEstimationFragment newInstance(ArrayList<String> beaconIds, String targetName) {
+    public static DistanceEstimationFragment newInstance(ArrayList<String> beaconIds, String targetName) {
 
         Bundle args = new Bundle();
         args.putStringArrayList(BundleKey.BEACON_IDS.getValue(), beaconIds);
         args.putSerializable(BundleKey.TARGET_NAME.getValue(), targetName);
 
-        DeviceDistanceEstimationFragment fragment = new DeviceDistanceEstimationFragment();
+        DistanceEstimationFragment fragment = new DistanceEstimationFragment();
         fragment.setArguments(args);
         return fragment;
     }
 
     @Inject
-    DeviceDistanceEstimationPresenter presenter;
+    DistanceEstimationPresenter presenter;
 
     @BindView(R.id.textViewDescription)
     TextView distanceDescriptionText;
@@ -65,7 +65,7 @@ public final class DeviceDistanceEstimationFragment extends Fragment implements 
     @BindView(R.id.imageViewCircle)
     ImageView circleImage;
 
-    private static final Logger LOGGER = LoggerFactory.getLogger(DeviceDistanceEstimationFragment.class);
+    private static final Logger LOGGER = LoggerFactory.getLogger(DistanceEstimationFragment.class);
 
     private static final int REQUEST_CODE_SUBSCRIBE_RESULT = 1;
 
@@ -103,7 +103,7 @@ public final class DeviceDistanceEstimationFragment extends Fragment implements 
         String message = getResources().getString(R.string.message_finding_for_nearby_device_format, beaconName);
         distanceDescriptionText.setText(message);
 
-        presenter.setSubscriber(beaconIds);
+        presenter.buildSubscriber(beaconIds);
     }
 
     @Override

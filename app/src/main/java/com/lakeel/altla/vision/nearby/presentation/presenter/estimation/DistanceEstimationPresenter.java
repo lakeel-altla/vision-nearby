@@ -18,14 +18,14 @@ import com.lakeel.altla.vision.nearby.domain.usecase.FindUserBeaconsUseCase;
 import com.lakeel.altla.vision.nearby.presentation.presenter.BasePresenter;
 import com.lakeel.altla.vision.nearby.presentation.subscriber.ForegroundSubscriber;
 import com.lakeel.altla.vision.nearby.presentation.subscriber.Subscriber;
-import com.lakeel.altla.vision.nearby.presentation.view.DeviceDistanceEstimationView;
+import com.lakeel.altla.vision.nearby.presentation.view.DistanceEstimationView;
 
 import java.util.List;
 import java.util.Locale;
 
 import javax.inject.Inject;
 
-public final class DeviceDistanceEstimationPresenter extends BasePresenter<DeviceDistanceEstimationView> implements GoogleApiClient.ConnectionCallbacks {
+public final class DistanceEstimationPresenter extends BasePresenter<DistanceEstimationView> implements GoogleApiClient.ConnectionCallbacks {
 
     @Inject
     FindUserBeaconsUseCase findUserBeaconsUseCase;
@@ -57,7 +57,7 @@ public final class DeviceDistanceEstimationPresenter extends BasePresenter<Devic
     };
 
     @Inject
-    DeviceDistanceEstimationPresenter(Activity activity) {
+    DistanceEstimationPresenter(Activity activity) {
         googleApiClient = new GoogleApiClient.Builder(activity)
                 .addApi(Nearby.MESSAGES_API)
                 .build();
@@ -90,7 +90,7 @@ public final class DeviceDistanceEstimationPresenter extends BasePresenter<Devic
     public void onConnectionSuspended(int i) {
     }
 
-    public void setSubscriber(List<String> beaconIds) {
+    public void buildSubscriber(List<String> beaconIds) {
         MessageFilter.Builder filterBuilder = new MessageFilter.Builder();
 
         for (String beaconId : beaconIds) {

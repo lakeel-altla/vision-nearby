@@ -199,6 +199,6 @@ public final class FavoriteFragment extends Fragment implements FavoriteView {
     @Override
     public void showFindNearbyDeviceFragment(ArrayList<String> beaconIds, String targetName) {
         FragmentController controller = new FragmentController(getActivity().getSupportFragmentManager());
-        controller.showDeviceDistanceEstimationFragment(beaconIds, targetName);
+        controller.showDistanceEstimationFragment(beaconIds, targetName);
     }
 }
