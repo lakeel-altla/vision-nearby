@@ -1,4 +1,4 @@
-package com.lakeel.altla.vision.nearby.presentation.presenter.settings.device;
+package com.lakeel.altla.vision.nearby.presentation.presenter.setting.device;
 
 import android.support.annotation.IntRange;
 

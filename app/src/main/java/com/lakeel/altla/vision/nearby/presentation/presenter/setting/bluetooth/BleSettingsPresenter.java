@@ -1,4 +1,4 @@
-package com.lakeel.altla.vision.nearby.presentation.presenter.settings.bluetooth;
+package com.lakeel.altla.vision.nearby.presentation.presenter.setting.bluetooth;
 
 import android.content.Context;
 

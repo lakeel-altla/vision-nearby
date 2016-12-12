@@ -11,7 +11,7 @@ import android.widget.TextView;
 import com.amulyakhare.textdrawable.TextDrawable;
 import com.lakeel.altla.vision.nearby.R;
 import com.lakeel.altla.vision.nearby.core.StringUtils;
-import com.lakeel.altla.vision.nearby.presentation.presenter.favorites.FavoriteListPresenter;
+import com.lakeel.altla.vision.nearby.presentation.presenter.favorite.FavoriteListPresenter;
 import com.lakeel.altla.vision.nearby.presentation.presenter.model.FavoriteModel;
 import com.lakeel.altla.vision.nearby.presentation.view.FavoriteItemView;
 import com.marshalchen.ultimaterecyclerview.SwipeableUltimateViewAdapter;

@@ -19,6 +19,7 @@ import java.util.HashMap;
 
 import javax.inject.Inject;
 
+import rx.Completable;
 import rx.Observable;
 import rx.Single;
 import rx.SingleSubscriber;
@@ -37,7 +38,7 @@ public class FirebaseHistoryRepositoryImpl implements FirebaseHistoryRepository 
     private DatabaseReference reference;
 
     private HistoryEntityMapper entityMapper = new HistoryEntityMapper();
-    
+
     @Inject
     public FirebaseHistoryRepositoryImpl(String url) {
         reference = FirebaseDatabase.getInstance().getReferenceFromUrl(url);
@@ -190,6 +191,23 @@ public class FirebaseHistoryRepositoryImpl implements FirebaseHistoryRepository 
             Exception exception = task.getException();
             if (exception != null) {
                 throw new DataStoreException(exception);
+            }
+        });
+    }
+
+    @Override
+    public Completable removeByUniqueKey(String userId, String uniqueKey) {
+        return Completable.create(subscriber -> {
+            Task task = reference.
+                    child(userId)
+                    .child(uniqueKey)
+                    .removeValue()
+                    .addOnSuccessListener(aVoid -> subscriber.onCompleted())
+                    .addOnFailureListener(subscriber::onError);
+
+            Exception e = task.getException();
+            if (e != null) {
+                subscriber.onError(e);
             }
         });
     }

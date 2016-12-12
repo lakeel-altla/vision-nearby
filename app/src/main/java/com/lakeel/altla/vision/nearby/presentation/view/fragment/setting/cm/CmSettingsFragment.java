@@ -10,7 +10,7 @@ import android.view.View;
 
 import com.lakeel.altla.vision.nearby.R;
 import com.lakeel.altla.vision.nearby.presentation.presenter.model.CmLinksModel;
-import com.lakeel.altla.vision.nearby.presentation.presenter.settings.cm.CmSettingsPresenter;
+import com.lakeel.altla.vision.nearby.presentation.presenter.setting.cm.CmSettingsPresenter;
 import com.lakeel.altla.vision.nearby.presentation.view.CmSettingsView;
 import com.lakeel.altla.vision.nearby.presentation.view.activity.MainActivity;
 

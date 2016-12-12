@@ -8,6 +8,4 @@ public interface HistoryItemView extends ItemView {
     void setItemPresenter(HistoryListPresenter.HistoryItemPresenter itemPresenter);
 
     void showItem(HistoryModel model);
-
-    void closeItem();
 }

@@ -1,7 +1,7 @@
 package com.lakeel.altla.vision.nearby.presentation.view.adapter;
 
 import com.lakeel.altla.vision.nearby.R;
-import com.lakeel.altla.vision.nearby.presentation.presenter.settings.device.DeviceListPresenter;
+import com.lakeel.altla.vision.nearby.presentation.presenter.setting.device.DeviceListPresenter;
 import com.lakeel.altla.vision.nearby.presentation.presenter.model.BeaconModel;
 import com.lakeel.altla.vision.nearby.presentation.view.DeviceItemView;
 

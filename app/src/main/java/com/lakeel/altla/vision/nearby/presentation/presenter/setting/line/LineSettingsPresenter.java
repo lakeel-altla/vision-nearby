@@ -1,4 +1,4 @@
-package com.lakeel.altla.vision.nearby.presentation.presenter.settings.line;
+package com.lakeel.altla.vision.nearby.presentation.presenter.setting.line;
 
 import com.lakeel.altla.vision.nearby.R;
 import com.lakeel.altla.vision.nearby.domain.usecase.FindLineLinkUseCase;

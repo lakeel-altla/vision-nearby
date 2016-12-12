@@ -11,7 +11,7 @@ import android.view.ViewGroup;
 import android.widget.RelativeLayout;
 
 import com.lakeel.altla.vision.nearby.R;
-import com.lakeel.altla.vision.nearby.presentation.presenter.favorites.FavoriteListPresenter;
+import com.lakeel.altla.vision.nearby.presentation.presenter.favorite.FavoriteListPresenter;
 import com.lakeel.altla.vision.nearby.presentation.presenter.model.FavoriteModel;
 import com.lakeel.altla.vision.nearby.presentation.view.FavoriteListView;
 import com.lakeel.altla.vision.nearby.presentation.view.activity.MainActivity;

@@ -1,7 +1,7 @@
 package com.lakeel.altla.vision.nearby.presentation.view.fragment.setting;
 
 import com.lakeel.altla.vision.nearby.R;
-import com.lakeel.altla.vision.nearby.presentation.presenter.settings.SettingsPresenter;
+import com.lakeel.altla.vision.nearby.presentation.presenter.setting.SettingsPresenter;
 import com.lakeel.altla.vision.nearby.presentation.view.SettingsView;
 import com.lakeel.altla.vision.nearby.presentation.view.activity.MainActivity;
 import com.lakeel.altla.vision.nearby.presentation.view.transaction.FragmentController;

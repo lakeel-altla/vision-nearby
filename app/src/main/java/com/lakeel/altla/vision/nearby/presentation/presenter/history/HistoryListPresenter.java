@@ -3,12 +3,13 @@ package com.lakeel.altla.vision.nearby.presentation.presenter.history;
 import android.support.annotation.IntRange;
 
 import com.lakeel.altla.vision.nearby.R;
+import com.lakeel.altla.vision.nearby.core.CollectionUtils;
 import com.lakeel.altla.vision.nearby.data.entity.HistoryEntity;
 import com.lakeel.altla.vision.nearby.data.entity.UserEntity;
 import com.lakeel.altla.vision.nearby.domain.usecase.FindFavoriteUseCase;
 import com.lakeel.altla.vision.nearby.domain.usecase.FindHistoryUseCase;
 import com.lakeel.altla.vision.nearby.domain.usecase.FindUserUseCase;
-import com.lakeel.altla.vision.nearby.domain.usecase.SaveFavoriteUseCase;
+import com.lakeel.altla.vision.nearby.domain.usecase.RemoveHistoryUseCase;
 import com.lakeel.altla.vision.nearby.presentation.firebase.MyUser;
 import com.lakeel.altla.vision.nearby.presentation.presenter.BaseItemPresenter;
 import com.lakeel.altla.vision.nearby.presentation.presenter.BasePresenter;
@@ -32,6 +33,7 @@ import javax.inject.Inject;
 import rx.Observable;
 import rx.Subscription;
 import rx.android.schedulers.AndroidSchedulers;
+import rx.functions.Action1;
 import rx.schedulers.Schedulers;
 
 public final class HistoryListPresenter extends BasePresenter<HistoryListView> {
@@ -46,7 +48,7 @@ public final class HistoryListPresenter extends BasePresenter<HistoryListView> {
     FindHistoryUseCase findHistoryUseCase;
 
     @Inject
-    SaveFavoriteUseCase saveFavoriteUseCase;
+    RemoveHistoryUseCase removeHistoryUseCase;
 
     private static final Logger LOGGER = LoggerFactory.getLogger(HistoryListPresenter.class);
 
@@ -128,19 +130,24 @@ public final class HistoryListPresenter extends BasePresenter<HistoryListView> {
             getView().showHistoryFragment(data);
         }
 
-        public void onAdd(String otherUserId) {
-            Subscription subscription = saveFavoriteUseCase
-                    .execute(MyUser.getUid(), otherUserId)
+        public void onRemove(HistoryModel model) {
+            Subscription subscription = removeHistoryUseCase
+                    .execute(MyUser.getUid(), model.key)
                     .subscribeOn(Schedulers.io())
                     .observeOn(AndroidSchedulers.mainThread())
-                    .subscribe(entity -> {
-                        getItemView().closeItem();
-                        getView().showSnackBar(R.string.message_added);
-                    }, e -> {
+                    .subscribe(e -> {
                         LOGGER.error("Failed to add to favorites.", e);
                         getView().showSnackBar(R.string.error_not_added);
+                    }, () -> {
+                        int size = historyModels.size();
+                        historyModels.remove(model);
+                        if (CollectionUtils.isEmpty(historyModels)) {
+                            getView().removeAll(size);
+                        } else {
+                            getView().updateItems();
+                        }
+                        getView().showSnackBar(R.string.message_removed);
                     });
-
             subscriptions.add(subscription);
         }
     }

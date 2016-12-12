@@ -1,4 +1,4 @@
-package com.lakeel.altla.vision.nearby.presentation.presenter.favorites;
+package com.lakeel.altla.vision.nearby.presentation.presenter.favorite;
 
 import com.lakeel.altla.cm.resource.Timestamp;
 import com.lakeel.altla.vision.nearby.R;

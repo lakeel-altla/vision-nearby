@@ -17,7 +17,7 @@ import android.widget.LinearLayout;
 import com.flipboard.bottomsheet.BottomSheetLayout;
 import com.lakeel.altla.vision.nearby.R;
 import com.lakeel.altla.vision.nearby.presentation.constants.BundleKey;
-import com.lakeel.altla.vision.nearby.presentation.presenter.favorites.FavoritePresenter;
+import com.lakeel.altla.vision.nearby.presentation.presenter.favorite.FavoritePresenter;
 import com.lakeel.altla.vision.nearby.presentation.presenter.model.PresenceModel;
 import com.lakeel.altla.vision.nearby.presentation.presenter.model.UserModel;
 import com.lakeel.altla.vision.nearby.presentation.view.DateFormatter;

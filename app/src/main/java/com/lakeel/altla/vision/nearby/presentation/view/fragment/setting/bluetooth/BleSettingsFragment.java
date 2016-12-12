@@ -9,7 +9,7 @@ import android.view.MenuItem;
 import com.lakeel.altla.vision.nearby.R;
 import com.lakeel.altla.vision.nearby.presentation.intent.IntentKey;
 import com.lakeel.altla.vision.nearby.presentation.presenter.model.BeaconIdModel;
-import com.lakeel.altla.vision.nearby.presentation.presenter.settings.bluetooth.BleSettingsPresenter;
+import com.lakeel.altla.vision.nearby.presentation.presenter.setting.bluetooth.BleSettingsPresenter;
 import com.lakeel.altla.vision.nearby.presentation.service.AdvertiseService;
 import com.lakeel.altla.vision.nearby.presentation.view.BleSettingsView;
 import com.lakeel.altla.vision.nearby.presentation.view.activity.MainActivity;

@@ -1,4 +1,4 @@
-package com.lakeel.altla.vision.nearby.presentation.presenter.favorites;
+package com.lakeel.altla.vision.nearby.presentation.presenter.favorite;
 
 import android.support.annotation.IntRange;
 

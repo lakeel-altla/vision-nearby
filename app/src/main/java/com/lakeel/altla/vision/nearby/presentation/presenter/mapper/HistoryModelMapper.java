@@ -18,6 +18,7 @@ public final class HistoryModelMapper {
     public HistoryModel map(@NonNull HistoryEntity historyEntity, @NonNull UserEntity userEntity) {
         HistoryModel model = new HistoryModel();
 
+        model.key = historyEntity.key;
         model.userId = historyEntity.userId;
         model.name = userEntity.name;
         model.imageUri = userEntity.imageUri;

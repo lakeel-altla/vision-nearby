@@ -1,4 +1,4 @@
-package com.lakeel.altla.vision.nearby.presentation.presenter.settings;
+package com.lakeel.altla.vision.nearby.presentation.presenter.setting;
 
 import com.lakeel.altla.vision.nearby.domain.usecase.FindConfigsUseCase;
 import com.lakeel.altla.vision.nearby.presentation.presenter.BasePresenter;

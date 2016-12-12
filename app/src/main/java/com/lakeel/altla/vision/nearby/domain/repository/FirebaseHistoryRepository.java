@@ -6,6 +6,7 @@ import com.google.android.gms.awareness.state.Weather;
 import com.google.android.gms.location.DetectedActivity;
 import com.lakeel.altla.vision.nearby.data.entity.HistoryEntity;
 
+import rx.Completable;
 import rx.Observable;
 import rx.Single;
 
@@ -24,4 +25,6 @@ public interface FirebaseHistoryRepository {
     Single<HistoryEntity> saveWeather(String uniqueId, String userId, Weather weather);
 
     Single<String> saveLocationText(String key, String userId, String language, String locationText);
+
+    Completable removeByUniqueKey(String userId, String uniqueKey);
 }

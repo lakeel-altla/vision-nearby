@@ -25,11 +25,11 @@ import java.util.ArrayList;
 import butterknife.BindView;
 import butterknife.ButterKnife;
 
-public final class RecentlyAdapter extends SwipeableUltimateViewAdapter<HistoryModel> {
+public final class HistoryAdapter extends SwipeableUltimateViewAdapter<HistoryModel> {
 
     private HistoryListPresenter historyListPresenter;
 
-    public RecentlyAdapter(HistoryListPresenter historyListPresenter) {
+    public HistoryAdapter(HistoryListPresenter historyListPresenter) {
         super(new ArrayList<>());
         this.historyListPresenter = historyListPresenter;
     }
@@ -52,7 +52,7 @@ public final class RecentlyAdapter extends SwipeableUltimateViewAdapter<HistoryM
         holder.onBind(position);
     }
 
-    public static class HistoryItemsViewHolder extends UltimateRecyclerviewViewHolder implements HistoryItemView {
+    static class HistoryItemsViewHolder extends UltimateRecyclerviewViewHolder implements HistoryItemView {
 
         @BindView(R.id.layout_row)
         LinearLayout itemLayout;
@@ -66,15 +66,15 @@ public final class RecentlyAdapter extends SwipeableUltimateViewAdapter<HistoryM
         @BindView(R.id.timestamp)
         TextView passingTime;
 
-        @BindView(R.id.button_add)
-        Button addButton;
+        @BindView(R.id.buttonRemove)
+        Button removeButton;
 
         @BindView(R.id.swipe_layout)
         SwipeLayout swipeLayout;
 
         private HistoryListPresenter.HistoryItemPresenter itemPresenter;
 
-        public HistoryItemsViewHolder(View itemView, boolean bind) {
+        HistoryItemsViewHolder(View itemView, boolean bind) {
             super(itemView);
             if (bind) {
                 ButterKnife.bind(this, itemView);
@@ -90,7 +90,6 @@ public final class RecentlyAdapter extends SwipeableUltimateViewAdapter<HistoryM
 
         @Override
         public void showItem(HistoryModel model) {
-            String id = model.userId;
             String userName = model.name;
             String imageUri = model.imageUri;
 
@@ -111,12 +110,7 @@ public final class RecentlyAdapter extends SwipeableUltimateViewAdapter<HistoryM
             passingTime.setText(dateFormatter.format());
 
             itemLayout.setOnClickListener(view -> itemPresenter.onClick(model));
-            addButton.setOnClickListener(v -> itemPresenter.onAdd(id));
-        }
-
-        @Override
-        public void closeItem() {
-            swipeLayout.close();
+            removeButton.setOnClickListener(v -> itemPresenter.onRemove(model));
         }
 
         @Override

@@ -14,7 +14,7 @@ import com.lakeel.altla.vision.nearby.R;
 import com.lakeel.altla.vision.nearby.presentation.presenter.history.HistoryListPresenter;
 import com.lakeel.altla.vision.nearby.presentation.view.HistoryListView;
 import com.lakeel.altla.vision.nearby.presentation.view.activity.MainActivity;
-import com.lakeel.altla.vision.nearby.presentation.view.adapter.RecentlyAdapter;
+import com.lakeel.altla.vision.nearby.presentation.view.adapter.HistoryAdapter;
 import com.lakeel.altla.vision.nearby.presentation.view.bundle.HistoryBundle;
 import com.lakeel.altla.vision.nearby.presentation.view.divider.DividerItemDecoration;
 import com.lakeel.altla.vision.nearby.presentation.view.transaction.FragmentController;
@@ -67,7 +67,7 @@ public final class HistoryListFragment extends Fragment implements HistoryListVi
         RecyclerView.LayoutManager mLayoutManager = new ScrollSmoothLineaerLayoutManager(getContext(), LinearLayoutManager.VERTICAL, false, 500);
         recyclerView.setLayoutManager(mLayoutManager);
 
-        RecentlyAdapter adapter = new RecentlyAdapter(presenter);
+        HistoryAdapter adapter = new HistoryAdapter(presenter);
         adapter.setMode(SwipeItemManagerInterface.Mode.Single);
 
         recyclerView.addItemDecoration(new DividerItemDecoration(getContext()));
@@ -84,9 +84,14 @@ public final class HistoryListFragment extends Fragment implements HistoryListVi
 
     @Override
     public void updateItems() {
-        RecentlyAdapter adapter = ((RecentlyAdapter) recyclerView.getAdapter());
+        HistoryAdapter adapter = ((HistoryAdapter) recyclerView.getAdapter());
         adapter.removeAll();
         adapter.insert(presenter.getItems());
+    }
+
+    @Override
+    public void removeAll(int size) {
+        recyclerView.getAdapter().notifyItemRangeRemoved(0, size);
     }
 
     @Override
