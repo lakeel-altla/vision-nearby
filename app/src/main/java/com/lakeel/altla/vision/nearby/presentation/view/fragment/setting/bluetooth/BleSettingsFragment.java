@@ -1,4 +1,4 @@
-package com.lakeel.altla.vision.nearby.presentation.view.fragment.settings.bluetooth;
+package com.lakeel.altla.vision.nearby.presentation.view.fragment.setting.bluetooth;
 
 import android.content.Intent;
 import android.os.Bundle;

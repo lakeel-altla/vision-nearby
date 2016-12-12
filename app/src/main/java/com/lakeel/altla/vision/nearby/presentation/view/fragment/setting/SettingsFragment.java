@@ -1,4 +1,4 @@
-package com.lakeel.altla.vision.nearby.presentation.view.fragment.settings;
+package com.lakeel.altla.vision.nearby.presentation.view.fragment.setting;
 
 import com.lakeel.altla.vision.nearby.R;
 import com.lakeel.altla.vision.nearby.presentation.presenter.settings.SettingsPresenter;

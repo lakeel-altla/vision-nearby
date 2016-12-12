@@ -1,4 +1,4 @@
-package com.lakeel.altla.vision.nearby.presentation.view.fragment.settings.cm;
+package com.lakeel.altla.vision.nearby.presentation.view.fragment.setting.cm;
 
 import android.os.Bundle;
 import android.support.annotation.StringRes;
