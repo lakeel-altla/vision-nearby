@@ -103,7 +103,7 @@ public final class NearbyListFragment extends Fragment implements NearbyListView
 
     @Override
     public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
-        inflater.inflate(R.menu.menu_profile, menu);
+        inflater.inflate(R.menu.menu_nearby, menu);
     }
 
     @Override
@@ -115,7 +115,6 @@ public final class NearbyListFragment extends Fragment implements NearbyListView
             default:
                 break;
         }
-
         return false;
     }
 
