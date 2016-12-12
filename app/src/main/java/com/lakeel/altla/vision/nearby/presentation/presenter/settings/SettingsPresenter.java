@@ -36,6 +36,6 @@ public final class SettingsPresenter extends BasePresenter<SettingsView> {
                 }, e -> {
                     LOGGER.error("Failed to find CM links settings.", e);
                 });
-        reusableSubscriptions.add(subscription);
+        subscriptions.add(subscription);
     }
 }

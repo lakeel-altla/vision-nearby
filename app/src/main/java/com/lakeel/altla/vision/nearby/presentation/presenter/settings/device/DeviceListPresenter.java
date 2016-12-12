@@ -63,7 +63,7 @@ public class DeviceListPresenter extends BasePresenter<DeviceView> {
                 }, e -> {
                     LOGGER.error("Failed to find user beacons.", e);
                 });
-        reusableSubscriptions.add(subscription);
+        subscriptions.add(subscription);
     }
 
     public int getItemCount() {

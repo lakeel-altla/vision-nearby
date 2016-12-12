@@ -61,7 +61,7 @@ public final class CmSettingsPresenter extends BasePresenter<CmSettingsView> {
                 }, e -> {
                     LOGGER.error("Failed to find CM links.", e);
                 });
-        reusableSubscriptions.add(subscription);
+        subscriptions.add(subscription);
     }
 
     public void onSaveCmApiKey(String apiKey) {
@@ -76,7 +76,7 @@ public final class CmSettingsPresenter extends BasePresenter<CmSettingsView> {
                     LOGGER.error("Failed to save API key.", e);
                     getView().showSnackBar(R.string.error_not_saved);
                 });
-        reusableSubscriptions.add(subscription);
+        subscriptions.add(subscription);
     }
 
     public void onSaveCmSecretKey(String secretKey) {
@@ -91,7 +91,7 @@ public final class CmSettingsPresenter extends BasePresenter<CmSettingsView> {
                     LOGGER.error("Failed to save secret key.", e);
                     getView().showSnackBar(R.string.error_not_saved);
                 });
-        reusableSubscriptions.add(subscription);
+        subscriptions.add(subscription);
     }
 
     public void onSaveCmJid(String jid) {
@@ -106,7 +106,7 @@ public final class CmSettingsPresenter extends BasePresenter<CmSettingsView> {
                     LOGGER.error("Failed to save jid.", e);
                     getView().showSnackBar(R.string.error_not_saved);
                 });
-        reusableSubscriptions.add(subscription);
+        subscriptions.add(subscription);
     }
 
     Observable<CmLinkEntity> findCmLink(String userId) {

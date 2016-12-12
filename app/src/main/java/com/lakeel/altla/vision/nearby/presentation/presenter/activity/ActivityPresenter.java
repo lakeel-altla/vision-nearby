@@ -160,7 +160,7 @@ public final class ActivityPresenter extends BasePresenter<ActivityView> impleme
                     }
                 }, e -> LOGGER.error("Failed to find preference settings.", e));
 
-        reusableSubscriptions.add(subscription);
+        subscriptions.add(subscription);
     }
 
     @Override
@@ -207,7 +207,7 @@ public final class ActivityPresenter extends BasePresenter<ActivityView> impleme
                 .subscribeOn(Schedulers.io())
                 .doOnError(e -> LOGGER.error("Failed to save beacon data.", e))
                 .subscribe();
-        reusableSubscriptions.add(beaconSubscription);
+        subscriptions.add(beaconSubscription);
 
         Subscription preferenceSubscription = findPreferencesUseCase
                 .execute()
@@ -218,7 +218,7 @@ public final class ActivityPresenter extends BasePresenter<ActivityView> impleme
                         getView().startAdvertiseService(model);
                     }
                 }, e -> LOGGER.error("Failed to find preferences.", e));
-        reusableSubscriptions.add(preferenceSubscription);
+        subscriptions.add(preferenceSubscription);
 
         Subscription cmLinksSubscription = findCmLinkUseCase
                 .execute(MyUser.getUid())
@@ -226,7 +226,7 @@ public final class ActivityPresenter extends BasePresenter<ActivityView> impleme
                 .subscribeOn(Schedulers.io())
                 .subscribe(authConfig -> CmApplication.initialize(authConfig, accessConfig),
                         e -> LOGGER.error("Failed to initialize CM settings.", e));
-        reusableSubscriptions.add(cmLinksSubscription);
+        subscriptions.add(cmLinksSubscription);
     }
 
     public void onAccessLocationGranted() {

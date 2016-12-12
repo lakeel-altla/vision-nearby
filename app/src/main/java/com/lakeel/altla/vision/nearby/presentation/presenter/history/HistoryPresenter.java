@@ -66,14 +66,14 @@ public final class HistoryPresenter extends BasePresenter<HistoryView> {
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribe(model -> getView().showPresence(model),
                         e -> LOGGER.error("Failed to find presence.", e));
-        reusableSubscriptions.add(presenceSubscription);
+        subscriptions.add(presenceSubscription);
 
         Subscription timesSubscription = findTimesUseCase.execute(MyUser.getUid(), otherUserId)
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribe(times -> getView().showTimes(times),
                         e -> LOGGER.error("Failed to find times.", e));
-        reusableSubscriptions.add(timesSubscription);
+        subscriptions.add(timesSubscription);
 
         Subscription userSubscription = findUserUseCase.execute(otherUserId)
                 .map(entity -> userModelMapper.map(entity))
@@ -81,7 +81,7 @@ public final class HistoryPresenter extends BasePresenter<HistoryView> {
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribe(model -> getView().showProfile(model),
                         e -> LOGGER.error("Failed to find user.", e));
-        reusableSubscriptions.add(userSubscription);
+        subscriptions.add(userSubscription);
 
         Subscription lineLinkSubscription = findLineLinkUseCase
                 .execute(otherUserId)
@@ -90,7 +90,7 @@ public final class HistoryPresenter extends BasePresenter<HistoryView> {
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribe(lineUrl -> getView().showLineUrl(lineUrl),
                         e -> LOGGER.error("Failed to find LINE link.", e));
-        reusableSubscriptions.add(lineLinkSubscription);
+        subscriptions.add(lineLinkSubscription);
 
         Subscription favoriteSubscription = findFavoriteUseCase
                 .execute(MyUser.getUid(), otherUserId)
@@ -100,7 +100,7 @@ public final class HistoryPresenter extends BasePresenter<HistoryView> {
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribe(entity -> getView().showAddButton(),
                         e -> LOGGER.error("Failed to find the user data.", e));
-        reusableSubscriptions.add(favoriteSubscription);
+        subscriptions.add(favoriteSubscription);
     }
 
     public void setUserLocationData(String userId, String latitude, String longitude) {
@@ -130,6 +130,6 @@ public final class HistoryPresenter extends BasePresenter<HistoryView> {
                             LOGGER.error("Failed to add favorites.", e);
                             getView().showSnackBar(R.string.error_not_added);
                         });
-        reusableSubscriptions.add(subscription);
+        subscriptions.add(subscription);
     }
 }

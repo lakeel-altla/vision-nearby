@@ -71,7 +71,7 @@ public final class TrackingPresenter extends BasePresenter<TrackingView> {
                         }
                     }
                 }, e -> LOGGER.error("Failed to find location.", e));
-        reusableSubscriptions.add(subscription);
+        subscriptions.add(subscription);
     }
 
     public void setBeaconData(String beaconId, String beaconName) {

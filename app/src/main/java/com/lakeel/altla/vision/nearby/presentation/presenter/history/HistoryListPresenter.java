@@ -83,7 +83,7 @@ public final class HistoryListPresenter extends BasePresenter<HistoryListView> {
                     LOGGER.error("Failed to find history.", e);
                     getView().showSnackBar(R.string.error_process);
                 });
-        reusableSubscriptions.add(subscription);
+        subscriptions.add(subscription);
     }
 
     public void onCreateItemView(HistoryItemView historyItemView) {
@@ -141,7 +141,7 @@ public final class HistoryListPresenter extends BasePresenter<HistoryListView> {
                         getView().showSnackBar(R.string.error_not_added);
                     });
 
-            reusableSubscriptions.add(subscription);
+            subscriptions.add(subscription);
         }
     }
 

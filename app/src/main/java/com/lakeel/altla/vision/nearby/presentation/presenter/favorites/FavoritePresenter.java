@@ -78,7 +78,7 @@ public final class FavoritePresenter extends BasePresenter<FavoriteView> {
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribe(model -> getView().showPresence(model),
                         e -> LOGGER.error("Failed to find presence.", e));
-        reusableSubscriptions.add(presenceSubscription);
+        subscriptions.add(presenceSubscription);
 
         Subscription userSubscription = findUserUseCase
                 .execute(userId)
@@ -87,7 +87,7 @@ public final class FavoritePresenter extends BasePresenter<FavoriteView> {
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribe(model -> getView().showProfile(model),
                         e -> LOGGER.error("Failed to find user.", e));
-        reusableSubscriptions.add(userSubscription);
+        subscriptions.add(userSubscription);
 
         Subscription configsSubscription = findConfigsUseCase
                 .execute()
@@ -98,7 +98,7 @@ public final class FavoritePresenter extends BasePresenter<FavoriteView> {
                     isCmLinkClicked = isCmLinkEnabled;
                     getView().initializeOptionMenu();
                 }, e -> LOGGER.error("Failed to find configs.", e));
-        reusableSubscriptions.add(configsSubscription);
+        subscriptions.add(configsSubscription);
 
         Subscription lineLinkSubscription = findLineLinkUseCase
                 .execute(userId)
@@ -111,7 +111,7 @@ public final class FavoritePresenter extends BasePresenter<FavoriteView> {
                 .subscribe(lineUrl -> getView().showLineUrl(lineUrl),
                         e -> LOGGER.error("Failed to find LINE links.", e)
                 );
-        reusableSubscriptions.add(lineLinkSubscription);
+        subscriptions.add(lineLinkSubscription);
     }
 
     public void setUserData(String userId, String userName) {
@@ -140,7 +140,7 @@ public final class FavoritePresenter extends BasePresenter<FavoriteView> {
                 }, e -> {
                     LOGGER.error("Failed to find user beacons.", e);
                 });
-        reusableSubscriptions.add(subscription);
+        subscriptions.add(subscription);
     }
 
     public void onCmMenuClicked() {
@@ -155,7 +155,7 @@ public final class FavoritePresenter extends BasePresenter<FavoriteView> {
                             LOGGER.error("Failed to add to CM favorites.", e);
                             getView().showSnackBar(R.string.error_not_added);
                         });
-        reusableSubscriptions.add(subscription);
+        subscriptions.add(subscription);
     }
 
     Single<Timestamp> saveCmFavorites(CmFavoriteData data) {
