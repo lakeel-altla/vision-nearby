@@ -66,7 +66,6 @@ public class HistoryService extends IntentService {
 
     @Override
     protected void onHandleIntent(Intent intent) {
-        // Dagger
         ServiceComponent serviceComponent = DaggerServiceComponent.create();
         serviceComponent.inject(this);
 

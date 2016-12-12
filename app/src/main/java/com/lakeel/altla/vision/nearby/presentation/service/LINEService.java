@@ -44,8 +44,7 @@ public class LineService extends IntentService {
 
     @Override
     protected void onHandleIntent(Intent intent) {
-        // Dagger
-        ServiceComponent component = DaggerServiceComponent.builder().build();
+        ServiceComponent component = DaggerServiceComponent.create();
         component.inject(this);
 
         String lineUrl = intent.getStringExtra(IntentKey.LINE_URL.name());
