@@ -4,7 +4,7 @@ import android.app.PendingIntent;
 
 import com.google.firebase.messaging.FirebaseMessagingService;
 import com.google.firebase.messaging.RemoteMessage;
-import com.lakeel.altla.vision.nearby.presentation.intent.DefaultPendingIntent;
+import com.lakeel.altla.vision.nearby.presentation.intent.DefaultIntent;
 import com.lakeel.altla.vision.nearby.presentation.notification.LocalNotification;
 
 import org.slf4j.Logger;
@@ -26,8 +26,8 @@ public class NotificationMessagingService extends FirebaseMessagingService {
         String title = payload.getTitle();
         String message = payload.getBody();
 
-        DefaultPendingIntent defaultPendingIntent = new DefaultPendingIntent(getApplicationContext());
-        PendingIntent pendingIntent = defaultPendingIntent.create();
+        DefaultIntent intent = new DefaultIntent();
+        PendingIntent pendingIntent = PendingIntent.getActivity(getApplicationContext(), 0, intent, PendingIntent.FLAG_CANCEL_CURRENT);
 
         LocalNotification localNotification = new LocalNotification(getApplicationContext(), title, message, pendingIntent);
         localNotification.show();

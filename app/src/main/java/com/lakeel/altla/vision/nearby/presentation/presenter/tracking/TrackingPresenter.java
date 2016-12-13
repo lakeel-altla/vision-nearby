@@ -44,6 +44,11 @@ public final class TrackingPresenter extends BasePresenter<TrackingView> {
     TrackingPresenter() {
     }
 
+    public void setBeaconData(String beaconId, String beaconName) {
+        this.beaconId = beaconId;
+        this.beaconName = beaconName;
+    }
+
     public void onResume() {
         Subscription subscription = findLocationDataUseCase
                 .execute(beaconId)
@@ -74,11 +79,6 @@ public final class TrackingPresenter extends BasePresenter<TrackingView> {
         subscriptions.add(subscription);
     }
 
-    public void setBeaconData(String beaconId, String beaconName) {
-        this.beaconId = beaconId;
-        this.beaconName = beaconName;
-    }
-
     public void onMapReady() {
         isMapReadied = true;
         if (geoLocation != null) {
@@ -90,16 +90,14 @@ public final class TrackingPresenter extends BasePresenter<TrackingView> {
         return isMenuEnabled;
     }
 
-    public void onFindNearbyDeviceMenuClicked() {
+    public void onFindDeviceMenuClick() {
         ArrayList<String> beaconIds = new ArrayList<>();
         beaconIds.add(beaconId);
         getView().showFindNearbyDeviceFragment(beaconIds, beaconName);
     }
 
-    public void onDirectionMenuClicked() {
-        String latitude = String.valueOf(geoLocation.latitude);
-        String longitude = String.valueOf(geoLocation.longitude);
-        getView().launchGoogleMapApp(latitude, longitude);
+    public void onDirectionMenuClick() {
+        getView().launchGoogleMapApp(String.valueOf(geoLocation.latitude), String.valueOf(geoLocation.longitude));
     }
 
     Single<GeoLocation> findLocation(String uniqueKey) {

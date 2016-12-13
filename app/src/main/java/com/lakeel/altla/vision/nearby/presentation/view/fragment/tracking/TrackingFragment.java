@@ -148,10 +148,10 @@ public final class TrackingFragment extends Fragment implements TrackingView, On
                 getActivity().getSupportFragmentManager().popBackStack();
                 return true;
             case R.id.find:
-                presenter.onFindNearbyDeviceMenuClicked();
+                presenter.onFindDeviceMenuClick();
                 break;
             case R.id.directions:
-                presenter.onDirectionMenuClicked();
+                presenter.onDirectionMenuClick();
                 break;
             default:
                 break;
@@ -206,8 +206,7 @@ public final class TrackingFragment extends Fragment implements TrackingView, On
 
     @Override
     public void launchGoogleMapApp(String latitude, String longitude) {
-        GoogleMapDirectionIntent directionIntent = new GoogleMapDirectionIntent(latitude, longitude);
-        Intent intent = directionIntent.create();
+        GoogleMapDirectionIntent intent = new GoogleMapDirectionIntent(latitude, longitude);
         startActivity(intent);
     }
 
