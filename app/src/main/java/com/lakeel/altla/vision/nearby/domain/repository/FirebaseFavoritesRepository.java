@@ -12,7 +12,7 @@ public interface FirebaseFavoritesRepository {
 
     Single<FavoriteEntity> findFavorite(String myUserId, String otherUserId);
 
-    Single<FavoriteEntity> saveFavorite(String myUserId, String otherUserId);
+    Completable saveFavorite(String myUserId, String otherUserId);
 
     Completable removeFavorite(String myUserId, String otherUserId);
 }

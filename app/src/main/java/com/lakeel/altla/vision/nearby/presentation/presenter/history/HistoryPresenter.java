@@ -122,13 +122,13 @@ public final class HistoryPresenter extends BasePresenter<HistoryView> {
                 .execute(MyUser.getUid(), otherUserId)
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
-                .subscribe(entity -> {
-                            getView().hideAddButton();
-                            getView().showSnackBar(R.string.message_added);
-                        },
+                .subscribe(
                         e -> {
                             LOGGER.error("Failed to add favorites.", e);
                             getView().showSnackBar(R.string.error_not_added);
+                        }, () -> {
+                            getView().hideAddButton();
+                            getView().showSnackBar(R.string.message_added);
                         });
         subscriptions.add(subscription);
     }

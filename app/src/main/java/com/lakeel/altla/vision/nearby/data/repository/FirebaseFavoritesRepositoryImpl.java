@@ -35,9 +35,14 @@ public class FirebaseFavoritesRepositoryImpl implements FirebaseFavoritesReposit
                         @Override
                         public void onDataChange(DataSnapshot dataSnapshot) {
                             for (DataSnapshot snapshot : dataSnapshot.getChildren()) {
-                                FavoriteEntity entity = snapshot.getValue(FavoriteEntity.class);
-                                entity.key = snapshot.getKey();
-                                subscriber.onNext(entity);
+                                Boolean bool = (Boolean) snapshot.getValue();
+                                if (bool == null) {
+                                    subscriber.onNext(null);
+                                } else {
+                                    FavoriteEntity entity = new FavoriteEntity();
+                                    entity.key = snapshot.getKey();
+                                    subscriber.onNext(entity);
+                                }
                             }
                             subscriber.onCompleted();
                         }
@@ -59,8 +64,15 @@ public class FirebaseFavoritesRepositoryImpl implements FirebaseFavoritesReposit
                         .addListenerForSingleValueEvent(new ValueEventListener() {
                             @Override
                             public void onDataChange(DataSnapshot dataSnapshot) {
-                                FavoriteEntity entity = dataSnapshot.getValue(FavoriteEntity.class);
-                                subscriber.onSuccess(entity);
+                                Boolean bool = (Boolean) dataSnapshot.getValue();
+                                if (bool == null) {
+                                    subscriber.onSuccess(null);
+                                } else {
+                                    FavoriteEntity entity = new FavoriteEntity();
+                                    entity.key = dataSnapshot.getKey();
+                                    subscriber.onSuccess(entity);
+
+                                }
                             }
 
                             @Override
@@ -71,15 +83,13 @@ public class FirebaseFavoritesRepositoryImpl implements FirebaseFavoritesReposit
     }
 
     @Override
-    public Single<FavoriteEntity> saveFavorite(String myUserId, String otherUserId) {
-        return Single.create(subscriber -> {
-            FavoriteEntity entity = new FavoriteEntity();
-
+    public Completable saveFavorite(String myUserId, String otherUserId) {
+        return Completable.create(subscriber -> {
             Task<Void> task = reference
                     .child(myUserId)
                     .child(otherUserId)
-                    .setValue(entity.toMap())
-                    .addOnSuccessListener(aVoid -> subscriber.onSuccess(entity))
+                    .setValue(true)
+                    .addOnSuccessListener(aVoid -> subscriber.onCompleted())
                     .addOnFailureListener(subscriber::onError);
 
             Exception exception = task.getException();
