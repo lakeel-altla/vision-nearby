@@ -2,9 +2,7 @@ package com.lakeel.altla.vision.nearby.presentation.presenter.model;
 
 public final class PreferenceModel {
 
-    public String namespaceId;
-
-    public String instanceId;
+    public String beaconId;
 
     public boolean isAdvertiseInBackgroundEnabled;
 

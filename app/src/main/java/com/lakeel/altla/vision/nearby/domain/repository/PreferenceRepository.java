@@ -1,15 +1,14 @@
 package com.lakeel.altla.vision.nearby.domain.repository;
 
-import com.lakeel.altla.vision.nearby.data.entity.PreferenceBeaconIdEntity;
 import com.lakeel.altla.vision.nearby.data.entity.PreferenceEntity;
 
 import rx.Single;
 
 public interface PreferenceRepository {
 
-    Single<PreferenceEntity> findPreferences();
+    Single<PreferenceEntity> findPreferences(String userId);
 
-    Single<PreferenceBeaconIdEntity> findBeaconId();
+    Single<String> findBeaconId();
 
-    Single<String> saveBeaconId();
+    Single<String> saveBeaconId(String userId);
 }

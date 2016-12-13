@@ -16,8 +16,8 @@ public final class FindPreferencesUseCase {
     FindPreferencesUseCase() {
     }
 
-    public Single<PreferenceEntity> execute() {
-        return repository.findPreferences();
+    public Single<PreferenceEntity> execute(String userId) {
+        return repository.findPreferences(userId);
     }
 
 }

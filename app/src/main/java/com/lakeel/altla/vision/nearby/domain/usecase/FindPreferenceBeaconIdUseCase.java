@@ -1,6 +1,5 @@
 package com.lakeel.altla.vision.nearby.domain.usecase;
 
-import com.lakeel.altla.vision.nearby.data.entity.PreferenceBeaconIdEntity;
 import com.lakeel.altla.vision.nearby.domain.repository.PreferenceRepository;
 
 import javax.inject.Inject;
@@ -16,7 +15,7 @@ public final class FindPreferenceBeaconIdUseCase {
     FindPreferenceBeaconIdUseCase() {
     }
 
-    public Single<PreferenceBeaconIdEntity> execute() {
+    public Single<String> execute() {
         return repository.findBeaconId();
     }
 }

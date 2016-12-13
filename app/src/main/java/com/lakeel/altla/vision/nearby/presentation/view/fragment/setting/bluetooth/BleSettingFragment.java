@@ -8,7 +8,6 @@ import android.view.MenuItem;
 
 import com.lakeel.altla.vision.nearby.R;
 import com.lakeel.altla.vision.nearby.presentation.intent.IntentKey;
-import com.lakeel.altla.vision.nearby.presentation.presenter.model.BeaconIdModel;
 import com.lakeel.altla.vision.nearby.presentation.presenter.setting.bluetooth.BleSettingPresenter;
 import com.lakeel.altla.vision.nearby.presentation.service.AdvertiseService;
 import com.lakeel.altla.vision.nearby.presentation.view.BleSettingView;
@@ -94,10 +93,9 @@ public final class BleSettingFragment extends PreferenceFragmentCompat implement
     }
 
     @Override
-    public void startAdvertise(BeaconIdModel model) {
+    public void startAdvertise(String beaconId) {
         Intent intent = new Intent(getContext(), AdvertiseService.class);
-        intent.putExtra(IntentKey.NAMESPACE_ID.name(), model.mNamespaceId);
-        intent.putExtra(IntentKey.INSTANCE_ID.name(), model.mInstanceId);
+        intent.putExtra(IntentKey.BEACON_ID.name(), beaconId);
         getContext().startService(intent);
     }
 

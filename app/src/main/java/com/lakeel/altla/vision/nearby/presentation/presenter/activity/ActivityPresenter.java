@@ -21,6 +21,7 @@ import com.lakeel.altla.cm.CmApplication;
 import com.lakeel.altla.cm.config.AccessConfig;
 import com.lakeel.altla.library.ResolutionResultCallback;
 import com.lakeel.altla.vision.nearby.R;
+import com.lakeel.altla.vision.nearby.core.StringUtils;
 import com.lakeel.altla.vision.nearby.domain.usecase.FindCmLinkUseCase;
 import com.lakeel.altla.vision.nearby.domain.usecase.FindPreferenceBeaconIdUseCase;
 import com.lakeel.altla.vision.nearby.domain.usecase.FindPreferencesUseCase;
@@ -149,7 +150,7 @@ public final class ActivityPresenter extends BasePresenter<ActivityView> impleme
         LOGGER.info("Connected to nearby service.");
 
         Subscription subscription = findPreferencesUseCase
-                .execute()
+                .execute(MyUser.getUid())
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribe(entity -> {
@@ -197,9 +198,10 @@ public final class ActivityPresenter extends BasePresenter<ActivityView> impleme
 
         Subscription beaconSubscription = findPreferenceBeaconIdUseCase
                 .execute()
-                .flatMap(entity -> {
-                    if (entity == null) return savePreferenceBeaconId();
-                    return Single.just(entity.namespaceId + entity.instanceId);
+                .flatMap(beaconId -> {
+                    if (StringUtils.isEmpty(beaconId))
+                        return savePreferenceBeaconId(MyUser.getUid());
+                    return Single.just(beaconId);
                 })
                 .flatMap(this::saveUserBeacon)
                 .flatMap(this::saveBeacon)
@@ -210,12 +212,12 @@ public final class ActivityPresenter extends BasePresenter<ActivityView> impleme
         subscriptions.add(beaconSubscription);
 
         Subscription preferenceSubscription = findPreferencesUseCase
-                .execute()
+                .execute(MyUser.getUid())
                 .map(entity -> preferencesModelMapper.map(entity))
                 .subscribeOn(Schedulers.io())
                 .subscribe(model -> {
                     if (model.isAdvertiseInBackgroundEnabled && isAdvertiseAvailability) {
-                        getView().startAdvertiseService(model);
+                        getView().startAdvertiseService(model.beaconId);
                     }
                 }, e -> LOGGER.error("Failed to find preferences.", e));
         subscriptions.add(preferenceSubscription);
@@ -290,8 +292,8 @@ public final class ActivityPresenter extends BasePresenter<ActivityView> impleme
         });
     }
 
-    Single<String> savePreferenceBeaconId() {
-        return savePreferenceBeaconIdUseCase.execute().subscribeOn(Schedulers.io());
+    Single<String> savePreferenceBeaconId(String userId) {
+        return savePreferenceBeaconIdUseCase.execute(userId).subscribeOn(Schedulers.io());
     }
 
     Single<String> saveUserBeacon(String beaconId) {

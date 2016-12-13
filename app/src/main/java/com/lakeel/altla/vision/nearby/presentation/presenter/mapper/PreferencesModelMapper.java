@@ -7,8 +7,7 @@ public final class PreferencesModelMapper {
 
     public PreferenceModel map(PreferenceEntity entity) {
         PreferenceModel model = new PreferenceModel();
-        model.namespaceId = entity.namespaceId;
-        model.instanceId = entity.instanceId;
+        model.beaconId = entity.beaconId;
         model.isAdvertiseInBackgroundEnabled = entity.isAdvertiseInBackgroundEnabled;
         model.isSubscribeInBackgroundEnabled = entity.isSubscribeInBackgroundEnabled;
         return model;

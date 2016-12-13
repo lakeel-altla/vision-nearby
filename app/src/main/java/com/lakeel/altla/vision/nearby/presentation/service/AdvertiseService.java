@@ -9,6 +9,7 @@ import android.os.IBinder;
 import android.support.annotation.Nullable;
 import android.support.v4.app.NotificationCompat;
 
+import com.lakeel.altla.library.EddystoneUID;
 import com.lakeel.altla.vision.nearby.R;
 import com.lakeel.altla.vision.nearby.core.StringUtils;
 import com.lakeel.altla.vision.nearby.presentation.intent.IntentKey;
@@ -29,8 +30,11 @@ public final class AdvertiseService extends Service {
     public int onStartCommand(Intent intent, int flags, int startId) {
         if (intent != null) {
             Bundle bundle = intent.getExtras();
-            String namespaceId = (String) bundle.get(IntentKey.NAMESPACE_ID.name());
-            String instanceId = (String) bundle.get(IntentKey.INSTANCE_ID.name());
+            String beaconId = (String) bundle.get(IntentKey.BEACON_ID.name());
+
+            EddystoneUID eddystoneUID = new EddystoneUID(beaconId);
+            String namespaceId = eddystoneUID.getNamespaceId();
+            String instanceId = eddystoneUID.getInstanceId();
 
             LOGGER.debug("Namespace Id=" + namespaceId + " Instance Id=" + instanceId);
 

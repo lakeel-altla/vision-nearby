@@ -47,10 +47,9 @@ public final class BleSettingPresenter extends BasePresenter<BleSettingView> {
     public void onStartAdvertise() {
         Subscription subscription = findPreferenceBeaconIdUseCase
                 .execute()
-                .map(entity -> beaconIdModelMapper.map(entity))
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
-                .subscribe(model -> getView().startAdvertise(model),
+                .subscribe(beaconId -> getView().startAdvertise(beaconId),
                         e -> LOGGER.error("Failed to find a beacon ID.", e));
         subscriptions.add(subscription);
     }

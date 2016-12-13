@@ -31,7 +31,6 @@ import com.lakeel.altla.vision.nearby.presentation.di.component.ViewComponent;
 import com.lakeel.altla.vision.nearby.presentation.di.module.ActivityModule;
 import com.lakeel.altla.vision.nearby.presentation.intent.IntentKey;
 import com.lakeel.altla.vision.nearby.presentation.presenter.activity.ActivityPresenter;
-import com.lakeel.altla.vision.nearby.presentation.presenter.model.PreferenceModel;
 import com.lakeel.altla.vision.nearby.presentation.service.AdvertiseService;
 import com.lakeel.altla.vision.nearby.presentation.view.ActivityView;
 import com.lakeel.altla.vision.nearby.presentation.view.layout.DrawerHeaderLayout;
@@ -247,10 +246,9 @@ public class MainActivity extends AppCompatActivity
     }
 
     @Override
-    public void startAdvertiseService(PreferenceModel model) {
+    public void startAdvertiseService(String beaconId) {
         Intent intent = new Intent(getApplicationContext(), AdvertiseService.class);
-        intent.putExtra(IntentKey.NAMESPACE_ID.name(), model.namespaceId);
-        intent.putExtra(IntentKey.INSTANCE_ID.name(), model.instanceId);
+        intent.putExtra(IntentKey.BEACON_ID.name(), beaconId);
         getApplicationContext().startService(intent);
     }
 

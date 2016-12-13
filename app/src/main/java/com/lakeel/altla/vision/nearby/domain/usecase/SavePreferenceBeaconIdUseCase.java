@@ -15,7 +15,7 @@ public final class SavePreferenceBeaconIdUseCase {
     SavePreferenceBeaconIdUseCase() {
     }
 
-    public Single<String> execute() {
-        return repository.saveBeaconId();
+    public Single<String> execute(String userId) {
+        return repository.saveBeaconId(userId);
     }
 }

@@ -23,7 +23,7 @@ public interface ActivityView extends BaseView {
 
     void showBleEnabledActivity();
 
-    void startAdvertiseService(PreferenceModel model);
+    void startAdvertiseService(String beaconId);
 
     void showAccessFineLocationPermissionSystemDialog();
 
