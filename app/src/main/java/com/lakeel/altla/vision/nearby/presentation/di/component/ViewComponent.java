@@ -14,10 +14,10 @@ import com.lakeel.altla.vision.nearby.presentation.view.fragment.user.UserPassin
 import com.lakeel.altla.vision.nearby.presentation.view.fragment.history.HistoryFragment;
 import com.lakeel.altla.vision.nearby.presentation.view.fragment.nearby.NearbyListFragment;
 import com.lakeel.altla.vision.nearby.presentation.view.fragment.setting.SettingFragment;
-import com.lakeel.altla.vision.nearby.presentation.view.fragment.setting.bluetooth.BleSettingFragment;
-import com.lakeel.altla.vision.nearby.presentation.view.fragment.setting.cm.CmSettingFragment;
-import com.lakeel.altla.vision.nearby.presentation.view.fragment.setting.device.DeviceListListFragment;
-import com.lakeel.altla.vision.nearby.presentation.view.fragment.setting.line.LineSettingFragment;
+import com.lakeel.altla.vision.nearby.presentation.view.fragment.bluetooth.BleSettingFragment;
+import com.lakeel.altla.vision.nearby.presentation.view.fragment.cm.CmSettingFragment;
+import com.lakeel.altla.vision.nearby.presentation.view.fragment.device.DeviceListListFragment;
+import com.lakeel.altla.vision.nearby.presentation.view.fragment.line.LineSettingFragment;
 import com.lakeel.altla.vision.nearby.presentation.view.fragment.signin.SignInFragment;
 import com.lakeel.altla.vision.nearby.presentation.view.fragment.tracking.TrackingFragment;
 
