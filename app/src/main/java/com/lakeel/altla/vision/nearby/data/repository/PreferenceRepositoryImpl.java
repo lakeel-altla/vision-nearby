@@ -45,11 +45,11 @@ public class PreferenceRepositoryImpl implements PreferenceRepository {
     }
 
     @Override
-    public Single<String> findBeaconId() {
+    public Single<String> findBeaconId(String userId) {
         return Single.create(new Single.OnSubscribe<String>() {
             @Override
             public void call(SingleSubscriber<? super String> subscriber) {
-                String beaconId = preference.getString(KEY_BEACON_ID, StringUtils.EMPTY);
+                String beaconId = preference.getString(KEY_BEACON_ID + userId, StringUtils.EMPTY);
 
                 if (StringUtils.isEmpty(beaconId)) {
                     subscriber.onSuccess(null);

@@ -11,6 +11,8 @@ import com.lakeel.altla.vision.nearby.data.execption.DataStoreException;
 import com.lakeel.altla.vision.nearby.data.mapper.BeaconEntityMapper;
 import com.lakeel.altla.vision.nearby.domain.repository.FirebaseBeaconsRepository;
 
+import java.util.Map;
+
 import javax.inject.Inject;
 
 import rx.Single;
@@ -28,15 +30,16 @@ public class FirebaseBeaconsRepositoryImpl implements FirebaseBeaconsRepository 
     }
 
     @Override
-    public Single<String> saveUserBeacon(String beaconId, String userId, String name) {
+    public Single<String> saveBeacon(String beaconId, String userId, String name) {
         return Single.create(new Single.OnSubscribe<String>() {
             @Override
             public void call(SingleSubscriber<? super String> subscriber) {
                 BeaconEntity entity = entityMapper.map(userId, name);
+                Map map = entity.toMap();
 
                 Task task = reference
                         .child(beaconId)
-                        .setValue(entity)
+                        .setValue(map)
                         .addOnSuccessListener(aVoid -> subscriber.onSuccess(beaconId))
                         .addOnFailureListener(subscriber::onError);
 
@@ -66,5 +69,21 @@ public class FirebaseBeaconsRepositoryImpl implements FirebaseBeaconsRepository 
                                 subscriber.onError(databaseError.toException());
                             }
                         }));
+    }
+
+    @Override
+    public Single<String> removeBeaconByBeaconId(String beaconId) {
+        return Single.create(subscriber -> {
+            Task task = reference
+                    .child(beaconId)
+                    .removeValue()
+                    .addOnSuccessListener(aVoid -> subscriber.onSuccess(beaconId))
+                    .addOnFailureListener(subscriber::onError);
+
+            Exception e = task.getException();
+            if (e != null) {
+                subscriber.onError(e);
+            }
+        });
     }
 }

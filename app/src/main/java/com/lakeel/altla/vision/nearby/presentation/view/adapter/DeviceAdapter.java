@@ -1,17 +1,19 @@
 package com.lakeel.altla.vision.nearby.presentation.view.adapter;
 
-import com.lakeel.altla.vision.nearby.R;
-import com.lakeel.altla.vision.nearby.presentation.presenter.setting.device.DeviceListPresenter;
-import com.lakeel.altla.vision.nearby.presentation.presenter.model.BeaconModel;
-import com.lakeel.altla.vision.nearby.presentation.view.DeviceItemView;
-
 import android.support.annotation.IntRange;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Button;
 import android.widget.LinearLayout;
 import android.widget.TextView;
+
+import com.lakeel.altla.vision.nearby.R;
+import com.lakeel.altla.vision.nearby.presentation.presenter.model.DeviceModel;
+import com.lakeel.altla.vision.nearby.presentation.presenter.setting.device.DeviceListPresenter;
+import com.lakeel.altla.vision.nearby.presentation.view.DateFormatter;
+import com.lakeel.altla.vision.nearby.presentation.view.DeviceItemView;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -47,8 +49,14 @@ public final class DeviceAdapter extends RecyclerView.Adapter<DeviceAdapter.Devi
         @BindView(R.id.layout)
         LinearLayout itemLayout;
 
-        @BindView(R.id.textName)
-        TextView beaconName;
+        @BindView(R.id.buttonRemove)
+        Button removeButton;
+
+        @BindView(R.id.deviceName)
+        TextView deviceName;
+
+        @BindView(R.id.lastUsedTime)
+        TextView lastUsedTime;
 
         private DeviceListPresenter.DeviceItemPresenter itemPresenter;
 
@@ -68,9 +76,15 @@ public final class DeviceAdapter extends RecyclerView.Adapter<DeviceAdapter.Devi
         }
 
         @Override
-        public void showItem(BeaconModel model) {
-            beaconName.setText(model.mName);
+        public void showItem(DeviceModel model) {
+            deviceName.setText(model.name);
             itemLayout.setOnClickListener(view -> itemPresenter.onClick(model));
+
+            DateFormatter formatter = new DateFormatter(model.lastUsedTime);
+            String lastUsedTimeText = formatter.format();
+            lastUsedTime.setText(lastUsedTimeText);
+
+            removeButton.setOnClickListener(view -> itemPresenter.onRemove(model));
         }
     }
 }

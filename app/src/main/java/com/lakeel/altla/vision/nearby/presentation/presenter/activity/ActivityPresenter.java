@@ -197,15 +197,15 @@ public final class ActivityPresenter extends BasePresenter<ActivityView> impleme
         observePresenceUseCase.execute(MyUser.getUid());
 
         Subscription beaconSubscription = findBeaconIdUseCase
-                .execute()
+                .execute(MyUser.getUid())
                 .flatMap(beaconId -> {
                     if (StringUtils.isEmpty(beaconId))
                         return savePreferenceBeaconId(MyUser.getUid());
                     return Single.just(beaconId);
                 })
-                .flatMap(this::saveUserBeacon)
-                .flatMap(this::saveBeacon)
-                .flatMap(this::saveToken)
+                .flatMap(beaconId -> saveUserBeacon(MyUser.getUid(), beaconId))
+                .flatMap(beaconId -> saveBeacon(beaconId, MyUser.getUid()))
+                .flatMap(beaconId -> saveToken(MyUser.getUid(), beaconId))
                 .subscribeOn(Schedulers.io())
                 .doOnError(e -> LOGGER.error("Failed to save beacon data.", e))
                 .subscribe();
@@ -296,16 +296,16 @@ public final class ActivityPresenter extends BasePresenter<ActivityView> impleme
         return savePreferenceBeaconIdUseCase.execute(userId).subscribeOn(Schedulers.io());
     }
 
-    Single<String> saveUserBeacon(String beaconId) {
-        return saveUserBeaconUseCase.execute(MyUser.getUid(), beaconId).subscribeOn(Schedulers.io());
+    Single<String> saveUserBeacon(String userId, String beaconId) {
+        return saveUserBeaconUseCase.execute(userId, beaconId).subscribeOn(Schedulers.io());
     }
 
-    Single<String> saveBeacon(String beaconId) {
-        return saveBeaconUseCase.execute(beaconId, MyUser.getUid(), Build.MODEL).subscribeOn(Schedulers.io());
+    Single<String> saveBeacon(String beaconId, String userId) {
+        return saveBeaconUseCase.execute(beaconId, userId, Build.MODEL).subscribeOn(Schedulers.io());
     }
 
-    Single<String> saveToken(String beaconId) {
+    Single<String> saveToken(String userId, String beaconId) {
         String token = instanceId.getToken();
-        return saveTokenUseCase.execute(MyUser.getUid(), beaconId, token).subscribeOn(Schedulers.io());
+        return saveTokenUseCase.execute(userId, beaconId, token).subscribeOn(Schedulers.io());
     }
 }

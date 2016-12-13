@@ -15,7 +15,7 @@ public final class FindBeaconIdUseCase {
     FindBeaconIdUseCase() {
     }
 
-    public Single<String> execute() {
-        return repository.findBeaconId();
+    public Single<String> execute(String userId) {
+        return repository.findBeaconId(userId);
     }
 }

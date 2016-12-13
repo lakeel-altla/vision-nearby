@@ -18,8 +18,8 @@ public final class DateFormatter {
 
     private final DateTime dateTime;
 
-    public DateFormatter(long dataTime) {
-        dateTime = new DateTime(dataTime);
+    public DateFormatter(long time) {
+        dateTime = new DateTime(time);
         dateComparator = new DateComparator(dateTime, new DateTime());
     }
 

@@ -15,4 +15,6 @@ public interface FirebaseUsersRepository {
     Single<String> saveBeacon(String userId, String beaconId);
 
     Observable<String> findBeaconsByUserId(String userId);
+
+    Single<String> removeBeacon(String userId, String beaconId);
 }

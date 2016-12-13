@@ -4,18 +4,19 @@ import com.lakeel.altla.vision.nearby.domain.repository.FirebaseBeaconsRepositor
 
 import javax.inject.Inject;
 
+import rx.Completable;
 import rx.Single;
 
-public final class SaveBeaconUseCase {
+public final class RemoveBeaconUseCase {
 
     @Inject
     FirebaseBeaconsRepository repository;
 
     @Inject
-    SaveBeaconUseCase() {
+    RemoveBeaconUseCase() {
     }
 
-    public Single<String> execute(String beaconId, String userId, String deviceName) {
-        return repository.saveBeacon(beaconId, userId, deviceName);
+    public Single<String> execute(String beaconId) {
+        return repository.removeBeaconByBeaconId(beaconId);
     }
 }

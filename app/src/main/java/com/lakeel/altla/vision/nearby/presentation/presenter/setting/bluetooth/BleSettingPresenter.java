@@ -5,6 +5,7 @@ import android.content.Context;
 import com.lakeel.altla.vision.nearby.domain.usecase.FindBeaconIdUseCase;
 import com.lakeel.altla.vision.nearby.presentation.checker.BleChecker;
 import com.lakeel.altla.vision.nearby.presentation.checker.BleChecker.State;
+import com.lakeel.altla.vision.nearby.presentation.firebase.MyUser;
 import com.lakeel.altla.vision.nearby.presentation.presenter.BasePresenter;
 import com.lakeel.altla.vision.nearby.presentation.service.AdvertiseService;
 import com.lakeel.altla.vision.nearby.presentation.service.RunningService;
@@ -43,7 +44,7 @@ public final class BleSettingPresenter extends BasePresenter<BleSettingView> {
 
     public void onStartAdvertise() {
         Subscription subscription = findBeaconIdUseCase
-                .execute()
+                .execute(MyUser.getUid())
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribe(beaconId -> getView().startAdvertise(beaconId),

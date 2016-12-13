@@ -14,7 +14,7 @@ import com.lakeel.altla.vision.nearby.presentation.view.fragment.nearby.NearbyLi
 import com.lakeel.altla.vision.nearby.presentation.view.fragment.setting.SettingFragment;
 import com.lakeel.altla.vision.nearby.presentation.view.fragment.setting.bluetooth.BleSettingFragment;
 import com.lakeel.altla.vision.nearby.presentation.view.fragment.setting.cm.CmSettingFragment;
-import com.lakeel.altla.vision.nearby.presentation.view.fragment.setting.device.DeviceListFragment;
+import com.lakeel.altla.vision.nearby.presentation.view.fragment.setting.device.DeviceListListFragment;
 import com.lakeel.altla.vision.nearby.presentation.view.fragment.setting.line.LineSettingFragment;
 import com.lakeel.altla.vision.nearby.presentation.view.fragment.signin.SignInFragment;
 import com.lakeel.altla.vision.nearby.presentation.view.fragment.tracking.TrackingFragment;
@@ -37,7 +37,7 @@ public final class FragmentController {
 
     private final String TRACKING_FRAGMENT_TAG = TrackingFragment.class.getSimpleName();
 
-    private final String DEVICE_LIST_FRAGMENT_TAG = DeviceListFragment.class.getSimpleName();
+    private final String DEVICE_LIST_FRAGMENT_TAG = DeviceListListFragment.class.getSimpleName();
 
     private final String DISTANCE_ESTIMATION_FRAGMENT_TAG = DistanceEstimationFragment.class.getSimpleName();
 
@@ -88,7 +88,7 @@ public final class FragmentController {
     }
 
     public void showDeviceListFragment() {
-        DeviceListFragment fragment = DeviceListFragment.newInstance();
+        DeviceListListFragment fragment = DeviceListListFragment.newInstance();
         replaceFragment(R.id.fragmentPlaceholder, fragment, DEVICE_LIST_FRAGMENT_TAG);
     }
 

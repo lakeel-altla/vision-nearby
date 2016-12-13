@@ -12,7 +12,6 @@ import com.lakeel.altla.vision.nearby.data.mapper.UserEntityMapper;
 import com.lakeel.altla.vision.nearby.domain.repository.FirebaseUsersRepository;
 
 import java.util.HashMap;
-import java.util.Iterator;
 import java.util.Map;
 
 import javax.inject.Inject;
@@ -94,6 +93,24 @@ public final class FirebaseUsersRepositoryImpl implements FirebaseUsersRepositor
                                 subscriber.onError(databaseError.toException());
                             }
                         });
+            }
+        });
+    }
+
+    @Override
+    public Single<String> removeBeacon(String userId, String beaconId) {
+        return Single.create(subscriber -> {
+            Task task = reference
+                    .child(userId)
+                    .child(KEY_BEACONS)
+                    .child(beaconId)
+                    .removeValue()
+                    .addOnSuccessListener(aVoid -> subscriber.onSuccess(beaconId))
+                    .addOnFailureListener(subscriber::onError);
+
+            Exception e = task.getException();
+            if (e != null) {
+                subscriber.onError(e);
             }
         });
     }
