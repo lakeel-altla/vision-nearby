@@ -60,10 +60,8 @@ public final class AdvertiseService extends Service {
                         @Override
                         public void onStartSuccess(AdvertiseSettings settingsInEffect) {
                             super.onStartSuccess(settingsInEffect);
-
                             LOGGER.debug("Succeeded to start advertising.");
 
-                            // Show a local notification.
                             NotificationCompat.Builder builder = new NotificationCompat.Builder(getApplicationContext());
                             builder.setContentTitle(getApplicationContext().getResources().getString(R.string.notification_title_advertise_ble));
                             builder.setContentText(getApplicationContext().getResources().getString(R.string.notification_message_advertise_ble));
