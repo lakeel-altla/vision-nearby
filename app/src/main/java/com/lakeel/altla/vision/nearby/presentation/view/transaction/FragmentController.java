@@ -27,11 +27,13 @@ public final class FragmentController {
 
     private final String SIGN_IN_FRAGMENT_TAG = SignInFragment.class.getSimpleName();
 
-    private final String USER_LIST_FRAGMENT_TAG = FavoriteListFragment.class.getSimpleName();
+    private final String FAVORITE_LIST_FRAGMENT_TAG = FavoriteListFragment.class.getSimpleName();
 
     private final String HISTORY_LIST_FRAGMENT_TAG = HistoryListFragment.class.getSimpleName();
 
     private final String HISTORY_FRAGMENT_TAG = HistoryFragment.class.getSimpleName();
+
+    private final String NEARBY_LIST_FRAGMENT = NearbyListFragment.class.getSimpleName();
 
     private final String TRACKING_FRAGMENT_TAG = TrackingFragment.class.getSimpleName();
 
@@ -41,13 +43,13 @@ public final class FragmentController {
 
     private final String PROFILE_FRAGMENT_TAG = FavoriteFragment.class.getSimpleName();
 
-    private final String SETTINGS_FRAGMENT_TAG = SettingFragment.class.getSimpleName();
+    private final String SETTING_FRAGMENT_TAG = SettingFragment.class.getSimpleName();
 
-    private final String SETTINGS_BLE_FRAGMENT_TAG = BleSettingFragment.class.getSimpleName();
+    private final String SETTING_BLE_FRAGMENT_TAG = BleSettingFragment.class.getSimpleName();
 
-    private final String SETTINGS_LINE_FRAGMENT_TAG = LineSettingFragment.class.getSimpleName();
+    private final String SETTING_LINE_FRAGMENT_TAG = LineSettingFragment.class.getSimpleName();
 
-    private final String SETTINGS_CM_FRAGMENT_TAG = CmSettingFragment.class.getSimpleName();
+    private final String SETTING_CM_FRAGMENT_TAG = CmSettingFragment.class.getSimpleName();
 
     private FragmentManager fragmentManager;
 
@@ -62,12 +64,12 @@ public final class FragmentController {
 
     public void showFavoriteListFragment() {
         FavoriteListFragment fragment = FavoriteListFragment.newInstance();
-        replaceFragment(R.id.fragmentPlaceholder, fragment, USER_LIST_FRAGMENT_TAG);
+        replaceFragment(R.id.fragmentPlaceholder, fragment, FAVORITE_LIST_FRAGMENT_TAG);
     }
 
     public void showNearbyListFragment() {
         NearbyListFragment fragment = NearbyListFragment.newInstance();
-        replaceFragment(R.id.fragmentPlaceholder, fragment, USER_LIST_FRAGMENT_TAG);
+        replaceFragment(R.id.fragmentPlaceholder, fragment, NEARBY_LIST_FRAGMENT);
     }
 
     public void showRecentlyListFragment() {
@@ -102,25 +104,25 @@ public final class FragmentController {
 
     public void showBleSettingsFragment() {
         BleSettingFragment fragment = BleSettingFragment.newInstance();
-        replaceFragment(R.id.fragmentPlaceholder, fragment, SETTINGS_BLE_FRAGMENT_TAG);
+        replaceFragment(R.id.fragmentPlaceholder, fragment, SETTING_BLE_FRAGMENT_TAG);
     }
 
     public void showLineSettingsFragment() {
         LineSettingFragment fragment = LineSettingFragment.newInstance();
-        replaceFragment(R.id.fragmentPlaceholder, fragment, SETTINGS_LINE_FRAGMENT_TAG);
+        replaceFragment(R.id.fragmentPlaceholder, fragment, SETTING_LINE_FRAGMENT_TAG);
     }
 
     public void showCmSettingsFragment() {
         CmSettingFragment fragment = CmSettingFragment.newInstance();
-        replaceFragment(R.id.fragmentPlaceholder, fragment, SETTINGS_CM_FRAGMENT_TAG);
+        replaceFragment(R.id.fragmentPlaceholder, fragment, SETTING_CM_FRAGMENT_TAG);
     }
 
     public void showSettingsFragment() {
         SettingFragment fragment = SettingFragment.newInstance();
-        replaceFragment(R.id.fragmentPlaceholder, fragment, SETTINGS_FRAGMENT_TAG);
+        replaceFragment(R.id.fragmentPlaceholder, fragment, SETTING_FRAGMENT_TAG);
     }
 
-    public void replaceFragment(@IdRes int containerViewId, Fragment fragment, String tag) {
+    private void replaceFragment(@IdRes int containerViewId, Fragment fragment, String tag) {
         FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
         fragmentTransaction.addToBackStack(tag);
         fragmentTransaction.replace(containerViewId, fragment, tag);
