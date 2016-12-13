@@ -2,11 +2,10 @@ package com.lakeel.altla.vision.nearby.presentation.presenter.setting.bluetooth;
 
 import android.content.Context;
 
-import com.lakeel.altla.vision.nearby.domain.usecase.FindPreferenceBeaconIdUseCase;
+import com.lakeel.altla.vision.nearby.domain.usecase.FindBeaconIdUseCase;
 import com.lakeel.altla.vision.nearby.presentation.checker.BleChecker;
 import com.lakeel.altla.vision.nearby.presentation.checker.BleChecker.State;
 import com.lakeel.altla.vision.nearby.presentation.presenter.BasePresenter;
-import com.lakeel.altla.vision.nearby.presentation.presenter.mapper.BeaconIdModelMapper;
 import com.lakeel.altla.vision.nearby.presentation.service.AdvertiseService;
 import com.lakeel.altla.vision.nearby.presentation.service.RunningService;
 import com.lakeel.altla.vision.nearby.presentation.view.BleSettingView;
@@ -23,11 +22,9 @@ import rx.schedulers.Schedulers;
 public final class BleSettingPresenter extends BasePresenter<BleSettingView> {
 
     @Inject
-    FindPreferenceBeaconIdUseCase findPreferenceBeaconIdUseCase;
+    FindBeaconIdUseCase findBeaconIdUseCase;
 
     private static final Logger LOGGER = LoggerFactory.getLogger(BleSettingPresenter.class);
-
-    private BeaconIdModelMapper beaconIdModelMapper = new BeaconIdModelMapper();
 
     private Context context;
 
@@ -45,7 +42,7 @@ public final class BleSettingPresenter extends BasePresenter<BleSettingView> {
     }
 
     public void onStartAdvertise() {
-        Subscription subscription = findPreferenceBeaconIdUseCase
+        Subscription subscription = findBeaconIdUseCase
                 .execute()
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())

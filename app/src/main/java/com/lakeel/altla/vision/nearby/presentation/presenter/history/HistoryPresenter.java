@@ -1,23 +1,35 @@
 package com.lakeel.altla.vision.nearby.presentation.presenter.history;
 
+import android.support.annotation.IntRange;
+
 import com.lakeel.altla.vision.nearby.R;
-import com.lakeel.altla.vision.nearby.domain.usecase.FindFavoriteUseCase;
-import com.lakeel.altla.vision.nearby.domain.usecase.FindLineLinkUseCase;
-import com.lakeel.altla.vision.nearby.domain.usecase.FindPresenceUseCase;
-import com.lakeel.altla.vision.nearby.domain.usecase.FindTimesUseCase;
+import com.lakeel.altla.vision.nearby.core.CollectionUtils;
+import com.lakeel.altla.vision.nearby.data.entity.HistoryEntity;
+import com.lakeel.altla.vision.nearby.data.entity.UserEntity;
+import com.lakeel.altla.vision.nearby.domain.usecase.FindHistoryUseCase;
 import com.lakeel.altla.vision.nearby.domain.usecase.FindUserUseCase;
-import com.lakeel.altla.vision.nearby.domain.usecase.SaveFavoriteUseCase;
+import com.lakeel.altla.vision.nearby.domain.usecase.RemoveHistoryUseCase;
 import com.lakeel.altla.vision.nearby.presentation.firebase.MyUser;
+import com.lakeel.altla.vision.nearby.presentation.presenter.BaseItemPresenter;
 import com.lakeel.altla.vision.nearby.presentation.presenter.BasePresenter;
-import com.lakeel.altla.vision.nearby.presentation.presenter.mapper.PresencesModelMapper;
-import com.lakeel.altla.vision.nearby.presentation.presenter.mapper.UserModelMapper;
+import com.lakeel.altla.vision.nearby.presentation.presenter.mapper.HistoryModelMapper;
+import com.lakeel.altla.vision.nearby.presentation.presenter.model.HistoryModel;
+import com.lakeel.altla.vision.nearby.presentation.presenter.model.LocationModel;
+import com.lakeel.altla.vision.nearby.presentation.view.HistoryItemView;
 import com.lakeel.altla.vision.nearby.presentation.view.HistoryView;
+import com.lakeel.altla.vision.nearby.presentation.view.bundle.HistoryBundle;
+import com.lakeel.altla.vision.nearby.presentation.view.bundle.WeatherBundle;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.List;
+
 import javax.inject.Inject;
 
+import rx.Observable;
 import rx.Subscription;
 import rx.android.schedulers.AndroidSchedulers;
 import rx.schedulers.Schedulers;
@@ -28,108 +40,114 @@ public final class HistoryPresenter extends BasePresenter<HistoryView> {
     FindUserUseCase findUserUseCase;
 
     @Inject
-    FindTimesUseCase findTimesUseCase;
+    FindHistoryUseCase findHistoryUseCase;
 
     @Inject
-    SaveFavoriteUseCase saveFavoriteUseCase;
-
-    @Inject
-    FindPresenceUseCase findPresenceUseCase;
-
-    @Inject
-    FindFavoriteUseCase findFavoriteUseCase;
-
-    @Inject
-    FindLineLinkUseCase findLineLinkUseCase;
+    RemoveHistoryUseCase removeHistoryUseCase;
 
     private static final Logger LOGGER = LoggerFactory.getLogger(HistoryPresenter.class);
 
-    private PresencesModelMapper presencesModelMapper = new PresencesModelMapper();
+    private HistoryModelMapper historyModelMapper = new HistoryModelMapper();
 
-    private UserModelMapper userModelMapper = new UserModelMapper();
+    private final List<HistoryModel> historyModels = new ArrayList<>();
 
-    private String otherUserId;
-
-    private String latitude;
-
-    private String longitude;
+    public List<HistoryModel> getItems() {
+        return historyModels;
+    }
 
     @Inject
     HistoryPresenter() {
     }
 
-    public void setUserLocationData(String userId, String latitude, String longitude) {
-        this.otherUserId = userId;
-        this.latitude = latitude;
-        this.longitude = longitude;
-    }
-
     public void onActivityCreated() {
-        Subscription presenceSubscription = findPresenceUseCase
-                .execute(otherUserId)
-                .map(entity -> presencesModelMapper.map(entity))
+        Subscription subscription = findHistoryUseCase
+                .execute(MyUser.getUid())
+                .flatMap(entity -> {
+                    Observable<HistoryEntity> historyObservable = Observable.just(entity);
+                    Observable<UserEntity> userObservable = findUser(entity.userId);
+                    return Observable.zip(historyObservable, userObservable, (historyEntity, userEntity) ->
+                            historyModelMapper.map(historyEntity, userEntity));
+                })
+                .toList()
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
-                .subscribe(model -> getView().showPresence(model),
-                        e -> LOGGER.error("Failed to find presence.", e));
-        subscriptions.add(presenceSubscription);
-
-        Subscription timesSubscription = findTimesUseCase.execute(MyUser.getUid(), otherUserId)
-                .subscribeOn(Schedulers.io())
-                .observeOn(AndroidSchedulers.mainThread())
-                .subscribe(times -> getView().showTimes(times),
-                        e -> LOGGER.error("Failed to find times.", e));
-        subscriptions.add(timesSubscription);
-
-        Subscription userSubscription = findUserUseCase.execute(otherUserId)
-                .map(entity -> userModelMapper.map(entity))
-                .subscribeOn(Schedulers.io())
-                .observeOn(AndroidSchedulers.mainThread())
-                .subscribe(model -> getView().showProfile(model),
-                        e -> LOGGER.error("Failed to find user.", e));
-        subscriptions.add(userSubscription);
-
-        Subscription lineLinkSubscription = findLineLinkUseCase
-                .execute(otherUserId)
-                .map(lineLinksEntity -> lineLinksEntity.url)
-                .subscribeOn(Schedulers.io())
-                .observeOn(AndroidSchedulers.mainThread())
-                .subscribe(lineUrl -> getView().showLineUrl(lineUrl),
-                        e -> LOGGER.error("Failed to find LINE link.", e));
-        subscriptions.add(lineLinkSubscription);
-
-        Subscription favoriteSubscription = findFavoriteUseCase
-                .execute(MyUser.getUid(), otherUserId)
-                .toObservable()
-                .filter(entity -> entity == null)
-                .subscribeOn(Schedulers.io())
-                .observeOn(AndroidSchedulers.mainThread())
-                .subscribe(entity -> getView().showAddButton(),
-                        e -> LOGGER.error("Failed to find the user data.", e));
-        subscriptions.add(favoriteSubscription);
+                .subscribe(historyItemModels -> {
+                    Collections.reverse(historyItemModels);
+                    historyModels.clear();
+                    historyModels.addAll(historyItemModels);
+                    getView().updateItems();
+                }, e -> {
+                    LOGGER.error("Failed to find history.", e);
+                    getView().showSnackBar(R.string.error_process);
+                });
+        subscriptions.add(subscription);
     }
 
-    public void onMapReady() {
-        if (latitude == null && longitude == null) {
-            getView().hideLocation();
-        } else {
-            getView().showLocationMap(latitude, longitude);
+    public void onCreateItemView(HistoryItemView historyItemView) {
+        HistoryItemPresenter historyItemPresenter = new HistoryItemPresenter();
+        historyItemPresenter.onCreateItemView(historyItemView);
+        historyItemView.setItemPresenter(historyItemPresenter);
+    }
+
+    public final class HistoryItemPresenter extends BaseItemPresenter<HistoryItemView> {
+
+        @Override
+        public void onBind(@IntRange(from = 0) int position) {
+            getItemView().showItem(historyModels.get(position));
+        }
+
+        public void onClick(HistoryModel model) {
+            HistoryBundle data = new HistoryBundle();
+
+            data.userId = model.userId;
+            data.userName = model.name;
+
+            LocationModel locationModel = model.locationModel;
+            if (locationModel != null) {
+                data.latitude = locationModel.latitude;
+                data.longitude = locationModel.longitude;
+            }
+
+            if (model.detectedActivity != null) {
+                data.detectedActivity = model.detectedActivity;
+            }
+
+            if (model.weather != null) {
+                WeatherBundle weatherBundle = new WeatherBundle();
+                weatherBundle.conditions = model.weather.conditions;
+                weatherBundle.humidity = model.weather.humidity;
+                weatherBundle.temperature = model.weather.temperature;
+                data.weatherBundle = weatherBundle;
+            }
+
+            data.timestamp = model.passingTime;
+
+            getView().showHistoryFragment(data);
+        }
+
+        public void onRemove(HistoryModel model) {
+            Subscription subscription = removeHistoryUseCase
+                    .execute(MyUser.getUid(), model.key)
+                    .subscribeOn(Schedulers.io())
+                    .observeOn(AndroidSchedulers.mainThread())
+                    .subscribe(e -> {
+                        LOGGER.error("Failed to add to favorites.", e);
+                        getView().showSnackBar(R.string.error_not_added);
+                    }, () -> {
+                        int size = historyModels.size();
+                        historyModels.remove(model);
+                        if (CollectionUtils.isEmpty(historyModels)) {
+                            getView().removeAll(size);
+                        } else {
+                            getView().updateItems();
+                        }
+                        getView().showSnackBar(R.string.message_removed);
+                    });
+            subscriptions.add(subscription);
         }
     }
 
-    public void onAdd() {
-        Subscription subscription = saveFavoriteUseCase
-                .execute(MyUser.getUid(), otherUserId)
-                .subscribeOn(Schedulers.io())
-                .observeOn(AndroidSchedulers.mainThread())
-                .subscribe(
-                        e -> {
-                            LOGGER.error("Failed to add favorites.", e);
-                            getView().showSnackBar(R.string.error_not_added);
-                        }, () -> {
-                            getView().hideAddButton();
-                            getView().showSnackBar(R.string.message_added);
-                        });
-        subscriptions.add(subscription);
+    Observable<UserEntity> findUser(String userId) {
+        return findUserUseCase.execute(userId).subscribeOn(Schedulers.io()).toObservable();
     }
 }

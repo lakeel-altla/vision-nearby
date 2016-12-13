@@ -6,13 +6,13 @@ import javax.inject.Inject;
 
 import rx.Single;
 
-public final class FindPreferenceBeaconIdUseCase {
+public final class FindBeaconIdUseCase {
 
     @Inject
     PreferenceRepository repository;
 
     @Inject
-    FindPreferenceBeaconIdUseCase() {
+    FindBeaconIdUseCase() {
     }
 
     public Single<String> execute() {

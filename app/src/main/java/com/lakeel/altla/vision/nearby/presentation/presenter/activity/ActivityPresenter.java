@@ -22,8 +22,8 @@ import com.lakeel.altla.cm.config.AccessConfig;
 import com.lakeel.altla.library.ResolutionResultCallback;
 import com.lakeel.altla.vision.nearby.R;
 import com.lakeel.altla.vision.nearby.core.StringUtils;
+import com.lakeel.altla.vision.nearby.domain.usecase.FindBeaconIdUseCase;
 import com.lakeel.altla.vision.nearby.domain.usecase.FindCmLinkUseCase;
-import com.lakeel.altla.vision.nearby.domain.usecase.FindPreferenceBeaconIdUseCase;
 import com.lakeel.altla.vision.nearby.domain.usecase.FindPreferencesUseCase;
 import com.lakeel.altla.vision.nearby.domain.usecase.FindTokenUseCase;
 import com.lakeel.altla.vision.nearby.domain.usecase.ObservePresenceUseCase;
@@ -68,7 +68,7 @@ public final class ActivityPresenter extends BasePresenter<ActivityView> impleme
     FindCmLinkUseCase findCmLinkUseCase;
 
     @Inject
-    FindPreferenceBeaconIdUseCase findPreferenceBeaconIdUseCase;
+    FindBeaconIdUseCase findBeaconIdUseCase;
 
     @Inject
     FindPreferencesUseCase findPreferencesUseCase;
@@ -196,7 +196,7 @@ public final class ActivityPresenter extends BasePresenter<ActivityView> impleme
 
         observePresenceUseCase.execute(MyUser.getUid());
 
-        Subscription beaconSubscription = findPreferenceBeaconIdUseCase
+        Subscription beaconSubscription = findBeaconIdUseCase
                 .execute()
                 .flatMap(beaconId -> {
                     if (StringUtils.isEmpty(beaconId))

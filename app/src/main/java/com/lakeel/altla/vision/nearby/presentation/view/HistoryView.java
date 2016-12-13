@@ -1,27 +1,16 @@
 package com.lakeel.altla.vision.nearby.presentation.view;
 
+import com.lakeel.altla.vision.nearby.presentation.view.bundle.HistoryBundle;
+
 import android.support.annotation.StringRes;
 
-import com.lakeel.altla.vision.nearby.presentation.presenter.model.UserModel;
-import com.lakeel.altla.vision.nearby.presentation.presenter.model.PresenceModel;
+public interface HistoryView extends BaseView {
 
-public interface HistoryView {
+    void updateItems();
+
+    void removeAll(int size);
 
     void showSnackBar(@StringRes int resId);
 
-    void showPresence(PresenceModel model);
-
-    void showLocationMap(String latitude, String longitude);
-
-    void hideLocation();
-
-    void showTimes(long times);
-
-    void showProfile(UserModel model);
-
-    void showAddButton();
-
-    void hideAddButton();
-
-    void showLineUrl(String url);
+    void showHistoryFragment(HistoryBundle data);
 }

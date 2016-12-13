@@ -1,4 +1,4 @@
-package com.lakeel.altla.vision.nearby.presentation.view.fragment.favorite;
+package com.lakeel.altla.vision.nearby.presentation.view.fragment.user;
 
 import android.os.Bundle;
 import android.support.annotation.StringRes;
@@ -17,12 +17,12 @@ import android.widget.LinearLayout;
 import com.flipboard.bottomsheet.BottomSheetLayout;
 import com.lakeel.altla.vision.nearby.R;
 import com.lakeel.altla.vision.nearby.presentation.constants.BundleKey;
-import com.lakeel.altla.vision.nearby.presentation.presenter.favorite.FavoritePresenter;
+import com.lakeel.altla.vision.nearby.presentation.presenter.user.UserProfilePresenter;
 import com.lakeel.altla.vision.nearby.presentation.presenter.model.PresenceModel;
 import com.lakeel.altla.vision.nearby.presentation.presenter.model.UserModel;
 import com.lakeel.altla.vision.nearby.presentation.view.DateFormatter;
-import com.lakeel.altla.vision.nearby.presentation.view.FavoriteView;
 import com.lakeel.altla.vision.nearby.presentation.view.GridShareSheet;
+import com.lakeel.altla.vision.nearby.presentation.view.UserProfileView;
 import com.lakeel.altla.vision.nearby.presentation.view.activity.MainActivity;
 import com.lakeel.altla.vision.nearby.presentation.view.layout.PresenceLayout;
 import com.lakeel.altla.vision.nearby.presentation.view.layout.ProfileLayout;
@@ -40,20 +40,20 @@ import butterknife.ButterKnife;
 import static com.lakeel.altla.vision.nearby.R.id.find;
 import static com.lakeel.altla.vision.nearby.R.id.share;
 
-public final class FavoriteFragment extends Fragment implements FavoriteView {
+public final class UserProfileFragment extends Fragment implements UserProfileView {
 
-    public static FavoriteFragment newInstance(String userId, String userName) {
+    public static UserProfileFragment newInstance(String userId, String userName) {
         Bundle args = new Bundle();
         args.putString(BundleKey.USER_ID.getValue(), userId);
         args.putString(BundleKey.USER_NAME.getValue(), userName);
 
-        FavoriteFragment fragment = new FavoriteFragment();
+        UserProfileFragment fragment = new UserProfileFragment();
         fragment.setArguments(args);
         return fragment;
     }
 
     @Inject
-    FavoritePresenter presenter;
+    UserProfilePresenter presenter;
 
     @BindView(R.id.mainLayout)
     LinearLayout mainLayout;

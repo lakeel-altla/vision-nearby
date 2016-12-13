@@ -8,10 +8,8 @@ import android.support.v4.app.FragmentTransaction;
 import com.lakeel.altla.vision.nearby.R;
 import com.lakeel.altla.vision.nearby.presentation.view.bundle.HistoryBundle;
 import com.lakeel.altla.vision.nearby.presentation.view.fragment.estimation.DistanceEstimationFragment;
-import com.lakeel.altla.vision.nearby.presentation.view.fragment.favorite.FavoriteFragment;
 import com.lakeel.altla.vision.nearby.presentation.view.fragment.favorite.FavoriteListFragment;
 import com.lakeel.altla.vision.nearby.presentation.view.fragment.history.HistoryFragment;
-import com.lakeel.altla.vision.nearby.presentation.view.fragment.history.HistoryListFragment;
 import com.lakeel.altla.vision.nearby.presentation.view.fragment.nearby.NearbyListFragment;
 import com.lakeel.altla.vision.nearby.presentation.view.fragment.setting.SettingFragment;
 import com.lakeel.altla.vision.nearby.presentation.view.fragment.setting.bluetooth.BleSettingFragment;
@@ -20,6 +18,8 @@ import com.lakeel.altla.vision.nearby.presentation.view.fragment.setting.device.
 import com.lakeel.altla.vision.nearby.presentation.view.fragment.setting.line.LineSettingFragment;
 import com.lakeel.altla.vision.nearby.presentation.view.fragment.signin.SignInFragment;
 import com.lakeel.altla.vision.nearby.presentation.view.fragment.tracking.TrackingFragment;
+import com.lakeel.altla.vision.nearby.presentation.view.fragment.user.UserPassingFragment;
+import com.lakeel.altla.vision.nearby.presentation.view.fragment.user.UserProfileFragment;
 
 import java.util.ArrayList;
 
@@ -29,9 +29,9 @@ public final class FragmentController {
 
     private final String FAVORITE_LIST_FRAGMENT_TAG = FavoriteListFragment.class.getSimpleName();
 
-    private final String HISTORY_LIST_FRAGMENT_TAG = HistoryListFragment.class.getSimpleName();
-
     private final String HISTORY_FRAGMENT_TAG = HistoryFragment.class.getSimpleName();
+
+    private final String USER_PASSING_FRAGMENT_TAG = UserPassingFragment.class.getSimpleName();
 
     private final String NEARBY_LIST_FRAGMENT = NearbyListFragment.class.getSimpleName();
 
@@ -41,7 +41,7 @@ public final class FragmentController {
 
     private final String DISTANCE_ESTIMATION_FRAGMENT_TAG = DistanceEstimationFragment.class.getSimpleName();
 
-    private final String PROFILE_FRAGMENT_TAG = FavoriteFragment.class.getSimpleName();
+    private final String USER_PROFILE_FRAGMENT_TAG = UserProfileFragment.class.getSimpleName();
 
     private final String SETTING_FRAGMENT_TAG = SettingFragment.class.getSimpleName();
 
@@ -72,14 +72,14 @@ public final class FragmentController {
         replaceFragment(R.id.fragmentPlaceholder, fragment, NEARBY_LIST_FRAGMENT);
     }
 
-    public void showRecentlyListFragment() {
-        HistoryListFragment fragment = HistoryListFragment.newInstance();
-        replaceFragment(R.id.fragmentPlaceholder, fragment, HISTORY_LIST_FRAGMENT_TAG);
+    public void showHistoryFragment() {
+        HistoryFragment fragment = HistoryFragment.newInstance();
+        replaceFragment(R.id.fragmentPlaceholder, fragment, HISTORY_FRAGMENT_TAG);
     }
 
-    public void showHistoryFragment(HistoryBundle data) {
-        HistoryFragment fragment = HistoryFragment.newInstance(data);
-        replaceFragment(R.id.fragmentPlaceholder, fragment, HISTORY_FRAGMENT_TAG);
+    public void showUserPassingFragment(HistoryBundle data) {
+        UserPassingFragment fragment = UserPassingFragment.newInstance(data);
+        replaceFragment(R.id.fragmentPlaceholder, fragment, USER_PASSING_FRAGMENT_TAG);
     }
 
     public void showTrackingFragment(String id, String beaconName) {
@@ -97,9 +97,9 @@ public final class FragmentController {
         replaceFragment(R.id.fragmentPlaceholder, fragment, DISTANCE_ESTIMATION_FRAGMENT_TAG);
     }
 
-    public void showProfileFragment(String userId, String userName) {
-        FavoriteFragment fragment = FavoriteFragment.newInstance(userId, userName);
-        replaceFragment(R.id.fragmentPlaceholder, fragment, PROFILE_FRAGMENT_TAG);
+    public void showUserProfileFragment(String userId, String userName) {
+        UserProfileFragment fragment = UserProfileFragment.newInstance(userId, userName);
+        replaceFragment(R.id.fragmentPlaceholder, fragment, USER_PROFILE_FRAGMENT_TAG);
     }
 
     public void showBleSettingsFragment() {

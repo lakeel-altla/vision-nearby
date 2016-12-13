@@ -1,4 +1,4 @@
-package com.lakeel.altla.vision.nearby.presentation.presenter.favorite;
+package com.lakeel.altla.vision.nearby.presentation.presenter.user;
 
 import com.lakeel.altla.cm.resource.Timestamp;
 import com.lakeel.altla.vision.nearby.R;
@@ -15,7 +15,7 @@ import com.lakeel.altla.vision.nearby.presentation.presenter.data.CmFavoriteData
 import com.lakeel.altla.vision.nearby.presentation.presenter.mapper.CmFavoritesDataMapper;
 import com.lakeel.altla.vision.nearby.presentation.presenter.mapper.PresencesModelMapper;
 import com.lakeel.altla.vision.nearby.presentation.presenter.mapper.UserModelMapper;
-import com.lakeel.altla.vision.nearby.presentation.view.FavoriteView;
+import com.lakeel.altla.vision.nearby.presentation.view.UserProfileView;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -29,7 +29,7 @@ import rx.Subscription;
 import rx.android.schedulers.AndroidSchedulers;
 import rx.schedulers.Schedulers;
 
-public final class FavoritePresenter extends BasePresenter<FavoriteView> {
+public final class UserProfilePresenter extends BasePresenter<UserProfileView> {
 
     @Inject
     FindPresenceUseCase findPresenceUseCase;
@@ -52,7 +52,7 @@ public final class FavoritePresenter extends BasePresenter<FavoriteView> {
     @Inject
     SaveCmFavoritesUseCase saveCmFavoritesUseCase;
 
-    private static final Logger LOGGER = LoggerFactory.getLogger(FavoritePresenter.class);
+    private static final Logger LOGGER = LoggerFactory.getLogger(UserProfilePresenter.class);
 
     private PresencesModelMapper presencesModelMapper = new PresencesModelMapper();
 
@@ -67,7 +67,7 @@ public final class FavoritePresenter extends BasePresenter<FavoriteView> {
     private boolean isCmLinkClicked;
 
     @Inject
-    FavoritePresenter() {
+    UserProfilePresenter() {
     }
 
     public void setUserData(String userId, String userName) {

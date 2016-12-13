@@ -104,6 +104,6 @@ public final class FavoriteListFragment extends Fragment implements FavoriteList
     @Override
     public void showFavoritesUserActivity(String userId, String userName) {
         FragmentController controller = new FragmentController(getFragmentManager());
-        controller.showProfileFragment(userId, userName);
+        controller.showUserProfileFragment(userId, userName);
     }
 }

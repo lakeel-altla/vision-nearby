@@ -1,112 +1,57 @@
 package com.lakeel.altla.vision.nearby.presentation.view.fragment.history;
 
 import android.os.Bundle;
-import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.Snackbar;
 import android.support.v4.app.Fragment;
-import android.support.v4.app.FragmentManager;
-import android.text.util.Linkify;
+import android.support.v7.widget.LinearLayoutManager;
+import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
-import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.ImageView;
 import android.widget.RelativeLayout;
 
-import com.flipboard.bottomsheet.BottomSheetLayout;
-import com.google.android.gms.maps.CameraUpdate;
-import com.google.android.gms.maps.CameraUpdateFactory;
-import com.google.android.gms.maps.GoogleMap;
-import com.google.android.gms.maps.OnMapReadyCallback;
-import com.google.android.gms.maps.SupportMapFragment;
-import com.google.android.gms.maps.model.CircleOptions;
-import com.google.android.gms.maps.model.LatLng;
-import com.google.android.gms.maps.model.MarkerOptions;
 import com.lakeel.altla.vision.nearby.R;
-import com.lakeel.altla.vision.nearby.presentation.constants.AppColor;
-import com.lakeel.altla.vision.nearby.presentation.constants.BundleKey;
-import com.lakeel.altla.vision.nearby.presentation.constants.DetectedActivity;
-import com.lakeel.altla.vision.nearby.presentation.constants.Radius;
-import com.lakeel.altla.vision.nearby.presentation.constants.WeatherCondition;
 import com.lakeel.altla.vision.nearby.presentation.presenter.history.HistoryPresenter;
-import com.lakeel.altla.vision.nearby.presentation.presenter.model.PresenceModel;
-import com.lakeel.altla.vision.nearby.presentation.presenter.model.UserModel;
-import com.lakeel.altla.vision.nearby.presentation.view.DateFormatter;
 import com.lakeel.altla.vision.nearby.presentation.view.HistoryView;
 import com.lakeel.altla.vision.nearby.presentation.view.activity.MainActivity;
+import com.lakeel.altla.vision.nearby.presentation.view.adapter.HistoryAdapter;
 import com.lakeel.altla.vision.nearby.presentation.view.bundle.HistoryBundle;
-import com.lakeel.altla.vision.nearby.presentation.view.bundle.WeatherBundle;
-import com.lakeel.altla.vision.nearby.presentation.view.layout.PassingLayout;
-import com.lakeel.altla.vision.nearby.presentation.view.layout.PresenceLayout;
-import com.lakeel.altla.vision.nearby.presentation.view.layout.ProfileLayout;
-import com.lakeel.altla.vision.nearby.presentation.view.layout.SnsLayout;
-import com.nostra13.universalimageloader.core.ImageLoader;
-
-import java.math.BigDecimal;
+import com.lakeel.altla.vision.nearby.presentation.view.divider.DividerItemDecoration;
+import com.lakeel.altla.vision.nearby.presentation.view.transaction.FragmentController;
+import com.marshalchen.ultimaterecyclerview.UltimateRecyclerView;
+import com.marshalchen.ultimaterecyclerview.layoutmanagers.ScrollSmoothLineaerLayoutManager;
+import com.marshalchen.ultimaterecyclerview.swipe.SwipeItemManagerInterface;
 
 import javax.inject.Inject;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
-import butterknife.OnClick;
 
-public final class HistoryFragment extends Fragment implements HistoryView, OnMapReadyCallback {
+public final class HistoryFragment extends Fragment implements HistoryView {
 
     @Inject
     HistoryPresenter presenter;
 
-    @BindView(R.id.mainLayout)
+    @BindView(R.id.layout)
     RelativeLayout mainLayout;
 
-    @BindView(R.id.imageViewUser)
-    ImageView userImageView;
+    @BindView(R.id.recycler_view)
+    UltimateRecyclerView recyclerView;
 
-    @BindView(R.id.shareSheet)
-    BottomSheetLayout shareSheet;
-
-    @BindView(R.id.addButton)
-    FloatingActionButton addButton;
-
-    private PresenceLayout presenceLayout = new PresenceLayout();
-
-    private PassingLayout passingLayout = new PassingLayout();
-
-    private ProfileLayout profileLayout = new ProfileLayout();
-
-    private SnsLayout snsLayout = new SnsLayout();
-
-    private GoogleMap map;
-
-    private SupportMapFragment supportMapFragment;
-
-    private View mapView;
-
-    public static HistoryFragment newInstance(HistoryBundle data) {
-        Bundle args = new Bundle();
-        args.putSerializable(BundleKey.RECENTLY.getValue(), data);
-
-        HistoryFragment fragment = new HistoryFragment();
-        fragment.setArguments(args);
-        return fragment;
+    public static HistoryFragment newInstance() {
+        return new HistoryFragment();
     }
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
-        View view = inflater.inflate(R.layout.fragment_history, container, false);
-
+        View view = inflater.inflate(R.layout.fragment_swipe_list, container, false);
         ButterKnife.bind(this, view);
-        ButterKnife.bind(presenceLayout, view.findViewById(R.id.presenceLayout));
-        ButterKnife.bind(passingLayout, view.findViewById(R.id.passingLayout));
-        ButterKnife.bind(profileLayout, view.findViewById(R.id.profileLayout));
-        ButterKnife.bind(snsLayout, view.findViewById(R.id.snsLayout));
 
         // Dagger
         MainActivity.getUserComponent(this).inject(this);
 
         presenter.onCreateView(this);
-
-        setHasOptionsMenu(true);
 
         return view;
     }
@@ -115,91 +60,38 @@ public final class HistoryFragment extends Fragment implements HistoryView, OnMa
     public void onActivityCreated(Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
 
-        ((MainActivity) getActivity()).setDrawerIndicatorEnabled(false);
+        getActivity().setTitle(R.string.title_recently);
 
-        FragmentManager fm = getChildFragmentManager();
-        supportMapFragment = (SupportMapFragment) fm.findFragmentById(R.id.locationMap);
-        if (supportMapFragment == null) {
-            supportMapFragment = SupportMapFragment.newInstance();
-            fm.beginTransaction().replace(R.id.locationLayout, supportMapFragment).commit();
-        }
-        supportMapFragment.getMapAsync(this);
+        ((MainActivity) getActivity()).setDrawerIndicatorEnabled(true);
 
-        Bundle bundle = getArguments();
-        HistoryBundle bundleData = (HistoryBundle) bundle.getSerializable(BundleKey.RECENTLY.getValue());
-        if (bundleData == null) {
-            throw new IllegalStateException("Bundle data is not set.");
-        }
+        RecyclerView.LayoutManager mLayoutManager = new ScrollSmoothLineaerLayoutManager(getContext(), LinearLayoutManager.VERTICAL, false, 500);
+        recyclerView.setLayoutManager(mLayoutManager);
 
-        presenter.setUserLocationData(bundleData.userId, bundleData.latitude, bundleData.longitude);
+        HistoryAdapter adapter = new HistoryAdapter(presenter);
+        adapter.setMode(SwipeItemManagerInterface.Mode.Single);
 
-        getActivity().setTitle(bundleData.userName);
-
-        DateFormatter dateFormatter = new DateFormatter(bundleData.timestamp);
-        passingLayout.textViewDate.setText(dateFormatter.format());
-
-        if (bundleData.weatherBundle == null) {
-            int resId = WeatherCondition.UNKNOWN.getResValue();
-            passingLayout.textViewWeather.setText(getContext().getString(resId));
-        } else {
-            WeatherBundle weatherBundle = bundleData.weatherBundle;
-            BigDecimal temperature = new BigDecimal(weatherBundle.temperature);
-            BigDecimal roundUppedTemperature = temperature.setScale(0, BigDecimal.ROUND_HALF_UP);
-
-            int humidity = weatherBundle.humidity;
-            int conditions[] = weatherBundle.conditions;
-
-            StringBuilder builder = new StringBuilder();
-            for (int value : conditions) {
-                WeatherCondition type = WeatherCondition.toWeatherCondition(value);
-                int resId = type.getResValue();
-                builder.append(getContext().getString(resId));
-                builder.append("  ");
-            }
-            builder.append(getString(R.string.message_temperature_format, String.valueOf(roundUppedTemperature)));
-            builder.append("  ");
-            builder.append(getString(R.string.message_humidity_format, String.valueOf(humidity)));
-
-            passingLayout.textViewWeather.setText(builder.toString());
-        }
-
-        int resId = DetectedActivity.toDetectedActivity(bundleData.detectedActivity).getResValue();
-        passingLayout.textViewDetectedActivity.setText(getContext().getString(resId));
+        recyclerView.addItemDecoration(new DividerItemDecoration(getContext()));
+        recyclerView.setAdapter(adapter);
 
         presenter.onActivityCreated();
     }
 
     @Override
-    public void onResume() {
-        super.onResume();
-
-        mapView = supportMapFragment.getView();
-        if (mapView != null) {
-            mapView.setVisibility(View.INVISIBLE);
-        }
+    public void onStop() {
+        super.onStop();
+        presenter.onStop();
     }
 
     @Override
-    public boolean onOptionsItemSelected(MenuItem item) {
-        switch (item.getItemId()) {
-            case android.R.id.home:
-                getFragmentManager().popBackStack();
-                break;
-            default:
-                break;
-        }
-        return true;
+    public void updateItems() {
+        HistoryAdapter adapter = ((HistoryAdapter) recyclerView.getAdapter());
+        adapter.removeAll();
+        adapter.insert(presenter.getItems());
     }
 
     @Override
-    public void onMapReady(GoogleMap googleMap) {
-        map = googleMap;
-        map.setMapType(GoogleMap.MAP_TYPE_NORMAL);
-
-        CameraUpdate cameraUpdate = CameraUpdateFactory.zoomTo(14);
-        map.moveCamera(cameraUpdate);
-
-        presenter.onMapReady();
+    public void removeAll(int size) {
+        recyclerView.getAdapter().notifyItemRangeRemoved(0, size);
     }
 
     @Override
@@ -208,73 +100,8 @@ public final class HistoryFragment extends Fragment implements HistoryView, OnMa
     }
 
     @Override
-    public void showPresence(PresenceModel model) {
-        int resId;
-        if (model.isConnected) {
-            resId = R.string.textView_connected;
-        } else {
-            resId = R.string.textView_disconnected;
-        }
-        presenceLayout.textViewPresence.setText(resId);
-
-        DateFormatter dateFormatter = new DateFormatter(model.lastOnlineTime);
-        presenceLayout.textViewLastOnline.setText(dateFormatter.format());
-    }
-
-    @Override
-    public void showLocationMap(String latitude, String longitude) {
-        mapView.setVisibility(View.VISIBLE);
-
-        LatLng latLng = new LatLng(Double.valueOf(latitude), Double.valueOf(longitude));
-        CircleOptions circleOptions = new CircleOptions()
-                .center(latLng)
-                .strokeColor(AppColor.PRIMARY)
-                .radius(Radius.GOOGLE_MAP);
-
-        map.addMarker(new MarkerOptions()
-                .position(latLng));
-        map.addCircle(circleOptions);
-        map.moveCamera(CameraUpdateFactory.newLatLng(latLng));
-    }
-
-    @Override
-    public void hideLocation() {
-        passingLayout.locationLayout.setVisibility(View.GONE);
-    }
-
-    @Override
-    public void showTimes(long times) {
-        passingLayout.textViewTimes.setText(String.valueOf(times));
-    }
-
-    @OnClick(R.id.addButton)
-    public void onAdd() {
-        presenter.onAdd();
-    }
-
-    @Override
-    public void showProfile(UserModel model) {
-        ImageLoader imageLoader = ImageLoader.getInstance();
-        imageLoader.displayImage(model.imageUri, userImageView);
-
-        profileLayout.textViewName.setText(model.name);
-        profileLayout.textViewEmail.setAutoLinkMask(Linkify.EMAIL_ADDRESSES);
-        profileLayout.textViewEmail.setText(model.email);
-    }
-
-    @Override
-    public void showAddButton() {
-        addButton.setVisibility(View.VISIBLE);
-    }
-
-    @Override
-    public void hideAddButton() {
-        addButton.setVisibility(View.GONE);
-    }
-
-    @Override
-    public void showLineUrl(String url) {
-        snsLayout.textViewLineUrl.setAutoLinkMask(Linkify.WEB_URLS);
-        snsLayout.textViewLineUrl.setText(url);
+    public void showHistoryFragment(HistoryBundle data) {
+        FragmentController controller = new FragmentController(getActivity().getSupportFragmentManager());
+        controller.showUserPassingFragment(data);
     }
 }

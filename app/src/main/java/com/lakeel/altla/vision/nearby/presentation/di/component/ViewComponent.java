@@ -8,10 +8,10 @@ import com.lakeel.altla.vision.nearby.presentation.di.module.RepositoryModule;
 import com.lakeel.altla.vision.nearby.presentation.service.LineService;
 import com.lakeel.altla.vision.nearby.presentation.view.activity.MainActivity;
 import com.lakeel.altla.vision.nearby.presentation.view.fragment.estimation.DistanceEstimationFragment;
-import com.lakeel.altla.vision.nearby.presentation.view.fragment.favorite.FavoriteFragment;
+import com.lakeel.altla.vision.nearby.presentation.view.fragment.user.UserProfileFragment;
 import com.lakeel.altla.vision.nearby.presentation.view.fragment.favorite.FavoriteListFragment;
+import com.lakeel.altla.vision.nearby.presentation.view.fragment.user.UserPassingFragment;
 import com.lakeel.altla.vision.nearby.presentation.view.fragment.history.HistoryFragment;
-import com.lakeel.altla.vision.nearby.presentation.view.fragment.history.HistoryListFragment;
 import com.lakeel.altla.vision.nearby.presentation.view.fragment.nearby.NearbyListFragment;
 import com.lakeel.altla.vision.nearby.presentation.view.fragment.setting.SettingFragment;
 import com.lakeel.altla.vision.nearby.presentation.view.fragment.setting.bluetooth.BleSettingFragment;
@@ -35,9 +35,9 @@ public interface ViewComponent {
 
     void inject(NearbyListFragment fragment);
 
-    void inject(HistoryListFragment fragment);
-
     void inject(HistoryFragment fragment);
+
+    void inject(UserPassingFragment fragment);
 
     void inject(SettingFragment fragment);
 
@@ -53,7 +53,7 @@ public interface ViewComponent {
 
     void inject(DistanceEstimationFragment fragment);
 
-    void inject(FavoriteFragment fragment);
+    void inject(UserProfileFragment fragment);
 
     void inject(LineService service);
 }

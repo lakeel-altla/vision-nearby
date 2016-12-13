@@ -7,7 +7,7 @@ import android.support.annotation.StringRes;
 
 import java.util.ArrayList;
 
-public interface FavoriteView {
+public interface UserProfileView {
 
     void showSnackBar(@StringRes int resId);
 
