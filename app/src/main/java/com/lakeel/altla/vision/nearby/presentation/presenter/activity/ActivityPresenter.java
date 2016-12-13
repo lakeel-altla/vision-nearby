@@ -185,7 +185,7 @@ public final class ActivityPresenter extends BasePresenter<ActivityView> impleme
         getView().showProfile(userData.displayName, userData.email, userData.imageUri);
 
         BleChecker checker = new BleChecker(context);
-        State state = checker.getState();
+        State state = checker.checkState();
         if (state == State.OFF) {
             getView().showBleEnabledActivity();
         } else if (state == State.SUBSCRIBE_ONLY) {

@@ -29,7 +29,7 @@ public final class BleChecker {
         manager = (BluetoothManager) this.context.getSystemService(Context.BLUETOOTH_SERVICE);
     }
 
-    public State getState() {
+    public State checkState() {
 
         // BLE of support in Android OS is it from the API 18, advertising support will be from the API 21.
         // Because it may not support the advertisement, check the devices.

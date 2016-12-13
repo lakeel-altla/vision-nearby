@@ -38,7 +38,7 @@ public final class BleSettingPresenter extends BasePresenter<BleSettingView> {
 
     public void onActivityCreated() {
         BleChecker checker = new BleChecker(context);
-        State state = checker.getState();
+        State state = checker.checkState();
         if (state == State.SUBSCRIBE_ONLY) {
             getView().disableAdvertiseSettings();
         }
