@@ -1,6 +1,6 @@
 package com.lakeel.altla.vision.nearby.presentation.attachment;
 
-import com.lakeel.altla.vision.nearby.presentation.constants.BeaconAttachment;
+import com.lakeel.altla.vision.nearby.presentation.constants.AttachmentType;
 
 
 public final class BeaconAttachmentFactory {
@@ -8,15 +8,15 @@ public final class BeaconAttachmentFactory {
     private BeaconAttachmentFactory() {
     }
 
-    public static com.lakeel.altla.vision.nearby.presentation.attachment.BeaconAttachment create(String attachmentType) {
-        BeaconAttachment type = BeaconAttachment.toType(attachmentType);
+    public static com.lakeel.altla.vision.nearby.presentation.attachment.Attachment create(String value) {
+        AttachmentType type = AttachmentType.toType(value);
         switch (type) {
             case USER_ID:
-                return new UserIdBeaconAttachment();
+                return new UserIdAttachment();
             case LINE_URL:
-                return new LineUrlBeaconAttachment();
+                return new LineUrlAttachment();
             case BEACON_ID:
-                return new BeaconIdBeaconAttachment();
+                return new BeaconIdAttachment();
             default:
                 return null;
         }

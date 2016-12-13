@@ -6,7 +6,7 @@ import com.lakeel.altla.vision.nearby.presentation.service.LineService;
 import android.content.Context;
 import android.content.Intent;
 
-public class LineUrlBeaconAttachment implements BeaconAttachment {
+public class LineUrlAttachment implements Attachment {
 
     @Override
     public void startService(Context context, String value) {

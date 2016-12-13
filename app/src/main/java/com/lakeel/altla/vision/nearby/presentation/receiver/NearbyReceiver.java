@@ -7,7 +7,7 @@ import com.google.android.gms.nearby.messages.Distance;
 import com.google.android.gms.nearby.messages.Message;
 
 import com.lakeel.altla.library.AttachmentListener;
-import com.lakeel.altla.vision.nearby.presentation.attachment.BeaconAttachment;
+import com.lakeel.altla.vision.nearby.presentation.attachment.Attachment;
 import com.lakeel.altla.vision.nearby.presentation.attachment.BeaconAttachmentFactory;
 
 import org.slf4j.Logger;
@@ -29,7 +29,7 @@ public final class NearbyReceiver extends BroadcastReceiver {
 
                     @Override
                     protected void onFound(String type, String value) {
-                        BeaconAttachment state = BeaconAttachmentFactory.create(type);
+                        Attachment state = BeaconAttachmentFactory.create(type);
                         if (state != null) {
                             state.startService(context, value);
                         }

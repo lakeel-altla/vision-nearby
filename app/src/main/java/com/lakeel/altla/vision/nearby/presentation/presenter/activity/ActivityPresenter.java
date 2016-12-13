@@ -30,8 +30,8 @@ import com.lakeel.altla.vision.nearby.domain.usecase.SaveBeaconUseCase;
 import com.lakeel.altla.vision.nearby.domain.usecase.SavePreferenceBeaconIdUseCase;
 import com.lakeel.altla.vision.nearby.domain.usecase.SaveTokenUseCase;
 import com.lakeel.altla.vision.nearby.domain.usecase.SaveUserBeaconUseCase;
-import com.lakeel.altla.vision.nearby.presentation.checker.BluetoothChecker;
-import com.lakeel.altla.vision.nearby.presentation.checker.BluetoothChecker.BleState;
+import com.lakeel.altla.vision.nearby.presentation.checker.BleChecker;
+import com.lakeel.altla.vision.nearby.presentation.checker.BleChecker.State;
 import com.lakeel.altla.vision.nearby.presentation.firebase.MyUser;
 import com.lakeel.altla.vision.nearby.presentation.presenter.BasePresenter;
 import com.lakeel.altla.vision.nearby.presentation.presenter.mapper.CmAuthConfigMapper;
@@ -184,11 +184,11 @@ public final class ActivityPresenter extends BasePresenter<ActivityView> impleme
         MyUser.UserData userData = MyUser.getUserData();
         getView().showProfile(userData.displayName, userData.email, userData.imageUri);
 
-        BluetoothChecker checker = new BluetoothChecker(context);
-        BleState state = checker.getState();
-        if (state == BleState.OFF) {
+        BleChecker checker = new BleChecker(context);
+        State state = checker.getState();
+        if (state == State.OFF) {
             getView().showBleEnabledActivity();
-        } else if (state == BleState.SUBSCRIBE_ONLY) {
+        } else if (state == State.SUBSCRIBE_ONLY) {
             isAdvertiseAvailability = false;
             getView().showAdvertiseDisableConfirmDialog();
         }

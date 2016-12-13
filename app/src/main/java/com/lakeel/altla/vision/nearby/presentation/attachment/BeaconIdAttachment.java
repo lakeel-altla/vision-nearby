@@ -7,7 +7,7 @@ import com.lakeel.altla.vision.nearby.presentation.service.NotificationService;
 import android.content.Context;
 import android.content.Intent;
 
-public final class BeaconIdBeaconAttachment implements BeaconAttachment {
+public final class BeaconIdAttachment implements Attachment {
 
     @Override
     public void startService(Context context, String value) {

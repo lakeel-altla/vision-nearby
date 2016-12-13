@@ -7,7 +7,7 @@ import com.lakeel.altla.vision.nearby.presentation.firebase.MyUser;
 import com.lakeel.altla.vision.nearby.presentation.intent.IntentKey;
 import com.lakeel.altla.vision.nearby.presentation.service.HistoryService;
 
-public class UserIdBeaconAttachment implements BeaconAttachment {
+public class UserIdAttachment implements Attachment {
 
     @Override
     public void startService(Context context, String value) {

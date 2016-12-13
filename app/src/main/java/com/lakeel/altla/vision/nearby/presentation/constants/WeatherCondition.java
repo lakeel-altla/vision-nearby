@@ -28,7 +28,7 @@ public enum WeatherCondition {
         return resValue;
     }
 
-    public static WeatherCondition toType(int intValue) {
+    public static WeatherCondition toWeatherCondition(int intValue) {
         for (WeatherCondition type : WeatherCondition.values()) {
             if (type.conditionValue == intValue) {
                 return type;

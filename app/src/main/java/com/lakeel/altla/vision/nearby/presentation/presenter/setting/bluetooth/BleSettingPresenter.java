@@ -3,8 +3,8 @@ package com.lakeel.altla.vision.nearby.presentation.presenter.setting.bluetooth;
 import android.content.Context;
 
 import com.lakeel.altla.vision.nearby.domain.usecase.FindPreferenceBeaconIdUseCase;
-import com.lakeel.altla.vision.nearby.presentation.checker.BluetoothChecker;
-import com.lakeel.altla.vision.nearby.presentation.checker.BluetoothChecker.BleState;
+import com.lakeel.altla.vision.nearby.presentation.checker.BleChecker;
+import com.lakeel.altla.vision.nearby.presentation.checker.BleChecker.State;
 import com.lakeel.altla.vision.nearby.presentation.presenter.BasePresenter;
 import com.lakeel.altla.vision.nearby.presentation.presenter.mapper.BeaconIdModelMapper;
 import com.lakeel.altla.vision.nearby.presentation.service.AdvertiseService;
@@ -37,9 +37,9 @@ public final class BleSettingPresenter extends BasePresenter<BleSettingView> {
     }
 
     public void onActivityCreated() {
-        BluetoothChecker checker = new BluetoothChecker(context);
-        BleState state = checker.getState();
-        if (state == BleState.SUBSCRIBE_ONLY) {
+        BleChecker checker = new BleChecker(context);
+        State state = checker.getState();
+        if (state == State.SUBSCRIBE_ONLY) {
             getView().disableAdvertiseSettings();
         }
     }

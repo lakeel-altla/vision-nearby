@@ -25,7 +25,7 @@ public enum DetectedActivity {
         return resValue;
     }
 
-    public static DetectedActivity toUserActivity(int intValue) {
+    public static DetectedActivity toDetectedActivity(int intValue) {
         for (DetectedActivity currentActivity : DetectedActivity.values()) {
             if (currentActivity.intValue == intValue) {
                 return currentActivity;

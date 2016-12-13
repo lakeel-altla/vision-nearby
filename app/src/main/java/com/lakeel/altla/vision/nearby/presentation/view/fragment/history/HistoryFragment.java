@@ -151,7 +151,7 @@ public final class HistoryFragment extends Fragment implements HistoryView, OnMa
 
             StringBuilder builder = new StringBuilder();
             for (int value : conditions) {
-                WeatherCondition type = WeatherCondition.toType(value);
+                WeatherCondition type = WeatherCondition.toWeatherCondition(value);
                 int resId = type.getResValue();
                 builder.append(getContext().getString(resId));
                 builder.append("  ");
@@ -163,7 +163,7 @@ public final class HistoryFragment extends Fragment implements HistoryView, OnMa
             passingLayout.textViewWeather.setText(builder.toString());
         }
 
-        int resId = DetectedActivity.toUserActivity(bundleData.detectedActivity).getResValue();
+        int resId = DetectedActivity.toDetectedActivity(bundleData.detectedActivity).getResValue();
         passingLayout.textViewDetectedActivity.setText(getContext().getString(resId));
 
         presenter.onActivityCreated();

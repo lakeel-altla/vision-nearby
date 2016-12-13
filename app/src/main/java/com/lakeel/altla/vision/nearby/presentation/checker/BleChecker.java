@@ -7,16 +7,16 @@ import android.os.Build;
 
 import org.altbeacon.beacon.BeaconTransmitter;
 
-import static com.lakeel.altla.vision.nearby.presentation.checker.BluetoothChecker.BleState.DISABLE;
-import static com.lakeel.altla.vision.nearby.presentation.checker.BluetoothChecker.BleState.ENABLE;
-import static com.lakeel.altla.vision.nearby.presentation.checker.BluetoothChecker.BleState.OFF;
-import static com.lakeel.altla.vision.nearby.presentation.checker.BluetoothChecker.BleState.SUBSCRIBE_ONLY;
+import static com.lakeel.altla.vision.nearby.presentation.checker.BleChecker.State.DISABLE;
+import static com.lakeel.altla.vision.nearby.presentation.checker.BleChecker.State.ENABLE;
+import static com.lakeel.altla.vision.nearby.presentation.checker.BleChecker.State.OFF;
+import static com.lakeel.altla.vision.nearby.presentation.checker.BleChecker.State.SUBSCRIBE_ONLY;
 import static org.altbeacon.beacon.BeaconTransmitter.NOT_SUPPORTED_CANNOT_GET_ADVERTISER;
 import static org.altbeacon.beacon.BeaconTransmitter.NOT_SUPPORTED_CANNOT_GET_ADVERTISER_MULTIPLE_ADVERTISEMENTS;
 
-public final class BluetoothChecker {
+public final class BleChecker {
 
-    public enum BleState {
+    public enum State {
         OFF, DISABLE, ENABLE, SUBSCRIBE_ONLY
     }
 
@@ -24,12 +24,12 @@ public final class BluetoothChecker {
 
     private BluetoothManager manager;
 
-    public BluetoothChecker(Context context) {
+    public BleChecker(Context context) {
         this.context = context;
         manager = (BluetoothManager) this.context.getSystemService(Context.BLUETOOTH_SERVICE);
     }
 
-    public BleState getState() {
+    public State getState() {
 
         // BLE of support in Android OS is it from the API 18, advertising support will be from the API 21.
         // Because it may not support the advertisement, check the devices.

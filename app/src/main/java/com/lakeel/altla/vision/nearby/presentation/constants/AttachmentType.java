@@ -1,17 +1,17 @@
 package com.lakeel.altla.vision.nearby.presentation.constants;
 
-public enum BeaconAttachment {
+public enum AttachmentType {
 
     UNKNOWN("unknown"), USER_ID("userId"), BEACON_ID("beaconId"), LINE_URL("lineUrl");
 
     private String value;
 
-    BeaconAttachment(String value) {
+    AttachmentType(String value) {
         this.value = value;
     }
 
-    public static BeaconAttachment toType(String value) {
-        for (BeaconAttachment type : BeaconAttachment.values()) {
+    public static AttachmentType toType(String value) {
+        for (AttachmentType type : AttachmentType.values()) {
             if (type.getValue().equals(value)) {
                 return type;
             }
