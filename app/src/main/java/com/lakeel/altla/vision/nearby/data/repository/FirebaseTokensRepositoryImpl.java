@@ -6,6 +6,7 @@ import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
+import com.lakeel.altla.vision.nearby.data.entity.TokenEntity;
 import com.lakeel.altla.vision.nearby.data.execption.DataStoreException;
 import com.lakeel.altla.vision.nearby.domain.repository.FirebaseTokensRepository;
 
@@ -61,18 +62,20 @@ public final class FirebaseTokensRepositoryImpl implements FirebaseTokensReposit
     }
 
     @Override
-    public Observable<String> findTokensByUserId(String userId) {
-        return Observable.create(new Observable.OnSubscribe<String>() {
+    public Observable<TokenEntity> findTokensByUserId(String userId) {
+        return Observable.create(new Observable.OnSubscribe<TokenEntity>() {
             @Override
-            public void call(Subscriber<? super String> subscriber) {
+            public void call(Subscriber<? super TokenEntity> subscriber) {
                 reference
                         .child(userId)
                         .addListenerForSingleValueEvent(new ValueEventListener() {
                             @Override
                             public void onDataChange(DataSnapshot dataSnapshot) {
                                 for (DataSnapshot snapshot : dataSnapshot.getChildren()) {
-                                    String token = (String) snapshot.getValue();
-                                    subscriber.onNext(token);
+                                    TokenEntity entity = new TokenEntity();
+                                    entity.beaconId = snapshot.getKey();
+                                    entity.token = (String) snapshot.getValue();;
+                                    subscriber.onNext(entity);
                                 }
                                 subscriber.onCompleted();
                             }

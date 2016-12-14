@@ -2,6 +2,7 @@ package com.lakeel.altla.vision.nearby.domain.repository;
 
 import com.lakeel.altla.vision.nearby.data.entity.BeaconEntity;
 
+import rx.Completable;
 import rx.Single;
 
 public interface FirebaseBeaconsRepository {
@@ -11,4 +12,8 @@ public interface FirebaseBeaconsRepository {
     Single<BeaconEntity> findBeacon(String beaconId);
 
     Single<String> removeBeaconByBeaconId(String beaconId);
+
+    Completable lostDevice(String beaconId);
+
+    Completable foundDevice(String beaconId);
 }

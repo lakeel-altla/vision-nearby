@@ -1,0 +1,73 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="80dp"
+    android:orientation="horizontal">
+
+    <com.marshalchen.ultimaterecyclerview.swipe.SwipeLayout
+        android:id="@+id/swipe_layout"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+
+        <LinearLayout
+            android:layout_width="160dp"
+            android:layout_height="match_parent"
+            android:background="@color/colorPrimary"
+            android:gravity="center">
+
+            <Button
+                android:id="@+id/buttonLost"
+                android:layout_width="80dp"
+                android:layout_height="match_parent"
+                android:background="@color/colorPrimary"
+                android:gravity="center"
+                android:textColor="@color/white" />
+
+            <Button
+                android:id="@+id/buttonRemove"
+                android:layout_width="80dp"
+                android:layout_height="match_parent"
+                android:background="@color/red"
+                android:gravity="center"
+                android:text="@string/button_remove"
+                android:textColor="@color/white" />
+
+        </LinearLayout>
+
+        <RelativeLayout
+            android:id="@+id/layout"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent">
+
+            <TextView
+                android:id="@+id/deviceName"
+                android:layout_width="wrap_content"
+                android:layout_height="match_parent"
+                android:gravity="center_vertical"
+                android:paddingEnd="0dp"
+                android:paddingStart="16dp"
+                android:text="@string/dummy" />
+
+            <TextView
+                android:id="@+id/lastUsedTime"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignParentEnd="true"
+                android:paddingEnd="16dp"
+                android:paddingStart="0dp"
+                android:paddingTop="16dp"
+                android:text="@string/dummy" />
+
+            <ImageView
+                android:id="@+id/lostImage"
+                android:layout_width="24dp"
+                android:layout_height="24dp"
+                android:layout_alignParentBottom="true"
+                android:layout_alignParentEnd="true"
+                android:layout_gravity="bottom|end"
+                android:layout_marginBottom="16dp"
+                android:layout_marginEnd="16dp" />
+        </RelativeLayout>
+
+    </com.marshalchen.ultimaterecyclerview.swipe.SwipeLayout>
+</LinearLayout>

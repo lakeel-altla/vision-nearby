@@ -8,6 +8,8 @@ import com.lakeel.altla.vision.nearby.data.entity.BeaconEntity;
 import com.lakeel.altla.vision.nearby.domain.usecase.FindBeaconUseCase;
 import com.lakeel.altla.vision.nearby.domain.usecase.FindUserBeaconsUseCase;
 import com.lakeel.altla.vision.nearby.domain.usecase.FindUserUseCase;
+import com.lakeel.altla.vision.nearby.domain.usecase.FoundDeviceUseCase;
+import com.lakeel.altla.vision.nearby.domain.usecase.LostDeviceUseCase;
 import com.lakeel.altla.vision.nearby.domain.usecase.RemoveBeaconUseCase;
 import com.lakeel.altla.vision.nearby.domain.usecase.RemoveUserBeaconUseCase;
 import com.lakeel.altla.vision.nearby.presentation.firebase.MyUser;
@@ -50,6 +52,12 @@ public class DeviceListPresenter extends BasePresenter<DeviceListView> {
     @Inject
     RemoveUserBeaconUseCase removeUserBeaconUseCase;
 
+    @Inject
+    LostDeviceUseCase lostDeviceUseCase;
+
+    @Inject
+    FoundDeviceUseCase foundDeviceUseCase;
+
     private static final Logger LOGGER = LoggerFactory.getLogger(DeviceListPresenter.class);
 
     private final BeaconModelMapper modelMapper = new BeaconModelMapper();
@@ -61,21 +69,7 @@ public class DeviceListPresenter extends BasePresenter<DeviceListView> {
     }
 
     public void onActivityCreated() {
-        Subscription subscription = findUserBeaconsUseCase
-                .execute(MyUser.getUid())
-                .flatMap(this::findBeacon)
-                .filter(entity -> entity != null)
-                .map(modelMapper::map)
-                .toSortedList((model1, model2) -> (int) (model2.lastUsedTime - model1.lastUsedTime))
-                .subscribeOn(Schedulers.io())
-                .subscribe(models -> {
-                    deviceModels.clear();
-                    deviceModels.addAll(models);
-                    getView().updateItems();
-                }, e -> {
-                    LOGGER.error("Failed to find user beacons.", e);
-                });
-        subscriptions.add(subscription);
+        findUserBeacons();
     }
 
     public int getItemCount() {
@@ -118,6 +112,44 @@ public class DeviceListPresenter extends BasePresenter<DeviceListView> {
                             e -> LOGGER.error("Failed to remove a device.", e));
             subscriptions.add(subscription);
         }
+
+        public void onLost(String beaconId) {
+            Subscription subscription = lostDeviceUseCase
+                    .execute(beaconId)
+                    .subscribeOn(Schedulers.io())
+                    .observeOn(AndroidSchedulers.mainThread())
+                    .subscribe(e -> LOGGER.error("Failed to save lost state of the device.", e),
+                            DeviceListPresenter.this::findUserBeacons);
+            subscriptions.add(subscription);
+        }
+
+        public void onFound(String beaconId) {
+            Subscription subscription = foundDeviceUseCase
+                    .execute(beaconId)
+                    .subscribeOn(Schedulers.io())
+                    .observeOn(AndroidSchedulers.mainThread())
+                    .subscribe(e -> LOGGER.error("Failed to save found state of the device.", e),
+                            DeviceListPresenter.this::findUserBeacons);
+            subscriptions.add(subscription);
+        }
+    }
+
+    private void findUserBeacons() {
+        Subscription subscription = findUserBeaconsUseCase
+                .execute(MyUser.getUid())
+                .flatMap(this::findBeacon)
+                .filter(entity -> entity != null)
+                .map(modelMapper::map)
+                .toSortedList((model1, model2) -> (int) (model2.lastUsedTime - model1.lastUsedTime))
+                .subscribeOn(Schedulers.io())
+                .subscribe(models -> {
+                    deviceModels.clear();
+                    deviceModels.addAll(models);
+                    getView().updateItems();
+                }, e -> {
+                    LOGGER.error("Failed to find user beacons.", e);
+                });
+        subscriptions.add(subscription);
     }
 
     Observable<BeaconEntity> findBeacon(String beaconId) {

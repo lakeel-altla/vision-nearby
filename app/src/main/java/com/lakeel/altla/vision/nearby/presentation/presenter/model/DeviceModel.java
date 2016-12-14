@@ -7,4 +7,6 @@ public final class DeviceModel {
     public String name;
 
     public long lastUsedTime;
+
+    public boolean isLost;
 }

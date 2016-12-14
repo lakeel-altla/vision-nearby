@@ -11,9 +11,11 @@ public final class BeaconEntity extends BaseEntity {
 
     public String userId;
 
+    public boolean isLost;
+
     public long lastUsedTime;
 
-    public Map toMap() {
+    public Map<String, Object> toMap() {
         Map<String, Object> map = new HashMap<>();
         map.put("name", name);
         map.put("userId", userId);

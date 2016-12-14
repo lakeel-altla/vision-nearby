@@ -6,7 +6,8 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
-import android.widget.LinearLayout;
+import android.widget.ImageView;
+import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import com.lakeel.altla.vision.nearby.R;
@@ -28,7 +29,7 @@ public final class DeviceAdapter extends RecyclerView.Adapter<DeviceAdapter.Devi
 
     @Override
     public DeviceViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
-        View itemView = LayoutInflater.from(parent.getContext()).inflate(R.layout.beacon_item, parent, false);
+        View itemView = LayoutInflater.from(parent.getContext()).inflate(R.layout.device_item, parent, false);
         DeviceAdapter.DeviceViewHolder viewHolder = new DeviceAdapter.DeviceViewHolder(itemView);
         deviceListPresenter.onCreateItemView(viewHolder);
         return viewHolder;
@@ -47,7 +48,10 @@ public final class DeviceAdapter extends RecyclerView.Adapter<DeviceAdapter.Devi
     public final class DeviceViewHolder extends RecyclerView.ViewHolder implements DeviceItemView {
 
         @BindView(R.id.layout)
-        LinearLayout itemLayout;
+        RelativeLayout itemLayout;
+
+        @BindView(R.id.buttonLost)
+        Button lostButton;
 
         @BindView(R.id.buttonRemove)
         Button removeButton;
@@ -57,6 +61,9 @@ public final class DeviceAdapter extends RecyclerView.Adapter<DeviceAdapter.Devi
 
         @BindView(R.id.lastUsedTime)
         TextView lastUsedTime;
+
+        @BindView(R.id.lostImage)
+        ImageView lostImage;
 
         private DeviceListPresenter.DeviceItemPresenter itemPresenter;
 
@@ -85,6 +92,19 @@ public final class DeviceAdapter extends RecyclerView.Adapter<DeviceAdapter.Devi
             lastUsedTime.setText(lastUsedTimeText);
 
             removeButton.setOnClickListener(view -> itemPresenter.onRemove(model));
+
+            if (model.isLost) {
+                lostButton.setText(R.string.button_found);
+                lostButton.setOnClickListener(view -> itemPresenter.onFound(model.beaconId));
+
+                lostImage.setVisibility(View.VISIBLE);
+                lostImage.setImageResource(R.drawable.ic_error);
+            } else {
+                lostButton.setText(R.string.button_lost);
+                lostButton.setOnClickListener(view -> itemPresenter.onLost(model.beaconId));
+
+                lostImage.setVisibility(View.INVISIBLE);
+            }
         }
     }
 }

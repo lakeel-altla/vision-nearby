@@ -108,6 +108,8 @@
 
     <string name="button_add">Add</string>
     <string name="button_remove">Remove</string>
+    <string name="button_lost">Lost</string>
+    <string name="button_found">Found</string>
 
     <string name="unknown_error">Unknown error</string>
 
@@ -118,4 +120,6 @@
     <string name="error_not_saved">Could not save.</string>
     <string name="error_not_found">Could not find.</string>
     <string name="error_not_deleted">Could not delete.</string>
+
+    <string name="dummy">Dummy</string>
 </resources>

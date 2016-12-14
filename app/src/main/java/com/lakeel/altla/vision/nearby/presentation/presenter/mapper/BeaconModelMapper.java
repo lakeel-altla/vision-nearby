@@ -10,6 +10,7 @@ public final class BeaconModelMapper {
         model.beaconId = entity.key;
         model.name = entity.name;
         model.lastUsedTime = entity.lastUsedTime;
+        model.isLost = entity.isLost;
         return model;
     }
 }

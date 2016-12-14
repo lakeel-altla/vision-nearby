@@ -4,8 +4,12 @@ import android.app.IntentService;
 import android.content.Intent;
 
 import com.lakeel.altla.vision.nearby.R;
-import com.lakeel.altla.vision.nearby.domain.usecase.FindUserIdByBeaconIdUseCase;
+import com.lakeel.altla.vision.nearby.data.entity.BeaconEntity;
+import com.lakeel.altla.vision.nearby.data.entity.NotificationEntity;
+import com.lakeel.altla.vision.nearby.data.entity.TokenEntity;
+import com.lakeel.altla.vision.nearby.domain.usecase.FindBeaconUseCase;
 import com.lakeel.altla.vision.nearby.domain.usecase.FindTokensUseCase;
+import com.lakeel.altla.vision.nearby.domain.usecase.FindUserIdByBeaconIdUseCase;
 import com.lakeel.altla.vision.nearby.domain.usecase.SaveNotificationUseCase;
 import com.lakeel.altla.vision.nearby.presentation.di.component.DaggerServiceComponent;
 import com.lakeel.altla.vision.nearby.presentation.di.component.ServiceComponent;
@@ -16,10 +20,14 @@ import org.slf4j.LoggerFactory;
 
 import javax.inject.Inject;
 
+import rx.Observable;
 import rx.schedulers.Schedulers;
 
 
 public class NotificationService extends IntentService {
+
+    @Inject
+    FindBeaconUseCase findBeaconUseCase;
 
     @Inject
     FindUserIdByBeaconIdUseCase findUserIdByBeaconIdUseCase;
@@ -49,12 +57,29 @@ public class NotificationService extends IntentService {
         String title = getApplicationContext().getString(R.string.notification_title_device_found);
         String message = getApplicationContext().getString(R.string.notification_message_device_found);
 
-        findUserIdByBeaconIdUseCase
+        findBeaconUseCase
                 .execute(beaconId)
-                .flatMapObservable(entity -> findTokensUseCase.execute(entity.userId).subscribeOn(Schedulers.io()))
-                .flatMap(token -> saveNotificationUseCase.execute(token, title, message).subscribeOn(Schedulers.io()).toObservable())
+                .toObservable()
+                .subscribeOn(Schedulers.io())
+                .filter(entity -> entity.isLost)
+                .flatMap(entity -> findUserId(beaconId))
+                .flatMap(entity -> findTokens(entity.userId))
+                .filter(entity -> !beaconId.equals(entity.beaconId))
+                .flatMap(entity -> saveNotification(entity.token, title, message))
                 .subscribeOn(Schedulers.io())
                 .doOnError(e -> LOGGER.error("Failed to save notification.", e))
                 .subscribe();
+    }
+
+    Observable<BeaconEntity> findUserId(String beaconId) {
+        return findUserIdByBeaconIdUseCase.execute(beaconId).subscribeOn(Schedulers.io()).toObservable();
+    }
+
+    Observable<TokenEntity> findTokens(String userId) {
+        return findTokensUseCase.execute(userId).subscribeOn(Schedulers.io());
+    }
+
+    Observable<NotificationEntity> saveNotification(String token, String title, String message) {
+        return saveNotificationUseCase.execute(token, title, message).subscribeOn(Schedulers.io()).toObservable();
     }
 }

@@ -16,7 +16,7 @@ import com.lakeel.altla.vision.nearby.presentation.view.fragment.nearby.NearbyLi
 import com.lakeel.altla.vision.nearby.presentation.view.fragment.setting.SettingFragment;
 import com.lakeel.altla.vision.nearby.presentation.view.fragment.bluetooth.BleSettingFragment;
 import com.lakeel.altla.vision.nearby.presentation.view.fragment.cm.CmSettingFragment;
-import com.lakeel.altla.vision.nearby.presentation.view.fragment.device.DeviceListListFragment;
+import com.lakeel.altla.vision.nearby.presentation.view.fragment.device.DeviceListFragment;
 import com.lakeel.altla.vision.nearby.presentation.view.fragment.line.LineSettingFragment;
 import com.lakeel.altla.vision.nearby.presentation.view.fragment.signin.SignInFragment;
 import com.lakeel.altla.vision.nearby.presentation.view.fragment.tracking.TrackingFragment;
@@ -49,7 +49,7 @@ public interface ViewComponent {
 
     void inject(TrackingFragment fragment);
 
-    void inject(DeviceListListFragment fragment);
+    void inject(DeviceListFragment fragment);
 
     void inject(DistanceEstimationFragment fragment);
 

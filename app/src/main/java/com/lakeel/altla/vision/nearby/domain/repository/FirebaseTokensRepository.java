@@ -1,5 +1,7 @@
 package com.lakeel.altla.vision.nearby.domain.repository;
 
+import com.lakeel.altla.vision.nearby.data.entity.TokenEntity;
+
 import rx.Observable;
 import rx.Single;
 
@@ -9,6 +11,5 @@ public interface FirebaseTokensRepository {
 
     Single<String> findTokenByUserId(String userId);
 
-    Observable<String> findTokensByUserId(String userId);
-
+    Observable<TokenEntity> findTokensByUserId(String userId);
 }

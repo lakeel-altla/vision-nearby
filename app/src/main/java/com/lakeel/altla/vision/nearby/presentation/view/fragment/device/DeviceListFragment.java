@@ -24,7 +24,7 @@ import javax.inject.Inject;
 import butterknife.BindView;
 import butterknife.ButterKnife;
 
-public final class DeviceListListFragment extends Fragment implements DeviceListView {
+public final class DeviceListFragment extends Fragment implements DeviceListView {
 
     @Inject
     DeviceListPresenter presenter;
@@ -32,8 +32,8 @@ public final class DeviceListListFragment extends Fragment implements DeviceList
     @BindView(R.id.recycler_view)
     RecyclerView recyclerView;
 
-    public static DeviceListListFragment newInstance() {
-        return new DeviceListListFragment();
+    public static DeviceListFragment newInstance() {
+        return new DeviceListFragment();
     }
 
     @Override

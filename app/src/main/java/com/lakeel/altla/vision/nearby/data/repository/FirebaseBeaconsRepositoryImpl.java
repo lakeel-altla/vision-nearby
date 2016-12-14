@@ -11,14 +11,18 @@ import com.lakeel.altla.vision.nearby.data.execption.DataStoreException;
 import com.lakeel.altla.vision.nearby.data.mapper.BeaconEntityMapper;
 import com.lakeel.altla.vision.nearby.domain.repository.FirebaseBeaconsRepository;
 
+import java.util.HashMap;
 import java.util.Map;
 
 import javax.inject.Inject;
 
+import rx.Completable;
 import rx.Single;
 import rx.SingleSubscriber;
 
 public class FirebaseBeaconsRepositoryImpl implements FirebaseBeaconsRepository {
+
+    private static final String KEY_IS_LOST = "isLost";
 
     private DatabaseReference reference;
 
@@ -35,11 +39,11 @@ public class FirebaseBeaconsRepositoryImpl implements FirebaseBeaconsRepository 
             @Override
             public void call(SingleSubscriber<? super String> subscriber) {
                 BeaconEntity entity = entityMapper.map(userId, name);
-                Map map = entity.toMap();
+                Map<String, Object> map = entity.toMap();
 
                 Task task = reference
                         .child(beaconId)
-                        .setValue(map)
+                        .updateChildren(map)
                         .addOnSuccessListener(aVoid -> subscriber.onSuccess(beaconId))
                         .addOnFailureListener(subscriber::onError);
 
@@ -78,6 +82,44 @@ public class FirebaseBeaconsRepositoryImpl implements FirebaseBeaconsRepository 
                     .child(beaconId)
                     .removeValue()
                     .addOnSuccessListener(aVoid -> subscriber.onSuccess(beaconId))
+                    .addOnFailureListener(subscriber::onError);
+
+            Exception e = task.getException();
+            if (e != null) {
+                subscriber.onError(e);
+            }
+        });
+    }
+
+    @Override
+    public Completable lostDevice(String beaconId) {
+        return Completable.create(subscriber -> {
+            Map<String, Object> map = new HashMap<>();
+            map.put(KEY_IS_LOST, true);
+
+            Task task = reference
+                    .child(beaconId)
+                    .updateChildren(map)
+                    .addOnSuccessListener(aVoid -> subscriber.onCompleted())
+                    .addOnFailureListener(subscriber::onError);
+
+            Exception e = task.getException();
+            if (e != null) {
+                subscriber.onError(e);
+            }
+        });
+    }
+
+    @Override
+    public Completable foundDevice(String beaconId) {
+        return Completable.create(subscriber -> {
+            Map<String, Object> map = new HashMap<>();
+            map.put(KEY_IS_LOST, false);
+
+            Task task = reference
+                    .child(beaconId)
+                    .updateChildren(map)
+                    .addOnSuccessListener(aVoid -> subscriber.onCompleted())
                     .addOnFailureListener(subscriber::onError);
 
             Exception e = task.getException();
