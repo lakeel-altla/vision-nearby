@@ -10,7 +10,7 @@ public final class HistoryEntity extends BaseEntity {
 
     public String userId;
 
-    public Integer userActivity;
+    public Integer detectedActivity;
 
     public LocationEntity location;
 
@@ -45,7 +45,7 @@ public final class HistoryEntity extends BaseEntity {
 
     public Map<String, Object> toUserActivityMap() {
         Map<String, Object> map = new HashMap<>();
-        map.put("detectedActivity", userActivity);
+        map.put("detectedActivity", detectedActivity);
         return map;
     }
 
