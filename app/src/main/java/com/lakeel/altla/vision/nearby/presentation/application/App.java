@@ -35,6 +35,7 @@ public class App extends Application {
 
         MultiDex.install(this);
         JodaTimeAndroid.init(this);
+
         initImageLoaderInstance();
 
         applicationComponent = DaggerApplicationComponent.builder()
