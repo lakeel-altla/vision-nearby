@@ -27,22 +27,16 @@ public final class SignInPresenter extends BasePresenter<SignInView> {
     private static final Logger LOGGER = LoggerFactory.getLogger(SignInPresenter.class);
 
     @Inject
-    public SignInPresenter() {
+    SignInPresenter() {
     }
-    
+
     private static final String GOOGLE_TOS_URL =
             "https://www.google.com/policies/terms/";
-
-    private static final String FIREBASE_TOS_URL =
-            "https://www.firebase.com/terms/terms-of-service.html";
 
     public void onSignIn() {
         Intent intent = AuthUI.getInstance()
                 .createSignInIntentBuilder()
-                .setProviders(
-                        AuthUI.EMAIL_PROVIDER,
-                        AuthUI.FACEBOOK_PROVIDER,
-                        AuthUI.GOOGLE_PROVIDER)
+                .setProviders(AuthUI.GOOGLE_PROVIDER)
                 .setTosUrl(GOOGLE_TOS_URL)
                 .setTheme(R.style.FirebaseUI)
                 .build();
