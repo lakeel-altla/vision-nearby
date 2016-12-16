@@ -89,7 +89,7 @@ public final class UserPassingFragment extends Fragment implements UserPassingVi
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
-        View view = inflater.inflate(R.layout.fragment_history, container, false);
+        View view = inflater.inflate(R.layout.fragment_user_passing, container, false);
 
         ButterKnife.bind(this, view);
         ButterKnife.bind(presenceLayout, view.findViewById(R.id.presenceLayout));
