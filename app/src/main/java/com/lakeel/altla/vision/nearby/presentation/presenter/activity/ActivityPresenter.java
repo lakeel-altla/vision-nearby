@@ -16,6 +16,7 @@ import com.google.android.gms.common.api.GoogleApiClient;
 import com.google.android.gms.common.api.Status;
 import com.google.android.gms.nearby.Nearby;
 import com.google.android.gms.tasks.Task;
+import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.iid.FirebaseInstanceId;
 import com.lakeel.altla.cm.CmApplication;
 import com.lakeel.altla.cm.config.AccessConfig;
@@ -276,8 +277,12 @@ public final class ActivityPresenter extends BasePresenter<ActivityView> impleme
         // Unless you explicitly sign out, sign-in state continues.
         // If you want to sign out, it is necessary to both sign out FirebaseAuth and Play Service Auth.
 
+        FirebaseDatabase.getInstance().goOffline();
+
         Task<Void> task = AuthUI.getInstance().signOut(activity);
         task.addOnCompleteListener(task1 -> {
+            FirebaseDatabase.getInstance().goOnline();
+
             if (task1.isSuccessful()) {
                 onUnSubscribeInBackground();
 
@@ -290,6 +295,13 @@ public final class ActivityPresenter extends BasePresenter<ActivityView> impleme
                 getView().showSnackBar(R.string.error_not_signed_out);
             }
         });
+
+        Exception e = task.getException();
+        if (e != null) {
+            LOGGER.error("Failed to sign out", e);
+            FirebaseDatabase.getInstance().goOnline();
+            getView().showSnackBar(R.string.error_not_signed_out);
+        }
     }
 
     Single<String> savePreferenceBeaconId(String userId) {
