@@ -12,6 +12,9 @@
                 android:id="@+id/nav_nearby"
                 android:title="@string/title_nearby"/>
         <item
+            android:id="@+id/nav_information"
+            android:title="@string/title_information"/>
+        <item
                 android:id="@+id/nav_settings"
                 android:title="@string/title_settings"/>
         <item

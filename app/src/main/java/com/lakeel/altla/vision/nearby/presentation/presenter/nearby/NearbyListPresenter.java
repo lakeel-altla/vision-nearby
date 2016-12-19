@@ -12,7 +12,7 @@ import com.lakeel.altla.cm.resource.Timestamp;
 import com.lakeel.altla.library.AttachmentListener;
 import com.lakeel.altla.library.ResolutionResultCallback;
 import com.lakeel.altla.vision.nearby.R;
-import com.lakeel.altla.vision.nearby.domain.usecase.FindCmJidUseCase;
+import com.lakeel.altla.vision.nearby.domain.usecase.FindCMJidUseCase;
 import com.lakeel.altla.vision.nearby.domain.usecase.FindConfigsUseCase;
 import com.lakeel.altla.vision.nearby.domain.usecase.FindUserUseCase;
 import com.lakeel.altla.vision.nearby.domain.usecase.SaveCmFavoritesUseCase;
@@ -88,7 +88,7 @@ public final class NearbyListPresenter extends BasePresenter<NearbyListView> imp
     FindConfigsUseCase findConfigsUseCase;
 
     @Inject
-    FindCmJidUseCase findCmJidUseCase;
+    FindCMJidUseCase findCmJidUseCase;
 
     @Inject
     SaveCmFavoritesUseCase saveCmFavoritesUseCase;

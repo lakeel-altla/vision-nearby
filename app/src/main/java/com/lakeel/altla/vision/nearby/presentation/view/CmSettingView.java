@@ -1,12 +1,12 @@
 package com.lakeel.altla.vision.nearby.presentation.view;
 
-import com.lakeel.altla.vision.nearby.presentation.presenter.model.CmLinksModel;
+import com.lakeel.altla.vision.nearby.presentation.presenter.model.CmLinkModel;
 
 import android.support.annotation.StringRes;
 
 public interface CmSettingView {
 
-    void showCmPreferences(CmLinksModel model);
+    void showCmPreferences(CmLinkModel model);
 
     void updateCmApiKeyPreference(String apiKey);
 

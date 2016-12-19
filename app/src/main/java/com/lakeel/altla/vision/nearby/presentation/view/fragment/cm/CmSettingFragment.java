@@ -9,7 +9,7 @@ import android.view.MenuItem;
 import android.view.View;
 
 import com.lakeel.altla.vision.nearby.R;
-import com.lakeel.altla.vision.nearby.presentation.presenter.model.CmLinksModel;
+import com.lakeel.altla.vision.nearby.presentation.presenter.model.CmLinkModel;
 import com.lakeel.altla.vision.nearby.presentation.presenter.setting.cm.CmSettingPresenter;
 import com.lakeel.altla.vision.nearby.presentation.view.CmSettingView;
 import com.lakeel.altla.vision.nearby.presentation.view.activity.MainActivity;
@@ -99,7 +99,7 @@ public final class CmSettingFragment extends PreferenceFragmentCompat implements
     }
 
     @Override
-    public void showCmPreferences(CmLinksModel model) {
+    public void showCmPreferences(CmLinkModel model) {
         cmApiPreference.setSummary(model.mApiKey);
         cmSecretPreference.setSummary(model.mSecretKey);
         cmJidPreference.setSummary(model.mJid);

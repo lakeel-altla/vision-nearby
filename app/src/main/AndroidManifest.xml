@@ -45,6 +45,7 @@
         <service android:name=".presentation.service.LineService" />
         <service android:name=".presentation.service.HistoryService" />
         <service android:name=".presentation.service.NotificationService" />
+        <service android:name=".presentation.service.SubscribeService" />
 
         <service
             android:name=".presentation.service.AdvertiseService"

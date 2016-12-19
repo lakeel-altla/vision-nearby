@@ -7,15 +7,16 @@ import android.support.v4.app.FragmentTransaction;
 
 import com.lakeel.altla.vision.nearby.R;
 import com.lakeel.altla.vision.nearby.presentation.view.bundle.HistoryBundle;
+import com.lakeel.altla.vision.nearby.presentation.view.fragment.bluetooth.BleSettingFragment;
+import com.lakeel.altla.vision.nearby.presentation.view.fragment.cm.CmSettingFragment;
 import com.lakeel.altla.vision.nearby.presentation.view.fragment.device.DeviceListFragment;
 import com.lakeel.altla.vision.nearby.presentation.view.fragment.estimation.DistanceEstimationFragment;
 import com.lakeel.altla.vision.nearby.presentation.view.fragment.favorite.FavoriteListFragment;
 import com.lakeel.altla.vision.nearby.presentation.view.fragment.history.HistoryFragment;
+import com.lakeel.altla.vision.nearby.presentation.view.fragment.information.InformationFragment;
+import com.lakeel.altla.vision.nearby.presentation.view.fragment.line.LineSettingFragment;
 import com.lakeel.altla.vision.nearby.presentation.view.fragment.nearby.NearbyListFragment;
 import com.lakeel.altla.vision.nearby.presentation.view.fragment.setting.SettingFragment;
-import com.lakeel.altla.vision.nearby.presentation.view.fragment.bluetooth.BleSettingFragment;
-import com.lakeel.altla.vision.nearby.presentation.view.fragment.cm.CmSettingFragment;
-import com.lakeel.altla.vision.nearby.presentation.view.fragment.line.LineSettingFragment;
 import com.lakeel.altla.vision.nearby.presentation.view.fragment.signin.SignInFragment;
 import com.lakeel.altla.vision.nearby.presentation.view.fragment.tracking.TrackingFragment;
 import com.lakeel.altla.vision.nearby.presentation.view.fragment.user.UserPassingFragment;
@@ -42,6 +43,8 @@ public final class FragmentController {
     private final String DISTANCE_ESTIMATION_FRAGMENT_TAG = DistanceEstimationFragment.class.getSimpleName();
 
     private final String USER_PROFILE_FRAGMENT_TAG = UserProfileFragment.class.getSimpleName();
+
+    private final String INFORMATION_FRAGMENT_TAG = InformationFragment.class.getSimpleName();
 
     private final String SETTING_FRAGMENT_TAG = SettingFragment.class.getSimpleName();
 
@@ -115,6 +118,11 @@ public final class FragmentController {
     public void showCmSettingsFragment() {
         CmSettingFragment fragment = CmSettingFragment.newInstance();
         replaceFragment(R.id.fragmentPlaceholder, fragment, SETTING_CM_FRAGMENT_TAG);
+    }
+
+    public void showInformationFragment() {
+        InformationFragment fragment = InformationFragment.newInstance();
+        replaceFragment(R.id.fragmentPlaceholder, fragment, INFORMATION_FRAGMENT_TAG);
     }
 
     public void showSettingsFragment() {

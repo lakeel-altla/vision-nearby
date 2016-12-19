@@ -23,7 +23,7 @@ import com.lakeel.altla.library.ResolutionResultCallback;
 import com.lakeel.altla.vision.nearby.R;
 import com.lakeel.altla.vision.nearby.core.StringUtils;
 import com.lakeel.altla.vision.nearby.domain.usecase.FindBeaconIdUseCase;
-import com.lakeel.altla.vision.nearby.domain.usecase.FindCmLinkUseCase;
+import com.lakeel.altla.vision.nearby.domain.usecase.FindCMLinkUseCase;
 import com.lakeel.altla.vision.nearby.domain.usecase.FindPreferencesUseCase;
 import com.lakeel.altla.vision.nearby.domain.usecase.FindTokenUseCase;
 import com.lakeel.altla.vision.nearby.domain.usecase.ObservePresenceUseCase;
@@ -66,7 +66,7 @@ public final class ActivityPresenter extends BasePresenter<ActivityView> impleme
     ObservePresenceUseCase observePresenceUseCase;
 
     @Inject
-    FindCmLinkUseCase findCmLinkUseCase;
+    FindCMLinkUseCase findCmLinkUseCase;
 
     @Inject
     FindBeaconIdUseCase findBeaconIdUseCase;
@@ -159,9 +159,10 @@ public final class ActivityPresenter extends BasePresenter<ActivityView> impleme
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribe(entity -> {
                     if (entity.isSubscribeInBackgroundEnabled) {
-                        onSubscribeInBackground();
+                        getView().startSubscribeService();
+//                        onSubscribeInBackground();
                     } else {
-                        onUnSubscribeInBackground();
+//                        onUnSubscribeInBackground();
                     }
                 }, e -> LOGGER.error("Failed to find preference settings.", e));
 

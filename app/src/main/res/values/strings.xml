@@ -33,6 +33,7 @@
     <string name="title_cm_settings">COMPANY Messenger Settings</string>
     <string name="title_cloud_tracking">Cloud Tracking</string>
     <string name="title_devices">Devices</string>
+    <string name="title_information">Information</string>
     <string name="title_find_nearby_device">Find Nearby Device</string>
     <string name="title_search">Search</string>
     <string name="title_recently">Recently</string>

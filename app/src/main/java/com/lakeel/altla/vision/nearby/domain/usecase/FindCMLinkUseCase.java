@@ -1,19 +1,19 @@
 package com.lakeel.altla.vision.nearby.domain.usecase;
 
 import com.lakeel.altla.vision.nearby.data.entity.CmLinkEntity;
-import com.lakeel.altla.vision.nearby.domain.repository.FirebaseCmLinksRepository;
+import com.lakeel.altla.vision.nearby.domain.repository.FirebaseCMLinksRepository;
 
 import javax.inject.Inject;
 
 import rx.Single;
 
-public final class FindCmLinkUseCase {
+public final class FindCMLinkUseCase {
 
     @Inject
-    FirebaseCmLinksRepository repository;
+    FirebaseCMLinksRepository repository;
 
     @Inject
-    FindCmLinkUseCase() {
+    FindCMLinkUseCase() {
     }
 
     public Single<CmLinkEntity> execute(String userId) {

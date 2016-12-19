@@ -4,7 +4,7 @@ import com.lakeel.altla.vision.nearby.data.entity.CmLinkEntity;
 
 import rx.Single;
 
-public interface FirebaseCmLinksRepository {
+public interface FirebaseCMLinksRepository {
 
     Single<String> findJidByUserId(String userId);
 

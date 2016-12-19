@@ -3,7 +3,7 @@ package com.lakeel.altla.vision.nearby.presentation.presenter.user;
 import com.lakeel.altla.cm.resource.Timestamp;
 import com.lakeel.altla.vision.nearby.R;
 import com.lakeel.altla.vision.nearby.core.StringUtils;
-import com.lakeel.altla.vision.nearby.domain.usecase.FindCmJidUseCase;
+import com.lakeel.altla.vision.nearby.domain.usecase.FindCMJidUseCase;
 import com.lakeel.altla.vision.nearby.domain.usecase.FindConfigsUseCase;
 import com.lakeel.altla.vision.nearby.domain.usecase.FindLineLinkUseCase;
 import com.lakeel.altla.vision.nearby.domain.usecase.FindPresenceUseCase;
@@ -47,7 +47,7 @@ public final class UserProfilePresenter extends BasePresenter<UserProfileView> {
     FindUserBeaconsUseCase findUserBeaconsUseCase;
 
     @Inject
-    FindCmJidUseCase findCmJidUseCase;
+    FindCMJidUseCase findCmJidUseCase;
 
     @Inject
     SaveCmFavoritesUseCase saveCmFavoritesUseCase;

@@ -32,9 +32,10 @@ import com.lakeel.altla.vision.nearby.presentation.di.module.ActivityModule;
 import com.lakeel.altla.vision.nearby.presentation.intent.IntentKey;
 import com.lakeel.altla.vision.nearby.presentation.presenter.activity.ActivityPresenter;
 import com.lakeel.altla.vision.nearby.presentation.service.AdvertiseService;
+import com.lakeel.altla.vision.nearby.presentation.service.SubscribeService;
 import com.lakeel.altla.vision.nearby.presentation.view.ActivityView;
-import com.lakeel.altla.vision.nearby.presentation.view.layout.DrawerHeaderLayout;
 import com.lakeel.altla.vision.nearby.presentation.view.fragment.FragmentController;
+import com.lakeel.altla.vision.nearby.presentation.view.layout.DrawerHeaderLayout;
 import com.nostra13.universalimageloader.core.ImageLoader;
 
 import org.slf4j.Logger;
@@ -180,6 +181,11 @@ public class MainActivity extends AppCompatActivity
                 controller.showNearbyListFragment();
                 break;
             }
+            case R.id.nav_information: {
+                FragmentController controller = new FragmentController(getSupportFragmentManager());
+                controller.showInformationFragment();
+                break;
+            }
             case R.id.nav_settings: {
                 FragmentController controller = new FragmentController(getSupportFragmentManager());
                 controller.showSettingsFragment();
@@ -249,6 +255,11 @@ public class MainActivity extends AppCompatActivity
     public void startAdvertiseService(String beaconId) {
         Intent intent = new Intent(getApplicationContext(), AdvertiseService.class);
         intent.putExtra(IntentKey.BEACON_ID.name(), beaconId);
+        getApplicationContext().startService(intent);
+    }
+
+    public void startSubscribeService() {
+        Intent intent = new Intent(getApplicationContext(), SubscribeService.class);
         getApplicationContext().startService(intent);
     }
 

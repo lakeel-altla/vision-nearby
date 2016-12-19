@@ -2,7 +2,7 @@ package com.lakeel.altla.vision.nearby.presentation.presenter.setting.cm;
 
 import com.lakeel.altla.vision.nearby.R;
 import com.lakeel.altla.vision.nearby.data.entity.CmLinkEntity;
-import com.lakeel.altla.vision.nearby.domain.usecase.FindCmLinkUseCase;
+import com.lakeel.altla.vision.nearby.domain.usecase.FindCMLinkUseCase;
 import com.lakeel.altla.vision.nearby.domain.usecase.FindConfigsUseCase;
 import com.lakeel.altla.vision.nearby.domain.usecase.SaveCmApiKeyUseCase;
 import com.lakeel.altla.vision.nearby.domain.usecase.SaveCmJidUseCase;
@@ -28,7 +28,7 @@ public final class CmSettingPresenter extends BasePresenter<CmSettingView> {
     FindConfigsUseCase findConfigsUseCase;
 
     @Inject
-    FindCmLinkUseCase findCmLinkUseCase;
+    FindCMLinkUseCase findCmLinkUseCase;
 
     @Inject
     SaveCmApiKeyUseCase saveCmApiKeyUseCase;

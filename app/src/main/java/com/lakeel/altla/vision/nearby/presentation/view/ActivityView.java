@@ -1,11 +1,9 @@
 package com.lakeel.altla.vision.nearby.presentation.view;
 
+import android.support.annotation.StringRes;
+
 import com.google.android.gms.common.ConnectionResult;
 import com.google.android.gms.common.api.Status;
-
-import com.lakeel.altla.vision.nearby.presentation.presenter.model.PreferenceModel;
-
-import android.support.annotation.StringRes;
 
 public interface ActivityView extends BaseView {
 
@@ -24,6 +22,8 @@ public interface ActivityView extends BaseView {
     void showBleEnabledActivity();
 
     void startAdvertiseService(String beaconId);
+
+    void startSubscribeService();
 
     void showAccessFineLocationPermissionSystemDialog();
 
