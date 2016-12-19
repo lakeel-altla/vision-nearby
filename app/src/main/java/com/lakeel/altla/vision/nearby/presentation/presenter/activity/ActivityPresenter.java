@@ -16,7 +16,6 @@ import com.google.android.gms.common.api.GoogleApiClient;
 import com.google.android.gms.common.api.Status;
 import com.google.android.gms.nearby.Nearby;
 import com.google.android.gms.tasks.Task;
-import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.iid.FirebaseInstanceId;
 import com.lakeel.altla.cm.CmApplication;
 import com.lakeel.altla.cm.config.AccessConfig;
@@ -28,6 +27,7 @@ import com.lakeel.altla.vision.nearby.domain.usecase.FindCmLinkUseCase;
 import com.lakeel.altla.vision.nearby.domain.usecase.FindPreferencesUseCase;
 import com.lakeel.altla.vision.nearby.domain.usecase.FindTokenUseCase;
 import com.lakeel.altla.vision.nearby.domain.usecase.ObservePresenceUseCase;
+import com.lakeel.altla.vision.nearby.domain.usecase.OfflineUseCase;
 import com.lakeel.altla.vision.nearby.domain.usecase.SaveBeaconUseCase;
 import com.lakeel.altla.vision.nearby.domain.usecase.SavePreferenceBeaconIdUseCase;
 import com.lakeel.altla.vision.nearby.domain.usecase.SaveTokenUseCase;
@@ -85,6 +85,9 @@ public final class ActivityPresenter extends BasePresenter<ActivityView> impleme
 
     @Inject
     SaveTokenUseCase saveTokenUseCase;
+
+    @Inject
+    OfflineUseCase offlineUseCase;
 
     private static final Logger LOGGER = LoggerFactory.getLogger(ActivityPresenter.class);
 
@@ -201,7 +204,7 @@ public final class ActivityPresenter extends BasePresenter<ActivityView> impleme
                 .execute(MyUser.getUid())
                 .flatMap(beaconId -> {
                     if (StringUtils.isEmpty(beaconId))
-                        return savePreferenceBeaconId(MyUser.getUid());
+                        return saveBeaconId(MyUser.getUid());
                     return Single.just(beaconId);
                 })
                 .flatMap(beaconId -> saveUserBeacon(MyUser.getUid(), beaconId))
@@ -273,38 +276,38 @@ public final class ActivityPresenter extends BasePresenter<ActivityView> impleme
     }
 
     public void onSignOut(@NonNull Activity activity) {
+        RunningService runningService = new RunningService(context, AdvertiseService.class);
+        runningService.stop();
 
-        // Unless you explicitly sign out, sign-in state continues.
-        // If you want to sign out, it is necessary to both sign out FirebaseAuth and Play Service Auth.
+        Subscription subscription = offlineUseCase
+                .execute(MyUser.getUid())
+                .subscribeOn(Schedulers.io())
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribe(e -> LOGGER.error("Failed to save offline status.", e),
+                        () -> {
+                            // Unless you explicitly sign out, sign-in state continues.
+                            // If you want to sign out, it is necessary to both sign out FirebaseAuth and Play Service Auth.
+                            Task<Void> task = AuthUI.getInstance().signOut(activity);
+                            task.addOnCompleteListener(result -> {
+                                if (result.isSuccessful()) {
+                                    onUnSubscribeInBackground();
+                                    getView().showSignInFragment();
+                                } else {
+                                    LOGGER.error("Failed to sign out.", result.getException());
+                                    getView().showSnackBar(R.string.error_not_signed_out);
+                                }
+                            });
 
-        FirebaseDatabase.getInstance().goOffline();
-
-        Task<Void> task = AuthUI.getInstance().signOut(activity);
-        task.addOnCompleteListener(task1 -> {
-            FirebaseDatabase.getInstance().goOnline();
-
-            if (task1.isSuccessful()) {
-                onUnSubscribeInBackground();
-
-                RunningService runningService = new RunningService(context, AdvertiseService.class);
-                runningService.stop();
-
-                getView().showSignInFragment();
-            } else {
-                LOGGER.error("Failed to sign out", task1.getException());
-                getView().showSnackBar(R.string.error_not_signed_out);
-            }
-        });
-
-        Exception e = task.getException();
-        if (e != null) {
-            LOGGER.error("Failed to sign out", e);
-            FirebaseDatabase.getInstance().goOnline();
-            getView().showSnackBar(R.string.error_not_signed_out);
-        }
+                            Exception e = task.getException();
+                            if (e != null) {
+                                LOGGER.error("Failed to sign out.", e);
+                                getView().showSnackBar(R.string.error_not_signed_out);
+                            }
+                        });
+        subscriptions.add(subscription);
     }
 
-    Single<String> savePreferenceBeaconId(String userId) {
+    Single<String> saveBeaconId(String userId) {
         return savePreferenceBeaconIdUseCase.execute(userId).subscribeOn(Schedulers.io());
     }
 
