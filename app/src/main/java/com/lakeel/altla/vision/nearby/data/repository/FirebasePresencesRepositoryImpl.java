@@ -52,14 +52,14 @@ public class FirebasePresencesRepositoryImpl implements FirebasePresencesReposit
             Task task = reference
                     .child(userId)
                     .child(IS_CONNECTED_KEY)
-                    .setValue(false)
-                    .addOnSuccessListener(aVoid -> subscriber.onCompleted())
-                    .addOnFailureListener(subscriber::onError);
+                    .setValue(false);
 
             Exception e = task.getException();
             if (e != null) {
                 subscriber.onError(e);
             }
+
+            subscriber.onCompleted();
         });
     }
 

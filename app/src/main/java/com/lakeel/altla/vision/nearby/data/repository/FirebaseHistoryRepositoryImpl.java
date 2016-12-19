@@ -15,14 +15,13 @@ import com.lakeel.altla.vision.nearby.data.execption.DataStoreException;
 import com.lakeel.altla.vision.nearby.data.mapper.HistoryEntityMapper;
 import com.lakeel.altla.vision.nearby.domain.repository.FirebaseHistoryRepository;
 
-import java.util.HashMap;
+import java.util.Map;
 
 import javax.inject.Inject;
 
 import rx.Completable;
 import rx.Observable;
 import rx.Single;
-import rx.SingleSubscriber;
 import rx.Subscriber;
 
 public class FirebaseHistoryRepositoryImpl implements FirebaseHistoryRepository {
@@ -30,10 +29,6 @@ public class FirebaseHistoryRepositoryImpl implements FirebaseHistoryRepository 
     private static final String ID_KEY = "userId";
 
     private static final String TIMESTAMP_KEY = "passingTime";
-
-    private static final String LOCATION_KEY = "location";
-
-    private static final String TEXT_KEY = "text";
 
     private DatabaseReference reference;
 
@@ -95,24 +90,21 @@ public class FirebaseHistoryRepositoryImpl implements FirebaseHistoryRepository 
 
     @Override
     public Single<String> saveHistory(String myUserId, String otherUserId) {
-        return Single.create(new Single.OnSubscribe<String>() {
-            @Override
-            public void call(SingleSubscriber<? super String> subscriber) {
-                HistoryEntity entity = entityMapper.map(otherUserId);
+        return Single.create(subscriber -> {
+            HistoryEntity entity = entityMapper.map(otherUserId);
 
-                DatabaseReference pushedReference = reference.child(myUserId).push();
-                String uniqueId = pushedReference.getKey();
+            DatabaseReference pushedReference = reference.child(myUserId).push();
+            String uniqueId = pushedReference.getKey();
 
-                Task<Void> task = pushedReference
-                        .setValue(entity.toMap())
-                        .addOnSuccessListener(aVoid -> subscriber.onSuccess(uniqueId))
-                        .addOnFailureListener(subscriber::onError);
+            Task<Void> task = pushedReference
+                    .setValue(entity.toMap());
 
-                Exception exception = task.getException();
-                if (exception != null) {
-                    throw new DataStoreException(exception);
-                }
+            Exception exception = task.getException();
+            if (exception != null) {
+                throw new DataStoreException(exception);
             }
+
+            subscriber.onSuccess(uniqueId);
         });
     }
 
@@ -120,18 +112,19 @@ public class FirebaseHistoryRepositoryImpl implements FirebaseHistoryRepository 
     public Single<HistoryEntity> saveDetectedActivity(String uniqueId, String userId, DetectedActivity detectedActivity) {
         return Single.create(subscriber -> {
             HistoryEntity entity = entityMapper.map(detectedActivity);
+            Map<String, Object> map = entity.toUserActivityMap();
 
             Task<Void> task = reference
                     .child(userId)
                     .child(uniqueId)
-                    .updateChildren(entity.toUserActivityMap())
-                    .addOnSuccessListener(aVoid -> subscriber.onSuccess(entity))
-                    .addOnFailureListener(subscriber::onError);
+                    .updateChildren(map);
 
             Exception exception = task.getException();
             if (exception != null) {
                 throw new DataStoreException(exception);
             }
+
+            subscriber.onSuccess(entity);
         });
     }
 
@@ -139,18 +132,19 @@ public class FirebaseHistoryRepositoryImpl implements FirebaseHistoryRepository 
     public Single<HistoryEntity> saveCurrentLocation(String uniqueId, String userId, Location location) {
         return Single.create(subscriber -> {
             HistoryEntity entity = entityMapper.map(location);
+            Map<String, Object> map = entity.toLocationMap();
 
             Task<Void> task = reference
                     .child(userId)
                     .child(uniqueId)
-                    .updateChildren(entity.toLocationMap())
-                    .addOnSuccessListener(aVoid -> subscriber.onSuccess(entity))
-                    .addOnFailureListener(subscriber::onError);
+                    .updateChildren(map);
 
             Exception exception = task.getException();
             if (exception != null) {
                 throw new DataStoreException(exception);
             }
+
+            subscriber.onSuccess(entity);
         });
     }
 
@@ -158,40 +152,19 @@ public class FirebaseHistoryRepositoryImpl implements FirebaseHistoryRepository 
     public Single<HistoryEntity> saveWeather(String uniqueId, String userId, Weather weather) {
         return Single.create(subscriber -> {
             HistoryEntity entity = entityMapper.map(weather);
+            Map<String, Object> map = entity.toWeatherMap();
 
             Task<Void> task = reference
                     .child(userId)
                     .child(uniqueId)
-                    .updateChildren(entity.toWeatherMap())
-                    .addOnSuccessListener(aVoid -> subscriber.onSuccess(entity))
-                    .addOnFailureListener(subscriber::onError);
+                    .updateChildren(map);
 
             Exception exception = task.getException();
             if (exception != null) {
                 throw new DataStoreException(exception);
             }
-        });
-    }
 
-    @Override
-    public Single<String> saveLocationText(String key, String userId, String language, String locationText) {
-        return Single.create(subscriber -> {
-            HashMap<String, Object> value = new HashMap<>();
-            value.put(language, locationText);
-
-            Task task = reference
-                    .child(userId)
-                    .child(key)
-                    .child(LOCATION_KEY)
-                    .child(TEXT_KEY)
-                    .updateChildren(value)
-                    .addOnSuccessListener(aVoid -> subscriber.onSuccess(locationText))
-                    .addOnFailureListener(subscriber::onError);
-
-            Exception exception = task.getException();
-            if (exception != null) {
-                throw new DataStoreException(exception);
-            }
+            subscriber.onSuccess(entity);
         });
     }
 
@@ -201,14 +174,14 @@ public class FirebaseHistoryRepositoryImpl implements FirebaseHistoryRepository 
             Task task = reference.
                     child(userId)
                     .child(uniqueKey)
-                    .removeValue()
-                    .addOnSuccessListener(aVoid -> subscriber.onCompleted())
-                    .addOnFailureListener(subscriber::onError);
+                    .removeValue();
 
             Exception e = task.getException();
             if (e != null) {
                 subscriber.onError(e);
             }
+
+            subscriber.onCompleted();
         });
     }
 }

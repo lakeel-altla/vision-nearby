@@ -13,7 +13,6 @@ import com.lakeel.altla.vision.nearby.domain.repository.FirebaseCmLinksRepositor
 import javax.inject.Inject;
 
 import rx.Single;
-import rx.SingleSubscriber;
 
 public final class FirebaseCmLinksRepositoryImpl implements FirebaseCmLinksRepository {
 
@@ -65,61 +64,52 @@ public final class FirebaseCmLinksRepositoryImpl implements FirebaseCmLinksRepos
 
     @Override
     public Single<String> saveApiKey(String userId, String apiKey) {
-        return Single.create(new Single.OnSubscribe<String>() {
-            @Override
-            public void call(SingleSubscriber<? super String> subscriber) {
-                Task<Void> task = reference
-                        .child(userId)
-                        .child(KEY_API_KEY)
-                        .setValue(apiKey)
-                        .addOnSuccessListener(aVoid -> subscriber.onSuccess(apiKey))
-                        .addOnFailureListener(subscriber::onError);
+        return Single.create(subscriber -> {
+            Task<Void> task = reference
+                    .child(userId)
+                    .child(KEY_API_KEY)
+                    .setValue(apiKey);
 
-                Exception exception = task.getException();
-                if (exception != null) {
-                    throw new DataStoreException(exception);
-                }
+            Exception exception = task.getException();
+            if (exception != null) {
+                throw new DataStoreException(exception);
             }
+
+            subscriber.onSuccess(apiKey);
         });
     }
 
     @Override
     public Single<String> saveSecretKey(String userId, String secretKey) {
-        return Single.create(new Single.OnSubscribe<String>() {
-            @Override
-            public void call(SingleSubscriber<? super String> subscriber) {
-                Task<Void> task = reference
-                        .child(userId)
-                        .child(KEY_SECRET_KEY)
-                        .setValue(secretKey)
-                        .addOnSuccessListener(aVoid -> subscriber.onSuccess(secretKey))
-                        .addOnFailureListener(subscriber::onError);
+        return Single.create(subscriber -> {
+            Task<Void> task = reference
+                    .child(userId)
+                    .child(KEY_SECRET_KEY)
+                    .setValue(secretKey);
 
-                Exception exception = task.getException();
-                if (exception != null) {
-                    throw new DataStoreException(exception);
-                }
+            Exception exception = task.getException();
+            if (exception != null) {
+                throw new DataStoreException(exception);
             }
+
+            subscriber.onSuccess(secretKey);
         });
     }
 
     @Override
     public Single<String> saveJid(String userId, String jid) {
-        return Single.create(new Single.OnSubscribe<String>() {
-            @Override
-            public void call(SingleSubscriber<? super String> subscriber) {
-                Task<Void> task = reference
-                        .child(userId)
-                        .child(KEY_JID_KEY)
-                        .setValue(jid)
-                        .addOnSuccessListener(aVoid -> subscriber.onSuccess(jid))
-                        .addOnFailureListener(subscriber::onError);
+        return Single.create(subscriber -> {
+            Task<Void> task = reference
+                    .child(userId)
+                    .child(KEY_JID_KEY)
+                    .setValue(jid);
 
-                Exception exception = task.getException();
-                if (exception != null) {
-                    throw new DataStoreException(exception);
-                }
+            Exception exception = task.getException();
+            if (exception != null) {
+                throw new DataStoreException(exception);
             }
+
+            subscriber.onSuccess(jid);
         });
     }
 }

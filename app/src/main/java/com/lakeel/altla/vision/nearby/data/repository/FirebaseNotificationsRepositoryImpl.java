@@ -32,14 +32,14 @@ public class FirebaseNotificationsRepositoryImpl implements FirebaseNotification
 
             Task task = reference
                     .push()
-                    .setValue(map)
-                    .addOnSuccessListener(aVoid -> subscriber.onSuccess(entity))
-                    .addOnFailureListener(subscriber::onError);
+                    .setValue(map);
 
             Exception exception = task.getException();
             if (exception != null) {
                 subscriber.onError(exception);
             }
+
+            subscriber.onSuccess(entity);
         });
     }
 }

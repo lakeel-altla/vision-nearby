@@ -18,7 +18,6 @@ import javax.inject.Inject;
 
 import rx.Completable;
 import rx.Single;
-import rx.SingleSubscriber;
 
 public class FirebaseBeaconsRepositoryImpl implements FirebaseBeaconsRepository {
 
@@ -35,23 +34,20 @@ public class FirebaseBeaconsRepositoryImpl implements FirebaseBeaconsRepository 
 
     @Override
     public Single<String> saveBeacon(String beaconId, String userId, String name) {
-        return Single.create(new Single.OnSubscribe<String>() {
-            @Override
-            public void call(SingleSubscriber<? super String> subscriber) {
-                BeaconEntity entity = entityMapper.map(userId, name);
-                Map<String, Object> map = entity.toMap();
+        return Single.create(subscriber -> {
+            BeaconEntity entity = entityMapper.map(userId, name);
+            Map<String, Object> map = entity.toMap();
 
-                Task task = reference
-                        .child(beaconId)
-                        .updateChildren(map)
-                        .addOnSuccessListener(aVoid -> subscriber.onSuccess(beaconId))
-                        .addOnFailureListener(subscriber::onError);
+            Task task = reference
+                    .child(beaconId)
+                    .updateChildren(map);
 
-                Exception e = task.getException();
-                if (e != null) {
-                    throw new DataStoreException(e);
-                }
+            Exception e = task.getException();
+            if (e != null) {
+                throw new DataStoreException(e);
             }
+
+            subscriber.onSuccess(beaconId);
         });
     }
 
@@ -76,18 +72,18 @@ public class FirebaseBeaconsRepositoryImpl implements FirebaseBeaconsRepository 
     }
 
     @Override
-    public Single<String> removeBeaconByBeaconId(String beaconId) {
+    public Single<String> removeBeacon(String beaconId) {
         return Single.create(subscriber -> {
             Task task = reference
                     .child(beaconId)
-                    .removeValue()
-                    .addOnSuccessListener(aVoid -> subscriber.onSuccess(beaconId))
-                    .addOnFailureListener(subscriber::onError);
+                    .removeValue();
 
             Exception e = task.getException();
             if (e != null) {
                 subscriber.onError(e);
             }
+
+            subscriber.onSuccess(beaconId);
         });
     }
 

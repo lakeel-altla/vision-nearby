@@ -31,14 +31,14 @@ public final class FirebaseTokensRepositoryImpl implements FirebaseTokensReposit
             Task task = reference
                     .child(userId)
                     .child(beaconId)
-                    .setValue(token)
-                    .addOnSuccessListener(aVoid -> subscriber.onSuccess(token))
-                    .addOnFailureListener(subscriber::onError);
+                    .setValue(token);
 
             Exception e = task.getException();
             if (e != null) {
                 throw new DataStoreException(e);
             }
+
+            subscriber.onSuccess(token);
         });
     }
 
@@ -74,7 +74,8 @@ public final class FirebaseTokensRepositoryImpl implements FirebaseTokensReposit
                                 for (DataSnapshot snapshot : dataSnapshot.getChildren()) {
                                     TokenEntity entity = new TokenEntity();
                                     entity.beaconId = snapshot.getKey();
-                                    entity.token = (String) snapshot.getValue();;
+                                    entity.token = (String) snapshot.getValue();
+                                    ;
                                     subscriber.onNext(entity);
                                 }
                                 subscriber.onCompleted();

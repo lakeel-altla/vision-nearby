@@ -41,14 +41,14 @@ public final class FirebaseUsersRepositoryImpl implements FirebaseUsersRepositor
             Map<String, Object> map = entityMapper.map();
             Task task = reference
                     .child(userId)
-                    .updateChildren(map)
-                    .addOnSuccessListener(aVoid -> subscriber.onCompleted())
-                    .addOnFailureListener(subscriber::onError);
+                    .updateChildren(map);
 
             Exception e = task.getException();
             if (e != null) {
                 throw new DataStoreException(e);
             }
+
+            subscriber.onCompleted();
         });
     }
 
@@ -60,12 +60,17 @@ public final class FirebaseUsersRepositoryImpl implements FirebaseUsersRepositor
                 Map<String, Object> map = new HashMap<>();
                 map.put(beaconId, true);
 
-                reference
+                Task task = reference
                         .child(userId)
                         .child(KEY_BEACONS)
-                        .updateChildren(map)
-                        .addOnSuccessListener(aVoid -> subscriber.onSuccess(beaconId))
-                        .addOnFailureListener(subscriber::onError);
+                        .updateChildren(map);
+
+                Exception e = task.getException();
+                if (e != null) {
+                    subscriber.onError(e);
+                }
+
+                subscriber.onSuccess(beaconId);
             }
         });
     }
@@ -104,14 +109,14 @@ public final class FirebaseUsersRepositoryImpl implements FirebaseUsersRepositor
                     .child(userId)
                     .child(KEY_BEACONS)
                     .child(beaconId)
-                    .removeValue()
-                    .addOnSuccessListener(aVoid -> subscriber.onSuccess(beaconId))
-                    .addOnFailureListener(subscriber::onError);
+                    .removeValue();
 
             Exception e = task.getException();
             if (e != null) {
                 subscriber.onError(e);
             }
+
+            subscriber.onSuccess(beaconId);
         });
     }
 

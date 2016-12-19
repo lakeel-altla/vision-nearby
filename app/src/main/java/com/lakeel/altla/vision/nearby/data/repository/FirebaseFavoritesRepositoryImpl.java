@@ -88,29 +88,31 @@ public class FirebaseFavoritesRepositoryImpl implements FirebaseFavoritesReposit
             Task<Void> task = reference
                     .child(myUserId)
                     .child(otherUserId)
-                    .setValue(true)
-                    .addOnSuccessListener(aVoid -> subscriber.onCompleted())
-                    .addOnFailureListener(subscriber::onError);
+                    .setValue(true);
 
             Exception exception = task.getException();
             if (exception != null) {
                 throw new DataStoreException(exception);
             }
+
+            subscriber.onCompleted();
         });
     }
 
     @Override
     public Completable removeFavorite(String userId, String otherUserId) {
-        return Completable.create(subscriber ->
-                reference
-                        .child(userId)
-                        .child(otherUserId)
-                        .removeValue((databaseError, databaseReference) -> {
-                            if (databaseError == null) {
-                                subscriber.onCompleted();
-                            } else {
-                                subscriber.onError(databaseError.toException());
-                            }
-                        }));
+        return Completable.create(subscriber -> {
+            Task task = reference
+                    .child(userId)
+                    .child(otherUserId)
+                    .removeValue();
+
+            Exception e = task.getException();
+            if (e != null) {
+                subscriber.onError(e);
+            }
+
+            subscriber.onCompleted();
+        });
     }
 }

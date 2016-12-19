@@ -24,7 +24,5 @@ public interface FirebaseHistoryRepository {
 
     Single<HistoryEntity> saveWeather(String uniqueId, String userId, Weather weather);
 
-    Single<String> saveLocationText(String key, String userId, String language, String locationText);
-
     Completable removeByUniqueKey(String userId, String uniqueKey);
 }

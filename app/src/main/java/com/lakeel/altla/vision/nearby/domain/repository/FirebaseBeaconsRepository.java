@@ -11,7 +11,7 @@ public interface FirebaseBeaconsRepository {
 
     Single<BeaconEntity> findBeacon(String beaconId);
 
-    Single<String> removeBeaconByBeaconId(String beaconId);
+    Single<String> removeBeacon(String beaconId);
 
     Completable lostDevice(String beaconId);
 

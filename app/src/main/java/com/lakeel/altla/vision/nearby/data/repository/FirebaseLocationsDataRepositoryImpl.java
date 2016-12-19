@@ -68,14 +68,14 @@ public final class FirebaseLocationsDataRepositoryImpl implements FirebaseLocati
             LocationDataEntity entity = entityMapper.map(beaconId);
             Task task = reference
                     .child(uniqueId)
-                    .setValue(entity.toMap())
-                    .addOnSuccessListener(aVoid -> subscriber.onSuccess(entity))
-                    .addOnFailureListener(subscriber::onError);
+                    .setValue(entity.toMap());
 
             Exception exception = task.getException();
             if (exception != null) {
                 subscriber.onError(new DataStoreException(exception));
             }
+
+            subscriber.onSuccess(entity);
         });
     }
 }

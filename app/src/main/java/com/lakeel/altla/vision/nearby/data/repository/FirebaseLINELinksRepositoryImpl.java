@@ -8,6 +8,7 @@ import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
 import com.lakeel.altla.vision.nearby.data.entity.LineLinkEntity;
 import com.lakeel.altla.vision.nearby.data.execption.DataStoreException;
+import com.lakeel.altla.vision.nearby.data.mapper.LineLinkEntityMapper;
 import com.lakeel.altla.vision.nearby.domain.repository.FirebaseLineLinksRepository;
 
 import java.util.Iterator;
@@ -22,6 +23,8 @@ public class FirebaseLineLinksRepositoryImpl implements FirebaseLineLinksReposit
 
     private static final String URL_KEY = "url";
 
+    private LineLinkEntityMapper entityMapper = new LineLinkEntityMapper();
+
     private DatabaseReference reference;
 
     @Inject
@@ -32,19 +35,18 @@ public class FirebaseLineLinksRepositoryImpl implements FirebaseLineLinksReposit
     @Override
     public Single<String> saveUrl(String userId, String url) {
         return Single.create(subscriber -> {
-            LineLinkEntity entity = new LineLinkEntity();
-            entity.url = url;
+            LineLinkEntity entity = entityMapper.map(url);
 
             Task<Void> task = reference
                     .child(userId)
-                    .setValue(entity)
-                    .addOnSuccessListener(aVoid -> subscriber.onSuccess(url))
-                    .addOnFailureListener(subscriber::onError);
+                    .setValue(entity);
 
             Exception exception = task.getException();
             if (exception != null) {
                 throw new DataStoreException(exception);
             }
+
+            subscriber.onSuccess(url);
         });
     }
 

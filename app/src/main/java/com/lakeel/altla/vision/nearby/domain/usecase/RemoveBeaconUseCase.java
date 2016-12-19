@@ -4,7 +4,6 @@ import com.lakeel.altla.vision.nearby.domain.repository.FirebaseBeaconsRepositor
 
 import javax.inject.Inject;
 
-import rx.Completable;
 import rx.Single;
 
 public final class RemoveBeaconUseCase {
@@ -17,6 +16,6 @@ public final class RemoveBeaconUseCase {
     }
 
     public Single<String> execute(String beaconId) {
-        return repository.removeBeaconByBeaconId(beaconId);
+        return repository.removeBeacon(beaconId);
     }
 }
