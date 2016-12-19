@@ -64,7 +64,7 @@ public final class InformationAdapter extends RecyclerView.Adapter<InformationAd
 
         private InformationPresenter.InformationItemPresenter itemPresenter;
 
-        public InformationViewHolder(View itemView) {
+        InformationViewHolder(View itemView) {
             super(itemView);
             ButterKnife.bind(this, itemView);
 
