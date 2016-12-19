@@ -60,6 +60,8 @@ public final class InformationAdapter extends RecyclerView.Adapter<InformationAd
 
         private ExpandAnimation expandAnimation;
 
+        private boolean isViewExpanded = false;
+
         private InformationPresenter.InformationItemPresenter itemPresenter;
 
         public InformationViewHolder(View itemView) {
@@ -94,7 +96,12 @@ public final class InformationAdapter extends RecyclerView.Adapter<InformationAd
 
         @Override
         public void onClick(View view) {
-            expandAnimation.start();
+            if (isViewExpanded) {
+                expandAnimation.close();
+            } else {
+                expandAnimation.show();
+            }
+            isViewExpanded = !isViewExpanded;
         }
     }
 }
