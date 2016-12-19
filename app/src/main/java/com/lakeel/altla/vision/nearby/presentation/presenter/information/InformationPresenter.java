@@ -16,6 +16,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 
 import javax.inject.Inject;
@@ -47,6 +48,8 @@ public final class InformationPresenter extends BasePresenter<InformationView> {
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribe(models -> {
+                    Collections.reverse(models);
+
                     this.models.clear();
                     this.models.addAll(models);
 

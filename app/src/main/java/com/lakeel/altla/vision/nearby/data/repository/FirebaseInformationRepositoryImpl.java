@@ -19,8 +19,6 @@ import rx.Observable;
 
 public class FirebaseInformationRepositoryImpl implements FirebaseInformationRepository {
 
-    private static final String KEY_POST_TIME = "postTime";
-
     private DatabaseReference reference;
 
     private InformationEntityMapper entityMapper = new InformationEntityMapper();
@@ -55,7 +53,6 @@ public class FirebaseInformationRepositoryImpl implements FirebaseInformationRep
         return Observable.create(subscriber -> {
             reference
                     .child(userId)
-                    .orderByChild(KEY_POST_TIME)
                     .addListenerForSingleValueEvent(new ValueEventListener() {
                         @Override
                         public void onDataChange(DataSnapshot dataSnapshot) {
