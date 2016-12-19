@@ -23,7 +23,7 @@ import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.MarkerOptions;
 import com.lakeel.altla.vision.nearby.R;
 import com.lakeel.altla.vision.nearby.presentation.constants.AppColor;
-import com.lakeel.altla.vision.nearby.presentation.constants.BundleKey;
+import com.lakeel.altla.vision.nearby.presentation.constants.FragmentBundle;
 import com.lakeel.altla.vision.nearby.presentation.constants.Radius;
 import com.lakeel.altla.vision.nearby.presentation.intent.GoogleMapDirectionIntent;
 import com.lakeel.altla.vision.nearby.presentation.presenter.tracking.TrackingPresenter;
@@ -58,8 +58,8 @@ public final class TrackingFragment extends Fragment implements TrackingView, On
 
     public static TrackingFragment newInstance(String id, String name) {
         Bundle bundle = new Bundle();
-        bundle.putSerializable(BundleKey.BEACON_ID.getValue(), id);
-        bundle.putSerializable(BundleKey.TARGET_NAME.getValue(), name);
+        bundle.putSerializable(FragmentBundle.BEACON_ID.name(), id);
+        bundle.putSerializable(FragmentBundle.TARGET_NAME.name(), name);
 
         TrackingFragment fragment = new TrackingFragment();
         fragment.setArguments(bundle);
@@ -98,8 +98,8 @@ public final class TrackingFragment extends Fragment implements TrackingView, On
         supportMapFragment.getMapAsync(this);
 
         Bundle bundle = getArguments();
-        String beaconId = (String) bundle.get(BundleKey.BEACON_ID.getValue());
-        String beaconName = (String) bundle.get(BundleKey.TARGET_NAME.getValue());
+        String beaconId = (String) bundle.get(FragmentBundle.BEACON_ID.name());
+        String beaconName = (String) bundle.get(FragmentBundle.TARGET_NAME.name());
         presenter.setBeaconData(beaconId, beaconName);
     }
 
@@ -176,7 +176,7 @@ public final class TrackingFragment extends Fragment implements TrackingView, On
         LatLng latLng = new LatLng(location.latitude, location.longitude);
         CircleOptions circleOptions = new CircleOptions()
                 .center(latLng)
-                .strokeColor(AppColor.PRIMARY)
+                .strokeColor(AppColor.PRIMARY.getValue())
                 .radius(Radius.GOOGLE_MAP.getValue());
 
         map.addMarker(new MarkerOptions()

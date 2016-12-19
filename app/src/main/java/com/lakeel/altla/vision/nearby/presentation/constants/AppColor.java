@@ -1,9 +1,15 @@
 package com.lakeel.altla.vision.nearby.presentation.constants;
 
-public final class AppColor {
+public enum AppColor {
+    PRIMARY(android.graphics.Color.argb(100, 255, 193, 7));
 
-    private AppColor() {
+    private int value;
+
+    AppColor(int value) {
+        this.value = value;
     }
 
-    public static final int PRIMARY = android.graphics.Color.argb(100, 255, 193, 7);
+    public int getValue() {
+        return value;
+    }
 }

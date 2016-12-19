@@ -23,8 +23,8 @@ import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.MarkerOptions;
 import com.lakeel.altla.vision.nearby.R;
 import com.lakeel.altla.vision.nearby.presentation.constants.AppColor;
-import com.lakeel.altla.vision.nearby.presentation.constants.BundleKey;
 import com.lakeel.altla.vision.nearby.presentation.constants.DetectedActivity;
+import com.lakeel.altla.vision.nearby.presentation.constants.FragmentBundle;
 import com.lakeel.altla.vision.nearby.presentation.constants.Radius;
 import com.lakeel.altla.vision.nearby.presentation.constants.WeatherCondition;
 import com.lakeel.altla.vision.nearby.presentation.presenter.model.PresenceModel;
@@ -79,7 +79,7 @@ public final class UserPassingFragment extends Fragment implements UserPassingVi
 
     public static UserPassingFragment newInstance(HistoryBundle data) {
         Bundle args = new Bundle();
-        args.putSerializable(BundleKey.RECENTLY.getValue(), data);
+        args.putSerializable(FragmentBundle.HISTORY.name(), data);
 
         UserPassingFragment fragment = new UserPassingFragment();
         fragment.setArguments(args);
@@ -122,7 +122,7 @@ public final class UserPassingFragment extends Fragment implements UserPassingVi
         supportMapFragment.getMapAsync(this);
 
         Bundle bundle = getArguments();
-        HistoryBundle bundleData = (HistoryBundle) bundle.getSerializable(BundleKey.RECENTLY.getValue());
+        HistoryBundle bundleData = (HistoryBundle) bundle.getSerializable(FragmentBundle.HISTORY.name());
         if (bundleData == null) {
             throw new IllegalStateException("Bundle data is not set.");
         }
@@ -224,7 +224,7 @@ public final class UserPassingFragment extends Fragment implements UserPassingVi
         LatLng latLng = new LatLng(Double.valueOf(latitude), Double.valueOf(longitude));
         CircleOptions circleOptions = new CircleOptions()
                 .center(latLng)
-                .strokeColor(AppColor.PRIMARY)
+                .strokeColor(AppColor.PRIMARY.getValue())
                 .radius(Radius.GOOGLE_MAP.getValue());
 
         map.addMarker(new MarkerOptions()

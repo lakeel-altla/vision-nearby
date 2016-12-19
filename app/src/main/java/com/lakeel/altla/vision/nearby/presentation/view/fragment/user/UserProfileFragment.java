@@ -16,7 +16,7 @@ import android.widget.LinearLayout;
 
 import com.flipboard.bottomsheet.BottomSheetLayout;
 import com.lakeel.altla.vision.nearby.R;
-import com.lakeel.altla.vision.nearby.presentation.constants.BundleKey;
+import com.lakeel.altla.vision.nearby.presentation.constants.FragmentBundle;
 import com.lakeel.altla.vision.nearby.presentation.presenter.user.UserProfilePresenter;
 import com.lakeel.altla.vision.nearby.presentation.presenter.model.PresenceModel;
 import com.lakeel.altla.vision.nearby.presentation.presenter.model.UserModel;
@@ -44,8 +44,8 @@ public final class UserProfileFragment extends Fragment implements UserProfileVi
 
     public static UserProfileFragment newInstance(String userId, String userName) {
         Bundle args = new Bundle();
-        args.putString(BundleKey.USER_ID.getValue(), userId);
-        args.putString(BundleKey.USER_NAME.getValue(), userName);
+        args.putString(FragmentBundle.USER_ID.name(), userId);
+        args.putString(FragmentBundle.USER_NAME.name(), userName);
 
         UserProfileFragment fragment = new UserProfileFragment();
         fragment.setArguments(args);
@@ -98,8 +98,8 @@ public final class UserProfileFragment extends Fragment implements UserProfileVi
         ((MainActivity) getActivity()).setDrawerIndicatorEnabled(false);
 
         Bundle bundle = getArguments();
-        String userId = bundle.getString(BundleKey.USER_ID.getValue());
-        String userName = bundle.getString(BundleKey.USER_NAME.getValue());
+        String userId = bundle.getString(FragmentBundle.USER_ID.name());
+        String userName = bundle.getString(FragmentBundle.USER_NAME.name());
 
         getActivity().setTitle(userName);
 
