@@ -73,9 +73,10 @@ public final class FirebaseTokensRepositoryImpl implements FirebaseTokensReposit
                             public void onDataChange(DataSnapshot dataSnapshot) {
                                 for (DataSnapshot snapshot : dataSnapshot.getChildren()) {
                                     TokenEntity entity = new TokenEntity();
+                                    entity.userId = dataSnapshot.getKey();
                                     entity.beaconId = snapshot.getKey();
                                     entity.token = (String) snapshot.getValue();
-                                    ;
+
                                     subscriber.onNext(entity);
                                 }
                                 subscriber.onCompleted();

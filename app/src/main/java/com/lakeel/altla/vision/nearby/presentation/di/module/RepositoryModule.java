@@ -8,12 +8,13 @@ import com.lakeel.altla.vision.nearby.data.repository.FirebaseCmLinksRepositoryI
 import com.lakeel.altla.vision.nearby.data.repository.FirebaseConfigsRepositoryImpl;
 import com.lakeel.altla.vision.nearby.data.repository.FirebaseConnectionRepositoryImpl;
 import com.lakeel.altla.vision.nearby.data.repository.FirebaseFavoritesRepositoryImpl;
+import com.lakeel.altla.vision.nearby.data.repository.FirebaseHistoryRepositoryImpl;
+import com.lakeel.altla.vision.nearby.data.repository.FirebaseInformationRepositoryImpl;
 import com.lakeel.altla.vision.nearby.data.repository.FirebaseLineLinksRepositoryImpl;
 import com.lakeel.altla.vision.nearby.data.repository.FirebaseLocationsDataRepositoryImpl;
 import com.lakeel.altla.vision.nearby.data.repository.FirebaseLocationsRepositoryImpl;
 import com.lakeel.altla.vision.nearby.data.repository.FirebaseNotificationsRepositoryImpl;
 import com.lakeel.altla.vision.nearby.data.repository.FirebasePresencesRepositoryImpl;
-import com.lakeel.altla.vision.nearby.data.repository.FirebaseHistoryRepositoryImpl;
 import com.lakeel.altla.vision.nearby.data.repository.FirebaseTokensRepositoryImpl;
 import com.lakeel.altla.vision.nearby.data.repository.FirebaseUsersRepositoryImpl;
 import com.lakeel.altla.vision.nearby.data.repository.PreferenceRepositoryImpl;
@@ -24,12 +25,13 @@ import com.lakeel.altla.vision.nearby.domain.repository.FirebaseCmLinksRepositor
 import com.lakeel.altla.vision.nearby.domain.repository.FirebaseConfigsRepository;
 import com.lakeel.altla.vision.nearby.domain.repository.FirebaseConnectionRepository;
 import com.lakeel.altla.vision.nearby.domain.repository.FirebaseFavoritesRepository;
+import com.lakeel.altla.vision.nearby.domain.repository.FirebaseHistoryRepository;
+import com.lakeel.altla.vision.nearby.domain.repository.FirebaseInformationRepository;
 import com.lakeel.altla.vision.nearby.domain.repository.FirebaseLineLinksRepository;
 import com.lakeel.altla.vision.nearby.domain.repository.FirebaseLocationsDataRepository;
 import com.lakeel.altla.vision.nearby.domain.repository.FirebaseLocationsRepository;
 import com.lakeel.altla.vision.nearby.domain.repository.FirebaseNotificationsRepository;
 import com.lakeel.altla.vision.nearby.domain.repository.FirebasePresencesRepository;
-import com.lakeel.altla.vision.nearby.domain.repository.FirebaseHistoryRepository;
 import com.lakeel.altla.vision.nearby.domain.repository.FirebaseTokensRepository;
 import com.lakeel.altla.vision.nearby.domain.repository.FirebaseUsersRepository;
 import com.lakeel.altla.vision.nearby.domain.repository.PreferenceRepository;
@@ -137,6 +139,12 @@ public class RepositoryModule {
     @Provides
     FirebaseNotificationsRepository provideFirebaseNotificationRepository(@Named("notificationsUrl") String url) {
         return new FirebaseNotificationsRepositoryImpl(url);
+    }
+
+    @InjectScope
+    @Provides
+    FirebaseInformationRepository provideFirebaseInformationRepository(@Named("informationUrl") String url) {
+        return new FirebaseInformationRepositoryImpl(url);
     }
 
     @InjectScope

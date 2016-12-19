@@ -10,6 +10,7 @@ import com.lakeel.altla.vision.nearby.data.entity.TokenEntity;
 import com.lakeel.altla.vision.nearby.domain.usecase.FindBeaconUseCase;
 import com.lakeel.altla.vision.nearby.domain.usecase.FindTokensUseCase;
 import com.lakeel.altla.vision.nearby.domain.usecase.FindUserIdByBeaconIdUseCase;
+import com.lakeel.altla.vision.nearby.domain.usecase.SaveInformationUseCase;
 import com.lakeel.altla.vision.nearby.domain.usecase.SaveNotificationUseCase;
 import com.lakeel.altla.vision.nearby.presentation.di.component.DaggerServiceComponent;
 import com.lakeel.altla.vision.nearby.presentation.di.component.ServiceComponent;
@@ -38,6 +39,9 @@ public class NotificationService extends IntentService {
     @Inject
     SaveNotificationUseCase saveNotificationUseCase;
 
+    @Inject
+    SaveInformationUseCase saveInformationUseCase;
+
     private static final Logger LOGGER = LoggerFactory.getLogger(NotificationService.class);
 
     public NotificationService() {
@@ -57,17 +61,25 @@ public class NotificationService extends IntentService {
         String title = getApplicationContext().getString(R.string.notification_title_device_found);
         String message = getApplicationContext().getString(R.string.notification_message_device_found);
 
-        findBeaconUseCase
+        Observable<String> observableForUserId = findBeaconUseCase
                 .execute(beaconId)
                 .toObservable()
-                .subscribeOn(Schedulers.io())
                 .filter(entity -> entity.isLost)
                 .flatMap(entity -> findUserId(beaconId))
-                .flatMap(entity -> findTokens(entity.userId))
+                .map(entity -> entity.userId);
+
+        observableForUserId
+                .flatMap(this::findTokens)
                 .filter(entity -> !beaconId.equals(entity.beaconId))
                 .flatMap(entity -> saveNotification(entity.token, title, message))
                 .subscribeOn(Schedulers.io())
                 .doOnError(e -> LOGGER.error("Failed to save notification.", e))
+                .subscribe();
+
+        observableForUserId
+                .flatMap(userId -> saveInformation(userId, title, message))
+                .subscribeOn(Schedulers.io())
+                .doOnError(e -> LOGGER.error("Failed to save information.", e))
                 .subscribe();
     }
 
@@ -77,6 +89,10 @@ public class NotificationService extends IntentService {
 
     Observable<TokenEntity> findTokens(String userId) {
         return findTokensUseCase.execute(userId).subscribeOn(Schedulers.io());
+    }
+
+    Observable<Object> saveInformation(String userId, String title, String message) {
+        return saveInformationUseCase.execute(userId, title, message).toObservable();
     }
 
     Observable<NotificationEntity> saveNotification(String token, String title, String message) {
