@@ -72,6 +72,9 @@ dependencies {
     compile 'net.cattaka:adapter-toolbox:0.3.4@aar'
     compile 'com.afollestad:sectioned-recyclerview:0.2.3'
 
+    //  RecyclerView Animation
+    compile 'com.marshalchen.ultimaterecyclerview:library:0.7.0'
+
     // altbeacon
     compile 'org.altbeacon:android-beacon-library:2.9.1'
 
@@ -112,9 +115,6 @@ dependencies {
 
     // geofire
     compile 'com.firebase:geofire-android:2.1.1'
-
-    //  RecyclerView Animation
-    compile 'com.marshalchen.ultimaterecyclerview:library:0.7.0'
 
     // Search View
     compile 'com.miguelcatalan:materialsearchview:1.4.0'
