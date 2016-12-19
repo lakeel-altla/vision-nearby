@@ -60,7 +60,7 @@ public final class ActivityPresenter extends BasePresenter<ActivityView> impleme
     AccessConfig accessConfig;
 
     @Inject
-    SavePreferenceBeaconIdUseCase savePreferenceBeaconIdUseCase;
+    SavePreferenceBeaconIdUseCase saveBeaconIdUseCase;
 
     @Inject
     ObservePresenceUseCase observePresenceUseCase;
@@ -308,7 +308,7 @@ public final class ActivityPresenter extends BasePresenter<ActivityView> impleme
     }
 
     Single<String> saveBeaconId(String userId) {
-        return savePreferenceBeaconIdUseCase.execute(userId).subscribeOn(Schedulers.io());
+        return saveBeaconIdUseCase.execute(userId).subscribeOn(Schedulers.io());
     }
 
     Single<String> saveUserBeacon(String userId, String beaconId) {
