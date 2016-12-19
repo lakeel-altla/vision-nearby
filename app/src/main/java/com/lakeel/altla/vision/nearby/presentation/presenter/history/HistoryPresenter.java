@@ -73,8 +73,10 @@ public final class HistoryPresenter extends BasePresenter<HistoryView> {
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribe(historyItemModels -> {
                     Collections.reverse(historyItemModels);
+
                     historyModels.clear();
                     historyModels.addAll(historyItemModels);
+
                     getView().updateItems();
                 }, e -> {
                     LOGGER.error("Failed to find history.", e);
@@ -135,12 +137,15 @@ public final class HistoryPresenter extends BasePresenter<HistoryView> {
                         getView().showSnackBar(R.string.error_not_added);
                     }, () -> {
                         int size = historyModels.size();
+
                         historyModels.remove(model);
+
                         if (CollectionUtils.isEmpty(historyModels)) {
                             getView().removeAll(size);
                         } else {
                             getView().updateItems();
                         }
+
                         getView().showSnackBar(R.string.message_removed);
                     });
             subscriptions.add(subscription);
