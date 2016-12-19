@@ -37,7 +37,7 @@ public class FirebasePresencesRepositoryImpl implements FirebasePresencesReposit
     }
 
     @Override
-    public void savePresenceOfflineOnDisconnected(String userId) {
+    public void savePresenceOfflineOnDisconnect(String userId) {
         reference
                 .child(userId)
                 .child(IS_CONNECTED_KEY)

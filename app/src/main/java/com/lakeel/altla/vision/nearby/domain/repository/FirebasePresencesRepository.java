@@ -8,7 +8,7 @@ public interface FirebasePresencesRepository {
 
     void savePresenceOnline(String userId);
 
-    void savePresenceOfflineOnDisconnected(String userId);
+    void savePresenceOfflineOnDisconnect(String userId);
 
     Single<PresenceEntity> findPresenceByUserId(String userId);
 }

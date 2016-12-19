@@ -29,6 +29,6 @@ public final class ObservePresenceUseCase {
                 });
 
         // Change presence to offline when disconnect to firebase.
-        presencesRepository.savePresenceOfflineOnDisconnected(userId);
+        presencesRepository.savePresenceOfflineOnDisconnect(userId);
     }
 }
