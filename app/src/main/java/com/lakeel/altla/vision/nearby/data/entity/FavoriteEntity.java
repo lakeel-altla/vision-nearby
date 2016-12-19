@@ -1,6 +1,6 @@
 package com.lakeel.altla.vision.nearby.data.entity;
 
-public final class FavoriteEntity extends BaseEntity {
+public final class FavoriteEntity {
 
-    public long addedTime;
+    public String favoriteUserId;
 }

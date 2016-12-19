@@ -73,7 +73,7 @@ public final class CmSettingPresenter extends BasePresenter<CmSettingView> {
                     getView().showSnackBar(R.string.message_saved);
                     getView().updateCmApiKeyPreference(apiKey);
                 }, e -> {
-                    LOGGER.error("Failed to save API key.", e);
+                    LOGGER.error("Failed to save API uniqueId.", e);
                     getView().showSnackBar(R.string.error_not_saved);
                 });
         subscriptions.add(subscription);
@@ -88,7 +88,7 @@ public final class CmSettingPresenter extends BasePresenter<CmSettingView> {
                     getView().showSnackBar(R.string.message_saved);
                     getView().updateCmSecretKeyPreference(secretKey);
                 }, e -> {
-                    LOGGER.error("Failed to save secret key.", e);
+                    LOGGER.error("Failed to save secret uniqueId.", e);
                     getView().showSnackBar(R.string.error_not_saved);
                 });
         subscriptions.add(subscription);

@@ -16,9 +16,9 @@ import com.google.android.gms.common.api.GoogleApiClient;
 import com.google.android.gms.location.ActivityRecognitionResult;
 import com.google.android.gms.location.DetectedActivity;
 import com.lakeel.altla.vision.nearby.domain.usecase.FindUserUseCase;
-import com.lakeel.altla.vision.nearby.domain.usecase.SaveUserLocationUseCase;
 import com.lakeel.altla.vision.nearby.domain.usecase.SaveDetectedActivityUseCase;
 import com.lakeel.altla.vision.nearby.domain.usecase.SaveHistoryUseCase;
+import com.lakeel.altla.vision.nearby.domain.usecase.SaveUserLocationUseCase;
 import com.lakeel.altla.vision.nearby.domain.usecase.SaveWeatherUseCase;
 import com.lakeel.altla.vision.nearby.presentation.di.component.DaggerServiceComponent;
 import com.lakeel.altla.vision.nearby.presentation.di.component.ServiceComponent;
@@ -82,7 +82,7 @@ public class HistoryService extends IntentService {
                     public void onConnected(@Nullable Bundle bundle) {
                         findUserUseCase
                                 .execute(userId)
-                                .flatMap(userEntity -> saveHistoryUseCase.execute(MyUser.getUid(), userEntity.key).subscribeOn(Schedulers.io()))
+                                .flatMap(userEntity -> saveHistoryUseCase.execute(MyUser.getUid(), userEntity.userId).subscribeOn(Schedulers.io()))
                                 .subscribeOn(Schedulers.io())
                                 .subscribe(uniqueKey -> {
                                     getUserCurrentActivity()

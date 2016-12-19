@@ -2,7 +2,7 @@ package com.lakeel.altla.vision.nearby.presentation.presenter.model;
 
 public final class HistoryModel {
 
-    public String key;
+    public String uniqueId;
 
     public String userId;
 

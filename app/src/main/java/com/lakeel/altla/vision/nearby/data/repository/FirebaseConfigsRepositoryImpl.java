@@ -6,7 +6,7 @@ import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
 
-import com.lakeel.altla.vision.nearby.data.entity.ConfigsEntity;
+import com.lakeel.altla.vision.nearby.data.entity.ConfigEntity;
 import com.lakeel.altla.vision.nearby.domain.repository.FirebaseConfigsRepository;
 
 import javax.inject.Inject;
@@ -23,11 +23,11 @@ public class FirebaseConfigsRepositoryImpl implements FirebaseConfigsRepository 
     }
 
     @Override
-    public Single<ConfigsEntity> find() {
+    public Single<ConfigEntity> find() {
         return Single.create(subscriber -> reference.addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
-                ConfigsEntity entity = dataSnapshot.getValue(ConfigsEntity.class);
+                ConfigEntity entity = dataSnapshot.getValue(ConfigEntity.class);
                 subscriber.onSuccess(entity);
             }
 

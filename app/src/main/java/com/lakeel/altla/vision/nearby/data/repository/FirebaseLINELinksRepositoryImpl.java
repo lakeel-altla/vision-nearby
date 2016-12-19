@@ -81,7 +81,7 @@ public class FirebaseLineLinksRepositoryImpl implements FirebaseLineLinksReposit
                         while (iterator.hasNext()) {
                             DataSnapshot snapshot = iterator.next();
                             LineLinkEntity entity = snapshot.getValue(LineLinkEntity.class);
-                            entity.key = snapshot.getKey();
+                            entity.userId = snapshot.getKey();
                             subscriber.onSuccess(entity);
                         }
                     }

@@ -4,7 +4,6 @@ import android.support.annotation.IntRange;
 
 import com.lakeel.altla.vision.nearby.R;
 import com.lakeel.altla.vision.nearby.core.CollectionUtils;
-import com.lakeel.altla.vision.nearby.data.entity.FavoriteEntity;
 import com.lakeel.altla.vision.nearby.data.entity.UserEntity;
 import com.lakeel.altla.vision.nearby.domain.usecase.FindFavoritesUseCase;
 import com.lakeel.altla.vision.nearby.domain.usecase.FindUserUseCase;
@@ -54,12 +53,8 @@ public final class FavoriteListPresenter extends BasePresenter<FavoriteListView>
     public void onActivityCreated() {
         Subscription subscription = findFavoritesUseCase
                 .execute(MyUser.getUid())
-                .flatMap(entity -> {
-                    Observable<FavoriteEntity> favoriteObservable = Observable.just(entity);
-                    Observable<UserEntity> userObservable = findUser(entity.key);
-                    return Observable.zip(favoriteObservable, userObservable, (favoriteEntity, userEntity) ->
-                            favoriteModelMapper.map(favoriteEntity, userEntity));
-                })
+                .flatMap(entity -> findUser(entity.favoriteUserId))
+                .map(entity -> favoriteModelMapper.map(entity))
                 .toList()
                 .subscribe(favoritesModels -> {
                     favoriteModels.clear();

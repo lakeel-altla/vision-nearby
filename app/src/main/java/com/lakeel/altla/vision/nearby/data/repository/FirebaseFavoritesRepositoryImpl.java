@@ -40,7 +40,7 @@ public class FirebaseFavoritesRepositoryImpl implements FirebaseFavoritesReposit
                                     subscriber.onNext(null);
                                 } else {
                                     FavoriteEntity entity = new FavoriteEntity();
-                                    entity.key = snapshot.getKey();
+                                    entity.favoriteUserId = snapshot.getKey();
                                     subscriber.onNext(entity);
                                 }
                             }
@@ -69,7 +69,7 @@ public class FirebaseFavoritesRepositoryImpl implements FirebaseFavoritesReposit
                                     subscriber.onSuccess(null);
                                 } else {
                                     FavoriteEntity entity = new FavoriteEntity();
-                                    entity.key = dataSnapshot.getKey();
+                                    entity.favoriteUserId = dataSnapshot.getKey();
                                     subscriber.onSuccess(entity);
 
                                 }

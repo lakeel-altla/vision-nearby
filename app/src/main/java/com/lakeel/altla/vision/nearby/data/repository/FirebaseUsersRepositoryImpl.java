@@ -128,7 +128,7 @@ public final class FirebaseUsersRepositoryImpl implements FirebaseUsersRepositor
                             @Override
                             public void onDataChange(DataSnapshot dataSnapshot) {
                                 UserEntity entity = dataSnapshot.getValue(UserEntity.class);
-                                entity.key = dataSnapshot.getKey();
+                                entity.userId = dataSnapshot.getKey();
                                 subscriber.onSuccess(entity);
                             }
 

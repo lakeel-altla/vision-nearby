@@ -127,7 +127,7 @@ public final class HistoryPresenter extends BasePresenter<HistoryView> {
 
         public void onRemove(HistoryModel model) {
             Subscription subscription = removeHistoryUseCase
-                    .execute(MyUser.getUid(), model.key)
+                    .execute(MyUser.getUid(), model.uniqueId)
                     .subscribeOn(Schedulers.io())
                     .observeOn(AndroidSchedulers.mainThread())
                     .subscribe(e -> {

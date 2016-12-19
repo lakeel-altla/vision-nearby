@@ -58,7 +58,7 @@ public class FirebaseHistoryRepositoryImpl implements FirebaseHistoryRepository 
                             public void onDataChange(DataSnapshot dataSnapshot) {
                                 for (DataSnapshot snapshot : dataSnapshot.getChildren()) {
                                     HistoryEntity entity = snapshot.getValue(HistoryEntity.class);
-                                    entity.key = snapshot.getKey();
+                                    entity.uniqueId = snapshot.getKey();
                                     subscriber.onNext(entity);
                                 }
                                 subscriber.onCompleted();

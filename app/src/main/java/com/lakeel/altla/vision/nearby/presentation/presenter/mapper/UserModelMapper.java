@@ -7,7 +7,7 @@ public final class UserModelMapper {
 
     public UserModel map(UserEntity entity) {
         UserModel model = new UserModel();
-        model.userId = entity.key;
+        model.userId = entity.userId;
         model.name = entity.name;
         model.imageUri = entity.imageUri;
         model.email = entity.email;

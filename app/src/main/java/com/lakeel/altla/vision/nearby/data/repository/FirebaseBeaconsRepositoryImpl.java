@@ -64,7 +64,7 @@ public class FirebaseBeaconsRepositoryImpl implements FirebaseBeaconsRepository 
                             @Override
                             public void onDataChange(DataSnapshot dataSnapshot) {
                                 BeaconEntity entity = dataSnapshot.getValue(BeaconEntity.class);
-                                entity.key = dataSnapshot.getKey();
+                                entity.beaconId = dataSnapshot.getKey();
                                 subscriber.onSuccess(entity);
                             }
 

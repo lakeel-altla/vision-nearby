@@ -1,6 +1,8 @@
 package com.lakeel.altla.vision.nearby.data.entity;
 
-public final class UserEntity extends BaseEntity {
+public final class UserEntity {
+
+    public String userId;
 
     public String name;
 

@@ -50,7 +50,7 @@ public final class FirebaseLocationsDataRepositoryImpl implements FirebaseLocati
                                 while (iterator.hasNext()) {
                                     DataSnapshot snapshot = iterator.next();
                                     LocationDataEntity entity = snapshot.getValue(LocationDataEntity.class);
-                                    entity.key = snapshot.getKey();
+                                    entity.uniqueId = snapshot.getKey();
                                     subscriber.onSuccess(entity);
                                 }
                             }

@@ -1,6 +1,6 @@
 package com.lakeel.altla.vision.nearby.domain.usecase;
 
-import com.lakeel.altla.vision.nearby.data.entity.ConfigsEntity;
+import com.lakeel.altla.vision.nearby.data.entity.ConfigEntity;
 import com.lakeel.altla.vision.nearby.domain.repository.FirebaseConfigsRepository;
 
 import javax.inject.Inject;
@@ -16,7 +16,7 @@ public final class FindConfigsUseCase {
     FindConfigsUseCase() {
     }
 
-    public Single<ConfigsEntity> execute() {
+    public Single<ConfigEntity> execute() {
         return repository.find();
     }
 }

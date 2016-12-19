@@ -52,7 +52,7 @@ public class LineService extends IntentService {
 
         findUserIdByLineUrlUseCase
                 .execute(lineUrl)
-                .flatMap(entity -> findUser(entity.key))
+                .flatMap(entity -> findUser(entity.userId))
                 .subscribeOn(AndroidSchedulers.mainThread())
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribe(entity -> {

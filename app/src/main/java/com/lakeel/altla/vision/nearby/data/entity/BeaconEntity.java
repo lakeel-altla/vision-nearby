@@ -5,7 +5,9 @@ import com.google.firebase.database.ServerValue;
 import java.util.HashMap;
 import java.util.Map;
 
-public final class BeaconEntity extends BaseEntity {
+public final class BeaconEntity {
+
+    public String beaconId;
 
     public String name;
 

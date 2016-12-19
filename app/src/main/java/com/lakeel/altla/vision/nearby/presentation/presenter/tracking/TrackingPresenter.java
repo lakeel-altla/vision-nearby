@@ -59,7 +59,7 @@ public final class TrackingPresenter extends BasePresenter<TrackingView> {
                     @Override
                     public Single<GeoLocation> call(LocationDataEntity entity) {
                         if (entity == null) return Single.just(null);
-                        return findLocation(entity.key);
+                        return findLocation(entity.uniqueId);
                     }
                 })
                 .subscribeOn(Schedulers.io())

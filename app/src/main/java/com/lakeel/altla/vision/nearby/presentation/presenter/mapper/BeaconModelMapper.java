@@ -7,7 +7,7 @@ public final class BeaconModelMapper {
 
     public DeviceModel map(BeaconEntity entity) {
         DeviceModel model = new DeviceModel();
-        model.beaconId = entity.key;
+        model.beaconId = entity.beaconId;
         model.name = entity.name;
         model.lastUsedTime = entity.lastUsedTime;
         model.isLost = entity.isLost;
