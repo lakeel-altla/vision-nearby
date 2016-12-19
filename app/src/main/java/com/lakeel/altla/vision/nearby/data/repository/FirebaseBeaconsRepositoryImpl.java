@@ -95,14 +95,14 @@ public class FirebaseBeaconsRepositoryImpl implements FirebaseBeaconsRepository 
 
             Task task = reference
                     .child(beaconId)
-                    .updateChildren(map)
-                    .addOnSuccessListener(aVoid -> subscriber.onCompleted())
-                    .addOnFailureListener(subscriber::onError);
+                    .updateChildren(map);
 
             Exception e = task.getException();
             if (e != null) {
                 subscriber.onError(e);
             }
+
+            subscriber.onCompleted();
         });
     }
 
@@ -114,14 +114,14 @@ public class FirebaseBeaconsRepositoryImpl implements FirebaseBeaconsRepository 
 
             Task task = reference
                     .child(beaconId)
-                    .updateChildren(map)
-                    .addOnSuccessListener(aVoid -> subscriber.onCompleted())
-                    .addOnFailureListener(subscriber::onError);
+                    .updateChildren(map);
 
             Exception e = task.getException();
             if (e != null) {
                 subscriber.onError(e);
             }
+
+            subscriber.onCompleted();
         });
     }
 }
