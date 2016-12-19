@@ -24,11 +24,11 @@ import java.util.ArrayList;
 import butterknife.BindView;
 import butterknife.ButterKnife;
 
-public final class FavoritesAdapter extends SwipeableUltimateViewAdapter<FavoriteModel> {
+public final class FavoriteAdapter extends SwipeableUltimateViewAdapter<FavoriteModel> {
 
     private FavoriteListPresenter favoriteListPresenter;
 
-    public FavoritesAdapter(FavoriteListPresenter presenter) {
+    public FavoriteAdapter(FavoriteListPresenter presenter) {
         super(new ArrayList<>());
         favoriteListPresenter = presenter;
     }
