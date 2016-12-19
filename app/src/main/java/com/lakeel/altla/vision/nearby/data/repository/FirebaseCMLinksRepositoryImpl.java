@@ -8,13 +8,13 @@ import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
 import com.lakeel.altla.vision.nearby.data.entity.CmLinkEntity;
 import com.lakeel.altla.vision.nearby.data.execption.DataStoreException;
-import com.lakeel.altla.vision.nearby.domain.repository.FirebaseCMLinksRepository;
+import com.lakeel.altla.vision.nearby.domain.repository.FirebaseCmLinksRepository;
 
 import javax.inject.Inject;
 
 import rx.Single;
 
-public final class FirebaseCMLinksRepositoryImpl implements FirebaseCMLinksRepository {
+public final class FirebaseCmLinksRepositoryImpl implements FirebaseCmLinksRepository {
 
     private static final String KEY_API_KEY = "apiKey";
 
@@ -25,7 +25,7 @@ public final class FirebaseCMLinksRepositoryImpl implements FirebaseCMLinksRepos
     private DatabaseReference reference;
 
     @Inject
-    public FirebaseCMLinksRepositoryImpl(String url) {
+    public FirebaseCmLinksRepositoryImpl(String url) {
         reference = FirebaseDatabase.getInstance().getReferenceFromUrl(url);
     }
 
