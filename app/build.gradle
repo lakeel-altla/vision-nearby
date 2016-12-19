@@ -64,9 +64,9 @@ dependencies {
     compile 'com.android.support:multidex:1.0.1'
 
     // support library
-    compile 'com.android.support:appcompat-v7:25.0.0'
-    compile 'com.android.support:design:25.0.0'
-    compile 'com.android.support:support-annotations:25.0.0'
+    compile 'com.android.support:appcompat-v7:25.1.0'
+    compile 'com.android.support:design:25.1.0'
+    compile 'com.android.support:support-annotations:25.1.0'
 
     // RecyclerView Section
     compile 'net.cattaka:adapter-toolbox:0.3.4@aar'
@@ -100,13 +100,13 @@ dependencies {
     apt 'com.jakewharton:butterknife-compiler:8.1.0'
 
     // Must set the same version.
-    compile 'com.google.firebase:firebase-auth:9.8.0'
-    compile 'com.google.android.gms:play-services-auth:9.8.0'
-    compile 'com.google.firebase:firebase-database:9.8.0'
-    compile 'com.google.android.gms:play-services-nearby:9.8.0'
-    compile 'com.google.android.gms:play-services-maps:9.8.0'
-    compile 'com.google.android.gms:play-services-awareness:9.8.0'
-    compile 'com.google.firebase:firebase-messaging:9.8.0'
+    compile 'com.google.firebase:firebase-auth:10.0.1'
+    compile 'com.google.android.gms:play-services-auth:10.0.1'
+    compile 'com.google.firebase:firebase-database:10.0.1'
+    compile 'com.google.android.gms:play-services-nearby:10.0.1'
+    compile 'com.google.android.gms:play-services-maps:10.0.1'
+    compile 'com.google.android.gms:play-services-awareness:10.0.1'
+    compile 'com.google.firebase:firebase-messaging:10.0.1'
 
     compile 'com.firebaseui:firebase-ui-auth:0.6.2'
 
