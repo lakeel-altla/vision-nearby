@@ -93,7 +93,7 @@
     <string name="message_temperature_format">%1$s℃</string>
     <string name="message_humidity_format">%1$s%%</string>
     <string name="message_user_found">User found.</string>
-    <string name="message_detected_date_format">Detected Date: %1$s</string>
+    <string name="message_found_date_format">Found Date: %1$s</string>
     <string name="message_device_not_detected">This device has not been detected by others.</string>
     <string name="message_finding_for_nearby_device_format">Finding for %1$s.</string>
     <string name="message_device_distance_format">%1$s meters away.</string>

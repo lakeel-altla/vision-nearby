@@ -48,7 +48,7 @@ public final class TrackingFragment extends Fragment implements TrackingView, On
     LinearLayout mainLayout;
 
     @BindView(R.id.textView_detected_date)
-    TextView detectedDateText;
+    TextView foundDate;
 
     private View mapView;
 
@@ -196,11 +196,11 @@ public final class TrackingFragment extends Fragment implements TrackingView, On
     }
 
     @Override
-    public void showDetectedDate(long detectedTime) {
-        DateFormatter formatter = new DateFormatter(detectedTime);
+    public void showFoundDate(long foundTime) {
+        DateFormatter formatter = new DateFormatter(foundTime);
         String formattedDate = formatter.format();
-        String time = getContext().getResources().getString(R.string.message_detected_date_format, formattedDate);
-        detectedDateText.setText(time);
+        String time = getContext().getResources().getString(R.string.message_found_date_format, formattedDate);
+        foundDate.setText(time);
     }
 
     @Override
@@ -215,7 +215,7 @@ public final class TrackingFragment extends Fragment implements TrackingView, On
     }
 
     @Override
-    public void showFindNearbyDeviceFragment(ArrayList<String> beaconIds, String beaconName) {
+    public void showDistanceEstimationFragment(ArrayList<String> beaconIds, String beaconName) {
         FragmentController controller = new FragmentController(getActivity().getSupportFragmentManager());
         controller.showDistanceEstimationFragment(beaconIds, beaconName);
     }

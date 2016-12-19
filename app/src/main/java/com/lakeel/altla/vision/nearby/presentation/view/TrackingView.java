@@ -10,11 +10,11 @@ public interface TrackingView {
 
     void showEmptyView();
 
-    void showDetectedDate(long detectedTime);
+    void showFoundDate(long foundTime);
 
     void launchGoogleMapApp(String latitude, String longitude);
 
     void showOptionMenu();
 
-    void showFindNearbyDeviceFragment(ArrayList<String> beaconIds, String beaconName);
+    void showDistanceEstimationFragment(ArrayList<String> beaconIds, String beaconName);
 }

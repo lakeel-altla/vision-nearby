@@ -53,7 +53,7 @@ public final class TrackingPresenter extends BasePresenter<TrackingView> {
         Subscription subscription = findLocationDataUseCase
                 .execute(beaconId)
                 .doOnSuccess(entity -> {
-                    if (entity != null) getView().showDetectedDate(entity.passingTime);
+                    if (entity != null) getView().showFoundDate(entity.passingTime);
                 })
                 .flatMap(new Func1<LocationDataEntity, Single<GeoLocation>>() {
                     @Override
@@ -93,7 +93,7 @@ public final class TrackingPresenter extends BasePresenter<TrackingView> {
     public void onFindDeviceMenuClick() {
         ArrayList<String> beaconIds = new ArrayList<>();
         beaconIds.add(beaconId);
-        getView().showFindNearbyDeviceFragment(beaconIds, beaconName);
+        getView().showDistanceEstimationFragment(beaconIds, beaconName);
     }
 
     public void onDirectionMenuClick() {
