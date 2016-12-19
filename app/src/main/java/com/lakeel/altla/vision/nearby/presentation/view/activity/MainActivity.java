@@ -34,7 +34,7 @@ import com.lakeel.altla.vision.nearby.presentation.presenter.activity.ActivityPr
 import com.lakeel.altla.vision.nearby.presentation.service.AdvertiseService;
 import com.lakeel.altla.vision.nearby.presentation.view.ActivityView;
 import com.lakeel.altla.vision.nearby.presentation.view.layout.DrawerHeaderLayout;
-import com.lakeel.altla.vision.nearby.presentation.view.transaction.FragmentController;
+import com.lakeel.altla.vision.nearby.presentation.view.fragment.FragmentController;
 import com.nostra13.universalimageloader.core.ImageLoader;
 
 import org.slf4j.Logger;

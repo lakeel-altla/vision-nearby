@@ -1,4 +1,4 @@
-package com.lakeel.altla.vision.nearby.presentation.view.transaction;
+package com.lakeel.altla.vision.nearby.presentation.view.fragment;
 
 import android.support.annotation.IdRes;
 import android.support.v4.app.Fragment;

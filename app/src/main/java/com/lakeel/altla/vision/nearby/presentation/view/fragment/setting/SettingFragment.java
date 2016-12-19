@@ -4,7 +4,7 @@ import com.lakeel.altla.vision.nearby.R;
 import com.lakeel.altla.vision.nearby.presentation.presenter.setting.SettingPresenter;
 import com.lakeel.altla.vision.nearby.presentation.view.SettingView;
 import com.lakeel.altla.vision.nearby.presentation.view.activity.MainActivity;
-import com.lakeel.altla.vision.nearby.presentation.view.transaction.FragmentController;
+import com.lakeel.altla.vision.nearby.presentation.view.fragment.FragmentController;
 
 import android.os.Bundle;
 import android.support.annotation.StringRes;

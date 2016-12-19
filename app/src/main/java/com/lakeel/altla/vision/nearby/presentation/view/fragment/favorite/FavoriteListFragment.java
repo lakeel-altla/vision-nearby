@@ -17,7 +17,7 @@ import com.lakeel.altla.vision.nearby.presentation.view.FavoriteListView;
 import com.lakeel.altla.vision.nearby.presentation.view.activity.MainActivity;
 import com.lakeel.altla.vision.nearby.presentation.view.adapter.FavoritesAdapter;
 import com.lakeel.altla.vision.nearby.presentation.view.divider.DividerItemDecoration;
-import com.lakeel.altla.vision.nearby.presentation.view.transaction.FragmentController;
+import com.lakeel.altla.vision.nearby.presentation.view.fragment.FragmentController;
 import com.marshalchen.ultimaterecyclerview.UltimateRecyclerView;
 import com.marshalchen.ultimaterecyclerview.layoutmanagers.ScrollSmoothLineaerLayoutManager;
 

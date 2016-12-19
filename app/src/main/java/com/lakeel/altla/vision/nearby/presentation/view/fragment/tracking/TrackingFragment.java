@@ -1,6 +1,5 @@
 package com.lakeel.altla.vision.nearby.presentation.view.fragment.tracking;
 
-import android.content.Intent;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
@@ -31,7 +30,7 @@ import com.lakeel.altla.vision.nearby.presentation.presenter.tracking.TrackingPr
 import com.lakeel.altla.vision.nearby.presentation.view.DateFormatter;
 import com.lakeel.altla.vision.nearby.presentation.view.TrackingView;
 import com.lakeel.altla.vision.nearby.presentation.view.activity.MainActivity;
-import com.lakeel.altla.vision.nearby.presentation.view.transaction.FragmentController;
+import com.lakeel.altla.vision.nearby.presentation.view.fragment.FragmentController;
 
 import java.util.ArrayList;
 
