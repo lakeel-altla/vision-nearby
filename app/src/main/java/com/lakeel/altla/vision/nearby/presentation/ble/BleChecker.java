@@ -1,4 +1,4 @@
-package com.lakeel.altla.vision.nearby.presentation.checker;
+package com.lakeel.altla.vision.nearby.presentation.ble;
 
 import android.bluetooth.BluetoothAdapter;
 import android.bluetooth.BluetoothManager;
@@ -7,10 +7,10 @@ import android.os.Build;
 
 import org.altbeacon.beacon.BeaconTransmitter;
 
-import static com.lakeel.altla.vision.nearby.presentation.checker.BleChecker.State.DISABLE;
-import static com.lakeel.altla.vision.nearby.presentation.checker.BleChecker.State.ENABLE;
-import static com.lakeel.altla.vision.nearby.presentation.checker.BleChecker.State.OFF;
-import static com.lakeel.altla.vision.nearby.presentation.checker.BleChecker.State.SUBSCRIBE_ONLY;
+import static com.lakeel.altla.vision.nearby.presentation.ble.BleChecker.State.DISABLE;
+import static com.lakeel.altla.vision.nearby.presentation.ble.BleChecker.State.ENABLE;
+import static com.lakeel.altla.vision.nearby.presentation.ble.BleChecker.State.OFF;
+import static com.lakeel.altla.vision.nearby.presentation.ble.BleChecker.State.SUBSCRIBE_ONLY;
 import static org.altbeacon.beacon.BeaconTransmitter.NOT_SUPPORTED_CANNOT_GET_ADVERTISER;
 import static org.altbeacon.beacon.BeaconTransmitter.NOT_SUPPORTED_CANNOT_GET_ADVERTISER_MULTIPLE_ADVERTISEMENTS;
 
