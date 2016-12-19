@@ -14,7 +14,7 @@ public final class HistoryModel {
 
     public WeatherModel weather;
 
-    public Integer detectedActivity;
+    public Integer userActivity;
 
     public long passingTime;
 }

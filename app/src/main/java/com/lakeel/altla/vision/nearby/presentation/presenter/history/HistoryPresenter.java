@@ -108,8 +108,8 @@ public final class HistoryPresenter extends BasePresenter<HistoryView> {
                 data.longitude = locationModel.longitude;
             }
 
-            if (model.detectedActivity != null) {
-                data.detectedActivity = model.detectedActivity;
+            if (model.userActivity != null) {
+                data.userActivity = model.userActivity;
             }
 
             if (model.weather != null) {

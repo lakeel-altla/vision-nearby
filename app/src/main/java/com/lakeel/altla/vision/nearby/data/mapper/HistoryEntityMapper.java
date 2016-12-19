@@ -24,7 +24,7 @@ public final class HistoryEntityMapper {
     public HistoryEntity map(DetectedActivity detectedActivity) {
         HistoryEntity entity = new HistoryEntity();
         if (detectedActivity != null) {
-            entity.detectedActivity = detectedActivity.getType();
+            entity.userActivity = detectedActivity.getType();
         }
         return entity;
     }

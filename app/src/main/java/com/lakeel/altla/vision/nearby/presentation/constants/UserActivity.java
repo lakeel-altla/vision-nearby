@@ -2,7 +2,7 @@ package com.lakeel.altla.vision.nearby.presentation.constants;
 
 import com.lakeel.altla.vision.nearby.R;
 
-public enum DetectedActivity {
+public enum UserActivity {
     IN_VEHICLE(com.google.android.gms.location.DetectedActivity.IN_VEHICLE, R.string.detected_activity_vehicle),
     ON_BICYCLE(com.google.android.gms.location.DetectedActivity.ON_BICYCLE, R.string.detected_activity_bicycle),
     ON_FOOT(com.google.android.gms.location.DetectedActivity.ON_FOOT, R.string.detected_activity_foot),
@@ -16,7 +16,7 @@ public enum DetectedActivity {
 
     private int resValue;
 
-    DetectedActivity(int intValue, int resValue) {
+    UserActivity(int intValue, int resValue) {
         this.intValue = intValue;
         this.resValue = resValue;
     }
@@ -25,12 +25,12 @@ public enum DetectedActivity {
         return resValue;
     }
 
-    public static DetectedActivity toDetectedActivity(int intValue) {
-        for (DetectedActivity currentActivity : DetectedActivity.values()) {
+    public static UserActivity toUserActivity(int intValue) {
+        for (UserActivity currentActivity : UserActivity.values()) {
             if (currentActivity.intValue == intValue) {
                 return currentActivity;
             }
         }
-        return DetectedActivity.UNKNOWN;
+        return UserActivity.UNKNOWN;
     }
 }

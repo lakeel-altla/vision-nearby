@@ -23,9 +23,9 @@ import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.MarkerOptions;
 import com.lakeel.altla.vision.nearby.R;
 import com.lakeel.altla.vision.nearby.presentation.constants.AppColor;
-import com.lakeel.altla.vision.nearby.presentation.constants.DetectedActivity;
 import com.lakeel.altla.vision.nearby.presentation.constants.FragmentBundle;
 import com.lakeel.altla.vision.nearby.presentation.constants.Radius;
+import com.lakeel.altla.vision.nearby.presentation.constants.UserActivity;
 import com.lakeel.altla.vision.nearby.presentation.constants.WeatherCondition;
 import com.lakeel.altla.vision.nearby.presentation.presenter.model.PresenceModel;
 import com.lakeel.altla.vision.nearby.presentation.presenter.model.UserModel;
@@ -124,12 +124,11 @@ public final class UserPassingFragment extends Fragment implements UserPassingVi
         Bundle bundle = getArguments();
         HistoryBundle bundleData = (HistoryBundle) bundle.getSerializable(FragmentBundle.HISTORY.name());
         if (bundleData == null) {
-            throw new IllegalStateException("Bundle data is not set.");
+            throw new NullPointerException("Bundle data is not set.");
         }
 
-        presenter.setUserLocationData(bundleData.userId, bundleData.latitude, bundleData.longitude);
-
         getActivity().setTitle(bundleData.userName);
+        presenter.setUserLocationData(bundleData.userId, bundleData.latitude, bundleData.longitude);
 
         DateFormatter dateFormatter = new DateFormatter(bundleData.timestamp);
         passingLayout.textViewDate.setText(dateFormatter.format());
@@ -159,8 +158,8 @@ public final class UserPassingFragment extends Fragment implements UserPassingVi
             passingLayout.textViewWeather.setText(builder.toString());
         }
 
-        int resId = DetectedActivity.toDetectedActivity(bundleData.detectedActivity).getResValue();
-        passingLayout.textViewDetectedActivity.setText(getContext().getString(resId));
+        int resId = UserActivity.toUserActivity(bundleData.userActivity).getResValue();
+        passingLayout.textViewUserActivity.setText(getContext().getString(resId));
 
         presenter.onActivityCreated();
     }

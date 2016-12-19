@@ -12,7 +12,7 @@ public final class HistoryBundle implements Serializable {
 
     public String longitude;
 
-    public int detectedActivity;
+    public int userActivity;
 
     public WeatherBundle weatherBundle;
 

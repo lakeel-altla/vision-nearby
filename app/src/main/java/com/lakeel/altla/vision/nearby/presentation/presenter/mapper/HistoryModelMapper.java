@@ -20,7 +20,7 @@ public final class HistoryModelMapper {
         model.userId = historyEntity.userId;
         model.name = userEntity.name;
         model.imageUri = userEntity.imageUri;
-        model.detectedActivity = historyEntity.detectedActivity;
+        model.userActivity = historyEntity.userActivity;
         model.passingTime = historyEntity.passingTime;
 
         LocationEntity locationEntity = historyEntity.location;

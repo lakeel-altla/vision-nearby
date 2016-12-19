@@ -15,8 +15,8 @@ public final class PassingLayout {
     @BindView(R.id.weatherText)
     public TextView textViewWeather;
 
-    @BindView(R.id.detectedActivityText)
-    public TextView textViewDetectedActivity;
+    @BindView(R.id.userActivityText)
+    public TextView textViewUserActivity;
 
     @BindView(R.id.timesText)
     public TextView textViewTimes;

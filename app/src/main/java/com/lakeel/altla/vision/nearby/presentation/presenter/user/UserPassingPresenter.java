@@ -58,8 +58,8 @@ public final class UserPassingPresenter extends BasePresenter<UserPassingView> {
     UserPassingPresenter() {
     }
 
-    public void setUserLocationData(String userId, String latitude, String longitude) {
-        this.otherUserId = userId;
+    public void setUserLocationData(String otherUserId, String latitude, String longitude) {
+        this.otherUserId = otherUserId;
         this.latitude = latitude;
         this.longitude = longitude;
     }

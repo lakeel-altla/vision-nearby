@@ -12,7 +12,7 @@ public final class HistoryEntity {
 
     public String userId;
 
-    public Integer detectedActivity;
+    public Integer userActivity;
 
     public LocationEntity location;
 
@@ -47,7 +47,7 @@ public final class HistoryEntity {
 
     public Map<String, Object> toUserActivityMap() {
         Map<String, Object> map = new HashMap<>();
-        map.put("detectedActivity", detectedActivity);
+        map.put("userActivity", userActivity);
         return map;
     }
 
