@@ -27,9 +27,9 @@ import com.lakeel.altla.vision.nearby.presentation.constants.BundleKey;
 import com.lakeel.altla.vision.nearby.presentation.constants.DetectedActivity;
 import com.lakeel.altla.vision.nearby.presentation.constants.Radius;
 import com.lakeel.altla.vision.nearby.presentation.constants.WeatherCondition;
-import com.lakeel.altla.vision.nearby.presentation.presenter.user.UserPassingPresenter;
 import com.lakeel.altla.vision.nearby.presentation.presenter.model.PresenceModel;
 import com.lakeel.altla.vision.nearby.presentation.presenter.model.UserModel;
+import com.lakeel.altla.vision.nearby.presentation.presenter.user.UserPassingPresenter;
 import com.lakeel.altla.vision.nearby.presentation.view.DateFormatter;
 import com.lakeel.altla.vision.nearby.presentation.view.UserPassingView;
 import com.lakeel.altla.vision.nearby.presentation.view.activity.MainActivity;
@@ -225,7 +225,7 @@ public final class UserPassingFragment extends Fragment implements UserPassingVi
         CircleOptions circleOptions = new CircleOptions()
                 .center(latLng)
                 .strokeColor(AppColor.PRIMARY)
-                .radius(Radius.GOOGLE_MAP);
+                .radius(Radius.GOOGLE_MAP.getValue());
 
         map.addMarker(new MarkerOptions()
                 .position(latLng));

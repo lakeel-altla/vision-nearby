@@ -177,7 +177,7 @@ public final class TrackingFragment extends Fragment implements TrackingView, On
         CircleOptions circleOptions = new CircleOptions()
                 .center(latLng)
                 .strokeColor(AppColor.PRIMARY)
-                .radius(Radius.GOOGLE_MAP);
+                .radius(Radius.GOOGLE_MAP.getValue());
 
         map.addMarker(new MarkerOptions()
                 .position(latLng));

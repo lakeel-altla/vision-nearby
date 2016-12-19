@@ -1,9 +1,15 @@
 package com.lakeel.altla.vision.nearby.presentation.constants;
 
-public final class Radius {
+public enum Radius {
+    GOOGLE_MAP(50.0);
 
-    private Radius() {
+    private double value;
+
+    Radius(double value) {
+        this.value = value;
     }
 
-    public static final int GOOGLE_MAP = 50;
+    public double getValue() {
+        return value;
+    }
 }
