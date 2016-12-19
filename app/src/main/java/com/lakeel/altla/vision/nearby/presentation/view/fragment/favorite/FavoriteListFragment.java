@@ -15,7 +15,7 @@ import com.lakeel.altla.vision.nearby.presentation.presenter.favorite.FavoriteLi
 import com.lakeel.altla.vision.nearby.presentation.presenter.model.FavoriteModel;
 import com.lakeel.altla.vision.nearby.presentation.view.FavoriteListView;
 import com.lakeel.altla.vision.nearby.presentation.view.activity.MainActivity;
-import com.lakeel.altla.vision.nearby.presentation.view.adapter.FavoritesAdapter;
+import com.lakeel.altla.vision.nearby.presentation.view.adapter.FavoriteAdapter;
 import com.lakeel.altla.vision.nearby.presentation.view.divider.DividerItemDecoration;
 import com.lakeel.altla.vision.nearby.presentation.view.fragment.FragmentController;
 import com.marshalchen.ultimaterecyclerview.UltimateRecyclerView;
@@ -72,7 +72,7 @@ public final class FavoriteListFragment extends Fragment implements FavoriteList
         recyclerView.setHasFixedSize(false);
         recyclerView.addItemDecoration(new DividerItemDecoration(getContext()));
 
-        FavoritesAdapter favoritesRecyclerAdapter = new FavoritesAdapter(presenter);
+        FavoriteAdapter favoritesRecyclerAdapter = new FavoriteAdapter(presenter);
         recyclerView.setAdapter(favoritesRecyclerAdapter);
 
         presenter.onActivityCreated();
@@ -86,7 +86,7 @@ public final class FavoriteListFragment extends Fragment implements FavoriteList
 
     @Override
     public void updateItems(List<FavoriteModel> models) {
-        FavoritesAdapter adapter = ((FavoritesAdapter) recyclerView.getAdapter());
+        FavoriteAdapter adapter = ((FavoriteAdapter) recyclerView.getAdapter());
         adapter.removeAll();
         adapter.insert(models);
     }

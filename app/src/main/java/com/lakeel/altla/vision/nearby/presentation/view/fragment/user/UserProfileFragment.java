@@ -17,17 +17,17 @@ import android.widget.LinearLayout;
 import com.flipboard.bottomsheet.BottomSheetLayout;
 import com.lakeel.altla.vision.nearby.R;
 import com.lakeel.altla.vision.nearby.presentation.constants.FragmentBundle;
-import com.lakeel.altla.vision.nearby.presentation.presenter.user.UserProfilePresenter;
 import com.lakeel.altla.vision.nearby.presentation.presenter.model.PresenceModel;
 import com.lakeel.altla.vision.nearby.presentation.presenter.model.UserModel;
+import com.lakeel.altla.vision.nearby.presentation.presenter.user.UserProfilePresenter;
 import com.lakeel.altla.vision.nearby.presentation.view.DateFormatter;
 import com.lakeel.altla.vision.nearby.presentation.view.GridShareSheet;
 import com.lakeel.altla.vision.nearby.presentation.view.UserProfileView;
 import com.lakeel.altla.vision.nearby.presentation.view.activity.MainActivity;
+import com.lakeel.altla.vision.nearby.presentation.view.fragment.FragmentController;
 import com.lakeel.altla.vision.nearby.presentation.view.layout.PresenceLayout;
 import com.lakeel.altla.vision.nearby.presentation.view.layout.ProfileLayout;
 import com.lakeel.altla.vision.nearby.presentation.view.layout.SnsLayout;
-import com.lakeel.altla.vision.nearby.presentation.view.fragment.FragmentController;
 import com.nostra13.universalimageloader.core.ImageLoader;
 
 import java.util.ArrayList;
@@ -41,16 +41,6 @@ import static com.lakeel.altla.vision.nearby.R.id.find;
 import static com.lakeel.altla.vision.nearby.R.id.share;
 
 public final class UserProfileFragment extends Fragment implements UserProfileView {
-
-    public static UserProfileFragment newInstance(String userId, String userName) {
-        Bundle args = new Bundle();
-        args.putString(FragmentBundle.USER_ID.name(), userId);
-        args.putString(FragmentBundle.USER_NAME.name(), userName);
-
-        UserProfileFragment fragment = new UserProfileFragment();
-        fragment.setArguments(args);
-        return fragment;
-    }
 
     @Inject
     UserProfilePresenter presenter;
@@ -69,6 +59,16 @@ public final class UserProfileFragment extends Fragment implements UserProfileVi
     private ProfileLayout profileLayout = new ProfileLayout();
 
     private SnsLayout snsLayout = new SnsLayout();
+
+    public static UserProfileFragment newInstance(String userId, String userName) {
+        Bundle args = new Bundle();
+        args.putString(FragmentBundle.USER_ID.name(), userId);
+        args.putString(FragmentBundle.USER_NAME.name(), userName);
+
+        UserProfileFragment fragment = new UserProfileFragment();
+        fragment.setArguments(args);
+        return fragment;
+    }
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,

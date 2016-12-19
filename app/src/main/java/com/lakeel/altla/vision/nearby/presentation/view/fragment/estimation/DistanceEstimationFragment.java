@@ -39,17 +39,6 @@ import static android.view.animation.Animation.INFINITE;
 
 public final class DistanceEstimationFragment extends Fragment implements DistanceEstimationView {
 
-    public static DistanceEstimationFragment newInstance(ArrayList<String> beaconIds, String targetName) {
-
-        Bundle args = new Bundle();
-        args.putStringArrayList(FragmentBundle.BEACON_IDS.name(), beaconIds);
-        args.putSerializable(FragmentBundle.TARGET_NAME.name(), targetName);
-
-        DistanceEstimationFragment fragment = new DistanceEstimationFragment();
-        fragment.setArguments(args);
-        return fragment;
-    }
-
     @Inject
     DistanceEstimationPresenter presenter;
 
@@ -68,6 +57,16 @@ public final class DistanceEstimationFragment extends Fragment implements Distan
     private static final Logger LOGGER = LoggerFactory.getLogger(DistanceEstimationFragment.class);
 
     private static final int REQUEST_CODE_SUBSCRIBE_RESULT = 1;
+
+    public static DistanceEstimationFragment newInstance(ArrayList<String> beaconIds, String targetName) {
+        Bundle args = new Bundle();
+        args.putStringArrayList(FragmentBundle.BEACON_IDS.name(), beaconIds);
+        args.putSerializable(FragmentBundle.TARGET_NAME.name(), targetName);
+
+        DistanceEstimationFragment fragment = new DistanceEstimationFragment();
+        fragment.setArguments(args);
+        return fragment;
+    }
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
