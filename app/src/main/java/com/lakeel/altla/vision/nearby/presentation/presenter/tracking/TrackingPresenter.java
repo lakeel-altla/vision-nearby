@@ -90,7 +90,7 @@ public final class TrackingPresenter extends BasePresenter<TrackingView> {
         return isMenuEnabled;
     }
 
-    public void onFindDeviceMenuClick() {
+    public void onDistanceEstimationMenuClick() {
         ArrayList<String> beaconIds = new ArrayList<>();
         beaconIds.add(beaconId);
         getView().showDistanceEstimationFragment(beaconIds, beaconName);

@@ -147,7 +147,7 @@ public final class TrackingFragment extends Fragment implements TrackingView, On
                 getActivity().getSupportFragmentManager().popBackStack();
                 return true;
             case R.id.find:
-                presenter.onFindDeviceMenuClick();
+                presenter.onDistanceEstimationMenuClick();
                 break;
             case R.id.directions:
                 presenter.onDirectionMenuClick();
