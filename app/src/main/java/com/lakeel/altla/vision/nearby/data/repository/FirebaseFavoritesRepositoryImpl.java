@@ -35,8 +35,8 @@ public class FirebaseFavoritesRepositoryImpl implements FirebaseFavoritesReposit
                         @Override
                         public void onDataChange(DataSnapshot dataSnapshot) {
                             for (DataSnapshot snapshot : dataSnapshot.getChildren()) {
-                                Boolean bool = (Boolean) snapshot.getValue();
-                                if (bool == null) {
+                                Boolean isFavorite = (Boolean) snapshot.getValue();
+                                if (isFavorite == null || !isFavorite) {
                                     subscriber.onNext(null);
                                 } else {
                                     FavoriteEntity entity = new FavoriteEntity();
@@ -64,14 +64,13 @@ public class FirebaseFavoritesRepositoryImpl implements FirebaseFavoritesReposit
                         .addListenerForSingleValueEvent(new ValueEventListener() {
                             @Override
                             public void onDataChange(DataSnapshot dataSnapshot) {
-                                Boolean bool = (Boolean) dataSnapshot.getValue();
-                                if (bool == null) {
+                                Boolean isFavorite = (Boolean) dataSnapshot.getValue();
+                                if (isFavorite == null || !isFavorite) {
                                     subscriber.onSuccess(null);
                                 } else {
                                     FavoriteEntity entity = new FavoriteEntity();
                                     entity.userId = dataSnapshot.getKey();
                                     subscriber.onSuccess(entity);
-
                                 }
                             }
 
