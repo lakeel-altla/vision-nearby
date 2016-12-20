@@ -53,12 +53,14 @@ public final class FavoriteListPresenter extends BasePresenter<FavoriteListView>
     public void onActivityCreated() {
         Subscription subscription = findFavoritesUseCase
                 .execute(MyUser.getUid())
-                .flatMap(entity -> findUser(entity.favoriteUserId))
+                .filter(entity -> entity != null)
+                .flatMap(entity -> findUser(entity.userId))
                 .map(entity -> favoriteModelMapper.map(entity))
                 .toList()
                 .subscribe(favoritesModels -> {
                     favoriteModels.clear();
                     favoriteModels.addAll(favoritesModels);
+
                     getView().updateItems(favoriteModels);
                 }, e -> {
                     getView().showSnackBar(R.string.error_process);
