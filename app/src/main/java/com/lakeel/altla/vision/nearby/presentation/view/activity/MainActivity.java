@@ -32,7 +32,6 @@ import com.lakeel.altla.vision.nearby.presentation.di.module.ActivityModule;
 import com.lakeel.altla.vision.nearby.presentation.intent.IntentKey;
 import com.lakeel.altla.vision.nearby.presentation.presenter.activity.ActivityPresenter;
 import com.lakeel.altla.vision.nearby.presentation.service.AdvertiseService;
-import com.lakeel.altla.vision.nearby.presentation.service.SubscribeService;
 import com.lakeel.altla.vision.nearby.presentation.view.ActivityView;
 import com.lakeel.altla.vision.nearby.presentation.view.fragment.FragmentController;
 import com.lakeel.altla.vision.nearby.presentation.view.layout.DrawerHeaderLayout;
@@ -138,7 +137,7 @@ public class MainActivity extends AppCompatActivity
     public void onRequestPermissionsResult(int requestCode, @NonNull String permissions[], @NonNull int[] grantResults) {
         if (REQUEST_CODE_ACCESS_LOCATION == requestCode && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
             LOGGER.info("Location permission is granted.");
-            presenter.onAccessLocationGranted();
+            presenter.onAccessLocationGrant();
         } else {
             super.onRequestPermissionsResult(requestCode, permissions, grantResults);
         }
@@ -258,11 +257,6 @@ public class MainActivity extends AppCompatActivity
         getApplicationContext().startService(intent);
     }
 
-    public void startSubscribeService() {
-        Intent intent = new Intent(getApplicationContext(), SubscribeService.class);
-        getApplicationContext().startService(intent);
-    }
-
     @TargetApi(Build.VERSION_CODES.M)
     @Override
     public void showAccessFineLocationPermissionSystemDialog() {
@@ -309,6 +303,6 @@ public class MainActivity extends AppCompatActivity
     }
 
     public void onSignedIn() {
-        presenter.onSignedIn();
+        presenter.onSignIn();
     }
 }

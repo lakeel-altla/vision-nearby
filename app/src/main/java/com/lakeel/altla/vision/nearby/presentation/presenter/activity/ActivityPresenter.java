@@ -22,9 +22,11 @@ import com.lakeel.altla.cm.config.AccessConfig;
 import com.lakeel.altla.library.ResolutionResultCallback;
 import com.lakeel.altla.vision.nearby.R;
 import com.lakeel.altla.vision.nearby.core.StringUtils;
+import com.lakeel.altla.vision.nearby.data.entity.PreferenceEntity;
 import com.lakeel.altla.vision.nearby.domain.usecase.FindBeaconIdUseCase;
 import com.lakeel.altla.vision.nearby.domain.usecase.FindCmLinkUseCase;
 import com.lakeel.altla.vision.nearby.domain.usecase.FindPreferencesUseCase;
+import com.lakeel.altla.vision.nearby.domain.usecase.FindSubscribeSettingUseCase;
 import com.lakeel.altla.vision.nearby.domain.usecase.FindTokenUseCase;
 import com.lakeel.altla.vision.nearby.domain.usecase.ObservePresenceUseCase;
 import com.lakeel.altla.vision.nearby.domain.usecase.OfflineUseCase;
@@ -37,7 +39,6 @@ import com.lakeel.altla.vision.nearby.presentation.ble.BleChecker.State;
 import com.lakeel.altla.vision.nearby.presentation.firebase.MyUser;
 import com.lakeel.altla.vision.nearby.presentation.presenter.BasePresenter;
 import com.lakeel.altla.vision.nearby.presentation.presenter.mapper.CmAuthConfigMapper;
-import com.lakeel.altla.vision.nearby.presentation.presenter.mapper.PreferencesModelMapper;
 import com.lakeel.altla.vision.nearby.presentation.service.AdvertiseService;
 import com.lakeel.altla.vision.nearby.presentation.service.RunningService;
 import com.lakeel.altla.vision.nearby.presentation.subscriber.BackgroundSubscriber;
@@ -89,11 +90,12 @@ public final class ActivityPresenter extends BasePresenter<ActivityView> impleme
     @Inject
     OfflineUseCase offlineUseCase;
 
+    @Inject
+    FindSubscribeSettingUseCase findSubscribeSettingUseCase;
+
     private static final Logger LOGGER = LoggerFactory.getLogger(ActivityPresenter.class);
 
     private FirebaseInstanceId instanceId = FirebaseInstanceId.getInstance();
-
-    private PreferencesModelMapper preferencesModelMapper = new PreferencesModelMapper();
 
     private CmAuthConfigMapper cmAuthConfigMapper = new CmAuthConfigMapper();
 
@@ -123,7 +125,7 @@ public final class ActivityPresenter extends BasePresenter<ActivityView> impleme
         super.onCreateView(activityView);
 
         if (MyUser.isAuthenticated()) {
-            onSignedIn();
+            onSignIn();
         } else {
             getView().showSignInFragment();
         }
@@ -153,19 +155,17 @@ public final class ActivityPresenter extends BasePresenter<ActivityView> impleme
     public void onConnected(@Nullable Bundle bundle) {
         LOGGER.info("Connected to nearby service.");
 
-        Subscription subscription = findPreferencesUseCase
-                .execute(MyUser.getUid())
+        Subscription subscription = findSubscribeSettingUseCase
+                .execute()
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
-                .subscribe(entity -> {
-                    if (entity.isSubscribeInBackgroundEnabled) {
-                        getView().startSubscribeService();
-//                        onSubscribeInBackground();
+                .subscribe(isSubscribeEnabled -> {
+                    if (isSubscribeEnabled) {
+                        onSubscribeInBackground();
                     } else {
-//                        onUnSubscribeInBackground();
+                        onUnSubscribeInBackground();
                     }
                 }, e -> LOGGER.error("Failed to find preference settings.", e));
-
         subscriptions.add(subscription);
     }
 
@@ -178,11 +178,11 @@ public final class ActivityPresenter extends BasePresenter<ActivityView> impleme
         getView().showConnectedResolutionSystemDialog(connectionResult);
     }
 
-    public void onSignedIn() {
+    public void onSignIn() {
         getView().showFavoriteListFragment();
 
         if (ActivityCompat.checkSelfPermission(context, Manifest.permission.ACCESS_FINE_LOCATION) == PackageManager.PERMISSION_GRANTED) {
-            onAccessLocationGranted();
+            onAccessLocationGrant();
         } else {
             getView().showAccessFineLocationPermissionSystemDialog();
         }
@@ -201,42 +201,41 @@ public final class ActivityPresenter extends BasePresenter<ActivityView> impleme
 
         observePresenceUseCase.execute(MyUser.getUid());
 
-        Subscription beaconSubscription = findBeaconIdUseCase
+        // TODO: Simply
+        Subscription subscription1 = findBeaconIdUseCase
                 .execute(MyUser.getUid())
                 .flatMap(beaconId -> {
-                    if (StringUtils.isEmpty(beaconId))
+                    if (StringUtils.isEmpty(beaconId)) {
                         return saveBeaconId(MyUser.getUid());
-                    return Single.just(beaconId);
+                    } else {
+                        return Single.just(beaconId);
+                    }
                 })
                 .flatMap(beaconId -> saveUserBeacon(MyUser.getUid(), beaconId))
                 .flatMap(beaconId -> saveBeacon(beaconId, MyUser.getUid()))
                 .flatMap(beaconId -> saveToken(MyUser.getUid(), beaconId))
+                .flatMap(s -> findPreferences(MyUser.getUid()))
                 .subscribeOn(Schedulers.io())
-                .doOnError(e -> LOGGER.error("Failed to save beacon data.", e))
-                .subscribe();
-        subscriptions.add(beaconSubscription);
-
-        Subscription preferenceSubscription = findPreferencesUseCase
-                .execute(MyUser.getUid())
-                .map(entity -> preferencesModelMapper.map(entity))
-                .subscribeOn(Schedulers.io())
-                .subscribe(model -> {
-                    if (model.isAdvertiseInBackgroundEnabled && isAdvertiseAvailability) {
-                        getView().startAdvertiseService(model.beaconId);
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribe(entity -> {
+                    if (entity.isAdvertiseInBackgroundEnabled && isAdvertiseAvailability) {
+                        getView().startAdvertiseService(entity.beaconId);
                     }
-                }, e -> LOGGER.error("Failed to find preferences.", e));
-        subscriptions.add(preferenceSubscription);
+                }, e -> LOGGER.error("Failed to process.", e));
 
-        Subscription cmLinksSubscription = findCmLinkUseCase
+        subscriptions.add(subscription1);
+
+        Subscription subscription2 = findCmLinkUseCase
                 .execute(MyUser.getUid())
                 .map(entity -> cmAuthConfigMapper.map(entity))
                 .subscribeOn(Schedulers.io())
                 .subscribe(authConfig -> CmApplication.initialize(authConfig, accessConfig),
                         e -> LOGGER.error("Failed to initialize CM settings.", e));
-        subscriptions.add(cmLinksSubscription);
+
+        subscriptions.add(subscription2);
     }
 
-    public void onAccessLocationGranted() {
+    public void onAccessLocationGrant() {
         isAccessLocationGranted = true;
         onConnect();
     }
@@ -321,7 +320,12 @@ public final class ActivityPresenter extends BasePresenter<ActivityView> impleme
     }
 
     Single<String> saveToken(String userId, String beaconId) {
+        // TODO: Observable
         String token = instanceId.getToken();
         return saveTokenUseCase.execute(userId, beaconId, token).subscribeOn(Schedulers.io());
+    }
+
+    Single<PreferenceEntity> findPreferences(String userId) {
+        return findPreferencesUseCase.execute(userId).subscribeOn(Schedulers.io());
     }
 }

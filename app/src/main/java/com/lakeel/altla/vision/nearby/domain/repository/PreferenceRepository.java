@@ -8,6 +8,8 @@ public interface PreferenceRepository {
 
     Single<PreferenceEntity> findPreferences(String userId);
 
+    Single<Boolean> findSubscribeSetting();
+
     Single<String> findBeaconId(String userId);
 
     Single<String> saveBeaconId(String userId);

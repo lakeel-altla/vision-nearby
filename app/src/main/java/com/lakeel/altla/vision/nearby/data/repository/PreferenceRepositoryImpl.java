@@ -45,6 +45,14 @@ public class PreferenceRepositoryImpl implements PreferenceRepository {
     }
 
     @Override
+    public Single<Boolean> findSubscribeSetting() {
+        return Single.create(subscriber -> {
+            boolean isSubscribeInBackgroundEnabled = preference.getBoolean(KEY_SUBSCRIBE_IN_BACKGROUND, true);
+            subscriber.onSuccess(isSubscribeInBackgroundEnabled);
+        });
+    }
+
+    @Override
     public Single<String> findBeaconId(String userId) {
         return Single.create(new Single.OnSubscribe<String>() {
             @Override
