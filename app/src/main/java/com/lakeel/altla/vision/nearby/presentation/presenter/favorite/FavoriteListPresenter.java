@@ -1,13 +1,17 @@
 package com.lakeel.altla.vision.nearby.presentation.presenter.favorite;
 
+import android.os.Bundle;
 import android.support.annotation.IntRange;
 
+import com.google.firebase.analytics.FirebaseAnalytics;
 import com.lakeel.altla.vision.nearby.R;
 import com.lakeel.altla.vision.nearby.core.CollectionUtils;
 import com.lakeel.altla.vision.nearby.data.entity.UserEntity;
 import com.lakeel.altla.vision.nearby.domain.usecase.FindFavoritesUseCase;
 import com.lakeel.altla.vision.nearby.domain.usecase.FindUserUseCase;
 import com.lakeel.altla.vision.nearby.domain.usecase.RemoveFavoriteUseCase;
+import com.lakeel.altla.vision.nearby.presentation.constants.AnalyticsEvent;
+import com.lakeel.altla.vision.nearby.presentation.constants.AnalyticsParam;
 import com.lakeel.altla.vision.nearby.presentation.firebase.MyUser;
 import com.lakeel.altla.vision.nearby.presentation.presenter.BaseItemPresenter;
 import com.lakeel.altla.vision.nearby.presentation.presenter.BasePresenter;
@@ -30,6 +34,9 @@ import rx.android.schedulers.AndroidSchedulers;
 import rx.schedulers.Schedulers;
 
 public final class FavoriteListPresenter extends BasePresenter<FavoriteListView> {
+
+    @Inject
+    FirebaseAnalytics firebaseAnalytics;
 
     @Inject
     FindUserUseCase findUserUseCase;
@@ -88,6 +95,10 @@ public final class FavoriteListPresenter extends BasePresenter<FavoriteListView>
         }
 
         public void onRemove(FavoriteModel model) {
+            Bundle params = new Bundle();
+            params.putString(AnalyticsParam.USER_NAME.getValue(), model.name);
+            firebaseAnalytics.logEvent(AnalyticsEvent.ADD_FAVORITE.getValue(), params);
+
             Subscription subscription = removeFavoriteUseCase
                     .execute(MyUser.getUid(), model.userId)
                     .subscribeOn(Schedulers.io())

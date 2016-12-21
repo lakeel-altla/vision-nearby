@@ -7,6 +7,4 @@ public final class FavoriteModel {
     public String name;
 
     public String imageUri;
-
-    public long addedTime;
 }

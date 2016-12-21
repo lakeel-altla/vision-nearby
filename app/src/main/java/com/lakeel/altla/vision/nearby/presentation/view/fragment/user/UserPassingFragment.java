@@ -128,7 +128,7 @@ public final class UserPassingFragment extends Fragment implements UserPassingVi
         }
 
         getActivity().setTitle(bundleData.userName);
-        presenter.setUserLocationData(bundleData.userId, bundleData.latitude, bundleData.longitude);
+        presenter.setUserLocationData(bundleData.userId, bundleData.userName, bundleData.latitude, bundleData.longitude);
 
         DateFormatter dateFormatter = new DateFormatter(bundleData.timestamp);
         passingLayout.textViewDate.setText(dateFormatter.format());

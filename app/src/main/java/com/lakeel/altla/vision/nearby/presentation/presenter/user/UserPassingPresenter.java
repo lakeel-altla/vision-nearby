@@ -1,5 +1,8 @@
 package com.lakeel.altla.vision.nearby.presentation.presenter.user;
 
+import android.os.Bundle;
+
+import com.google.firebase.analytics.FirebaseAnalytics;
 import com.lakeel.altla.vision.nearby.R;
 import com.lakeel.altla.vision.nearby.domain.usecase.FindFavoriteUseCase;
 import com.lakeel.altla.vision.nearby.domain.usecase.FindLineLinkUseCase;
@@ -7,6 +10,8 @@ import com.lakeel.altla.vision.nearby.domain.usecase.FindPresenceUseCase;
 import com.lakeel.altla.vision.nearby.domain.usecase.FindTimesUseCase;
 import com.lakeel.altla.vision.nearby.domain.usecase.FindUserUseCase;
 import com.lakeel.altla.vision.nearby.domain.usecase.SaveFavoriteUseCase;
+import com.lakeel.altla.vision.nearby.presentation.constants.AnalyticsEvent;
+import com.lakeel.altla.vision.nearby.presentation.constants.AnalyticsParam;
 import com.lakeel.altla.vision.nearby.presentation.firebase.MyUser;
 import com.lakeel.altla.vision.nearby.presentation.presenter.BasePresenter;
 import com.lakeel.altla.vision.nearby.presentation.presenter.mapper.PresencesModelMapper;
@@ -23,6 +28,9 @@ import rx.android.schedulers.AndroidSchedulers;
 import rx.schedulers.Schedulers;
 
 public final class UserPassingPresenter extends BasePresenter<UserPassingView> {
+
+    @Inject
+    FirebaseAnalytics firebaseAnalytics;
 
     @Inject
     FindUserUseCase findUserUseCase;
@@ -50,6 +58,8 @@ public final class UserPassingPresenter extends BasePresenter<UserPassingView> {
 
     private String otherUserId;
 
+    private String userName;
+
     private String latitude;
 
     private String longitude;
@@ -58,8 +68,9 @@ public final class UserPassingPresenter extends BasePresenter<UserPassingView> {
     UserPassingPresenter() {
     }
 
-    public void setUserLocationData(String otherUserId, String latitude, String longitude) {
+    public void setUserLocationData(String otherUserId, String userName, String latitude, String longitude) {
         this.otherUserId = otherUserId;
+        this.userName = userName;
         this.latitude = latitude;
         this.longitude = longitude;
     }
@@ -118,6 +129,11 @@ public final class UserPassingPresenter extends BasePresenter<UserPassingView> {
     }
 
     public void onAdd() {
+        Bundle params = new Bundle();
+        params.putString(AnalyticsParam.USER_ID.getValue(), otherUserId);
+        params.putString(AnalyticsParam.USER_NAME.getValue(), userName);
+        firebaseAnalytics.logEvent(AnalyticsEvent.ADD_FAVORITE.getValue(), params);
+
         Subscription subscription = saveFavoriteUseCase
                 .execute(MyUser.getUid(), otherUserId)
                 .subscribeOn(Schedulers.io())
