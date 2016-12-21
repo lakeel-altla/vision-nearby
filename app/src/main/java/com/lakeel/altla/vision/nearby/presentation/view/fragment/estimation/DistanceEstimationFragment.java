@@ -97,9 +97,9 @@ public final class DistanceEstimationFragment extends Fragment implements Distan
 
         Bundle bundle = getArguments();
         List<String> beaconIds = bundle.getStringArrayList(FragmentBundle.BEACON_IDS.name());
-        String beaconName = bundle.getString(FragmentBundle.TARGET_NAME.name());
+        String targetName = bundle.getString(FragmentBundle.TARGET_NAME.name());
 
-        String message = getResources().getString(R.string.message_finding_for_nearby_device_format, beaconName);
+        String message = getResources().getString(R.string.message_finding_for_nearby_device_format, targetName);
         distanceDescriptionText.setText(message);
 
         presenter.buildSubscriber(beaconIds);
