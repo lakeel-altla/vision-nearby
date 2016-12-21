@@ -89,7 +89,7 @@ public final class NearbyListFragment extends Fragment implements NearbyListView
 
         swipeRefreshLayout.setColorSchemeResources(R.color.colorPrimary, R.color.colorPrimary, R.color.colorPrimary, R.color.colorPrimary);
         swipeRefreshLayout.setOnRefreshListener(() -> {
-            new Handler().postDelayed(() -> swipeRefreshLayout.setRefreshing(false), 1000);
+            new Handler().postDelayed(() -> swipeRefreshLayout.setRefreshing(false), 10000);
             presenter.onRefresh();
         });
 
