@@ -4,4 +4,9 @@
             android:id="@+id/menu_cm_favorites"
             android:title="@string/title_add_favorites"
             android:icon="@drawable/ic_cm_launcher"/>
+
+    <item
+        android:id="@+id/menu_cm_message"
+        android:title="@string/title_send_message"
+        android:icon="@drawable/ic_cm_launcher"/>
 </menu>

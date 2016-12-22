@@ -16,6 +16,8 @@ import android.widget.LinearLayout;
 
 import com.flipboard.bottomsheet.BottomSheetLayout;
 import com.lakeel.altla.vision.nearby.R;
+import com.lakeel.altla.vision.nearby.android.SendMessageDialog;
+import com.lakeel.altla.vision.nearby.core.StringUtils;
 import com.lakeel.altla.vision.nearby.presentation.constants.FragmentBundle;
 import com.lakeel.altla.vision.nearby.presentation.presenter.model.PresenceModel;
 import com.lakeel.altla.vision.nearby.presentation.presenter.model.UserModel;
@@ -173,8 +175,15 @@ public final class UserProfileFragment extends Fragment implements UserProfileVi
     public void showShareSheet() {
         GridShareSheet shareSheet = new GridShareSheet(getContext(), this.shareSheet, R.menu.menu_share);
         shareSheet.setOnMenuItemClickListener(item -> {
-            if (item.getItemId() == R.id.menu_cm_favorites) {
-                presenter.onCmMenuClick();
+            switch (item.getItemId()) {
+                case R.id.menu_cm_favorites:
+                    presenter.onAddFavoriteMenuClick();
+                    break;
+                case R.id.menu_cm_message:
+                    presenter.onSendMenuClick();
+                    break;
+                default:
+                    break;
             }
             return true;
         });
@@ -194,6 +203,19 @@ public final class UserProfileFragment extends Fragment implements UserProfileVi
     public void showLineUrl(String url) {
         snsLayout.textViewLineUrl.setAutoLinkMask(Linkify.WEB_URLS);
         snsLayout.textViewLineUrl.setText(url);
+    }
+
+    @Override
+    public void showMessageInputDialog() {
+        SendMessageDialog dialog = new SendMessageDialog(getContext(), (dialog1, input) -> {
+            String message = input.toString();
+            if (StringUtils.isEmpty(message)) {
+                showSnackBar(R.string.error_required);
+                return;
+            }
+            presenter.onSendMessage(message);
+        });
+        dialog.show();
     }
 
     @Override

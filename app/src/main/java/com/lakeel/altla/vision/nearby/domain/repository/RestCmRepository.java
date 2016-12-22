@@ -8,4 +8,6 @@ import rx.Single;
 public interface RestCmRepository {
 
     Single<Timestamp> saveFavorites(CmFavoriteData data);
+
+    Single<Timestamp> sendMessage(String jid, String message);
 }

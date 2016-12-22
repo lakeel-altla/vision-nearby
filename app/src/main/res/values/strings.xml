@@ -5,6 +5,8 @@
     <string name="navigation_drawer_close">Close navigation drawer</string>
 
     <string name="dialog_button_positive">OK</string>
+    <string name="dialog_button_cancel">Cancel</string>
+    <string name="dialog_button_send">Send</string>
     <string name="dialog_message_confirm_find_nearby_devices">Are you sure you want to find the nearby device?</string>
 
     <string name="textView_state">State</string>
@@ -57,6 +59,7 @@
     <string name="title_directions">Directions</string>
     <string name="title_refresh">Refresh</string>
     <string name="title_add_favorites">Add to Favorites</string>
+    <string name="title_send_message">Send Message</string>
     <string name="title_add_friends">Add to Friends</string>
 
     <string name="preference_summary_advertise_in_background">Allow advertise data when the app becomes
@@ -88,6 +91,7 @@
     <string name="message_added">Added.</string>
     <string name="message_saved">Saved.</string>
     <string name="message_removed">Removed.</string>
+    <string name="message_send">Send.</string>
     <string name="message_advertise_disable">This device can not support bluetooth advertising.
     </string>
     <string name="message_not_found">Not found.</string>
@@ -121,6 +125,7 @@
     <string name="error_not_saved">Could not save.</string>
     <string name="error_not_found">Could not find.</string>
     <string name="error_not_deleted">Could not delete.</string>
+    <string name="error_required">Required.</string>
 
     <string name="dummy">Dummy</string>
 </resources>

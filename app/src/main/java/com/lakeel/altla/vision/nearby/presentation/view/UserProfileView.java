@@ -21,5 +21,7 @@ public interface UserProfileView {
 
     void showLineUrl(String url);
 
+    void showMessageInputDialog();
+
     void showFindNearbyDeviceFragment(ArrayList<String> beaconIds, String targetName);
 }

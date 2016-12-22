@@ -10,6 +10,7 @@ import com.lakeel.altla.vision.nearby.domain.usecase.FindPresenceUseCase;
 import com.lakeel.altla.vision.nearby.domain.usecase.FindUserBeaconsUseCase;
 import com.lakeel.altla.vision.nearby.domain.usecase.FindUserUseCase;
 import com.lakeel.altla.vision.nearby.domain.usecase.SaveCmFavoritesUseCase;
+import com.lakeel.altla.vision.nearby.domain.usecase.SendMessageUseCase;
 import com.lakeel.altla.vision.nearby.presentation.presenter.BasePresenter;
 import com.lakeel.altla.vision.nearby.presentation.presenter.data.CmFavoriteData;
 import com.lakeel.altla.vision.nearby.presentation.presenter.mapper.CmFavoritesDataMapper;
@@ -51,6 +52,9 @@ public final class UserProfilePresenter extends BasePresenter<UserProfileView> {
 
     @Inject
     SaveCmFavoritesUseCase saveCmFavoritesUseCase;
+
+    @Inject
+    SendMessageUseCase sendMessageUseCase;
 
     private static final Logger LOGGER = LoggerFactory.getLogger(UserProfilePresenter.class);
 
@@ -143,7 +147,7 @@ public final class UserProfilePresenter extends BasePresenter<UserProfileView> {
         subscriptions.add(subscription);
     }
 
-    public void onCmMenuClick() {
+    public void onAddFavoriteMenuClick() {
         Subscription subscription = findCmJidUseCase
                 .execute(userId)
                 .map(jid -> cmFavoritesDataMapper.map(jid))
@@ -158,7 +162,26 @@ public final class UserProfilePresenter extends BasePresenter<UserProfileView> {
         subscriptions.add(subscription);
     }
 
+    public void onSendMenuClick() {
+        getView().showMessageInputDialog();
+    }
+
+    public void onSendMessage(String message) {
+        Subscription subscription = findCmJidUseCase
+                .execute(userId)
+                .flatMap(jid -> sendMessage(jid, message))
+                .subscribeOn(Schedulers.io())
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribe(timestamp -> getView().showSnackBar(R.string.message_send)
+                        , e -> LOGGER.error("Failed to send message.", e));
+        subscriptions.add(subscription);
+    }
+
     Single<Timestamp> saveCmFavorites(CmFavoriteData data) {
         return saveCmFavoritesUseCase.execute(data).subscribeOn(Schedulers.io());
+    }
+
+    Single<Timestamp> sendMessage(String jid, String message) {
+        return sendMessageUseCase.execute(jid, message).subscribeOn(Schedulers.io());
     }
 }
