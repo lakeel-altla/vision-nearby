@@ -1,6 +1,8 @@
 package com.lakeel.altla.vision.nearby.presentation.view.bundle;
 
-public final class WeatherBundle {
+import java.io.Serializable;
+
+public final class WeatherBundle implements Serializable {
 
     public int[] conditions;
 
