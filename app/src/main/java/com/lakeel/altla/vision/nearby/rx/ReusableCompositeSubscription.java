@@ -1,4 +1,4 @@
-package com.lakeel.altla.vision.nearby.presentation.presenter;
+package com.lakeel.altla.vision.nearby.rx;
 
 import android.support.annotation.NonNull;
 
