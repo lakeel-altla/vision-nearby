@@ -307,25 +307,25 @@ public final class ActivityPresenter extends BasePresenter<ActivityView> impleme
         subscriptions.add(subscription);
     }
 
-    Single<String> saveBeaconId(String userId) {
+    private Single<String> saveBeaconId(String userId) {
         return saveBeaconIdUseCase.execute(userId).subscribeOn(Schedulers.io());
     }
 
-    Single<String> saveUserBeacon(String userId, String beaconId) {
+    private Single<String> saveUserBeacon(String userId, String beaconId) {
         return saveUserBeaconUseCase.execute(userId, beaconId).subscribeOn(Schedulers.io());
     }
 
-    Single<String> saveBeacon(String beaconId, String userId) {
+    private Single<String> saveBeacon(String beaconId, String userId) {
         return saveBeaconUseCase.execute(beaconId, userId, Build.MODEL).subscribeOn(Schedulers.io());
     }
 
-    Single<String> saveToken(String userId, String beaconId) {
+    private Single<String> saveToken(String userId, String beaconId) {
         // TODO: Observable
         String token = instanceId.getToken();
         return saveTokenUseCase.execute(userId, beaconId, token).subscribeOn(Schedulers.io());
     }
 
-    Single<PreferenceEntity> findPreferences(String userId) {
+    private Single<PreferenceEntity> findPreferences(String userId) {
         return findPreferencesUseCase.execute(userId).subscribeOn(Schedulers.io());
     }
 }

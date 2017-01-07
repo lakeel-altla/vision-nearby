@@ -177,11 +177,11 @@ public final class UserProfilePresenter extends BasePresenter<UserProfileView> {
         subscriptions.add(subscription);
     }
 
-    Single<Timestamp> saveCmFavorites(CmFavoriteData data) {
+    private Single<Timestamp> saveCmFavorites(CmFavoriteData data) {
         return saveCmFavoritesUseCase.execute(data).subscribeOn(Schedulers.io());
     }
 
-    Single<Timestamp> sendMessage(String jid, String message) {
+    private Single<Timestamp> sendMessage(String jid, String message) {
         return sendMessageUseCase.execute(jid, message).subscribeOn(Schedulers.io());
     }
 }

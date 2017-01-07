@@ -123,7 +123,7 @@ public final class FavoriteListPresenter extends BasePresenter<FavoriteListView>
         }
     }
 
-    Observable<UserEntity> findUser(String userId) {
+    private Observable<UserEntity> findUser(String userId) {
         return findUserUseCase.execute(userId).toObservable();
     }
 }

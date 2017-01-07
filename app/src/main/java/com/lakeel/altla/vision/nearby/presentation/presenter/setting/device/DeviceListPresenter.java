@@ -152,11 +152,11 @@ public class DeviceListPresenter extends BasePresenter<DeviceListView> {
         subscriptions.add(subscription);
     }
 
-    Observable<BeaconEntity> findBeacon(String beaconId) {
+    private Observable<BeaconEntity> findBeacon(String beaconId) {
         return findBeaconUseCase.execute(beaconId).subscribeOn(Schedulers.io()).toObservable();
     }
 
-    Single<String> removeUserBeacon(String userId, String beaconId) {
+    private Single<String> removeUserBeacon(String userId, String beaconId) {
         return removeUserBeaconUseCase.execute(userId, beaconId).subscribeOn(Schedulers.io());
     }
 }

@@ -279,11 +279,11 @@ public final class NearbyListPresenter extends BasePresenter<NearbyListView> imp
         }
     }
 
-    Observable<String> findCmJid(String userId) {
+    private Observable<String> findCmJid(String userId) {
         return findCmJidUseCase.execute(userId).subscribeOn(Schedulers.io()).toObservable();
     }
 
-    Observable<Timestamp> saveCmFavorites(CmFavoriteData data) {
+    private Observable<Timestamp> saveCmFavorites(CmFavoriteData data) {
         return saveCmFavoritesUseCase.execute(data).subscribeOn(Schedulers.io()).toObservable();
     }
 }

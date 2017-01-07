@@ -152,7 +152,7 @@ public final class HistoryPresenter extends BasePresenter<HistoryView> {
         }
     }
 
-    Observable<UserEntity> findUser(String userId) {
+    private Observable<UserEntity> findUser(String userId) {
         return findUserUseCase.execute(userId).subscribeOn(Schedulers.io()).toObservable();
     }
 }

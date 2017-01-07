@@ -100,7 +100,7 @@ public final class TrackingPresenter extends BasePresenter<TrackingView> {
         getView().launchGoogleMapApp(String.valueOf(geoLocation.latitude), String.valueOf(geoLocation.longitude));
     }
 
-    Single<GeoLocation> findLocation(String uniqueKey) {
+    private Single<GeoLocation> findLocation(String uniqueKey) {
         return findLocationUseCase.execute(uniqueKey).subscribeOn(Schedulers.io());
     }
 }

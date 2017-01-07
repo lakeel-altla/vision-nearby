@@ -27,9 +27,6 @@ import javax.inject.Inject;
 
 public final class DistanceEstimationPresenter extends BasePresenter<DistanceEstimationView> implements GoogleApiClient.ConnectionCallbacks {
 
-    @Inject
-    FindUserBeaconsUseCase findUserBeaconsUseCase;
-
     private final GoogleApiClient googleApiClient;
 
     private Subscriber subscriber;

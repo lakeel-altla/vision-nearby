@@ -13,7 +13,7 @@ public abstract class BaseItemPresenter<IV extends ItemView> implements ItemPres
         this.itemView = itemView;
     }
 
-    public IV getItemView() {
+    protected IV getItemView() {
         return itemView;
     }
 }

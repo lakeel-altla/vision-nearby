@@ -109,7 +109,7 @@ public final class CmSettingPresenter extends BasePresenter<CmSettingView> {
         subscriptions.add(subscription);
     }
 
-    Observable<CmLinkEntity> findCmLink(String userId) {
+    private Observable<CmLinkEntity> findCmLink(String userId) {
         return findCmLinkUseCase.execute(userId).subscribeOn(Schedulers.io()).toObservable();
     }
 }
