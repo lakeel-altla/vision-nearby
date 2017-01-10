@@ -4,5 +4,5 @@ import rx.Observable;
 
 public interface FirebaseConnectionRepository {
 
-    Observable<Object> observePresence();
+    Observable<Object> observeConnection();
 }

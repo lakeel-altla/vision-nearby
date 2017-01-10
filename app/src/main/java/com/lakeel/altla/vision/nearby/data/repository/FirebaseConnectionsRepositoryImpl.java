@@ -8,7 +8,7 @@ import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ServerValue;
 import com.google.firebase.database.ValueEventListener;
 import com.lakeel.altla.vision.nearby.data.entity.PresenceEntity;
-import com.lakeel.altla.vision.nearby.domain.repository.FirebasePresencesRepository;
+import com.lakeel.altla.vision.nearby.domain.repository.FirebaseConnectionsRepository;
 import com.lakeel.altla.vision.nearby.presentation.firebase.MyUser;
 
 import java.util.HashMap;
@@ -19,7 +19,7 @@ import javax.inject.Inject;
 import rx.Completable;
 import rx.Single;
 
-public class FirebasePresencesRepositoryImpl implements FirebasePresencesRepository {
+public class FirebaseConnectionsRepositoryImpl implements FirebaseConnectionsRepository {
 
     private static final String IS_CONNECTED_KEY = "isConnected";
 
@@ -28,12 +28,12 @@ public class FirebasePresencesRepositoryImpl implements FirebasePresencesReposit
     private DatabaseReference reference;
 
     @Inject
-    public FirebasePresencesRepositoryImpl(String url) {
+    public FirebaseConnectionsRepositoryImpl(String url) {
         reference = FirebaseDatabase.getInstance().getReferenceFromUrl(url);
     }
 
     @Override
-    public void savePresenceOnline(String userId) {
+    public void saveOnline(String userId) {
         // Check user authentication because when user sign out, this method is called and FirebaseUser instance become null.
         if (MyUser.isAuthenticated()) {
             Map<String, Object> map = new HashMap<>();
@@ -47,7 +47,7 @@ public class FirebasePresencesRepositoryImpl implements FirebasePresencesReposit
     }
 
     @Override
-    public Completable savePresenceOffline(String userId) {
+    public Completable saveOffline(String userId) {
         return Completable.create(subscriber -> {
             Task task = reference
                     .child(userId)

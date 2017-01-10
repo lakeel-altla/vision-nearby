@@ -1,6 +1,6 @@
 package com.lakeel.altla.vision.nearby.domain.usecase;
 
-import com.lakeel.altla.vision.nearby.domain.repository.FirebasePresencesRepository;
+import com.lakeel.altla.vision.nearby.domain.repository.FirebaseConnectionsRepository;
 
 import javax.inject.Inject;
 
@@ -9,13 +9,13 @@ import rx.Completable;
 public final class OfflineUseCase {
 
     @Inject
-    FirebasePresencesRepository repository;
+    FirebaseConnectionsRepository repository;
 
     @Inject
     OfflineUseCase() {
     }
 
     public Completable execute(String userId) {
-        return repository.savePresenceOffline(userId);
+        return repository.saveOffline(userId);
     }
 }

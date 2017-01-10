@@ -5,11 +5,11 @@ import com.lakeel.altla.vision.nearby.data.entity.PresenceEntity;
 import rx.Completable;
 import rx.Single;
 
-public interface FirebasePresencesRepository {
+public interface FirebaseConnectionsRepository {
 
-    void savePresenceOnline(String userId);
+    void saveOnline(String userId);
 
-    Completable savePresenceOffline(String userId);
+    Completable saveOffline(String userId);
 
     void savePresenceOfflineOnDisconnect(String userId);
 

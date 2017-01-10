@@ -27,7 +27,7 @@ public final class FirebaseConnectionRepositoryImpl implements FirebaseConnectio
     }
 
     @Override
-    public Observable<Object> observePresence() {
+    public Observable<Object> observeConnection() {
         return Observable.create(subscriber -> {
             reference.addValueEventListener(new ValueEventListener() {
                 @Override

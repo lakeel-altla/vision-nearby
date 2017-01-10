@@ -41,9 +41,9 @@ public final class ConfigModule {
 
     @InjectScope
     @Provides
-    @Named("presencesUrl")
+    @Named("connectionsUrl")
     String providePresencesUrl() {
-        return "https://profile-notification-95441.firebaseio.com/presences";
+        return "https://profile-notification-95441.firebaseio.com/connections";
     }
 
     @InjectScope

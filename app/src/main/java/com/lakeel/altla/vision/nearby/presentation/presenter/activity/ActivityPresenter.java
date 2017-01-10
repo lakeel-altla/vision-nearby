@@ -28,7 +28,7 @@ import com.lakeel.altla.vision.nearby.domain.usecase.FindCmLinkUseCase;
 import com.lakeel.altla.vision.nearby.domain.usecase.FindPreferencesUseCase;
 import com.lakeel.altla.vision.nearby.domain.usecase.FindSubscribeSettingUseCase;
 import com.lakeel.altla.vision.nearby.domain.usecase.FindTokenUseCase;
-import com.lakeel.altla.vision.nearby.domain.usecase.ObservePresenceUseCase;
+import com.lakeel.altla.vision.nearby.domain.usecase.ObserveConnectionUseCase;
 import com.lakeel.altla.vision.nearby.domain.usecase.OfflineUseCase;
 import com.lakeel.altla.vision.nearby.domain.usecase.SaveBeaconUseCase;
 import com.lakeel.altla.vision.nearby.domain.usecase.SavePreferenceBeaconIdUseCase;
@@ -64,7 +64,7 @@ public final class ActivityPresenter extends BasePresenter<ActivityView> impleme
     SavePreferenceBeaconIdUseCase saveBeaconIdUseCase;
 
     @Inject
-    ObservePresenceUseCase observePresenceUseCase;
+    ObserveConnectionUseCase observeConnectionUseCase;
 
     @Inject
     FindCmLinkUseCase findCmLinkUseCase;
@@ -199,7 +199,7 @@ public final class ActivityPresenter extends BasePresenter<ActivityView> impleme
             getView().showAdvertiseDisableConfirmDialog();
         }
 
-        observePresenceUseCase.execute(MyUser.getUid());
+        observeConnectionUseCase.execute(MyUser.getUid());
 
         // TODO: Simply
         Subscription subscription1 = findBeaconIdUseCase
