@@ -40,7 +40,7 @@ public final class FirebaseConnectionRepositoryImpl implements FirebaseConnectio
 
                 @Override
                 public void onCancelled(DatabaseError databaseError) {
-                    LOGGER.error("Connection event was canceled", databaseError.toException());
+                    LOGGER.error("Connection event was canceled.", databaseError.toException());
                 }
             });
         });
