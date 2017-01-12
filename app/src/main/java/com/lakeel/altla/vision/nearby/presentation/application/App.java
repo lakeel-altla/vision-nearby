@@ -4,9 +4,7 @@ import android.app.Activity;
 import android.app.Application;
 import android.support.annotation.NonNull;
 import android.support.multidex.MultiDex;
-import android.support.v4.app.Fragment;
 
-import com.google.firebase.analytics.FirebaseAnalytics;
 import com.google.firebase.database.FirebaseDatabase;
 import com.lakeel.altla.vision.nearby.R;
 import com.lakeel.altla.vision.nearby.presentation.di.component.ApplicationComponent;
@@ -23,8 +21,6 @@ public class App extends Application {
 
     private FirebaseDatabase firebaseDatabase;
 
-    private FirebaseAnalytics firebaseAnalytics;
-
     private ApplicationComponent applicationComponent;
 
     @Override
@@ -35,8 +31,6 @@ public class App extends Application {
             firebaseDatabase = FirebaseDatabase.getInstance();
             firebaseDatabase.setPersistenceEnabled(true);
         }
-
-        firebaseAnalytics = FirebaseAnalytics.getInstance(this);
 
         MultiDex.install(this);
         JodaTimeAndroid.init(this);
@@ -50,10 +44,6 @@ public class App extends Application {
 
     public static ApplicationComponent getApplicationComponent(@NonNull Activity activity) {
         return ((App) activity.getApplication()).applicationComponent;
-    }
-
-    public static FirebaseAnalytics getFirebaseAnalytics(Fragment fragment) {
-        return ((App) fragment.getActivity().getApplication()).firebaseAnalytics;
     }
 
     private void initImageLoaderInstance() {
