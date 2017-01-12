@@ -39,7 +39,7 @@ public final class AdvertiseService extends Service {
             LOGGER.debug("Namespace Id=" + namespaceId + " Instance Id=" + instanceId);
 
             if (StringUtils.isEmpty(namespaceId) || StringUtils.isEmpty(instanceId)) {
-                LOGGER.error("Stop publish service because Namespace ID or Instance ID was empty.");
+                LOGGER.error("Stop AdvertiseService because Namespace ID or Instance ID was empty.");
                 stopSelf();
             } else {
                 BeaconParser beaconParser = new BeaconParser()
@@ -48,7 +48,7 @@ public final class AdvertiseService extends Service {
                 BeaconTransmitter beaconTransmitter = new BeaconTransmitter(getApplicationContext(), beaconParser);
 
                 if (beaconTransmitter.isStarted()) {
-                    LOGGER.debug("Already started");
+                    LOGGER.warn("Already started");
                 } else {
                     // Transmit as a Eddystone-UID.
                     Beacon beacon = new Beacon.Builder()
