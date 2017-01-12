@@ -114,7 +114,7 @@ public class HistoryService extends IntentService {
         googleApiClient.connect();
     }
 
-    Single<DetectedActivity> getUserCurrentActivity() {
+    private Single<DetectedActivity> getUserCurrentActivity() {
         return Single.create(new Single.OnSubscribe<DetectedActivity>() {
             @Override
             public void call(SingleSubscriber<? super DetectedActivity> subscriber) {
@@ -132,7 +132,7 @@ public class HistoryService extends IntentService {
         });
     }
 
-    Single<Location> getUserCurrentLocation(Context context) {
+    private Single<Location> getUserCurrentLocation(Context context) {
         return Single.create(subscriber -> {
             if (ContextCompat.checkSelfPermission(context, Manifest.permission.ACCESS_FINE_LOCATION) == PackageManager.PERMISSION_GRANTED) {
                 Awareness.SnapshotApi.getLocation(googleApiClient)
@@ -151,7 +151,7 @@ public class HistoryService extends IntentService {
         });
     }
 
-    Single<Weather> getWeather(Context context) {
+    private Single<Weather> getWeather(Context context) {
         return Single.create(subscriber -> {
             if (ContextCompat.checkSelfPermission(context, Manifest.permission.ACCESS_FINE_LOCATION) == PackageManager.PERMISSION_GRANTED) {
                 Awareness.SnapshotApi.getWeather(googleApiClient)
