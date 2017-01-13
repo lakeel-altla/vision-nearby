@@ -29,10 +29,10 @@ public final class NearbyReceiver extends BroadcastReceiver {
 
                     @Override
                     protected void onFound(String type, String value) {
-                        Attachment attachment = BeaconAttachmentFactory.create(type);
-                        if (attachment != null) {
-                            attachment.startService(context, value);
-                        }
+//                        Attachment attachment = BeaconAttachmentFactory.create(type);
+//                        if (attachment != null) {
+//                            attachment.startService(context, value);
+//                        }
                     }
 
                     @Override

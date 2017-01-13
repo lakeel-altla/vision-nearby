@@ -21,6 +21,8 @@ public interface ActivityView extends BaseView {
 
     void showBleEnabledActivity();
 
+    void startSubscribeBeacons();
+
     void startAdvertiseService(String beaconId);
 
     void showAccessFineLocationPermissionSystemDialog();

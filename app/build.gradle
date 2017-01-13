@@ -76,7 +76,10 @@ dependencies {
     compile 'com.marshalchen.ultimaterecyclerview:library:0.7.0'
 
     // altbeacon
-    compile 'org.altbeacon:android-beacon-library:2.9.1'
+    compile 'org.altbeacon:android-beacon-library:2.9.2'
+
+    // nv-bluetooth
+    compile 'com.neovisionaries:nv-bluetooth:1.8'
 
     // Date
     compile 'net.danlew:android.joda:2.9.4.1'

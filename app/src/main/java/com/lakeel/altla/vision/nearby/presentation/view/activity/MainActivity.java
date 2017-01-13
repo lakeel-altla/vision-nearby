@@ -47,6 +47,9 @@ import butterknife.ButterKnife;
 public class MainActivity extends AppCompatActivity
         implements NavigationView.OnNavigationItemSelectedListener, ActivityView {
 
+    @Inject
+    ActivityPresenter presenter;
+
     private static final Logger LOGGER = LoggerFactory.getLogger(MainActivity.class);
 
     private static final int REQUEST_CODE_RESOLVE_CONNECTION = 1;
@@ -66,9 +69,6 @@ public class MainActivity extends AppCompatActivity
     private DrawerLayout drawerLayout;
 
     private RelativeLayout mainLayout;
-
-    @Inject
-    ActivityPresenter presenter;
 
     @TargetApi(Build.VERSION_CODES.M)
     @Override
@@ -248,6 +248,11 @@ public class MainActivity extends AppCompatActivity
     public void showBleEnabledActivity() {
         Intent enableBtIntent = new Intent(BluetoothAdapter.ACTION_REQUEST_ENABLE);
         startActivityForResult(enableBtIntent, REQUEST_CODE_ENABLE_BLE);
+    }
+
+    @Override
+    public void startSubscribeBeacons() {
+        ((App) getApplication()).startSubscribeBeacons();
     }
 
     @Override

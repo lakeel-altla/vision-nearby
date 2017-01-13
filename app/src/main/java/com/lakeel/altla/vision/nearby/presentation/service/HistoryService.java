@@ -15,6 +15,8 @@ import com.google.android.gms.awareness.state.Weather;
 import com.google.android.gms.common.api.GoogleApiClient;
 import com.google.android.gms.location.ActivityRecognitionResult;
 import com.google.android.gms.location.DetectedActivity;
+import com.lakeel.altla.vision.nearby.data.entity.UserEntity;
+import com.lakeel.altla.vision.nearby.domain.usecase.FindBeaconUseCase;
 import com.lakeel.altla.vision.nearby.domain.usecase.FindUserUseCase;
 import com.lakeel.altla.vision.nearby.domain.usecase.SaveDetectedActivityUseCase;
 import com.lakeel.altla.vision.nearby.domain.usecase.SaveHistoryUseCase;
@@ -36,6 +38,9 @@ import rx.SingleSubscriber;
 import rx.schedulers.Schedulers;
 
 public class HistoryService extends IntentService {
+
+    @Inject
+    FindBeaconUseCase findBeaconUseCase;
 
     @Inject
     FindUserUseCase findUserUseCase;
@@ -69,9 +74,7 @@ public class HistoryService extends IntentService {
         ServiceComponent serviceComponent = DaggerServiceComponent.create();
         serviceComponent.inject(this);
 
-        String userId = intent.getStringExtra(IntentKey.USER_ID.name());
-
-        LOGGER.info("User was found:userId = " + userId);
+        String beaconId = intent.getStringExtra(IntentKey.BEACON_ID.name());
 
         Context context = getApplicationContext();
         googleApiClient = new GoogleApiClient.Builder(context)
@@ -80,9 +83,11 @@ public class HistoryService extends IntentService {
 
                     @Override
                     public void onConnected(@Nullable Bundle bundle) {
-                        findUserUseCase
-                                .execute(userId)
-                                .flatMap(userEntity -> saveHistoryUseCase.execute(MyUser.getUid(), userEntity.userId).subscribeOn(Schedulers.io()))
+                        findBeaconUseCase
+                                .execute(beaconId)
+                                .subscribeOn(Schedulers.io())
+                                .flatMap(entity -> findUser(entity.userId))
+                                .flatMap(entity -> saveHistory(MyUser.getUid(), entity.userId))
                                 .subscribeOn(Schedulers.io())
                                 .subscribe(uniqueKey -> {
                                     getUserCurrentActivity()
@@ -112,6 +117,14 @@ public class HistoryService extends IntentService {
                 .build();
 
         googleApiClient.connect();
+    }
+
+    private Single<UserEntity> findUser(String userId) {
+        return findUserUseCase.execute(userId).subscribeOn(Schedulers.io());
+    }
+
+    private Single<String> saveHistory(String myUserId, String otherUserId) {
+        return saveHistoryUseCase.execute(myUserId, otherUserId).subscribeOn(Schedulers.io());
     }
 
     private Single<DetectedActivity> getUserCurrentActivity() {

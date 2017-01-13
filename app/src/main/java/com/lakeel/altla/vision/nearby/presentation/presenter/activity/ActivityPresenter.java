@@ -180,28 +180,18 @@ public final class ActivityPresenter extends BasePresenter<ActivityView> impleme
 
     public void onSignIn() {
         getView().showFavoriteListFragment();
+        getView().startSubscribeBeacons();
 
-        if (ActivityCompat.checkSelfPermission(context, Manifest.permission.ACCESS_FINE_LOCATION) == PackageManager.PERMISSION_GRANTED) {
-            onAccessLocationGrant();
-        } else {
-            getView().showAccessFineLocationPermissionSystemDialog();
-        }
+        checkBle();
+        checkAccessLocationPermission();
 
         MyUser.UserData userData = MyUser.getUserData();
         getView().showProfile(userData.displayName, userData.email, userData.imageUri);
 
-        BleChecker checker = new BleChecker(context);
-        State state = checker.checkState();
-        if (state == State.OFF) {
-            getView().showBleEnabledActivity();
-        } else if (state == State.SUBSCRIBE_ONLY) {
-            isAdvertiseAvailability = false;
-            getView().showAdvertiseDisableConfirmDialog();
-        }
-
+        // Observe user presence.
         observeConnectionUseCase.execute(MyUser.getUid());
 
-        // TODO: Simply
+        // TODO: UseCase
         Subscription subscription1 = findBeaconIdUseCase
                 .execute(MyUser.getUid())
                 .flatMap(beaconId -> {
@@ -222,16 +212,15 @@ public final class ActivityPresenter extends BasePresenter<ActivityView> impleme
                         getView().startAdvertiseService(entity.beaconId);
                     }
                 }, e -> LOGGER.error("Failed to process.", e));
-
         subscriptions.add(subscription1);
 
+        // TODO: UseCase
         Subscription subscription2 = findCmLinkUseCase
                 .execute(MyUser.getUid())
                 .map(entity -> cmAuthConfigMapper.map(entity))
                 .subscribeOn(Schedulers.io())
                 .subscribe(authConfig -> CmApplication.initialize(authConfig, accessConfig),
                         e -> LOGGER.error("Failed to initialize CM settings.", e));
-
         subscriptions.add(subscription2);
     }
 
@@ -305,6 +294,25 @@ public final class ActivityPresenter extends BasePresenter<ActivityView> impleme
                             }
                         });
         subscriptions.add(subscription);
+    }
+
+    private void checkAccessLocationPermission() {
+        if (ActivityCompat.checkSelfPermission(context, Manifest.permission.ACCESS_FINE_LOCATION) == PackageManager.PERMISSION_GRANTED) {
+            onAccessLocationGrant();
+        } else {
+            getView().showAccessFineLocationPermissionSystemDialog();
+        }
+    }
+
+    private void checkBle() {
+        BleChecker checker = new BleChecker(context);
+        State state = checker.checkState();
+        if (state == State.OFF) {
+            getView().showBleEnabledActivity();
+        } else if (state == State.SUBSCRIBE_ONLY) {
+            isAdvertiseAvailability = false;
+            getView().showAdvertiseDisableConfirmDialog();
+        }
     }
 
     private Single<String> saveBeaconId(String userId) {

@@ -7,9 +7,11 @@ import android.support.multidex.MultiDex;
 
 import com.google.firebase.database.FirebaseDatabase;
 import com.lakeel.altla.vision.nearby.R;
+import com.lakeel.altla.vision.nearby.altBeacon.BeaconClient;
 import com.lakeel.altla.vision.nearby.presentation.di.component.ApplicationComponent;
 import com.lakeel.altla.vision.nearby.presentation.di.component.DaggerApplicationComponent;
 import com.lakeel.altla.vision.nearby.presentation.di.module.ApplicationModule;
+import com.lakeel.altla.vision.nearby.presentation.firebase.MyUser;
 import com.nostra13.universalimageloader.cache.memory.impl.UsingFreqLimitedMemoryCache;
 import com.nostra13.universalimageloader.core.DisplayImageOptions;
 import com.nostra13.universalimageloader.core.ImageLoader;
@@ -23,6 +25,10 @@ public class App extends Application {
 
     private ApplicationComponent applicationComponent;
 
+    public static ApplicationComponent getApplicationComponent(@NonNull Activity activity) {
+        return ((App) activity.getApplication()).applicationComponent;
+    }
+
     @Override
     public void onCreate() {
         super.onCreate();
@@ -32,21 +38,27 @@ public class App extends Application {
             firebaseDatabase.setPersistenceEnabled(true);
         }
 
-        MultiDex.install(this);
-        JodaTimeAndroid.init(this);
-
-        initImageLoaderInstance();
-
         applicationComponent = DaggerApplicationComponent.builder()
                 .applicationModule(new ApplicationModule(this))
                 .build();
+
+        MultiDex.install(this);
+
+        JodaTimeAndroid.init(this);
+
+        initImageLoader();
+
+        if (MyUser.isAuthenticated()) {
+            startSubscribeBeacons();
+        }
     }
 
-    public static ApplicationComponent getApplicationComponent(@NonNull Activity activity) {
-        return ((App) activity.getApplication()).applicationComponent;
+    public void startSubscribeBeacons() {
+        BeaconClient client = new BeaconClient(getApplicationContext());
+        client.connectService();
     }
 
-    private void initImageLoaderInstance() {
+    private void initImageLoader() {
         // Init ImageLoader instance.
         DisplayImageOptions displayImageOptions = new DisplayImageOptions.Builder()
                 .showImageForEmptyUri(R.mipmap.ic_user)

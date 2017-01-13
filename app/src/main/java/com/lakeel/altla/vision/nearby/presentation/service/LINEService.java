@@ -5,8 +5,7 @@ import android.app.PendingIntent;
 import android.content.Intent;
 
 import com.lakeel.altla.vision.nearby.R;
-import com.lakeel.altla.vision.nearby.data.entity.UserEntity;
-import com.lakeel.altla.vision.nearby.domain.usecase.FindUserIdByLineUrlUseCase;
+import com.lakeel.altla.vision.nearby.domain.usecase.FindLineLinkUseCase;
 import com.lakeel.altla.vision.nearby.domain.usecase.FindUserUseCase;
 import com.lakeel.altla.vision.nearby.presentation.di.component.DaggerServiceComponent;
 import com.lakeel.altla.vision.nearby.presentation.di.component.ServiceComponent;
@@ -19,17 +18,15 @@ import org.slf4j.LoggerFactory;
 
 import javax.inject.Inject;
 
-import rx.Single;
-import rx.android.schedulers.AndroidSchedulers;
 import rx.schedulers.Schedulers;
 
 public class LineService extends IntentService {
 
     @Inject
-    FindUserIdByLineUrlUseCase findUserIdByLineUrlUseCase;
+    FindUserUseCase findUserUseCase;
 
     @Inject
-    FindUserUseCase findUserUseCase;
+    FindLineLinkUseCase findLineLinkUseCase;
 
     private static final Logger LOGGER = LoggerFactory.getLogger(LineService.class);
 
@@ -46,28 +43,28 @@ public class LineService extends IntentService {
         ServiceComponent component = DaggerServiceComponent.create();
         component.inject(this);
 
-        String lineUrl = intent.getStringExtra(IntentKey.LINE_URL.name());
+        String userId = intent.getStringExtra(IntentKey.USER_ID.name());
 
-        LOGGER.info("LINE URL was found:URL=" + lineUrl);
+        // Show LINE URL notification.
+        findUserUseCase.execute(userId)
+                .subscribeOn(Schedulers.io())
+                .subscribe(userEntity -> showLineNotification(userId, userEntity.name), e -> LOGGER.error("Failed to notify LINE notification.", e));
+    }
 
-        findUserIdByLineUrlUseCase
-                .execute(lineUrl)
-                .flatMap(entity -> findUser(entity.userId))
-                .subscribeOn(AndroidSchedulers.mainThread())
-                .observeOn(AndroidSchedulers.mainThread())
+    private void showLineNotification(String userId, String userName) {
+        findLineLinkUseCase.execute(userId)
+                .toObservable()
+                .filter(entity -> entity != null)
+                .subscribeOn(Schedulers.io())
                 .subscribe(entity -> {
                     String title = getString(R.string.notification_title_line_user_found);
-                    String message = getString(R.string.notification_message_user_using_line, entity.name);
+                    String message = getString(R.string.notification_message_user_using_line, userName);
 
-                    UriIntent uriIntent = new UriIntent(lineUrl);
+                    UriIntent uriIntent = new UriIntent(entity.url);
                     PendingIntent pendingIntent = PendingIntent.getActivity(getApplicationContext(), 0, uriIntent, PendingIntent.FLAG_CANCEL_CURRENT);
 
                     LocalNotification notification = new LocalNotification(getApplicationContext(), title, message, pendingIntent);
                     notification.show();
-                }, e -> LOGGER.error("Failed to notify a LINE notification.", e));
-    }
-
-    Single<UserEntity> findUser(String jsonKey) {
-        return findUserUseCase.execute(jsonKey).subscribeOn(Schedulers.io());
+                });
     }
 }
