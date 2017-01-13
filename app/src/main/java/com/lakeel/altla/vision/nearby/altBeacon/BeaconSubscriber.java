@@ -45,7 +45,7 @@ public final class BeaconSubscriber {
         beaconManager.addRangeNotifier(new BeaconRangeNotifier() {
 
             @Override
-            void onEddystoneUidFound(String beaconId) {
+            protected void onEddystoneUidFound(String beaconId) {
                 findBeaconUseCase
                         .execute(beaconId)
                         .subscribeOn(Schedulers.io())
