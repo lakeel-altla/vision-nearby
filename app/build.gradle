@@ -23,7 +23,7 @@ android {
                     GOOGLE_AWARENESS_API_KEY: project.property("GOOGLE_AWARENESS_API_KEY")
             ]
         } catch (e) {
-            throw new RuntimeException("You should create gradle.properties and define enviroment values. Please see README file.")
+            throw new RuntimeException("You should create gradle.properties and define enviroment values. Please see README file.", e)
         }
     }
     dexOptions {
@@ -132,7 +132,6 @@ dependencies {
     // Apache
     compile 'commons-codec:commons-codec:1.8'
 
-    // メモリリーク。
 //    debugCompile 'com.squareup.leakcanary:leakcanary-android:1.3'
 //    releaseCompile 'com.squareup.leakcanary:leakcanary-android-no-op:1.3'
 
