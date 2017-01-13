@@ -62,7 +62,7 @@ public final class BleSettingFragment extends PreferenceFragmentCompat implement
             if (booleanValue) {
                 ((MainActivity) getActivity()).startMonitorBeacons();
             } else {
-                ((MainActivity) getActivity()).onUnSubscribeInBackground();
+                ((MainActivity) getActivity()).stopMonitorBeacons();
             }
             return true;
         });
