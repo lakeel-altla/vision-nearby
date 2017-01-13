@@ -109,6 +109,8 @@ public class MainActivity extends AppCompatActivity
             } else {
                 LOGGER.error("Failed to enable BLE.");
             }
+        } else {
+            super.onActivityResult(requestCode, resultCode, data);
         }
     }
 
