@@ -1,34 +1,33 @@
 package com.lakeel.altla.vision.nearby.presentation.presenter.nearby;
 
-import android.app.Activity;
-import android.os.Bundle;
+import android.content.Context;
+import android.content.Intent;
+import android.content.ServiceConnection;
+import android.os.RemoteException;
 import android.support.annotation.IntRange;
-import android.support.annotation.Nullable;
 
-import com.google.android.gms.common.api.GoogleApiClient;
-import com.google.android.gms.common.api.Status;
-import com.google.android.gms.nearby.Nearby;
 import com.lakeel.altla.cm.resource.Timestamp;
-import com.lakeel.altla.library.AttachmentListener;
-import com.lakeel.altla.library.ResolutionResultCallback;
 import com.lakeel.altla.vision.nearby.R;
+import com.lakeel.altla.vision.nearby.altBeacon.BeaconRangeNotifier;
+import com.lakeel.altla.vision.nearby.altBeacon.ForegroundBeaconManager;
+import com.lakeel.altla.vision.nearby.domain.usecase.FindBeaconUseCase;
 import com.lakeel.altla.vision.nearby.domain.usecase.FindCmJidUseCase;
 import com.lakeel.altla.vision.nearby.domain.usecase.FindConfigsUseCase;
 import com.lakeel.altla.vision.nearby.domain.usecase.FindUserUseCase;
 import com.lakeel.altla.vision.nearby.domain.usecase.SaveCmFavoritesUseCase;
-import com.lakeel.altla.vision.nearby.presentation.constants.AttachmentType;
-import com.lakeel.altla.vision.nearby.presentation.firebase.MyUser;
 import com.lakeel.altla.vision.nearby.presentation.presenter.BaseItemPresenter;
 import com.lakeel.altla.vision.nearby.presentation.presenter.BasePresenter;
 import com.lakeel.altla.vision.nearby.presentation.presenter.data.CmFavoriteData;
 import com.lakeel.altla.vision.nearby.presentation.presenter.mapper.CmFavoritesDataMapper;
 import com.lakeel.altla.vision.nearby.presentation.presenter.mapper.NearbyItemsModelMapper;
 import com.lakeel.altla.vision.nearby.presentation.presenter.model.NearbyItemModel;
-import com.lakeel.altla.vision.nearby.presentation.subscriber.ForegroundSubscriber;
-import com.lakeel.altla.vision.nearby.presentation.subscriber.Subscriber;
 import com.lakeel.altla.vision.nearby.presentation.view.NearbyItemView;
 import com.lakeel.altla.vision.nearby.presentation.view.NearbyListView;
 
+import org.altbeacon.beacon.BeaconConsumer;
+import org.altbeacon.beacon.BeaconManager;
+import org.altbeacon.beacon.BeaconParser;
+import org.altbeacon.beacon.Region;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -36,6 +35,7 @@ import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.List;
+import java.util.UUID;
 import java.util.concurrent.ScheduledThreadPoolExecutor;
 import java.util.concurrent.TimeUnit;
 
@@ -46,23 +46,18 @@ import rx.Subscription;
 import rx.android.schedulers.AndroidSchedulers;
 import rx.schedulers.Schedulers;
 
-public final class NearbyListPresenter extends BasePresenter<NearbyListView> implements GoogleApiClient.ConnectionCallbacks {
+public final class NearbyListPresenter extends BasePresenter<NearbyListView> implements BeaconConsumer {
 
-    private class NearbyMessagesListener extends AttachmentListener {
+    private BeaconRangeNotifier notifier = new BeaconRangeNotifier() {
 
         @Override
-        protected void onFound(String type, String value) {
-            if (AttachmentType.USER_ID != AttachmentType.toType(type)) {
-                return;
-            }
-            if (MyUser.getUid().equals(value)) {
-                return;
-            }
-
-            Subscription subscription = findUserUseCase
-                    .execute(value)
+        protected void onEddystoneUidFound(String beaconId) {
+            Subscription subscription = findBeaconUseCase.execute(beaconId)
+                    .subscribeOn(Schedulers.io())
                     .toObservable()
+                    // Exclude public beacon.
                     .filter(entity -> entity != null)
+                    .flatMap(entity -> findUserUseCase.execute(entity.userId).subscribeOn(Schedulers.io()).toObservable())
                     .subscribeOn(Schedulers.io())
                     .map(itemsEntity -> nearbyItemsModelMapper.map(itemsEntity))
                     .subscribeOn(Schedulers.io())
@@ -76,10 +71,12 @@ public final class NearbyListPresenter extends BasePresenter<NearbyListView> imp
                         nearbyItemModels.add(scannedModel);
                         getView().updateItems();
                     }, e -> LOGGER.error("Failed to find nearby item.", e));
-
             subscriptions.add(subscription);
         }
-    }
+    };
+
+    @Inject
+    FindBeaconUseCase findBeaconUseCase;
 
     @Inject
     FindUserUseCase findUserUseCase;
@@ -95,10 +92,6 @@ public final class NearbyListPresenter extends BasePresenter<NearbyListView> imp
 
     private static Logger LOGGER = LoggerFactory.getLogger(NearbyListPresenter.class);
 
-    private final GoogleApiClient googleApiClient;
-
-    private final Subscriber subscriber;
-
     private final List<NearbyItemModel> nearbyItemModels = new ArrayList<>();
 
     private final List<NearbyItemModel> checkedModels = new LinkedList<>();
@@ -113,24 +106,33 @@ public final class NearbyListPresenter extends BasePresenter<NearbyListView> imp
 
     private boolean isCmLinkEnabled;
 
-    private ResolutionResultCallback resultCallback = new ResolutionResultCallback() {
-        @Override
-        protected void onResolution(Status status) {
-            getView().showResolutionSystemDialog(status);
-        }
-    };
+    private Context context;
+
+    private ForegroundBeaconManager beaconManager;
+
+    private Region region;
 
     @Inject
-    NearbyListPresenter(Activity activity) {
-        googleApiClient = new GoogleApiClient.Builder(activity)
-                .addApi(Nearby.MESSAGES_API)
-                .build();
-        subscriber = new ForegroundSubscriber(googleApiClient, new NearbyMessagesListener());
+    NearbyListPresenter(Context context) {
+        this.context = context;
+
+        beaconManager = ForegroundBeaconManager.getInstance(context);
+//        beaconManager = BeaconManager.getInstanceForApplication(context);
+
+        beaconManager.getBeaconParsers().add(new BeaconParser().
+                setBeaconLayout(BeaconParser.EDDYSTONE_UID_LAYOUT));
+        beaconManager.getBeaconParsers().add(new BeaconParser().
+                setBeaconLayout(BeaconParser.EDDYSTONE_TLM_LAYOUT));
+        beaconManager.getBeaconParsers().add(new BeaconParser().
+                setBeaconLayout(BeaconParser.EDDYSTONE_URL_LAYOUT));
+
+        beaconManager.addRangeNotifier(notifier);
+
+        region = new Region(UUID.randomUUID().toString(), null, null, null);
     }
 
     public void onResume() {
-        googleApiClient.registerConnectionCallbacks(this);
-        googleApiClient.connect();
+        beaconManager.bind(this);
 
         Subscription subscription = findConfigsUseCase
                 .execute()
@@ -138,39 +140,29 @@ public final class NearbyListPresenter extends BasePresenter<NearbyListView> imp
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribe(bool -> isCmLinkEnabled = bool,
-                        e -> LOGGER.error("Failed to find config settings.", e));
+                        e -> LOGGER.error("Failed to find CM configuration.", e));
         subscriptions.add(subscription);
-    }
-
-    public void onPause() {
-        googleApiClient.unregisterConnectionCallbacks(this);
     }
 
     @Override
     public void onStop() {
         super.onStop();
 
-        subscriber.unSubscribe(resultCallback);
+        try {
+            beaconManager.stopRangingBeaconsInRegion(region);
+        } catch (RemoteException e) {
+            LOGGER.error("Failed to unSubscribe.");
+        }
 
         getView().hideIndicator();
         getView().drawNormalActionBarColor();
-    }
-
-    @Override
-    public void onConnected(@Nullable Bundle bundle) {
-        getView().showIndicator();
-        onSubscribe();
-    }
-
-    @Override
-    public void onConnectionSuspended(int i) {
     }
 
     public void onRefresh() {
         if (isScanning) {
             return;
         }
-        onSubscribe();
+        subscribe();
     }
 
     public void onCreateItemView(NearbyItemView nearbyItemView) {
@@ -220,14 +212,22 @@ public final class NearbyListPresenter extends BasePresenter<NearbyListView> imp
         subscriptions.add(subscription);
     }
 
-    public void onSubscribe() {
-        subscriber.subscribe(resultCallback);
+    public void subscribe() {
+        try {
+            beaconManager.startRangingBeaconsInRegion(region);
+        } catch (RemoteException e) {
+            LOGGER.error("Failed to subscribe.");
+        }
 
         isScanning = true;
 
         executor.schedule(() -> {
             // Stop to scanning after 10 seconds.
-            subscriber.unSubscribe(resultCallback);
+            try {
+                beaconManager.stopRangingBeaconsInRegion(region);
+            } catch (RemoteException e) {
+                LOGGER.error("Failed to unSubscribe.");
+            }
 
             isScanning = false;
 
@@ -243,6 +243,27 @@ public final class NearbyListPresenter extends BasePresenter<NearbyListView> imp
 
     public boolean isCmLinkEnabled() {
         return isCmLinkEnabled;
+    }
+
+    @Override
+    public void onBeaconServiceConnect() {
+        getView().showIndicator();
+        subscribe();
+    }
+
+    @Override
+    public Context getApplicationContext() {
+        return context;
+    }
+
+    @Override
+    public void unbindService(ServiceConnection serviceConnection) {
+        context.unbindService(serviceConnection);
+    }
+
+    @Override
+    public boolean bindService(Intent intent, ServiceConnection serviceConnection, int i) {
+        return context.bindService(intent, serviceConnection, i);
     }
 
     public final class NearbyItemPresenter extends BaseItemPresenter<NearbyItemView> {

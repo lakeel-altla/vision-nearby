@@ -125,12 +125,6 @@ public final class NearbyListFragment extends Fragment implements NearbyListView
     }
 
     @Override
-    public void onPause() {
-        super.onPause();
-        presenter.onPause();
-    }
-
-    @Override
     public void onStop() {
         super.onStop();
         presenter.onStop();
@@ -139,7 +133,7 @@ public final class NearbyListFragment extends Fragment implements NearbyListView
     @Override
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
         if (REQUEST_CODE_SUBSCRIBE_RESULT == requestCode && resultCode == RESULT_OK) {
-            presenter.onSubscribe();
+            presenter.subscribe();
         } else {
             super.onActivityResult(requestCode, resultCode, data);
         }

@@ -8,7 +8,7 @@ import org.slf4j.LoggerFactory;
 
 import java.util.Collection;
 
-abstract class BeaconRangeNotifier implements RangeNotifier {
+public abstract class BeaconRangeNotifier implements RangeNotifier {
 
     private static final Logger LOGGER = LoggerFactory.getLogger(BeaconRangeNotifier.class);
 
@@ -25,11 +25,11 @@ abstract class BeaconRangeNotifier implements RangeNotifier {
                 String namespaceId = beacon.getId1().toString().replace("0x", "");
                 String instanceId = beacon.getId2().toString().replace("0x", "");
                 String beaconId = namespaceId + instanceId;
-
+                
                 onEddystoneUidFound(beaconId);
             }
         }
     }
 
-    abstract void onEddystoneUidFound(String beaconId);
+    protected abstract void onEddystoneUidFound(String beaconId);
 }
