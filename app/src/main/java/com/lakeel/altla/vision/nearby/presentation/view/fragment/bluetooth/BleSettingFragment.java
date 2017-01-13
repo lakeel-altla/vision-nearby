@@ -22,7 +22,7 @@ public final class BleSettingFragment extends PreferenceFragmentCompat implement
 
     private static final String KEY_ADVERTISE_IN_BACKGROUND = "advertiseInBackground";
 
-    private static final String KEY_SUBSCRIBE_IN_BACKGROUND = "subscribeInBackground";
+    private static final String KEY_SUBSCRIBE_IN_BACKGROUND = "startMonitorBeacons";
 
     private SwitchPreferenceCompat advertisePreference;
 
@@ -60,7 +60,7 @@ public final class BleSettingFragment extends PreferenceFragmentCompat implement
         subscribePreference.setOnPreferenceChangeListener((preference, newValue) -> {
             Boolean booleanValue = (Boolean) newValue;
             if (booleanValue) {
-                ((MainActivity) getActivity()).onSubscribeInBackground();
+                ((MainActivity) getActivity()).startMonitorBeacons();
             } else {
                 ((MainActivity) getActivity()).onUnSubscribeInBackground();
             }

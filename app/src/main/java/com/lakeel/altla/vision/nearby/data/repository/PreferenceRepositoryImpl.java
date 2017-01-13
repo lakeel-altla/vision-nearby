@@ -19,7 +19,7 @@ public class PreferenceRepositoryImpl implements PreferenceRepository {
 
     private static final String KEY_ADVERTISE_IN_BACKGROUND = "advertiseInBackground";
 
-    private static final String KEY_SUBSCRIBE_IN_BACKGROUND = "subscribeInBackground";
+    private static final String KEY_SUBSCRIBE_IN_BACKGROUND = "startMonitorBeacons";
 
     private SharedPreferences preference;
 

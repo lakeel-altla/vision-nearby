@@ -7,8 +7,6 @@ import com.google.android.gms.common.api.Status;
 
 public interface ActivityView extends BaseView {
 
-    void showConnectedResolutionSystemDialog(ConnectionResult connectionResult);
-
     void showFavoriteListFragment();
 
     void showSignInFragment();
@@ -21,11 +19,9 @@ public interface ActivityView extends BaseView {
 
     void showBleEnabledActivity();
 
-    void startSubscribeBeacons();
+    void startMonitorBeacons();
+
+    void stopMonitorBeacons();
 
     void startAdvertiseService(String beaconId);
-
-    void showAccessFineLocationPermissionSystemDialog();
-
-    void showResolutionSystemDialog(Status status);
 }

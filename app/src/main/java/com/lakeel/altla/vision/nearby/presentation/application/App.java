@@ -11,7 +11,6 @@ import com.lakeel.altla.vision.nearby.altBeacon.BeaconClient;
 import com.lakeel.altla.vision.nearby.presentation.di.component.ApplicationComponent;
 import com.lakeel.altla.vision.nearby.presentation.di.component.DaggerApplicationComponent;
 import com.lakeel.altla.vision.nearby.presentation.di.module.ApplicationModule;
-import com.lakeel.altla.vision.nearby.presentation.firebase.MyUser;
 import com.nostra13.universalimageloader.cache.memory.impl.UsingFreqLimitedMemoryCache;
 import com.nostra13.universalimageloader.core.DisplayImageOptions;
 import com.nostra13.universalimageloader.core.ImageLoader;
@@ -24,6 +23,8 @@ public class App extends Application {
     private FirebaseDatabase firebaseDatabase;
 
     private ApplicationComponent applicationComponent;
+
+    private BeaconClient beaconClient;
 
     public static ApplicationComponent getApplicationComponent(@NonNull Activity activity) {
         return ((App) activity.getApplication()).applicationComponent;
@@ -48,14 +49,15 @@ public class App extends Application {
 
         initImageLoader();
 
-        if (MyUser.isAuthenticated()) {
-            startSubscribeBeacons();
-        }
+        beaconClient = new BeaconClient(this);
     }
 
-    public void startSubscribeBeacons() {
-        BeaconClient client = new BeaconClient(getApplicationContext());
-        client.connectService();
+    public void startMonitorBeacons() {
+        beaconClient.startMonitor();
+    }
+
+    public void stopMonitorBeacons() {
+        beaconClient.stopMonitor();
     }
 
     private void initImageLoader() {

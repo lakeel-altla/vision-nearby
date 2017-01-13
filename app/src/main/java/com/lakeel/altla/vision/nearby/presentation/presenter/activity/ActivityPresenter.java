@@ -1,25 +1,15 @@
 package com.lakeel.altla.vision.nearby.presentation.presenter.activity;
 
-import android.Manifest;
 import android.app.Activity;
 import android.content.Context;
-import android.content.pm.PackageManager;
 import android.os.Build;
-import android.os.Bundle;
 import android.support.annotation.NonNull;
-import android.support.annotation.Nullable;
-import android.support.v4.app.ActivityCompat;
 
 import com.firebase.ui.auth.AuthUI;
-import com.google.android.gms.common.ConnectionResult;
-import com.google.android.gms.common.api.GoogleApiClient;
-import com.google.android.gms.common.api.Status;
-import com.google.android.gms.nearby.Nearby;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.iid.FirebaseInstanceId;
 import com.lakeel.altla.cm.CmApplication;
 import com.lakeel.altla.cm.config.AccessConfig;
-import com.lakeel.altla.library.ResolutionResultCallback;
 import com.lakeel.altla.vision.nearby.R;
 import com.lakeel.altla.vision.nearby.core.StringUtils;
 import com.lakeel.altla.vision.nearby.data.entity.PreferenceEntity;
@@ -41,8 +31,6 @@ import com.lakeel.altla.vision.nearby.presentation.presenter.BasePresenter;
 import com.lakeel.altla.vision.nearby.presentation.presenter.mapper.CmAuthConfigMapper;
 import com.lakeel.altla.vision.nearby.presentation.service.AdvertiseService;
 import com.lakeel.altla.vision.nearby.presentation.service.RunningService;
-import com.lakeel.altla.vision.nearby.presentation.subscriber.BackgroundSubscriber;
-import com.lakeel.altla.vision.nearby.presentation.subscriber.Subscriber;
 import com.lakeel.altla.vision.nearby.presentation.view.ActivityView;
 
 import org.slf4j.Logger;
@@ -55,7 +43,7 @@ import rx.Subscription;
 import rx.android.schedulers.AndroidSchedulers;
 import rx.schedulers.Schedulers;
 
-public final class ActivityPresenter extends BasePresenter<ActivityView> implements GoogleApiClient.ConnectionCallbacks, GoogleApiClient.OnConnectionFailedListener {
+public final class ActivityPresenter extends BasePresenter<ActivityView> {
 
     @Inject
     AccessConfig accessConfig;
@@ -101,23 +89,11 @@ public final class ActivityPresenter extends BasePresenter<ActivityView> impleme
 
     private final Context context;
 
-    private final GoogleApiClient googleApiClient;
-
-    private final Subscriber subscriber;
-
-    private boolean isAccessLocationGranted;
-
-    private boolean isAlreadySubscribed;
-
     private boolean isAdvertiseAvailability = true;
 
     @Inject
     ActivityPresenter(Activity activity) {
-        googleApiClient = new GoogleApiClient.Builder(activity)
-                .addApi(Nearby.MESSAGES_API)
-                .build();
         context = activity.getApplicationContext();
-        subscriber = new BackgroundSubscriber(context, googleApiClient);
     }
 
     @Override
@@ -131,29 +107,15 @@ public final class ActivityPresenter extends BasePresenter<ActivityView> impleme
         }
     }
 
-    public void onStart() {
-        if (MyUser.isAuthenticated() && isAccessLocationGranted()) {
-            googleApiClient.registerConnectionCallbacks(this);
-            googleApiClient.registerConnectionFailedListener(this);
-            onConnect();
-        }
-    }
+    public void onSignIn() {
+        getView().showFavoriteListFragment();
 
-    @Override
-    public void onStop() {
-        super.onStop();
+        checkBle();
 
-        if (MyUser.isAuthenticated()) {
-            googleApiClient.unregisterConnectionCallbacks(this);
-            googleApiClient.unregisterConnectionFailedListener(this);
+        showProfile();
 
-            googleApiClient.disconnect();
-        }
-    }
-
-    @Override
-    public void onConnected(@Nullable Bundle bundle) {
-        LOGGER.info("Connected to nearby service.");
+        // Observe user presence.
+        observeConnectionUseCase.execute(MyUser.getUid());
 
         Subscription subscription = findSubscribeSettingUseCase
                 .execute()
@@ -161,35 +123,12 @@ public final class ActivityPresenter extends BasePresenter<ActivityView> impleme
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribe(isSubscribeEnabled -> {
                     if (isSubscribeEnabled) {
-                        onSubscribeInBackground();
+                        startMonitorBeacons();
                     } else {
-                        onUnSubscribeInBackground();
+                        stopMonitorBeacons();
                     }
                 }, e -> LOGGER.error("Failed to find preference settings.", e));
         subscriptions.add(subscription);
-    }
-
-    @Override
-    public void onConnectionSuspended(int i) {
-    }
-
-    @Override
-    public void onConnectionFailed(@NonNull ConnectionResult connectionResult) {
-        getView().showConnectedResolutionSystemDialog(connectionResult);
-    }
-
-    public void onSignIn() {
-        getView().showFavoriteListFragment();
-        getView().startSubscribeBeacons();
-
-        checkBle();
-        checkAccessLocationPermission();
-
-        MyUser.UserData userData = MyUser.getUserData();
-        getView().showProfile(userData.displayName, userData.email, userData.imageUri);
-
-        // Observe user presence.
-        observeConnectionUseCase.execute(MyUser.getUid());
 
         // TODO: UseCase
         Subscription subscription1 = findBeaconIdUseCase
@@ -224,44 +163,13 @@ public final class ActivityPresenter extends BasePresenter<ActivityView> impleme
         subscriptions.add(subscription2);
     }
 
-    public void onAccessLocationGrant() {
-        isAccessLocationGranted = true;
-        onConnect();
-    }
-
-    public boolean isAccessLocationGranted() {
-        return isAccessLocationGranted;
-    }
-
-    public void onConnect() {
-        googleApiClient.connect();
-    }
-
-    public void onSubscribeInBackground() {
-        if (isAlreadySubscribed) {
-            return;
-        }
-
-        subscriber.subscribe(new ResolutionResultCallback() {
-            @Override
-            protected void onResolution(Status status) {
-                isAlreadySubscribed = false;
-                getView().showResolutionSystemDialog(status);
-            }
-        });
-
-        isAlreadySubscribed = true;
-    }
-
-    public void onUnSubscribeInBackground() {
-        subscriber.unSubscribe(new ResolutionResultCallback() {
-            @Override
-            protected void onResolution(Status status) {
-                getView().showResolutionSystemDialog(status);
-            }
-        });
-
-        isAlreadySubscribed = false;
+    public void onBleEnabled() {
+        Subscription subscription = findBeaconIdUseCase.execute(MyUser.getUid())
+                .subscribeOn(Schedulers.io())
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribe(beaconId -> getView().startAdvertiseService(beaconId),
+                        e -> LOGGER.error("Failed to find beacon ID."));
+        subscriptions.add(subscription);
     }
 
     public void onSignOut(@NonNull Activity activity) {
@@ -279,7 +187,7 @@ public final class ActivityPresenter extends BasePresenter<ActivityView> impleme
                             Task<Void> task = AuthUI.getInstance().signOut(activity);
                             task.addOnCompleteListener(result -> {
                                 if (result.isSuccessful()) {
-                                    onUnSubscribeInBackground();
+                                    stopMonitorBeacons();
                                     getView().showSignInFragment();
                                 } else {
                                     LOGGER.error("Failed to sign out.", result.getException());
@@ -296,23 +204,30 @@ public final class ActivityPresenter extends BasePresenter<ActivityView> impleme
         subscriptions.add(subscription);
     }
 
-    private void checkAccessLocationPermission() {
-        if (ActivityCompat.checkSelfPermission(context, Manifest.permission.ACCESS_FINE_LOCATION) == PackageManager.PERMISSION_GRANTED) {
-            onAccessLocationGrant();
-        } else {
-            getView().showAccessFineLocationPermissionSystemDialog();
-        }
-    }
-
     private void checkBle() {
         BleChecker checker = new BleChecker(context);
+
         State state = checker.checkState();
         if (state == State.OFF) {
+            isAdvertiseAvailability = false;
             getView().showBleEnabledActivity();
         } else if (state == State.SUBSCRIBE_ONLY) {
             isAdvertiseAvailability = false;
             getView().showAdvertiseDisableConfirmDialog();
         }
+    }
+
+    private void showProfile() {
+        MyUser.UserData userData = MyUser.getUserData();
+        getView().showProfile(userData.displayName, userData.email, userData.imageUri);
+    }
+
+    private void startMonitorBeacons() {
+        getView().startMonitorBeacons();
+    }
+
+    private void stopMonitorBeacons() {
+        getView().stopMonitorBeacons();
     }
 
     private Single<String> saveBeaconId(String userId) {

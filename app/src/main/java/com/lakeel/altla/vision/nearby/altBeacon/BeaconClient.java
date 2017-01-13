@@ -9,7 +9,6 @@ import org.altbeacon.beacon.BeaconManager;
 import org.altbeacon.beacon.BeaconParser;
 import org.altbeacon.beacon.Region;
 import org.altbeacon.beacon.powersave.BackgroundPowerSaver;
-import org.altbeacon.beacon.startup.RegionBootstrap;
 
 import java.util.UUID;
 
@@ -27,8 +26,13 @@ public final class BeaconClient implements BeaconConsumer {
 
     private BeaconManager beaconManager;
 
+    private final BeaconRegionNotifier beaconRegionNotifier;
+
     public BeaconClient(Context context) {
         this.context = context;
+
+        Region region = new Region(UUID.randomUUID().toString(), null, null, null);
+        beaconRegionNotifier = new BeaconRegionNotifier(context, region);
 
         beaconManager = BeaconManager.getInstanceForApplication(context);
 
@@ -48,26 +52,23 @@ public final class BeaconClient implements BeaconConsumer {
         beaconManager.setBackgroundScanPeriod(BACKGROUND_SCAN_PERIOD);
         beaconManager.setBackgroundBetweenScanPeriod(BACKGROUND_BETWEEN_SCAN_PERIOD);
 
-        // Connect to beacon service.
-        beaconManager.bind(this);
-    }
-
-    public void connectService() {
-        beaconManager.bind(this);
-    }
-
-    @Override
-    public void onBeaconServiceConnect() {
-        // Start subscribe in background.
-
-        // Background settings.
-        // This restart is guaranteed to happen after reboot or after connecting/disconnecting the device to a charger.
-        new RegionBootstrap(new BeaconRegionNotifier(context), new Region(UUID.randomUUID().toString(), null, null, null));
-
         // Save device battery.
         // Simply constructing this class and holding a reference to it in your custom Application class
         // enables auto battery saving of about 60%.
         new BackgroundPowerSaver(context);
+    }
+
+    public void startMonitor() {
+        beaconManager.bind(this);
+    }
+
+    public void stopMonitor() {
+        beaconRegionNotifier.stop();
+    }
+
+    @Override
+    public void onBeaconServiceConnect() {
+        beaconRegionNotifier.start();
     }
 
     @Override

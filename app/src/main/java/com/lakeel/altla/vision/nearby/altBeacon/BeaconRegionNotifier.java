@@ -4,6 +4,7 @@ import android.content.Context;
 
 import org.altbeacon.beacon.Region;
 import org.altbeacon.beacon.startup.BootstrapNotifier;
+import org.altbeacon.beacon.startup.RegionBootstrap;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -13,8 +14,21 @@ final class BeaconRegionNotifier implements BootstrapNotifier {
 
     private final Context context;
 
-    BeaconRegionNotifier(Context context) {
+    private final Region region;
+
+    private RegionBootstrap regionBootstrap;
+
+    BeaconRegionNotifier(Context context, Region region) {
         this.context = context;
+        this.region = region;
+    }
+
+    void start() {
+        regionBootstrap = new RegionBootstrap(this, region);
+    }
+
+    void stop() {
+        regionBootstrap.removeRegion(region);
     }
 
     @Override

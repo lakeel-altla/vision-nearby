@@ -42,9 +42,6 @@ public final class BeaconSubscriber {
     }
 
     public void subscribe(Region region) {
-        // TODO:
-//        beaconManager.setForegroundBetweenScanPeriod();
-
         beaconManager.addRangeNotifier(new BeaconRangeNotifier() {
 
             @Override
@@ -77,7 +74,7 @@ public final class BeaconSubscriber {
 
                 try {
                     // Stop to subscribe.
-                    beaconManager.startRangingBeaconsInRegion(region);
+                    beaconManager.stopRangingBeaconsInRegion(region);
                 } catch (RemoteException e) {
                     LOGGER.error("Failed to stop to subscribe beacons.", e);
                 }

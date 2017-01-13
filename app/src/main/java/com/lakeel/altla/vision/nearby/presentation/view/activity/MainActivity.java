@@ -1,11 +1,8 @@
 package com.lakeel.altla.vision.nearby.presentation.view.activity;
 
-import android.Manifest;
 import android.annotation.TargetApi;
 import android.bluetooth.BluetoothAdapter;
 import android.content.Intent;
-import android.content.IntentSender;
-import android.content.pm.PackageManager;
 import android.os.Build;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
@@ -22,8 +19,6 @@ import android.view.MenuItem;
 import android.view.View;
 import android.widget.RelativeLayout;
 
-import com.google.android.gms.common.ConnectionResult;
-import com.google.android.gms.common.api.Status;
 import com.lakeel.altla.vision.nearby.R;
 import com.lakeel.altla.vision.nearby.android.ConfirmDialog;
 import com.lakeel.altla.vision.nearby.presentation.application.App;
@@ -52,13 +47,7 @@ public class MainActivity extends AppCompatActivity
 
     private static final Logger LOGGER = LoggerFactory.getLogger(MainActivity.class);
 
-    private static final int REQUEST_CODE_RESOLVE_CONNECTION = 1;
-
-    private static final int REQUEST_CODE_ENABLE_BLE = 2;
-
-    private static final int REQUEST_CODE_SUBSCRIBE_RESULT = 3;
-
-    private static final int REQUEST_CODE_ACCESS_LOCATION = 4;
+    private static final int REQUEST_CODE_ENABLE_BLE = 1;
 
     private DrawerHeaderLayout drawerHeaderLayout = new DrawerHeaderLayout();
 
@@ -107,39 +96,19 @@ public class MainActivity extends AppCompatActivity
     }
 
     @Override
-    public void onStart() {
-        super.onStart();
-        presenter.onStart();
-    }
-
-    @Override
     public void onStop() {
         super.onStop();
         presenter.onStop();
     }
 
     @Override
-    protected void onActivityResult(final int requestCode, final int resultCode, final Intent data) {
-        if (REQUEST_CODE_RESOLVE_CONNECTION == requestCode && resultCode == RESULT_OK) {
-            if (presenter.isAccessLocationGranted()) {
-                presenter.onConnect();
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        if (REQUEST_CODE_ENABLE_BLE == requestCode) {
+            if (RESULT_OK == resultCode) {
+                presenter.onBleEnabled();
             } else {
-                LOGGER.warn("Can not connect to nearby. Not granted for location permission.");
+                LOGGER.error("Failed to enable BLE.");
             }
-        } else if (REQUEST_CODE_SUBSCRIBE_RESULT == requestCode && resultCode == RESULT_OK) {
-            presenter.onSubscribeInBackground();
-        } else {
-            super.onActivityResult(requestCode, resultCode, data);
-        }
-    }
-
-    @Override
-    public void onRequestPermissionsResult(int requestCode, @NonNull String permissions[], @NonNull int[] grantResults) {
-        if (REQUEST_CODE_ACCESS_LOCATION == requestCode && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
-            LOGGER.info("Location permission is granted.");
-            presenter.onAccessLocationGrant();
-        } else {
-            super.onRequestPermissionsResult(requestCode, permissions, grantResults);
         }
     }
 
@@ -157,7 +126,6 @@ public class MainActivity extends AppCompatActivity
     public boolean onOptionsItemSelected(MenuItem item) {
         return toggle.onOptionsItemSelected(item) || super.onOptionsItemSelected(item);
     }
-
 
     @SuppressWarnings("StatementWithEmptyBody")
     @Override
@@ -203,15 +171,6 @@ public class MainActivity extends AppCompatActivity
     }
 
     @Override
-    public void showConnectedResolutionSystemDialog(ConnectionResult connectionResult) {
-        try {
-            connectionResult.startResolutionForResult(this, REQUEST_CODE_RESOLVE_CONNECTION);
-        } catch (IntentSender.SendIntentException e) {
-            LOGGER.error("Could not resolve to connect nearby");
-        }
-    }
-
-    @Override
     public void showSignInFragment() {
         ActionBar actionBar = getSupportActionBar();
         if (actionBar != null) {
@@ -251,8 +210,13 @@ public class MainActivity extends AppCompatActivity
     }
 
     @Override
-    public void startSubscribeBeacons() {
-        ((App) getApplication()).startSubscribeBeacons();
+    public void startMonitorBeacons() {
+        ((App) getApplication()).startMonitorBeacons();
+    }
+
+    @Override
+    public void stopMonitorBeacons() {
+        ((App) getApplication()).stopMonitorBeacons();
     }
 
     @Override
@@ -260,21 +224,6 @@ public class MainActivity extends AppCompatActivity
         Intent intent = new Intent(getApplicationContext(), AdvertiseService.class);
         intent.putExtra(IntentKey.BEACON_ID.name(), beaconId);
         getApplicationContext().startService(intent);
-    }
-
-    @TargetApi(Build.VERSION_CODES.M)
-    @Override
-    public void showAccessFineLocationPermissionSystemDialog() {
-        MainActivity.this.requestPermissions(new String[]{Manifest.permission.ACCESS_FINE_LOCATION}, REQUEST_CODE_ACCESS_LOCATION);
-    }
-
-    @Override
-    public void showResolutionSystemDialog(Status status) {
-        try {
-            status.startResolutionForResult(MainActivity.this, REQUEST_CODE_SUBSCRIBE_RESULT);
-        } catch (IntentSender.SendIntentException e) {
-            LOGGER.error("Failed to show resolution dialog for nearby.", e);
-        }
     }
 
     @Override
@@ -297,14 +246,6 @@ public class MainActivity extends AppCompatActivity
 
     public void setDrawerIndicatorEnabled(boolean enabled) {
         toggle.setDrawerIndicatorEnabled(enabled);
-    }
-
-    public void onSubscribeInBackground() {
-        presenter.onSubscribeInBackground();
-    }
-
-    public void onUnSubscribeInBackground() {
-        presenter.onUnSubscribeInBackground();
     }
 
     public void onSignedIn() {
