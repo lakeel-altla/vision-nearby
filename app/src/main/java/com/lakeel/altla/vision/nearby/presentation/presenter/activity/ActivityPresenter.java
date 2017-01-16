@@ -206,7 +206,6 @@ public final class ActivityPresenter extends BasePresenter<ActivityView> {
 
     private void checkBle() {
         BleChecker checker = new BleChecker(context);
-
         State state = checker.checkState();
         if (state == State.OFF) {
             isAdvertiseAvailability = false;
