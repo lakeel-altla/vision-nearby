@@ -111,7 +111,6 @@ public final class ActivityPresenter extends BasePresenter<ActivityView> {
         getView().showFavoriteListFragment();
 
         checkBle();
-
         showProfile();
 
         // Observe user presence.
