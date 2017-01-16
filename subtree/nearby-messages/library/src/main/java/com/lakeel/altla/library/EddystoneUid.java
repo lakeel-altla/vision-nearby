@@ -3,7 +3,7 @@ package com.lakeel.altla.library;
 /**
  * An Eddystone UID, broadcast by BLE beacons.
  */
-public final class EddystoneUID {
+public final class EddystoneUid {
 
     /**
      * The 16-byte ID, as a hex string.
@@ -16,7 +16,7 @@ public final class EddystoneUID {
      * @param beaconId The 16-byte ID, as a hex string.
      * @throws IllegalArgumentNullException Thrown when beaconId is null.
      */
-    public EddystoneUID(String beaconId) {
+    public EddystoneUid(String beaconId) {
         if (beaconId == null) throw new IllegalArgumentNullException("beaconId");
         this.beaconId = beaconId;
     }
