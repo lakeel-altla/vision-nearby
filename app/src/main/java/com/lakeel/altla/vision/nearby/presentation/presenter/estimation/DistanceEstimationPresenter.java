@@ -5,7 +5,7 @@ import android.content.Intent;
 import android.content.ServiceConnection;
 import android.os.RemoteException;
 
-import com.lakeel.altla.library.EddystoneUID;
+import com.lakeel.altla.library.EddystoneUid;
 import com.lakeel.altla.vision.nearby.altBeacon.BeaconRangeNotifier;
 import com.lakeel.altla.vision.nearby.altBeacon.ForegroundBeaconManager;
 import com.lakeel.altla.vision.nearby.presentation.presenter.BasePresenter;
@@ -65,7 +65,7 @@ public final class DistanceEstimationPresenter extends BasePresenter<DistanceEst
     public void setRegions(List<String> beaconIds) {
         List<Region> regions = new ArrayList<>(beaconIds.size());
         for (String beaconId : beaconIds) {
-            EddystoneUID eddystoneUID = new EddystoneUID(beaconId);
+            EddystoneUid eddystoneUID = new EddystoneUid(beaconId);
 
             Identifier id1 = Identifier.parse(eddystoneUID.getNamespaceId());
             Identifier id2 = Identifier.parse(eddystoneUID.getInstanceId());
