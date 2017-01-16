@@ -79,10 +79,6 @@ public final class BeaconSubscriber {
                     LOGGER.error("Failed to stop to subscribe beacons.", e);
                 }
             }
-
-            @Override
-            protected void onDistanceChanged(double distance) {
-            }
         });
 
         try {

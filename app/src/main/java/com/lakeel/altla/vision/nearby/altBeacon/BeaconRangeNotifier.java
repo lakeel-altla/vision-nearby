@@ -32,15 +32,10 @@ public abstract class BeaconRangeNotifier implements RangeNotifier {
                 String beaconId = namespaceId + instanceId;
 
                 // Execute on main thread.
-                handler.post(() -> {
-                    onFound(beaconId);
-                    onDistanceChanged(beacon.getDistance());
-                });
+                handler.post(() -> onFound(beaconId));
             }
         }
     }
 
     protected abstract void onFound(String beaconId);
-
-    protected abstract void onDistanceChanged(double distance);
 }
