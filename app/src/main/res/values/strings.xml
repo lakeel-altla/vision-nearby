@@ -102,6 +102,7 @@
     <string name="message_device_not_detected">This device has not been detected by others.</string>
     <string name="message_finding_for_nearby_device_format">Finding for %1$s.</string>
     <string name="message_device_distance_format">%1$s meters away.</string>
+    <string name="message_no_item_found">No items found.</string>
 
     <string name="notification_title_line_user_found">LINE user is found.</string>
     <string name="notification_title_advertise_ble">Advertising as a beacon.</string>
