@@ -1,9 +1,10 @@
-package com.lakeel.altla.vision.nearby.altBeacon;
+package com.lakeel.altla.vision.nearby.presentation.beacon;
 
 import android.content.Context;
 import android.content.Intent;
 import android.os.RemoteException;
 
+import com.lakeel.altla.vision.nearby.altBeacon.BeaconRangeNotifier;
 import com.lakeel.altla.vision.nearby.domain.usecase.FindBeaconUseCase;
 import com.lakeel.altla.vision.nearby.presentation.di.component.DaggerDefaultComponent;
 import com.lakeel.altla.vision.nearby.presentation.di.component.DefaultComponent;
@@ -22,18 +23,18 @@ import javax.inject.Inject;
 
 import rx.schedulers.Schedulers;
 
-public final class BeaconSubscriber {
+public final class BackgroundBeaconSubscriber {
 
     @Inject
     FindBeaconUseCase findBeaconUseCase;
 
-    private static final Logger LOGGER = LoggerFactory.getLogger(BeaconSubscriber.class);
+    private static final Logger LOGGER = LoggerFactory.getLogger(BackgroundBeaconSubscriber.class);
 
     private final Context context;
 
     private final BeaconManager beaconManager;
 
-    BeaconSubscriber(Context context) {
+    BackgroundBeaconSubscriber(Context context) {
         DefaultComponent component = DaggerDefaultComponent.create();
         component.inject(this);
 
@@ -82,6 +83,7 @@ public final class BeaconSubscriber {
         });
 
         try {
+            // Start to subscribe.
             beaconManager.startRangingBeaconsInRegion(region);
         } catch (RemoteException e) {
             LOGGER.error("Failed to start to subscribe beacons.", e);

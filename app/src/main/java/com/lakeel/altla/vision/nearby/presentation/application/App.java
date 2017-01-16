@@ -7,7 +7,7 @@ import android.support.multidex.MultiDex;
 
 import com.google.firebase.database.FirebaseDatabase;
 import com.lakeel.altla.vision.nearby.R;
-import com.lakeel.altla.vision.nearby.altBeacon.BackgroundBeaconManager;
+import com.lakeel.altla.vision.nearby.presentation.beacon.BackgroundBeaconManager;
 import com.lakeel.altla.vision.nearby.presentation.di.component.ApplicationComponent;
 import com.lakeel.altla.vision.nearby.presentation.di.component.DaggerApplicationComponent;
 import com.lakeel.altla.vision.nearby.presentation.di.module.ApplicationModule;

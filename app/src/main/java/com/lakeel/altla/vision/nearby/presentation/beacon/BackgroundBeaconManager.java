@@ -1,4 +1,4 @@
-package com.lakeel.altla.vision.nearby.altBeacon;
+package com.lakeel.altla.vision.nearby.presentation.beacon;
 
 import android.content.Context;
 
