@@ -26,13 +26,13 @@ public final class BackgroundBeaconManager implements BeaconConsumer {
 
     private BeaconManager beaconManager;
 
-    private final BeaconRegionNotifier beaconRegionNotifier;
+    private final BeaconNotifier beaconNotifier;
 
     public BackgroundBeaconManager(Context context) {
         this.context = context;
 
         Region region = new Region(UUID.randomUUID().toString(), null, null, null);
-        beaconRegionNotifier = new BeaconRegionNotifier(context, region);
+        beaconNotifier = new BeaconNotifier(context, region);
 
         beaconManager = BeaconManager.getInstanceForApplication(context);
 
@@ -63,12 +63,12 @@ public final class BackgroundBeaconManager implements BeaconConsumer {
     }
 
     public void stopMonitor() {
-        beaconRegionNotifier.stop();
+        beaconNotifier.stop();
     }
 
     @Override
     public void onBeaconServiceConnect() {
-        beaconRegionNotifier.start();
+        beaconNotifier.start();
     }
 
     @Override
