@@ -1,111 +1,109 @@
 package com.lakeel.altla.vision.nearby.presentation.presenter.estimation;
 
-import android.app.Activity;
-import android.os.Bundle;
-import android.support.annotation.Nullable;
+import android.content.Context;
+import android.content.Intent;
+import android.content.ServiceConnection;
+import android.os.RemoteException;
 
-import com.google.android.gms.common.api.GoogleApiClient;
-import com.google.android.gms.common.api.Status;
-import com.google.android.gms.nearby.Nearby;
-import com.google.android.gms.nearby.messages.Distance;
-import com.google.android.gms.nearby.messages.Message;
-import com.google.android.gms.nearby.messages.MessageFilter;
-import com.google.android.gms.nearby.messages.MessageListener;
-import com.google.android.gms.nearby.messages.SubscribeOptions;
 import com.lakeel.altla.library.EddystoneUID;
-import com.lakeel.altla.library.ResolutionResultCallback;
-import com.lakeel.altla.vision.nearby.domain.usecase.FindUserBeaconsUseCase;
+import com.lakeel.altla.vision.nearby.altBeacon.BeaconRangeNotifier;
+import com.lakeel.altla.vision.nearby.altBeacon.ForegroundBeaconManager;
 import com.lakeel.altla.vision.nearby.presentation.presenter.BasePresenter;
-import com.lakeel.altla.vision.nearby.presentation.subscriber.ForegroundSubscriber;
-import com.lakeel.altla.vision.nearby.presentation.subscriber.Subscriber;
 import com.lakeel.altla.vision.nearby.presentation.view.DistanceEstimationView;
 
+import org.altbeacon.beacon.BeaconConsumer;
+import org.altbeacon.beacon.BeaconManager;
+import org.altbeacon.beacon.Identifier;
+import org.altbeacon.beacon.Region;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Locale;
+import java.util.UUID;
 
 import javax.inject.Inject;
 
-public final class DistanceEstimationPresenter extends BasePresenter<DistanceEstimationView> implements GoogleApiClient.ConnectionCallbacks {
+public final class DistanceEstimationPresenter extends BasePresenter<DistanceEstimationView> implements BeaconConsumer {
 
-    private final GoogleApiClient googleApiClient;
-
-    private Subscriber subscriber;
-
-    private ResolutionResultCallback resultCallback = new ResolutionResultCallback() {
+    private BeaconRangeNotifier notifier = new BeaconRangeNotifier() {
         @Override
-        protected void onResolution(Status status) {
-            getView().showResolutionSystemDialog(status);
-        }
-    };
-
-    private MessageListener messageListener = new MessageListener() {
-
-        @Override
-        public void onFound(Message message) {
-            super.onFound(message);
+        protected void onFound(String beaconId) {
         }
 
         @Override
-        public void onDistanceChanged(Message message, Distance distance) {
-            super.onDistanceChanged(message, distance);
-            String meters = String.format(Locale.getDefault(), "%.2f", distance.getMeters());
+        protected void onDistanceChanged(double distance) {
+            String meters = String.format(Locale.getDefault(), "%.2f", distance);
             getView().showDistance(meters);
         }
     };
 
+    private static final Logger LOGGER = LoggerFactory.getLogger(DistanceEstimationPresenter.class);
+
+    private Context context;
+
+    private BeaconManager beaconManager;
+
+    private List<Region> regions;
+
     @Inject
-    DistanceEstimationPresenter(Activity activity) {
-        googleApiClient = new GoogleApiClient.Builder(activity)
-                .addApi(Nearby.MESSAGES_API)
-                .build();
+    DistanceEstimationPresenter(Context context) {
+        this.context = context;
+        beaconManager = new ForegroundBeaconManager(context);
+        beaconManager.addRangeNotifier(notifier);
     }
 
     public void onResume() {
-        googleApiClient.registerConnectionCallbacks(this);
-        googleApiClient.connect();
+        beaconManager.bind(this);
     }
 
     public void onPause() {
-        googleApiClient.unregisterConnectionCallbacks(this);
+        beaconManager.unbind(this);
     }
 
-    @Override
-    public void onStop() {
-        super.onStop();
-
-        subscriber.unSubscribe(resultCallback);
-
-        googleApiClient.disconnect();
-    }
-
-    @Override
-    public void onConnected(@Nullable Bundle bundle) {
-        onSubscribe();
-    }
-
-    @Override
-    public void onConnectionSuspended(int i) {
-    }
-
-    public void buildSubscriber(List<String> beaconIds) {
-        MessageFilter.Builder filterBuilder = new MessageFilter.Builder();
-
+    public void setRegions(List<String> beaconIds) {
+        List<Region> regions = new ArrayList<>(beaconIds.size());
         for (String beaconId : beaconIds) {
             EddystoneUID eddystoneUID = new EddystoneUID(beaconId);
-            String namespaceId = eddystoneUID.getNamespaceId();
-            String instanceId = eddystoneUID.getInstanceId();
 
-            filterBuilder.includeEddystoneUids(namespaceId, instanceId);
+            Identifier id1 = Identifier.parse(eddystoneUID.getNamespaceId());
+            Identifier id2 = Identifier.parse(eddystoneUID.getInstanceId());
+
+            Region region = new Region(UUID.randomUUID().toString(), id1, id2, null);
+            regions.add(region);
         }
 
-        SubscribeOptions options = new SubscribeOptions.Builder()
-                .setFilter(filterBuilder.build())
-                .build();
-
-        subscriber = new ForegroundSubscriber(googleApiClient, messageListener, options);
+        this.regions = regions;
     }
 
-    public void onSubscribe() {
-        subscriber.subscribe(resultCallback);
+    public void subscribe() {
+        try {
+            for (Region region : regions) {
+                beaconManager.startRangingBeaconsInRegion(region);
+            }
+        } catch (RemoteException e) {
+            LOGGER.error("Failed to estimate distance.", e);
+        }
+    }
+
+    @Override
+    public void onBeaconServiceConnect() {
+        subscribe();
+    }
+
+    @Override
+    public Context getApplicationContext() {
+        return context;
+    }
+
+    @Override
+    public void unbindService(ServiceConnection serviceConnection) {
+        context.unbindService(serviceConnection);
+    }
+
+    @Override
+    public boolean bindService(Intent intent, ServiceConnection serviceConnection, int i) {
+        return context.bindService(intent, serviceConnection, i);
     }
 }

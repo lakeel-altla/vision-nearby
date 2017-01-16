@@ -50,9 +50,7 @@ public final class NearbyListPresenter extends BasePresenter<NearbyListView> imp
     private BeaconRangeNotifier notifier = new BeaconRangeNotifier() {
 
         @Override
-        protected void onEddystoneUidFound(String beaconId) {
-            LOGGER.debug("onEddystoneUidFound");
-
+        protected void onFound(String beaconId) {
             Subscription subscription = findBeaconUseCase.execute(beaconId)
                     .subscribeOn(Schedulers.io())
                     .toObservable()
@@ -73,6 +71,10 @@ public final class NearbyListPresenter extends BasePresenter<NearbyListView> imp
                         getView().updateItems();
                     }, e -> LOGGER.error("Failed to find nearby item.", e));
             subscriptions.add(subscription);
+        }
+
+        @Override
+        protected void onDistanceChanged(double distance) {
         }
     };
 
@@ -117,7 +119,7 @@ public final class NearbyListPresenter extends BasePresenter<NearbyListView> imp
     NearbyListPresenter(Context context) {
         this.context = context;
 
-        beaconManager = ForegroundBeaconManager.getInstance(context);
+        beaconManager = new ForegroundBeaconManager(context);
         beaconManager.addRangeNotifier(notifier);
 
         region = new Region(UUID.randomUUID().toString(), null, null, null);
@@ -134,6 +136,10 @@ public final class NearbyListPresenter extends BasePresenter<NearbyListView> imp
                 .subscribe(bool -> isCmLinkEnabled = bool,
                         e -> LOGGER.error("Failed to find CM configuration.", e));
         subscriptions.add(subscription);
+    }
+
+    public void onPause() {
+        beaconManager.unbind(this);
     }
 
     @Override

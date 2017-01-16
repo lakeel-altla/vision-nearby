@@ -23,5 +23,5 @@ public interface UserProfileView {
 
     void showMessageInputDialog();
 
-    void showFindNearbyDeviceFragment(ArrayList<String> beaconIds, String targetName);
+    void showDistanceEstimationFragment(ArrayList<String> beaconIds, String targetName);
 }

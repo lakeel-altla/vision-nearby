@@ -1,5 +1,8 @@
 package com.lakeel.altla.vision.nearby.altBeacon;
 
+import android.os.Handler;
+import android.os.Looper;
+
 import org.altbeacon.beacon.Beacon;
 import org.altbeacon.beacon.RangeNotifier;
 import org.altbeacon.beacon.Region;
@@ -11,6 +14,8 @@ import java.util.Collection;
 public abstract class BeaconRangeNotifier implements RangeNotifier {
 
     private static final Logger LOGGER = LoggerFactory.getLogger(BeaconRangeNotifier.class);
+
+    private Handler handler = new Handler(Looper.getMainLooper());
 
     @Override
     public final void didRangeBeaconsInRegion(Collection<Beacon> beacons, Region region) {
@@ -25,11 +30,17 @@ public abstract class BeaconRangeNotifier implements RangeNotifier {
                 String namespaceId = beacon.getId1().toString().replace("0x", "");
                 String instanceId = beacon.getId2().toString().replace("0x", "");
                 String beaconId = namespaceId + instanceId;
-                
-                onEddystoneUidFound(beaconId);
+
+                // Execute on main thread.
+                handler.post(() -> {
+                    onFound(beaconId);
+                    onDistanceChanged(beacon.getDistance());
+                });
             }
         }
     }
 
-    protected abstract void onEddystoneUidFound(String beaconId);
+    protected abstract void onFound(String beaconId);
+
+    protected abstract void onDistanceChanged(double distance);
 }

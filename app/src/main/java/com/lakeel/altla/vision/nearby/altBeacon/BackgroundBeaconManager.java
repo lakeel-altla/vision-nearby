@@ -12,7 +12,7 @@ import org.altbeacon.beacon.powersave.BackgroundPowerSaver;
 
 import java.util.UUID;
 
-public final class BackgroundBeaconManager implements BeaconConsumer {
+public final class BackgroundBeaconManager extends BeaconManager implements BeaconConsumer {
 
     private static final String I_BEACON_LAYOUT = "m:2-3=0215,i:4-19,i:20-21,i:22-23,p:24-24";
 
@@ -24,33 +24,35 @@ public final class BackgroundBeaconManager implements BeaconConsumer {
 
     private final Context context;
 
-    private BeaconManager beaconManager;
-
     private final BeaconNotifier beaconNotifier;
 
     public BackgroundBeaconManager(Context context) {
+        super(context);
+
+        // BeaconManager is designed for a singleton class.
+        // So, return new instance of the BeaconManager.
+
+        client = this;
         this.context = context;
 
         Region region = new Region(UUID.randomUUID().toString(), null, null, null);
         beaconNotifier = new BeaconNotifier(context, region);
 
-        beaconManager = BeaconManager.getInstanceForApplication(context);
-
-        beaconManager.getBeaconParsers().add(new BeaconParser().
+        getBeaconParsers().add(new BeaconParser().
                 setBeaconLayout(I_BEACON_LAYOUT));
-        beaconManager.getBeaconParsers().add(new BeaconParser().
+        getBeaconParsers().add(new BeaconParser().
                 setBeaconLayout(BeaconParser.EDDYSTONE_UID_LAYOUT));
-        beaconManager.getBeaconParsers().add(new BeaconParser().
+        getBeaconParsers().add(new BeaconParser().
                 setBeaconLayout(BeaconParser.EDDYSTONE_TLM_LAYOUT));
-        beaconManager.getBeaconParsers().add(new BeaconParser().
+        getBeaconParsers().add(new BeaconParser().
                 setBeaconLayout(BeaconParser.EDDYSTONE_URL_LAYOUT));
-        beaconManager.getBeaconParsers().add(new BeaconParser().
+        getBeaconParsers().add(new BeaconParser().
                 setBeaconLayout(EDDYSTONE_EID_LAYOUT));
-        beaconManager.getBeaconParsers().add(new BeaconParser().
+        getBeaconParsers().add(new BeaconParser().
                 setBeaconLayout(BeaconParser.ALTBEACON_LAYOUT));
 
-        beaconManager.setBackgroundScanPeriod(BACKGROUND_SCAN_PERIOD);
-        beaconManager.setBackgroundBetweenScanPeriod(BACKGROUND_BETWEEN_SCAN_PERIOD);
+        setBackgroundScanPeriod(BACKGROUND_SCAN_PERIOD);
+        setBackgroundBetweenScanPeriod(BACKGROUND_BETWEEN_SCAN_PERIOD);
 
         // Save device battery.
         // Simply constructing this class and holding a reference to it in your custom Application class
@@ -59,7 +61,7 @@ public final class BackgroundBeaconManager implements BeaconConsumer {
     }
 
     public void startMonitor() {
-        beaconManager.bind(this);
+        bind(this);
     }
 
     public void stopMonitor() {

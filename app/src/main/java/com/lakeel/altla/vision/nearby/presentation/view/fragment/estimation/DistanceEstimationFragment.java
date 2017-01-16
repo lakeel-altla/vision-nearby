@@ -102,7 +102,7 @@ public final class DistanceEstimationFragment extends Fragment implements Distan
         String message = getResources().getString(R.string.message_finding_for_nearby_device_format, targetName);
         distanceDescriptionText.setText(message);
 
-        presenter.buildSubscriber(beaconIds);
+        presenter.setRegions(beaconIds);
     }
 
     @Override
@@ -147,7 +147,7 @@ public final class DistanceEstimationFragment extends Fragment implements Distan
     @Override
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
         if (REQUEST_CODE_SUBSCRIBE_RESULT == requestCode && resultCode == RESULT_OK) {
-            presenter.onSubscribe();
+            presenter.subscribe();
         } else {
             super.onActivityResult(requestCode, resultCode, data);
         }

@@ -219,7 +219,7 @@ public final class UserProfileFragment extends Fragment implements UserProfileVi
     }
 
     @Override
-    public void showFindNearbyDeviceFragment(ArrayList<String> beaconIds, String targetName) {
+    public void showDistanceEstimationFragment(ArrayList<String> beaconIds, String targetName) {
         FragmentController controller = new FragmentController(getActivity().getSupportFragmentManager());
         controller.showDistanceEstimationFragment(beaconIds, targetName);
     }

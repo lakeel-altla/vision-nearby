@@ -140,7 +140,7 @@ public final class UserProfilePresenter extends BasePresenter<UserProfileView> {
                 .subscribe(beacons -> {
                     ArrayList<String> beaconIds = new ArrayList<>(beacons.size());
                     beaconIds.addAll(beacons);
-                    getView().showFindNearbyDeviceFragment(beaconIds, userName);
+                    getView().showDistanceEstimationFragment(beaconIds, userName);
                 }, e -> {
                     LOGGER.error("Failed to find user beacons.", e);
                 });
