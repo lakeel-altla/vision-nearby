@@ -28,8 +28,6 @@ public class FirebaseHistoryRepositoryImpl implements FirebaseHistoryRepository 
 
     private static final String ID_KEY = "userId";
 
-    private static final String TIMESTAMP_KEY = "passingTime";
-
     private DatabaseReference reference;
 
     private HistoryEntityMapper entityMapper = new HistoryEntityMapper();
@@ -47,7 +45,6 @@ public class FirebaseHistoryRepositoryImpl implements FirebaseHistoryRepository 
             public void call(Subscriber<? super HistoryEntity> subscriber) {
                 reference
                         .child(userId)
-                        .orderByChild(TIMESTAMP_KEY)
                         .addListenerForSingleValueEvent(new ValueEventListener() {
                             @Override
                             public void onDataChange(DataSnapshot dataSnapshot) {
