@@ -70,8 +70,6 @@
             </intent-filter>
         </service>
 
-        <receiver android:name=".presentation.receiver.NearbyReceiver" />
-
     </application>
 
 </manifest>
