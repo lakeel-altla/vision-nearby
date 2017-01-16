@@ -26,7 +26,6 @@ import com.lakeel.altla.vision.nearby.presentation.view.NearbyListView;
 
 import org.altbeacon.beacon.BeaconConsumer;
 import org.altbeacon.beacon.BeaconManager;
-import org.altbeacon.beacon.BeaconParser;
 import org.altbeacon.beacon.Region;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -52,6 +51,8 @@ public final class NearbyListPresenter extends BasePresenter<NearbyListView> imp
 
         @Override
         protected void onEddystoneUidFound(String beaconId) {
+            LOGGER.debug("onEddystoneUidFound");
+
             Subscription subscription = findBeaconUseCase.execute(beaconId)
                     .subscribeOn(Schedulers.io())
                     .toObservable()
@@ -108,7 +109,7 @@ public final class NearbyListPresenter extends BasePresenter<NearbyListView> imp
 
     private Context context;
 
-    private ForegroundBeaconManager beaconManager;
+    private BeaconManager beaconManager;
 
     private Region region;
 
@@ -117,15 +118,6 @@ public final class NearbyListPresenter extends BasePresenter<NearbyListView> imp
         this.context = context;
 
         beaconManager = ForegroundBeaconManager.getInstance(context);
-//        beaconManager = BeaconManager.getInstanceForApplication(context);
-
-        beaconManager.getBeaconParsers().add(new BeaconParser().
-                setBeaconLayout(BeaconParser.EDDYSTONE_UID_LAYOUT));
-        beaconManager.getBeaconParsers().add(new BeaconParser().
-                setBeaconLayout(BeaconParser.EDDYSTONE_TLM_LAYOUT));
-        beaconManager.getBeaconParsers().add(new BeaconParser().
-                setBeaconLayout(BeaconParser.EDDYSTONE_URL_LAYOUT));
-
         beaconManager.addRangeNotifier(notifier);
 
         region = new Region(UUID.randomUUID().toString(), null, null, null);
@@ -222,7 +214,7 @@ public final class NearbyListPresenter extends BasePresenter<NearbyListView> imp
         isScanning = true;
 
         executor.schedule(() -> {
-            // Stop to scanning after 10 seconds.
+            // Stop to scan after 10 seconds.
             try {
                 beaconManager.stopRangingBeaconsInRegion(region);
             } catch (RemoteException e) {
