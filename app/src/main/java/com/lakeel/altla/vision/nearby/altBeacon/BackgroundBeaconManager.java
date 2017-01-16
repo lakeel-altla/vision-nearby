@@ -12,7 +12,7 @@ import org.altbeacon.beacon.powersave.BackgroundPowerSaver;
 
 import java.util.UUID;
 
-public final class BeaconClient implements BeaconConsumer {
+public final class BackgroundBeaconManager implements BeaconConsumer {
 
     private static final String I_BEACON_LAYOUT = "m:2-3=0215,i:4-19,i:20-21,i:22-23,p:24-24";
 
@@ -28,7 +28,7 @@ public final class BeaconClient implements BeaconConsumer {
 
     private final BeaconRegionNotifier beaconRegionNotifier;
 
-    public BeaconClient(Context context) {
+    public BackgroundBeaconManager(Context context) {
         this.context = context;
 
         Region region = new Region(UUID.randomUUID().toString(), null, null, null);

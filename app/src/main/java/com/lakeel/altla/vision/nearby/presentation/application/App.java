@@ -7,7 +7,7 @@ import android.support.multidex.MultiDex;
 
 import com.google.firebase.database.FirebaseDatabase;
 import com.lakeel.altla.vision.nearby.R;
-import com.lakeel.altla.vision.nearby.altBeacon.BeaconClient;
+import com.lakeel.altla.vision.nearby.altBeacon.BackgroundBeaconManager;
 import com.lakeel.altla.vision.nearby.presentation.di.component.ApplicationComponent;
 import com.lakeel.altla.vision.nearby.presentation.di.component.DaggerApplicationComponent;
 import com.lakeel.altla.vision.nearby.presentation.di.module.ApplicationModule;
@@ -24,7 +24,7 @@ public class App extends Application {
 
     private ApplicationComponent applicationComponent;
 
-    private BeaconClient beaconClient;
+    private BackgroundBeaconManager backgroundBeaconManager;
 
     public static ApplicationComponent getApplicationComponent(@NonNull Activity activity) {
         return ((App) activity.getApplication()).applicationComponent;
@@ -49,15 +49,15 @@ public class App extends Application {
 
         initImageLoader();
 
-        beaconClient = new BeaconClient(this);
+        backgroundBeaconManager = new BackgroundBeaconManager(this);
     }
 
     public void startMonitorBeacons() {
-        beaconClient.startMonitor();
+        backgroundBeaconManager.startMonitor();
     }
 
     public void stopMonitorBeacons() {
-        beaconClient.stopMonitor();
+        backgroundBeaconManager.stopMonitor();
     }
 
     private void initImageLoader() {
