@@ -1,7 +1,5 @@
 package com.lakeel.altla.vision.nearby.presentation.view.fragment.nearby;
 
-import android.content.Intent;
-import android.content.IntentSender;
 import android.os.Build;
 import android.os.Bundle;
 import android.os.Handler;
@@ -18,7 +16,6 @@ import android.view.View;
 import android.view.ViewGroup;
 
 import com.flipboard.bottomsheet.BottomSheetLayout;
-import com.google.android.gms.common.api.Status;
 import com.lakeel.altla.vision.nearby.R;
 import com.lakeel.altla.vision.nearby.presentation.presenter.nearby.NearbyListPresenter;
 import com.lakeel.altla.vision.nearby.presentation.view.GridShareSheet;
@@ -30,15 +27,11 @@ import com.lakeel.altla.vision.nearby.presentation.view.activity.MainActivity;
 import com.lakeel.altla.vision.nearby.presentation.view.adapter.NearbyAdapter;
 import com.lakeel.altla.vision.nearby.presentation.view.divider.DividerItemDecoration;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-
 import javax.inject.Inject;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
 
-import static android.app.Activity.RESULT_OK;
 import static com.lakeel.altla.vision.nearby.R.id.share;
 
 public final class NearbyListFragment extends Fragment implements NearbyListView {
@@ -54,10 +47,6 @@ public final class NearbyListFragment extends Fragment implements NearbyListView
 
     @BindView(R.id.recycler_view)
     RecyclerView recyclerView;
-
-    private static final Logger LOGGER = LoggerFactory.getLogger(NearbyListFragment.class);
-
-    private static final int REQUEST_CODE_SUBSCRIBE_RESULT = 1;
 
     public static NearbyListFragment newInstance() {
         return new NearbyListFragment();
@@ -131,15 +120,6 @@ public final class NearbyListFragment extends Fragment implements NearbyListView
     }
 
     @Override
-    public void onActivityResult(int requestCode, int resultCode, Intent data) {
-        if (REQUEST_CODE_SUBSCRIBE_RESULT == requestCode && resultCode == RESULT_OK) {
-            presenter.subscribe();
-        } else {
-            super.onActivityResult(requestCode, resultCode, data);
-        }
-    }
-
-    @Override
     public void updateItems() {
         recyclerView.getAdapter().notifyDataSetChanged();
     }
@@ -201,20 +181,9 @@ public final class NearbyListFragment extends Fragment implements NearbyListView
             }
             return true;
         });
-
         if (!presenter.isCmLinkEnabled()) {
             shareSheet.hideMenuItem(R.id.menu_cm_favorites);
         }
-
         shareSheet.show();
-    }
-
-    @Override
-    public void showResolutionSystemDialog(Status status) {
-        try {
-            status.startResolutionForResult(getActivity(), REQUEST_CODE_SUBSCRIBE_RESULT);
-        } catch (IntentSender.SendIntentException e) {
-            LOGGER.error("Failed to show resolution dialog for nearby.", e);
-        }
     }
 }

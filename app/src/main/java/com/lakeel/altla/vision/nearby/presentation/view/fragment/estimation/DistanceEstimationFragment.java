@@ -1,7 +1,5 @@
 package com.lakeel.altla.vision.nearby.presentation.view.fragment.estimation;
 
-import android.content.Intent;
-import android.content.IntentSender;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v4.content.res.ResourcesCompat;
@@ -14,7 +12,6 @@ import android.view.animation.ScaleAnimation;
 import android.widget.ImageView;
 import android.widget.TextView;
 
-import com.google.android.gms.common.api.Status;
 import com.lakeel.altla.vision.nearby.R;
 import com.lakeel.altla.vision.nearby.presentation.constants.FragmentBundle;
 import com.lakeel.altla.vision.nearby.presentation.firebase.MyUser;
@@ -22,9 +19,6 @@ import com.lakeel.altla.vision.nearby.presentation.presenter.estimation.Distance
 import com.lakeel.altla.vision.nearby.presentation.view.DistanceEstimationView;
 import com.lakeel.altla.vision.nearby.presentation.view.activity.MainActivity;
 import com.nostra13.universalimageloader.core.ImageLoader;
-
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -34,7 +28,6 @@ import javax.inject.Inject;
 import butterknife.BindView;
 import butterknife.ButterKnife;
 
-import static android.app.Activity.RESULT_OK;
 import static android.view.animation.Animation.INFINITE;
 
 public final class DistanceEstimationFragment extends Fragment implements DistanceEstimationView {
@@ -53,10 +46,6 @@ public final class DistanceEstimationFragment extends Fragment implements Distan
 
     @BindView(R.id.imageViewCircle)
     ImageView circleImage;
-
-    private static final Logger LOGGER = LoggerFactory.getLogger(DistanceEstimationFragment.class);
-
-    private static final int REQUEST_CODE_SUBSCRIBE_RESULT = 1;
 
     public static DistanceEstimationFragment newInstance(ArrayList<String> beaconIds, String targetName) {
         Bundle args = new Bundle();
@@ -102,7 +91,7 @@ public final class DistanceEstimationFragment extends Fragment implements Distan
         String message = getResources().getString(R.string.message_finding_for_nearby_device_format, targetName);
         distanceDescriptionText.setText(message);
 
-        presenter.setRegions(beaconIds);
+        presenter.setBeaconIds(beaconIds);
     }
 
     @Override
@@ -118,12 +107,6 @@ public final class DistanceEstimationFragment extends Fragment implements Distan
         animation.setRepeatCount(INFINITE);
 
         circleImage.startAnimation(animation);
-    }
-
-    @Override
-    public void onPause() {
-        super.onPause();
-        presenter.onPause();
     }
 
     @Override
@@ -145,28 +128,10 @@ public final class DistanceEstimationFragment extends Fragment implements Distan
     }
 
     @Override
-    public void onActivityResult(int requestCode, int resultCode, Intent data) {
-        if (REQUEST_CODE_SUBSCRIBE_RESULT == requestCode && resultCode == RESULT_OK) {
-            presenter.subscribe();
-        } else {
-            super.onActivityResult(requestCode, resultCode, data);
-        }
-    }
-
-    @Override
     public void showDistance(String meters) {
         if (isResumed()) {
             String message = getResources().getString(R.string.message_device_distance_format, meters);
             distanceText.setText(message);
-        }
-    }
-
-    @Override
-    public void showResolutionSystemDialog(Status status) {
-        try {
-            status.startResolutionForResult(getActivity(), REQUEST_CODE_SUBSCRIBE_RESULT);
-        } catch (IntentSender.SendIntentException e) {
-            LOGGER.error("Failed to show resolution dialog for nearby.", e);
         }
     }
 }

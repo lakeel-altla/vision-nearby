@@ -1,7 +1,5 @@
 package com.lakeel.altla.vision.nearby.presentation.view;
 
-import com.google.android.gms.common.api.Status;
-
 public interface NearbyListView extends BaseView {
 
     void updateItems();
@@ -21,6 +19,4 @@ public interface NearbyListView extends BaseView {
     void hideOptionMenu();
 
     void showShareSheet();
-
-    void showResolutionSystemDialog(Status status);
 }

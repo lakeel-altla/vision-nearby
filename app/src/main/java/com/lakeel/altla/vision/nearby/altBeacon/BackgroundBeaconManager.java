@@ -1,10 +1,7 @@
 package com.lakeel.altla.vision.nearby.altBeacon;
 
 import android.content.Context;
-import android.content.Intent;
-import android.content.ServiceConnection;
 
-import org.altbeacon.beacon.BeaconConsumer;
 import org.altbeacon.beacon.BeaconManager;
 import org.altbeacon.beacon.BeaconParser;
 import org.altbeacon.beacon.Region;
@@ -12,7 +9,7 @@ import org.altbeacon.beacon.powersave.BackgroundPowerSaver;
 
 import java.util.UUID;
 
-public final class BackgroundBeaconManager extends BeaconManager implements BeaconConsumer {
+public final class BackgroundBeaconManager extends BeaconManager {
 
     private static final String I_BEACON_LAYOUT = "m:2-3=0215,i:4-19,i:20-21,i:22-23,p:24-24";
 
@@ -61,30 +58,10 @@ public final class BackgroundBeaconManager extends BeaconManager implements Beac
     }
 
     public void startMonitor() {
-        bind(this);
+        beaconNotifier.start();
     }
 
     public void stopMonitor() {
         beaconNotifier.stop();
-    }
-
-    @Override
-    public void onBeaconServiceConnect() {
-        beaconNotifier.start();
-    }
-
-    @Override
-    public Context getApplicationContext() {
-        return context;
-    }
-
-    @Override
-    public void unbindService(ServiceConnection serviceConnection) {
-        context.unbindService(serviceConnection);
-    }
-
-    @Override
-    public boolean bindService(Intent intent, ServiceConnection serviceConnection, int i) {
-        return context.bindService(intent, serviceConnection, i);
     }
 }

@@ -1,15 +1,12 @@
 package com.lakeel.altla.vision.nearby.presentation.presenter.nearby;
 
+import android.bluetooth.BluetoothAdapter;
+import android.bluetooth.BluetoothManager;
 import android.content.Context;
-import android.content.Intent;
-import android.content.ServiceConnection;
-import android.os.RemoteException;
 import android.support.annotation.IntRange;
 
 import com.lakeel.altla.cm.resource.Timestamp;
 import com.lakeel.altla.vision.nearby.R;
-import com.lakeel.altla.vision.nearby.altBeacon.BeaconRangeNotifier;
-import com.lakeel.altla.vision.nearby.altBeacon.ForegroundBeaconManager;
 import com.lakeel.altla.vision.nearby.domain.usecase.FindBeaconUseCase;
 import com.lakeel.altla.vision.nearby.domain.usecase.FindCmJidUseCase;
 import com.lakeel.altla.vision.nearby.domain.usecase.FindConfigsUseCase;
@@ -23,10 +20,10 @@ import com.lakeel.altla.vision.nearby.presentation.presenter.mapper.NearbyItemsM
 import com.lakeel.altla.vision.nearby.presentation.presenter.model.NearbyItemModel;
 import com.lakeel.altla.vision.nearby.presentation.view.NearbyItemView;
 import com.lakeel.altla.vision.nearby.presentation.view.NearbyListView;
+import com.neovisionaries.bluetooth.ble.advertising.ADPayloadParser;
+import com.neovisionaries.bluetooth.ble.advertising.ADStructure;
+import com.neovisionaries.bluetooth.ble.advertising.EddystoneUID;
 
-import org.altbeacon.beacon.BeaconConsumer;
-import org.altbeacon.beacon.BeaconManager;
-import org.altbeacon.beacon.Region;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -34,7 +31,6 @@ import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.List;
-import java.util.UUID;
 import java.util.concurrent.ScheduledThreadPoolExecutor;
 import java.util.concurrent.TimeUnit;
 
@@ -45,39 +41,7 @@ import rx.Subscription;
 import rx.android.schedulers.AndroidSchedulers;
 import rx.schedulers.Schedulers;
 
-public final class NearbyListPresenter extends BasePresenter<NearbyListView> implements BeaconConsumer {
-
-    private BeaconRangeNotifier notifier = new BeaconRangeNotifier() {
-
-        @Override
-        protected void onFound(String beaconId) {
-            Subscription subscription = findBeaconUseCase.execute(beaconId)
-                    .subscribeOn(Schedulers.io())
-                    .toObservable()
-                    // Exclude public beacon.
-                    .filter(entity -> entity != null)
-                    .flatMap(entity -> findUserUseCase.execute(entity.userId).subscribeOn(Schedulers.io()).toObservable())
-                    .subscribeOn(Schedulers.io())
-                    .map(itemsEntity -> nearbyItemsModelMapper.map(itemsEntity))
-                    .subscribeOn(Schedulers.io())
-                    .observeOn(AndroidSchedulers.mainThread())
-                    .subscribe(scannedModel -> {
-                        for (NearbyItemModel model : nearbyItemModels) {
-                            if (model.userId.equals(scannedModel.userId)) {
-                                return;
-                            }
-                        }
-                        nearbyItemModels.add(scannedModel);
-                        getView().updateItems();
-                    }, e -> LOGGER.error("Failed to find nearby item.", e));
-            subscriptions.add(subscription);
-        }
-
-        @Override
-        protected void onDistanceChanged(double distance) {
-        }
-    };
-
+public final class NearbyListPresenter extends BasePresenter<NearbyListView> {
     @Inject
     FindBeaconUseCase findBeaconUseCase;
 
@@ -109,24 +73,51 @@ public final class NearbyListPresenter extends BasePresenter<NearbyListView> imp
 
     private boolean isCmLinkEnabled;
 
-    private Context context;
+    private final BluetoothAdapter bluetoothAdapter;
 
-    private BeaconManager beaconManager;
+    private final BluetoothAdapter.LeScanCallback scanCallback = (bluetoothDevice, rssi, scanRecord) -> {
+        List<ADStructure> structures =
+                ADPayloadParser.getInstance().parse(scanRecord);
 
-    private Region region;
+        for (ADStructure structure : structures) {
+            if (structure instanceof EddystoneUID) {
+                EddystoneUID eddystoneUID = (EddystoneUID) structure;
+                String beaconId = eddystoneUID.getBeaconIdAsString().toLowerCase();
+
+                Subscription subscription = findBeaconUseCase.execute(beaconId)
+                        .subscribeOn(Schedulers.io())
+                        .toObservable()
+                        // Exclude public beacon.
+                        .filter(entity -> entity != null)
+                        .flatMap(entity -> findUserUseCase.execute(entity.userId).subscribeOn(Schedulers.io()).toObservable())
+                        .subscribeOn(Schedulers.io())
+                        .map(itemsEntity -> nearbyItemsModelMapper.map(itemsEntity))
+                        .subscribeOn(Schedulers.io())
+                        .observeOn(AndroidSchedulers.mainThread())
+                        .subscribe(scannedModel -> {
+                            for (NearbyItemModel model : nearbyItemModels) {
+                                if (model.userId.equals(scannedModel.userId)) {
+                                    return;
+                                }
+                            }
+                            nearbyItemModels.add(scannedModel);
+                            getView().updateItems();
+                        }, e -> LOGGER.error("Failed to find nearby item.", e));
+                subscriptions.add(subscription);
+            }
+        }
+    };
 
     @Inject
     NearbyListPresenter(Context context) {
-        this.context = context;
-
-        beaconManager = new ForegroundBeaconManager(context);
-        beaconManager.addRangeNotifier(notifier);
-
-        region = new Region(UUID.randomUUID().toString(), null, null, null);
+        // TODO: Check Ble
+        final BluetoothManager bluetoothManager = (BluetoothManager) context.getSystemService(Context.BLUETOOTH_SERVICE);
+        bluetoothAdapter = bluetoothManager.getAdapter();
     }
 
     public void onResume() {
-        beaconManager.bind(this);
+        getView().showIndicator();
+        subscribe();
 
         Subscription subscription = findConfigsUseCase
                 .execute()
@@ -138,19 +129,12 @@ public final class NearbyListPresenter extends BasePresenter<NearbyListView> imp
         subscriptions.add(subscription);
     }
 
-    public void onPause() {
-        beaconManager.unbind(this);
-    }
-
     @Override
     public void onStop() {
         super.onStop();
 
-        try {
-            beaconManager.stopRangingBeaconsInRegion(region);
-        } catch (RemoteException e) {
-            LOGGER.error("Failed to unSubscribe.");
-        }
+        // TODO: Deprecated
+        bluetoothAdapter.stopLeScan(scanCallback);
 
         getView().hideIndicator();
         getView().drawNormalActionBarColor();
@@ -171,6 +155,30 @@ public final class NearbyListPresenter extends BasePresenter<NearbyListView> imp
 
     public int getItemCount() {
         return nearbyItemModels.size();
+    }
+
+    public void subscribe() {
+        // TODO: Deprecated
+        bluetoothAdapter.startLeScan(scanCallback);
+
+        isScanning = true;
+
+        executor.schedule(() -> {
+            // Stop to scan after 10 seconds.
+
+            // TODO: Deprecated
+            bluetoothAdapter.stopLeScan(scanCallback);
+
+            isScanning = false;
+
+            getView().hideIndicator();
+
+            if (nearbyItemModels.size() == 0) {
+                getView().showSnackBar(R.string.message_not_found);
+            }
+
+            subscriptions.unSubscribe();
+        }, 10, TimeUnit.SECONDS);
     }
 
     public void onShareSelected() {
@@ -210,58 +218,8 @@ public final class NearbyListPresenter extends BasePresenter<NearbyListView> imp
         subscriptions.add(subscription);
     }
 
-    public void subscribe() {
-        try {
-            beaconManager.startRangingBeaconsInRegion(region);
-        } catch (RemoteException e) {
-            LOGGER.error("Failed to subscribe.");
-        }
-
-        isScanning = true;
-
-        executor.schedule(() -> {
-            // Stop to scan after 10 seconds.
-            try {
-                beaconManager.stopRangingBeaconsInRegion(region);
-            } catch (RemoteException e) {
-                LOGGER.error("Failed to unSubscribe.");
-            }
-
-            isScanning = false;
-
-            getView().hideIndicator();
-
-            if (nearbyItemModels.size() == 0) {
-                getView().showSnackBar(R.string.message_not_found);
-            }
-
-            subscriptions.unSubscribe();
-        }, 10, TimeUnit.SECONDS);
-    }
-
     public boolean isCmLinkEnabled() {
         return isCmLinkEnabled;
-    }
-
-    @Override
-    public void onBeaconServiceConnect() {
-        getView().showIndicator();
-        subscribe();
-    }
-
-    @Override
-    public Context getApplicationContext() {
-        return context;
-    }
-
-    @Override
-    public void unbindService(ServiceConnection serviceConnection) {
-        context.unbindService(serviceConnection);
-    }
-
-    @Override
-    public boolean bindService(Intent intent, ServiceConnection serviceConnection, int i) {
-        return context.bindService(intent, serviceConnection, i);
     }
 
     public final class NearbyItemPresenter extends BaseItemPresenter<NearbyItemView> {
