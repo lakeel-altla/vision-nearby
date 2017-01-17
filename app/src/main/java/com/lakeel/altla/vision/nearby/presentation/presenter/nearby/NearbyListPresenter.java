@@ -10,18 +10,13 @@ import android.content.Context;
 import android.content.Intent;
 import android.support.annotation.IntRange;
 
-import com.lakeel.altla.cm.resource.Timestamp;
 import com.lakeel.altla.vision.nearby.R;
 import com.lakeel.altla.vision.nearby.domain.usecase.FindBeaconUseCase;
-import com.lakeel.altla.vision.nearby.domain.usecase.FindCmJidUseCase;
 import com.lakeel.altla.vision.nearby.domain.usecase.FindConfigsUseCase;
 import com.lakeel.altla.vision.nearby.domain.usecase.FindUserUseCase;
-import com.lakeel.altla.vision.nearby.domain.usecase.SaveCmFavoritesUseCase;
 import com.lakeel.altla.vision.nearby.presentation.ble.BleChecker;
 import com.lakeel.altla.vision.nearby.presentation.presenter.BaseItemPresenter;
 import com.lakeel.altla.vision.nearby.presentation.presenter.BasePresenter;
-import com.lakeel.altla.vision.nearby.presentation.presenter.data.CmFavoriteData;
-import com.lakeel.altla.vision.nearby.presentation.presenter.mapper.CmFavoritesDataMapper;
 import com.lakeel.altla.vision.nearby.presentation.presenter.mapper.NearbyItemsModelMapper;
 import com.lakeel.altla.vision.nearby.presentation.presenter.model.NearbyItemModel;
 import com.lakeel.altla.vision.nearby.presentation.view.NearbyItemView;
@@ -42,12 +37,12 @@ import java.util.concurrent.TimeUnit;
 
 import javax.inject.Inject;
 
-import rx.Observable;
 import rx.Subscription;
 import rx.android.schedulers.AndroidSchedulers;
 import rx.schedulers.Schedulers;
 
 public final class NearbyListPresenter extends BasePresenter<NearbyListView> {
+
     @Inject
     FindBeaconUseCase findBeaconUseCase;
 
@@ -56,12 +51,6 @@ public final class NearbyListPresenter extends BasePresenter<NearbyListView> {
 
     @Inject
     FindConfigsUseCase findConfigsUseCase;
-
-    @Inject
-    FindCmJidUseCase findCmJidUseCase;
-
-    @Inject
-    SaveCmFavoritesUseCase saveCmFavoritesUseCase;
 
     private static Logger LOGGER = LoggerFactory.getLogger(NearbyListPresenter.class);
 
@@ -75,13 +64,9 @@ public final class NearbyListPresenter extends BasePresenter<NearbyListView> {
 
     private NearbyItemsModelMapper nearbyItemsModelMapper = new NearbyItemsModelMapper();
 
-    private CmFavoritesDataMapper cmFavoritesDataMapper = new CmFavoritesDataMapper();
-
     private ScheduledThreadPoolExecutor executor = new ScheduledThreadPoolExecutor(1);
 
     private boolean isScanning;
-
-    private boolean isCmLinkEnabled;
 
     private ScanCallback scanCallback = new ScanCallback() {
 
@@ -144,15 +129,6 @@ public final class NearbyListPresenter extends BasePresenter<NearbyListView> {
         if (state == BleChecker.State.ENABLE) {
             subscribe();
         }
-
-        Subscription subscription = findConfigsUseCase
-                .execute()
-                .map(entity -> entity.isCmLinkEnabled)
-                .subscribeOn(Schedulers.io())
-                .observeOn(AndroidSchedulers.mainThread())
-                .subscribe(bool -> isCmLinkEnabled = bool,
-                        e -> LOGGER.error("Failed to find CM configuration.", e));
-        subscriptions.add(subscription);
     }
 
     @Override
@@ -203,47 +179,6 @@ public final class NearbyListPresenter extends BasePresenter<NearbyListView> {
         }, 10, TimeUnit.SECONDS);
     }
 
-    public void onShareSelected() {
-        getView().showShareSheet();
-    }
-
-    public void onAddToCmFavorite() {
-        List<String> nearbyIds = new ArrayList<>(checkedModels.size());
-
-        for (NearbyItemModel model : checkedModels) {
-            nearbyIds.add(model.userId);
-        }
-
-        Subscription subscription = Observable
-                .from(nearbyIds)
-                .flatMap(this::findCmJid)
-                .toList()
-                .map(userIds -> cmFavoritesDataMapper.map(userIds))
-                .flatMap(this::saveCmFavorites)
-                .subscribeOn(Schedulers.io())
-                .observeOn(AndroidSchedulers.mainThread())
-                .subscribe(timestamp -> {
-                    for (NearbyItemModel model : checkedModels) {
-                        model.isChecked = false;
-                    }
-                    checkedModels.clear();
-
-                    getView().hideOptionMenu();
-                    getView().drawNormalActionBarColor();
-                    getView().updateItems();
-                    getView().showSnackBar(R.string.message_added);
-                }, e -> {
-                    LOGGER.error("Failed to add nearby users to COMPANY Messenger.", e);
-                    getView().showSnackBar(R.string.error_not_added);
-                });
-
-        subscriptions.add(subscription);
-    }
-
-    public boolean isCmLinkEnabled() {
-        return isCmLinkEnabled;
-    }
-
     public final class NearbyItemPresenter extends BaseItemPresenter<NearbyItemView> {
 
         @Override
@@ -267,22 +202,11 @@ public final class NearbyListPresenter extends BasePresenter<NearbyListView> {
             model.isChecked = !model.isChecked;
 
             if (0 < checkedModels.size()) {
-                if (isCmLinkEnabled) {
-                    getView().showOptionMenu();
-                }
                 getView().drawEditableActionBarColor();
             } else {
                 getView().hideOptionMenu();
                 getView().drawNormalActionBarColor();
             }
         }
-    }
-
-    private Observable<String> findCmJid(String userId) {
-        return findCmJidUseCase.execute(userId).subscribeOn(Schedulers.io()).toObservable();
-    }
-
-    private Observable<Timestamp> saveCmFavorites(CmFavoriteData data) {
-        return saveCmFavoritesUseCase.execute(data).subscribeOn(Schedulers.io()).toObservable();
     }
 }
