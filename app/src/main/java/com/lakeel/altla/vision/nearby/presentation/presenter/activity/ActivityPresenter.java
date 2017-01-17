@@ -3,10 +3,12 @@ package com.lakeel.altla.vision.nearby.presentation.presenter.activity;
 import android.app.Activity;
 import android.content.Context;
 import android.os.Build;
+import android.os.Bundle;
 import android.support.annotation.NonNull;
 
 import com.firebase.ui.auth.AuthUI;
 import com.google.android.gms.tasks.Task;
+import com.google.firebase.analytics.FirebaseAnalytics;
 import com.google.firebase.iid.FirebaseInstanceId;
 import com.lakeel.altla.vision.nearby.R;
 import com.lakeel.altla.vision.nearby.core.StringUtils;
@@ -22,6 +24,8 @@ import com.lakeel.altla.vision.nearby.domain.usecase.SaveTokenUseCase;
 import com.lakeel.altla.vision.nearby.domain.usecase.SaveUserBeaconUseCase;
 import com.lakeel.altla.vision.nearby.presentation.ble.BleChecker;
 import com.lakeel.altla.vision.nearby.presentation.ble.BleChecker.State;
+import com.lakeel.altla.vision.nearby.presentation.constants.AnalyticsEvent;
+import com.lakeel.altla.vision.nearby.presentation.constants.AnalyticsParam;
 import com.lakeel.altla.vision.nearby.presentation.firebase.MyUser;
 import com.lakeel.altla.vision.nearby.presentation.presenter.BasePresenter;
 import com.lakeel.altla.vision.nearby.presentation.service.AdvertiseService;
@@ -39,6 +43,9 @@ import rx.android.schedulers.AndroidSchedulers;
 import rx.schedulers.Schedulers;
 
 public final class ActivityPresenter extends BasePresenter<ActivityView> {
+
+    @Inject
+    FirebaseAnalytics firebaseAnalytics;
 
     @Inject
     SavePreferenceBeaconIdUseCase saveBeaconIdUseCase;
@@ -106,7 +113,7 @@ public final class ActivityPresenter extends BasePresenter<ActivityView> {
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribe(isSubscribeEnabled -> {
                     if (isSubscribeEnabled) {
-                        startMonitorBeacons();
+                        getView().startMonitorBeacons();
                     } else {
                         stopMonitorBeacons();
                     }
@@ -156,11 +163,19 @@ public final class ActivityPresenter extends BasePresenter<ActivityView> {
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribe(e -> LOGGER.error("Failed to save offline status.", e),
                         () -> {
+                            MyUser.UserData userData = MyUser.getUserData();
+
                             // Unless you explicitly sign out, sign-in state continues.
                             // If you want to sign out, it is necessary to both sign out FirebaseAuth and Play Service Auth.
+
                             Task<Void> task = AuthUI.getInstance().signOut(activity);
                             task.addOnCompleteListener(result -> {
                                 if (result.isSuccessful()) {
+                                    Bundle params = new Bundle();
+                                    params.putString(AnalyticsParam.USER_ID.getValue(), userData.userId);
+                                    params.putString(AnalyticsParam.USER_NAME.getValue(), userData.displayName);
+                                    firebaseAnalytics.logEvent(AnalyticsEvent.LOG_OUT.getValue(), params);
+
                                     stopMonitorBeacons();
                                     getView().showSignInFragment();
                                 } else {
@@ -193,10 +208,6 @@ public final class ActivityPresenter extends BasePresenter<ActivityView> {
     private void showProfile() {
         MyUser.UserData userData = MyUser.getUserData();
         getView().showProfile(userData.displayName, userData.email, userData.imageUri);
-    }
-
-    private void startMonitorBeacons() {
-        getView().startMonitorBeacons();
     }
 
     private void stopMonitorBeacons() {

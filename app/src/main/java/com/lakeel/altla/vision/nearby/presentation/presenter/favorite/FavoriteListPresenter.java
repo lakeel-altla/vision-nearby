@@ -96,6 +96,7 @@ public final class FavoriteListPresenter extends BasePresenter<FavoriteListView>
 
         public void onRemove(FavoriteModel model) {
             Bundle params = new Bundle();
+            params.putString(AnalyticsParam.USER_ID.getValue(), model.userId);
             params.putString(AnalyticsParam.USER_NAME.getValue(), model.name);
             firebaseAnalytics.logEvent(AnalyticsEvent.REMOVE_FAVORITE.getValue(), params);
 
