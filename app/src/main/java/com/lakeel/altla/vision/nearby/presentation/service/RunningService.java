@@ -15,8 +15,8 @@ public final class RunningService {
     private final Context context;
 
     public RunningService(Context context, Class clazz) {
-        this.clazz = clazz;
         this.context = context;
+        this.clazz = clazz;
     }
 
     public void stop() {
