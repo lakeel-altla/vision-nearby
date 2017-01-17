@@ -1,5 +1,6 @@
 package com.lakeel.altla.vision.nearby.presentation.view.fragment.nearby;
 
+import android.content.Intent;
 import android.os.Build;
 import android.os.Bundle;
 import android.os.Handler;
@@ -27,11 +28,15 @@ import com.lakeel.altla.vision.nearby.presentation.view.activity.MainActivity;
 import com.lakeel.altla.vision.nearby.presentation.view.adapter.NearbyAdapter;
 import com.lakeel.altla.vision.nearby.presentation.view.divider.DividerItemDecoration;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 import javax.inject.Inject;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
 
+import static android.app.Activity.RESULT_OK;
 import static com.lakeel.altla.vision.nearby.R.id.share;
 
 public final class NearbyListFragment extends Fragment implements NearbyListView {
@@ -47,6 +52,10 @@ public final class NearbyListFragment extends Fragment implements NearbyListView
 
     @BindView(R.id.recycler_view)
     RecyclerView recyclerView;
+
+    private static final Logger LOGGER = LoggerFactory.getLogger(NearbyListFragment.class);
+
+    private static final int REQUEST_CODE_ENABLE_BLE = 1;
 
     public static NearbyListFragment newInstance() {
         return new NearbyListFragment();
@@ -117,6 +126,24 @@ public final class NearbyListFragment extends Fragment implements NearbyListView
     public void onStop() {
         super.onStop();
         presenter.onStop();
+    }
+
+    @Override
+    public void onActivityResult(int requestCode, int resultCode, Intent data) {
+        if (REQUEST_CODE_ENABLE_BLE == requestCode) {
+            if (RESULT_OK == resultCode) {
+                presenter.subscribe();
+            } else {
+                LOGGER.error("Failed to enable BLE.");
+            }
+        } else {
+            super.onActivityResult(requestCode, resultCode, data);
+        }
+    }
+
+    @Override
+    public void showBleEnabledActivity(Intent intent) {
+        startActivityForResult(intent, REQUEST_CODE_ENABLE_BLE);
     }
 
     @Override

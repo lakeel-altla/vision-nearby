@@ -2,10 +2,7 @@ package com.lakeel.altla.vision.nearby.presentation.view;
 
 import android.support.annotation.StringRes;
 
-import com.google.android.gms.common.ConnectionResult;
-import com.google.android.gms.common.api.Status;
-
-public interface ActivityView extends BaseView {
+public interface ActivityView {
 
     void showFavoriteListFragment();
 

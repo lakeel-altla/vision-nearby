@@ -1,5 +1,6 @@
 package com.lakeel.altla.vision.nearby.presentation.view.fragment.estimation;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v4.content.res.ResourcesCompat;
@@ -20,6 +21,9 @@ import com.lakeel.altla.vision.nearby.presentation.view.DistanceEstimationView;
 import com.lakeel.altla.vision.nearby.presentation.view.activity.MainActivity;
 import com.nostra13.universalimageloader.core.ImageLoader;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 import java.util.ArrayList;
 import java.util.List;
 
@@ -28,6 +32,7 @@ import javax.inject.Inject;
 import butterknife.BindView;
 import butterknife.ButterKnife;
 
+import static android.app.Activity.RESULT_OK;
 import static android.view.animation.Animation.INFINITE;
 
 public final class DistanceEstimationFragment extends Fragment implements DistanceEstimationView {
@@ -46,6 +51,10 @@ public final class DistanceEstimationFragment extends Fragment implements Distan
 
     @BindView(R.id.imageViewCircle)
     ImageView circleImage;
+
+    private static final Logger LOGGER = LoggerFactory.getLogger(DistanceEstimationFragment.class);
+
+    private static final int REQUEST_CODE_ENABLE_BLE = 1;
 
     public static DistanceEstimationFragment newInstance(ArrayList<String> beaconIds, String targetName) {
         Bundle args = new Bundle();
@@ -116,6 +125,19 @@ public final class DistanceEstimationFragment extends Fragment implements Distan
     }
 
     @Override
+    public void onActivityResult(int requestCode, int resultCode, Intent data) {
+        if (REQUEST_CODE_ENABLE_BLE == requestCode) {
+            if (RESULT_OK == resultCode) {
+                presenter.subscribe();
+            } else {
+                LOGGER.error("Failed to enable BLE.");
+            }
+        } else {
+            super.onActivityResult(requestCode, resultCode, data);
+        }
+    }
+
+    @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         switch (item.getItemId()) {
             case android.R.id.home:
@@ -133,5 +155,10 @@ public final class DistanceEstimationFragment extends Fragment implements Distan
             String message = getResources().getString(R.string.message_device_distance_format, meters);
             distanceText.setText(message);
         }
+    }
+
+    @Override
+    public void showBleEnabledActivity(Intent intent) {
+        startActivityForResult(intent, REQUEST_CODE_ENABLE_BLE);
     }
 }

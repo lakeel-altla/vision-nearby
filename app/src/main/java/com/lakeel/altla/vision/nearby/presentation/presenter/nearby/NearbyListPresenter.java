@@ -2,7 +2,12 @@ package com.lakeel.altla.vision.nearby.presentation.presenter.nearby;
 
 import android.bluetooth.BluetoothAdapter;
 import android.bluetooth.BluetoothManager;
+import android.bluetooth.le.BluetoothLeScanner;
+import android.bluetooth.le.ScanCallback;
+import android.bluetooth.le.ScanRecord;
+import android.bluetooth.le.ScanResult;
 import android.content.Context;
+import android.content.Intent;
 import android.support.annotation.IntRange;
 
 import com.lakeel.altla.cm.resource.Timestamp;
@@ -12,6 +17,7 @@ import com.lakeel.altla.vision.nearby.domain.usecase.FindCmJidUseCase;
 import com.lakeel.altla.vision.nearby.domain.usecase.FindConfigsUseCase;
 import com.lakeel.altla.vision.nearby.domain.usecase.FindUserUseCase;
 import com.lakeel.altla.vision.nearby.domain.usecase.SaveCmFavoritesUseCase;
+import com.lakeel.altla.vision.nearby.presentation.ble.BleChecker;
 import com.lakeel.altla.vision.nearby.presentation.presenter.BaseItemPresenter;
 import com.lakeel.altla.vision.nearby.presentation.presenter.BasePresenter;
 import com.lakeel.altla.vision.nearby.presentation.presenter.data.CmFavoriteData;
@@ -59,6 +65,10 @@ public final class NearbyListPresenter extends BasePresenter<NearbyListView> {
 
     private static Logger LOGGER = LoggerFactory.getLogger(NearbyListPresenter.class);
 
+    private final Context context;
+
+    private final BluetoothLeScanner scanner;
+
     private final List<NearbyItemModel> nearbyItemModels = new ArrayList<>();
 
     private final List<NearbyItemModel> checkedModels = new LinkedList<>();
@@ -73,51 +83,67 @@ public final class NearbyListPresenter extends BasePresenter<NearbyListView> {
 
     private boolean isCmLinkEnabled;
 
-    private final BluetoothAdapter bluetoothAdapter;
+    private ScanCallback scanCallback = new ScanCallback() {
 
-    private final BluetoothAdapter.LeScanCallback scanCallback = (bluetoothDevice, rssi, scanRecord) -> {
-        List<ADStructure> structures =
-                ADPayloadParser.getInstance().parse(scanRecord);
+        @Override
+        public void onScanResult(int callbackType, ScanResult result) {
+            ScanRecord scanRecord = result.getScanRecord();
+            if (scanRecord == null) {
+                return;
+            }
 
-        for (ADStructure structure : structures) {
-            if (structure instanceof EddystoneUID) {
-                EddystoneUID eddystoneUID = (EddystoneUID) structure;
-                String beaconId = eddystoneUID.getBeaconIdAsString().toLowerCase();
+            List<ADStructure> structures =
+                    ADPayloadParser.getInstance().parse(scanRecord.getBytes());
 
-                Subscription subscription = findBeaconUseCase.execute(beaconId)
-                        .subscribeOn(Schedulers.io())
-                        .toObservable()
-                        // Exclude public beacon.
-                        .filter(entity -> entity != null)
-                        .flatMap(entity -> findUserUseCase.execute(entity.userId).subscribeOn(Schedulers.io()).toObservable())
-                        .subscribeOn(Schedulers.io())
-                        .map(itemsEntity -> nearbyItemsModelMapper.map(itemsEntity))
-                        .subscribeOn(Schedulers.io())
-                        .observeOn(AndroidSchedulers.mainThread())
-                        .subscribe(scannedModel -> {
-                            for (NearbyItemModel model : nearbyItemModels) {
-                                if (model.userId.equals(scannedModel.userId)) {
-                                    return;
+            for (ADStructure structure : structures) {
+                if (structure instanceof EddystoneUID) {
+                    EddystoneUID eddystoneUID = (EddystoneUID) structure;
+                    String beaconId = eddystoneUID.getBeaconIdAsString().toLowerCase();
+
+                    Subscription subscription = findBeaconUseCase.execute(beaconId)
+                            .subscribeOn(Schedulers.io())
+                            .toObservable()
+                            // Exclude public beacon.
+                            .filter(entity -> entity != null)
+                            .flatMap(entity -> findUserUseCase.execute(entity.userId).subscribeOn(Schedulers.io()).toObservable())
+                            .subscribeOn(Schedulers.io())
+                            .map(itemsEntity -> nearbyItemsModelMapper.map(itemsEntity))
+                            .subscribeOn(Schedulers.io())
+                            .observeOn(AndroidSchedulers.mainThread())
+                            .subscribe(scannedModel -> {
+                                for (NearbyItemModel model : nearbyItemModels) {
+                                    if (model.userId.equals(scannedModel.userId)) {
+                                        return;
+                                    }
                                 }
-                            }
-                            nearbyItemModels.add(scannedModel);
-                            getView().updateItems();
-                        }, e -> LOGGER.error("Failed to find nearby item.", e));
-                subscriptions.add(subscription);
+                                nearbyItemModels.add(scannedModel);
+                                getView().updateItems();
+                            }, e -> LOGGER.error("Failed to find nearby item.", e));
+                    subscriptions.add(subscription);
+                }
             }
         }
     };
 
     @Inject
     NearbyListPresenter(Context context) {
-        // TODO: Check Ble
-        final BluetoothManager bluetoothManager = (BluetoothManager) context.getSystemService(Context.BLUETOOTH_SERVICE);
-        bluetoothAdapter = bluetoothManager.getAdapter();
+        this.context = context;
+        BluetoothManager bluetoothManager = (BluetoothManager) context.getSystemService(Context.BLUETOOTH_SERVICE);
+        BluetoothAdapter bluetoothAdapter = bluetoothManager.getAdapter();
+        scanner = bluetoothAdapter.getBluetoothLeScanner();
     }
 
     public void onResume() {
         getView().showIndicator();
-        subscribe();
+
+        BleChecker checker = new BleChecker(context);
+        BleChecker.State state = checker.checkState();
+        if (state == BleChecker.State.OFF) {
+            getView().showBleEnabledActivity(new Intent(BluetoothAdapter.ACTION_REQUEST_ENABLE));
+        }
+        if (state == BleChecker.State.ENABLE) {
+            subscribe();
+        }
 
         Subscription subscription = findConfigsUseCase
                 .execute()
@@ -133,8 +159,7 @@ public final class NearbyListPresenter extends BasePresenter<NearbyListView> {
     public void onStop() {
         super.onStop();
 
-        // TODO: Deprecated
-        bluetoothAdapter.stopLeScan(scanCallback);
+        scanner.stopScan(scanCallback);
 
         getView().hideIndicator();
         getView().drawNormalActionBarColor();
@@ -158,16 +183,13 @@ public final class NearbyListPresenter extends BasePresenter<NearbyListView> {
     }
 
     public void subscribe() {
-        // TODO: Deprecated
-        bluetoothAdapter.startLeScan(scanCallback);
+        scanner.startScan(scanCallback);
 
         isScanning = true;
 
         executor.schedule(() -> {
             // Stop to scan after 10 seconds.
-
-            // TODO: Deprecated
-            bluetoothAdapter.stopLeScan(scanCallback);
+            scanner.stopScan(scanCallback);
 
             isScanning = false;
 

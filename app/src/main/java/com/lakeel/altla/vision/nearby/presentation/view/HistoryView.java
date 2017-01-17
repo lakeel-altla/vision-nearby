@@ -4,7 +4,7 @@ import com.lakeel.altla.vision.nearby.presentation.view.bundle.HistoryBundle;
 
 import android.support.annotation.StringRes;
 
-public interface HistoryView extends BaseView {
+public interface HistoryView {
 
     void updateItems();
 

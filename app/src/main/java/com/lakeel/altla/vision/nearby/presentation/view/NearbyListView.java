@@ -1,6 +1,10 @@
 package com.lakeel.altla.vision.nearby.presentation.view;
 
-public interface NearbyListView extends BaseView {
+import android.content.Intent;
+
+public interface NearbyListView {
+
+    void showBleEnabledActivity(Intent intent);
 
     void updateItems();
 

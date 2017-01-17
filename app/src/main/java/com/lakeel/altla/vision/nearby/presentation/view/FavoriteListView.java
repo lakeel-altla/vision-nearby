@@ -7,7 +7,7 @@ import android.support.annotation.StringRes;
 
 import java.util.List;
 
-public interface FavoriteListView extends BaseView {
+public interface FavoriteListView {
 
     void updateItems(List<FavoriteModel> models);
 
