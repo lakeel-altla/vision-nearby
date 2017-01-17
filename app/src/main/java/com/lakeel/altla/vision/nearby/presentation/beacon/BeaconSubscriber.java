@@ -23,18 +23,18 @@ import javax.inject.Inject;
 
 import rx.schedulers.Schedulers;
 
-public final class BackgroundBeaconSubscriber {
+public final class BeaconSubscriber {
 
     @Inject
     FindBeaconUseCase findBeaconUseCase;
 
-    private static final Logger LOGGER = LoggerFactory.getLogger(BackgroundBeaconSubscriber.class);
+    private static final Logger LOGGER = LoggerFactory.getLogger(BeaconSubscriber.class);
 
     private final Context context;
 
     private final BeaconManager beaconManager;
 
-    BackgroundBeaconSubscriber(Context context) {
+    BeaconSubscriber(Context context) {
         DefaultComponent component = DaggerDefaultComponent.create();
         component.inject(this);
 

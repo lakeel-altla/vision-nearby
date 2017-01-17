@@ -12,17 +12,18 @@ final class BeaconNotifier implements BootstrapNotifier {
 
     private final Region region;
 
-    private final BackgroundBeaconSubscriber subscriber;
+    private final BeaconSubscriber subscriber;
 
     private RegionBootstrap regionBootstrap;
 
     BeaconNotifier(Context context, Region region) {
         this.context = context;
         this.region = region;
-        subscriber = new BackgroundBeaconSubscriber(context);
+        subscriber = new BeaconSubscriber(context);
     }
 
     void start() {
+        // Subscribe beacons in the background.
         regionBootstrap = new RegionBootstrap(this, region);
     }
 
@@ -37,6 +38,7 @@ final class BeaconNotifier implements BootstrapNotifier {
 
     @Override
     public void didEnterRegion(Region region) {
+        // If enter the region of the beacons, start to subscribe.
         subscriber.subscribe(region);
     }
 

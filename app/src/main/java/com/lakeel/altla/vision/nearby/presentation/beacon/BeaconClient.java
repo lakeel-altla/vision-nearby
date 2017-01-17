@@ -9,7 +9,7 @@ import org.altbeacon.beacon.powersave.BackgroundPowerSaver;
 
 import java.util.UUID;
 
-public final class BackgroundBeaconManager {
+public final class BeaconClient {
 
     private static final String I_BEACON_LAYOUT = "m:2-3=0215,i:4-19,i:20-21,i:22-23,p:24-24";
 
@@ -17,11 +17,11 @@ public final class BackgroundBeaconManager {
 
     private static final long BACKGROUND_SCAN_PERIOD = 10000L;
 
-    private static final long BACKGROUND_BETWEEN_SCAN_PERIOD = 300000L;
+    private static final long BACKGROUND_BETWEEN_SCAN_PERIOD = 10000L;
 
     private final BeaconNotifier beaconNotifier;
 
-    public BackgroundBeaconManager(Context context) {
+    public BeaconClient(Context context) {
         Region region = new Region(UUID.randomUUID().toString(), null, null, null);
         beaconNotifier = new BeaconNotifier(context, region);
 
