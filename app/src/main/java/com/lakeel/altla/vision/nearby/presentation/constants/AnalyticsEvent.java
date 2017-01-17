@@ -1,7 +1,7 @@
 package com.lakeel.altla.vision.nearby.presentation.constants;
 
 public enum AnalyticsEvent {
-    ADD_FAVORITE("add_favorite");
+    ADD_FAVORITE("add_favorite"), REMOVE_FAVORITE("remove_favorite");
 
     private String value;
 
