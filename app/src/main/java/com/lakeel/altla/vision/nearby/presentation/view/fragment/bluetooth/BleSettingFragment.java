@@ -60,9 +60,9 @@ public final class BleSettingFragment extends PreferenceFragmentCompat implement
         subscribePreference.setOnPreferenceChangeListener((preference, newValue) -> {
             Boolean booleanValue = (Boolean) newValue;
             if (booleanValue) {
-                ((MainActivity) getActivity()).startMonitorBeacons();
+                presenter.onStartSubscribe();
             } else {
-                ((MainActivity) getActivity()).stopMonitorBeacons();
+                presenter.onStopSubscribe();
             }
             return true;
         });
@@ -102,5 +102,15 @@ public final class BleSettingFragment extends PreferenceFragmentCompat implement
     @Override
     public void disableAdvertiseSettings() {
         advertisePreference.setEnabled(false);
+    }
+
+    @Override
+    public void startSubscribe() {
+        ((MainActivity) getActivity()).startMonitorBeacons();
+    }
+
+    @Override
+    public void stopSubscribe() {
+        ((MainActivity) getActivity()).stopMonitorBeacons();
     }
 }
