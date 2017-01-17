@@ -7,15 +7,15 @@ import android.support.v4.app.FragmentTransaction;
 
 import com.lakeel.altla.vision.nearby.R;
 import com.lakeel.altla.vision.nearby.presentation.view.bundle.HistoryBundle;
-import com.lakeel.altla.vision.nearby.presentation.view.fragment.bluetooth.BleSettingFragment;
+import com.lakeel.altla.vision.nearby.presentation.view.fragment.bluetooth.BleSettingsFragment;
 import com.lakeel.altla.vision.nearby.presentation.view.fragment.device.DeviceListFragment;
 import com.lakeel.altla.vision.nearby.presentation.view.fragment.estimation.DistanceEstimationFragment;
 import com.lakeel.altla.vision.nearby.presentation.view.fragment.favorite.FavoriteListFragment;
 import com.lakeel.altla.vision.nearby.presentation.view.fragment.history.HistoryFragment;
 import com.lakeel.altla.vision.nearby.presentation.view.fragment.information.InformationFragment;
-import com.lakeel.altla.vision.nearby.presentation.view.fragment.line.LineSettingFragment;
+import com.lakeel.altla.vision.nearby.presentation.view.fragment.line.LineSettingsFragment;
 import com.lakeel.altla.vision.nearby.presentation.view.fragment.nearby.NearbyListFragment;
-import com.lakeel.altla.vision.nearby.presentation.view.fragment.setting.SettingFragment;
+import com.lakeel.altla.vision.nearby.presentation.view.fragment.setting.SettingsFragment;
 import com.lakeel.altla.vision.nearby.presentation.view.fragment.signin.SignInFragment;
 import com.lakeel.altla.vision.nearby.presentation.view.fragment.tracking.TrackingFragment;
 import com.lakeel.altla.vision.nearby.presentation.view.fragment.user.UserPassingFragment;
@@ -45,11 +45,11 @@ public final class FragmentController {
 
     private final String INFORMATION_FRAGMENT_TAG = InformationFragment.class.getSimpleName();
 
-    private final String SETTING_FRAGMENT_TAG = SettingFragment.class.getSimpleName();
+    private final String SETTINGS_FRAGMENT_TAG = SettingsFragment.class.getSimpleName();
 
-    private final String SETTING_BLE_FRAGMENT_TAG = BleSettingFragment.class.getSimpleName();
+    private final String SETTINGS_BLE_FRAGMENT_TAG = BleSettingsFragment.class.getSimpleName();
 
-    private final String SETTING_LINE_FRAGMENT_TAG = LineSettingFragment.class.getSimpleName();
+    private final String SETTINGS_LINE_FRAGMENT_TAG = LineSettingsFragment.class.getSimpleName();
 
     private FragmentManager fragmentManager;
 
@@ -103,13 +103,13 @@ public final class FragmentController {
     }
 
     public void showBleSettingsFragment() {
-        BleSettingFragment fragment = BleSettingFragment.newInstance();
-        replaceFragment(R.id.fragmentPlaceholder, fragment, SETTING_BLE_FRAGMENT_TAG);
+        BleSettingsFragment fragment = BleSettingsFragment.newInstance();
+        replaceFragment(R.id.fragmentPlaceholder, fragment, SETTINGS_BLE_FRAGMENT_TAG);
     }
 
     public void showLineSettingsFragment() {
-        LineSettingFragment fragment = LineSettingFragment.newInstance();
-        replaceFragment(R.id.fragmentPlaceholder, fragment, SETTING_LINE_FRAGMENT_TAG);
+        LineSettingsFragment fragment = LineSettingsFragment.newInstance();
+        replaceFragment(R.id.fragmentPlaceholder, fragment, SETTINGS_LINE_FRAGMENT_TAG);
     }
 
     public void showInformationFragment() {
@@ -118,8 +118,8 @@ public final class FragmentController {
     }
 
     public void showSettingsFragment() {
-        SettingFragment fragment = SettingFragment.newInstance();
-        replaceFragment(R.id.fragmentPlaceholder, fragment, SETTING_FRAGMENT_TAG);
+        SettingsFragment fragment = SettingsFragment.newInstance();
+        replaceFragment(R.id.fragmentPlaceholder, fragment, SETTINGS_FRAGMENT_TAG);
     }
 
     private void replaceFragment(@IdRes int containerViewId, Fragment fragment, String tag) {

@@ -10,7 +10,7 @@ import com.lakeel.altla.vision.nearby.presentation.constants.AnalyticsEvent;
 import com.lakeel.altla.vision.nearby.presentation.constants.AnalyticsParam;
 import com.lakeel.altla.vision.nearby.presentation.firebase.MyUser;
 import com.lakeel.altla.vision.nearby.presentation.presenter.BasePresenter;
-import com.lakeel.altla.vision.nearby.presentation.view.LineSettingView;
+import com.lakeel.altla.vision.nearby.presentation.view.LineSettingsView;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -21,7 +21,7 @@ import rx.Subscription;
 import rx.android.schedulers.AndroidSchedulers;
 import rx.schedulers.Schedulers;
 
-public final class LineSettingPresenter extends BasePresenter<LineSettingView> {
+public final class LineSettingsPresenter extends BasePresenter<LineSettingsView> {
 
     @Inject
     FirebaseAnalytics firebaseAnalytics;
@@ -32,10 +32,10 @@ public final class LineSettingPresenter extends BasePresenter<LineSettingView> {
     @Inject
     FindLineLinkUseCase findLineLinkUseCase;
 
-    private static final Logger LOGGER = LoggerFactory.getLogger(LineSettingPresenter.class);
+    private static final Logger LOGGER = LoggerFactory.getLogger(LineSettingsPresenter.class);
 
     @Inject
-    LineSettingPresenter() {
+    LineSettingsPresenter() {
     }
 
     public void onActivityCreated() {

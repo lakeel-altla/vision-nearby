@@ -1,6 +1,6 @@
 package com.lakeel.altla.vision.nearby.presentation.view;
 
-public interface BleSettingView {
+public interface BleSettingsView {
 
     void startAdvertise(String beaconId);
 

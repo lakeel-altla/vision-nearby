@@ -13,7 +13,7 @@ import com.lakeel.altla.vision.nearby.presentation.firebase.MyUser;
 import com.lakeel.altla.vision.nearby.presentation.presenter.BasePresenter;
 import com.lakeel.altla.vision.nearby.presentation.service.AdvertiseService;
 import com.lakeel.altla.vision.nearby.presentation.service.RunningService;
-import com.lakeel.altla.vision.nearby.presentation.view.BleSettingView;
+import com.lakeel.altla.vision.nearby.presentation.view.BleSettingsView;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -24,7 +24,7 @@ import rx.Subscription;
 import rx.android.schedulers.AndroidSchedulers;
 import rx.schedulers.Schedulers;
 
-public final class BleSettingPresenter extends BasePresenter<BleSettingView> {
+public final class BleSettingsPresenter extends BasePresenter<BleSettingsView> {
 
     @Inject
     FirebaseAnalytics firebaseAnalytics;
@@ -32,12 +32,12 @@ public final class BleSettingPresenter extends BasePresenter<BleSettingView> {
     @Inject
     FindBeaconIdUseCase findBeaconIdUseCase;
 
-    private static final Logger LOGGER = LoggerFactory.getLogger(BleSettingPresenter.class);
+    private static final Logger LOGGER = LoggerFactory.getLogger(BleSettingsPresenter.class);
 
     private Context context;
 
     @Inject
-    BleSettingPresenter(Context context) {
+    BleSettingsPresenter(Context context) {
         this.context = context;
     }
 

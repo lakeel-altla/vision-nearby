@@ -1,21 +1,14 @@
 package com.lakeel.altla.vision.nearby.presentation.view.fragment.setting;
 
 import android.os.Bundle;
-import android.support.annotation.StringRes;
-import android.support.design.widget.Snackbar;
 import android.support.v7.preference.PreferenceFragmentCompat;
 import android.support.v7.preference.PreferenceScreen;
-import android.view.View;
 
 import com.lakeel.altla.vision.nearby.R;
-import com.lakeel.altla.vision.nearby.presentation.presenter.setting.SettingPresenter;
-import com.lakeel.altla.vision.nearby.presentation.view.SettingView;
 import com.lakeel.altla.vision.nearby.presentation.view.activity.MainActivity;
 import com.lakeel.altla.vision.nearby.presentation.view.fragment.FragmentController;
 
-import javax.inject.Inject;
-
-public final class SettingFragment extends PreferenceFragmentCompat implements SettingView {
+public final class SettingsFragment extends PreferenceFragmentCompat {
 
     private static final String KEY_BLUETOOTH_SCREEN = "bluetoothScreen";
 
@@ -23,11 +16,8 @@ public final class SettingFragment extends PreferenceFragmentCompat implements S
 
     private static final String KEY_TRACKING_SCREEN = "trackingScreen";
 
-    @Inject
-    SettingPresenter presenter;
-
-    public static SettingFragment newInstance() {
-        return new SettingFragment();
+    public static SettingsFragment newInstance() {
+        return new SettingsFragment();
     }
 
     @Override
@@ -36,8 +26,6 @@ public final class SettingFragment extends PreferenceFragmentCompat implements S
 
         // Dagger
         MainActivity.getUserComponent(this).inject(this);
-
-        presenter.onCreateView(this);
 
         // BLE
         PreferenceScreen bleScreen = (PreferenceScreen) findPreference(KEY_BLUETOOTH_SCREEN);
@@ -74,19 +62,5 @@ public final class SettingFragment extends PreferenceFragmentCompat implements S
 
         MainActivity activity = (MainActivity) getActivity();
         activity.setDrawerIndicatorEnabled(true);
-    }
-
-    @Override
-    public void onStop() {
-        super.onStop();
-        presenter.onStop();
-    }
-
-    @Override
-    public void showSnackBar(@StringRes int resId) {
-        View view = getView();
-        if (view != null) {
-            Snackbar.make(getView(), resId, Snackbar.LENGTH_SHORT).show();
-        }
     }
 }

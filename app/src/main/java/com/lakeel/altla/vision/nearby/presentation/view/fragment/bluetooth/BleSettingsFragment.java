@@ -8,17 +8,17 @@ import android.view.MenuItem;
 
 import com.lakeel.altla.vision.nearby.R;
 import com.lakeel.altla.vision.nearby.presentation.intent.IntentKey;
-import com.lakeel.altla.vision.nearby.presentation.presenter.ble.BleSettingPresenter;
+import com.lakeel.altla.vision.nearby.presentation.presenter.ble.BleSettingsPresenter;
 import com.lakeel.altla.vision.nearby.presentation.service.AdvertiseService;
-import com.lakeel.altla.vision.nearby.presentation.view.BleSettingView;
+import com.lakeel.altla.vision.nearby.presentation.view.BleSettingsView;
 import com.lakeel.altla.vision.nearby.presentation.view.activity.MainActivity;
 
 import javax.inject.Inject;
 
-public final class BleSettingFragment extends PreferenceFragmentCompat implements BleSettingView {
+public final class BleSettingsFragment extends PreferenceFragmentCompat implements BleSettingsView {
 
     @Inject
-    BleSettingPresenter presenter;
+    BleSettingsPresenter presenter;
 
     private static final String KEY_ADVERTISE_IN_BACKGROUND = "advertiseInBackground";
 
@@ -26,8 +26,8 @@ public final class BleSettingFragment extends PreferenceFragmentCompat implement
 
     private SwitchPreferenceCompat advertisePreference;
 
-    public static BleSettingFragment newInstance() {
-        return new BleSettingFragment();
+    public static BleSettingsFragment newInstance() {
+        return new BleSettingsFragment();
     }
 
     @Override

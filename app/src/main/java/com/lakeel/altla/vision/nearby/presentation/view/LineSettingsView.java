@@ -2,7 +2,7 @@ package com.lakeel.altla.vision.nearby.presentation.view;
 
 import android.support.annotation.StringRes;
 
-public interface LineSettingView {
+public interface LineSettingsView {
 
     void showLineUrl(String url);
 

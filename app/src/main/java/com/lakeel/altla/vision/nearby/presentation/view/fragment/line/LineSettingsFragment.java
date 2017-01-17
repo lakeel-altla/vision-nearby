@@ -9,23 +9,23 @@ import android.view.MenuItem;
 import android.view.View;
 
 import com.lakeel.altla.vision.nearby.R;
-import com.lakeel.altla.vision.nearby.presentation.presenter.line.LineSettingPresenter;
-import com.lakeel.altla.vision.nearby.presentation.view.LineSettingView;
+import com.lakeel.altla.vision.nearby.presentation.presenter.line.LineSettingsPresenter;
+import com.lakeel.altla.vision.nearby.presentation.view.LineSettingsView;
 import com.lakeel.altla.vision.nearby.presentation.view.activity.MainActivity;
 
 import javax.inject.Inject;
 
-public final class LineSettingFragment extends PreferenceFragmentCompat implements LineSettingView {
+public final class LineSettingsFragment extends PreferenceFragmentCompat implements LineSettingsView {
 
     @Inject
-    LineSettingPresenter presenter;
+    LineSettingsPresenter presenter;
 
     private static final String KEY_LINE_URL = "lineUrl";
 
     private EditTextPreference lineUrlPreference;
 
-    public static LineSettingFragment newInstance() {
-        return new LineSettingFragment();
+    public static LineSettingsFragment newInstance() {
+        return new LineSettingsFragment();
     }
 
     @Override
