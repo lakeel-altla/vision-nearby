@@ -154,9 +154,6 @@ public final class ActivityPresenter extends BasePresenter<ActivityView> {
     }
 
     public void onSignOut(@NonNull Activity activity) {
-        RunningService runningService = new RunningService(context, AdvertiseService.class);
-        runningService.stop();
-
         Subscription subscription = offlineUseCase
                 .execute(MyUser.getUid())
                 .subscribeOn(Schedulers.io())
@@ -176,7 +173,11 @@ public final class ActivityPresenter extends BasePresenter<ActivityView> {
                                     params.putString(AnalyticsParam.USER_NAME.getValue(), userData.displayName);
                                     firebaseAnalytics.logEvent(AnalyticsEvent.LOG_OUT.getValue(), params);
 
+                                    RunningService runningService = new RunningService(context, AdvertiseService.class);
+                                    runningService.stop();
+
                                     stopMonitorBeacons();
+
                                     getView().showSignInFragment();
                                 } else {
                                     LOGGER.error("Failed to sign out.", result.getException());

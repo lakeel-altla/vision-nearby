@@ -8,6 +8,7 @@ import com.lakeel.altla.vision.nearby.altBeacon.BeaconRangeNotifier;
 import com.lakeel.altla.vision.nearby.domain.usecase.FindBeaconUseCase;
 import com.lakeel.altla.vision.nearby.presentation.di.component.DaggerDefaultComponent;
 import com.lakeel.altla.vision.nearby.presentation.di.component.DefaultComponent;
+import com.lakeel.altla.vision.nearby.presentation.firebase.MyUser;
 import com.lakeel.altla.vision.nearby.presentation.intent.IntentKey;
 import com.lakeel.altla.vision.nearby.presentation.service.HistoryService;
 import com.lakeel.altla.vision.nearby.presentation.service.LineService;
@@ -47,6 +48,10 @@ public final class BeaconSubscriber {
 
             @Override
             protected void onFound(String beaconId) {
+                if (!MyUser.isAuthenticated()) {
+                    return;
+                }
+
                 findBeaconUseCase
                         .execute(beaconId)
                         .subscribeOn(Schedulers.io())
