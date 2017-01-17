@@ -140,8 +140,9 @@ public class DeviceListPresenter extends BasePresenter<DeviceListView> {
                 .flatMap(this::findBeacon)
                 .filter(entity -> entity != null)
                 .map(modelMapper::map)
-                .toSortedList((model1, model2) -> (int) (model2.lastUsedTime - model1.lastUsedTime))
+                .toSortedList((t1, t2) -> Long.compare(t2.lastUsedTime, t1.lastUsedTime))
                 .subscribeOn(Schedulers.io())
+                .observeOn(AndroidSchedulers.mainThread())
                 .subscribe(models -> {
                     deviceModels.clear();
                     deviceModels.addAll(models);
