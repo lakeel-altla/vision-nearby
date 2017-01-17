@@ -12,7 +12,7 @@ import android.view.View;
 import android.view.ViewGroup;
 
 import com.lakeel.altla.vision.nearby.R;
-import com.lakeel.altla.vision.nearby.presentation.presenter.setting.device.DeviceListPresenter;
+import com.lakeel.altla.vision.nearby.presentation.presenter.device.DeviceListPresenter;
 import com.lakeel.altla.vision.nearby.presentation.view.DeviceListView;
 import com.lakeel.altla.vision.nearby.presentation.view.activity.MainActivity;
 import com.lakeel.altla.vision.nearby.presentation.view.adapter.DeviceAdapter;

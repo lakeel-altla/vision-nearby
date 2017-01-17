@@ -9,7 +9,7 @@ import android.view.MenuItem;
 import android.view.View;
 
 import com.lakeel.altla.vision.nearby.R;
-import com.lakeel.altla.vision.nearby.presentation.presenter.setting.line.LineSettingPresenter;
+import com.lakeel.altla.vision.nearby.presentation.presenter.line.LineSettingPresenter;
 import com.lakeel.altla.vision.nearby.presentation.view.LineSettingView;
 import com.lakeel.altla.vision.nearby.presentation.view.activity.MainActivity;
 

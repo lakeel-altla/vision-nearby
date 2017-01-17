@@ -8,7 +8,7 @@ import android.view.MenuItem;
 
 import com.lakeel.altla.vision.nearby.R;
 import com.lakeel.altla.vision.nearby.presentation.intent.IntentKey;
-import com.lakeel.altla.vision.nearby.presentation.presenter.setting.bluetooth.BleSettingPresenter;
+import com.lakeel.altla.vision.nearby.presentation.presenter.bluetooth.BleSettingPresenter;
 import com.lakeel.altla.vision.nearby.presentation.service.AdvertiseService;
 import com.lakeel.altla.vision.nearby.presentation.view.BleSettingView;
 import com.lakeel.altla.vision.nearby.presentation.view.activity.MainActivity;
