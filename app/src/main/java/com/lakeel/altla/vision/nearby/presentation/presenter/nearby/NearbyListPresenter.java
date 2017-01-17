@@ -12,7 +12,6 @@ import android.support.annotation.IntRange;
 
 import com.lakeel.altla.vision.nearby.R;
 import com.lakeel.altla.vision.nearby.domain.usecase.FindBeaconUseCase;
-import com.lakeel.altla.vision.nearby.domain.usecase.FindConfigsUseCase;
 import com.lakeel.altla.vision.nearby.domain.usecase.FindUserUseCase;
 import com.lakeel.altla.vision.nearby.presentation.ble.BleChecker;
 import com.lakeel.altla.vision.nearby.presentation.presenter.BaseItemPresenter;
@@ -48,9 +47,6 @@ public final class NearbyListPresenter extends BasePresenter<NearbyListView> {
 
     @Inject
     FindUserUseCase findUserUseCase;
-
-    @Inject
-    FindConfigsUseCase findConfigsUseCase;
 
     private static Logger LOGGER = LoggerFactory.getLogger(NearbyListPresenter.class);
 

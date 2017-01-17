@@ -4,8 +4,6 @@ import android.content.Context;
 import android.preference.PreferenceManager;
 
 import com.lakeel.altla.vision.nearby.data.repository.FirebaseBeaconsRepositoryImpl;
-import com.lakeel.altla.vision.nearby.data.repository.FirebaseCmLinksRepositoryImpl;
-import com.lakeel.altla.vision.nearby.data.repository.FirebaseConfigsRepositoryImpl;
 import com.lakeel.altla.vision.nearby.data.repository.FirebaseConnectionRepositoryImpl;
 import com.lakeel.altla.vision.nearby.data.repository.FirebaseConnectionsRepositoryImpl;
 import com.lakeel.altla.vision.nearby.data.repository.FirebaseFavoritesRepositoryImpl;
@@ -18,10 +16,7 @@ import com.lakeel.altla.vision.nearby.data.repository.FirebaseNotificationsRepos
 import com.lakeel.altla.vision.nearby.data.repository.FirebaseTokensRepositoryImpl;
 import com.lakeel.altla.vision.nearby.data.repository.FirebaseUsersRepositoryImpl;
 import com.lakeel.altla.vision.nearby.data.repository.PreferenceRepositoryImpl;
-import com.lakeel.altla.vision.nearby.data.repository.RestGeocodeRepositoryImpl;
 import com.lakeel.altla.vision.nearby.domain.repository.FirebaseBeaconsRepository;
-import com.lakeel.altla.vision.nearby.domain.repository.FirebaseCmLinksRepository;
-import com.lakeel.altla.vision.nearby.domain.repository.FirebaseConfigsRepository;
 import com.lakeel.altla.vision.nearby.domain.repository.FirebaseConnectionRepository;
 import com.lakeel.altla.vision.nearby.domain.repository.FirebaseConnectionsRepository;
 import com.lakeel.altla.vision.nearby.domain.repository.FirebaseFavoritesRepository;
@@ -34,7 +29,6 @@ import com.lakeel.altla.vision.nearby.domain.repository.FirebaseNotificationsRep
 import com.lakeel.altla.vision.nearby.domain.repository.FirebaseTokensRepository;
 import com.lakeel.altla.vision.nearby.domain.repository.FirebaseUsersRepository;
 import com.lakeel.altla.vision.nearby.domain.repository.PreferenceRepository;
-import com.lakeel.altla.vision.nearby.domain.repository.RestGeocodeRepository;
 import com.lakeel.altla.vision.nearby.presentation.di.InjectScope;
 
 import javax.inject.Named;
@@ -42,9 +36,6 @@ import javax.inject.Named;
 import dagger.Module;
 import dagger.Provides;
 import okhttp3.OkHttpClient;
-import retrofit2.Retrofit;
-import retrofit2.adapter.rxjava.RxJavaCallAdapterFactory;
-import retrofit2.converter.gson.GsonConverterFactory;
 
 @Module
 public class RepositoryModule {
@@ -81,32 +72,14 @@ public class RepositoryModule {
 
     @InjectScope
     @Provides
-    FirebaseConfigsRepository provideConfigsRepository(@Named("configsUrl") String url) {
-        return new FirebaseConfigsRepositoryImpl(url);
-    }
-
-    @InjectScope
-    @Provides
     FirebaseConnectionRepository provideConnectionRepository(@Named("connectionUrl") String url) {
         return new FirebaseConnectionRepositoryImpl(url);
     }
 
     @InjectScope
     @Provides
-    RestGeocodeRepository provideLocationRepository(RestGeocodeRepositoryImpl repository) {
-        return repository;
-    }
-
-    @InjectScope
-    @Provides
     PreferenceRepository providePreferenceRepository(Context context) {
         return new PreferenceRepositoryImpl(PreferenceManager.getDefaultSharedPreferences(context));
-    }
-
-    @InjectScope
-    @Provides
-    FirebaseCmLinksRepository provideCmLinksRepository(@Named("cmLinksUrl") String url) {
-        return new FirebaseCmLinksRepositoryImpl(url);
     }
 
     @InjectScope
@@ -150,17 +123,6 @@ public class RepositoryModule {
     OkHttpClient provideOkHttpClient() {
         return new OkHttpClient()
                 .newBuilder()
-                .build();
-    }
-
-    @InjectScope
-    @Provides
-    Retrofit provideGeocodeRetrofit(@Named("geocodeBaseUrl") String baseUrl, OkHttpClient okHttpClient) {
-        return new Retrofit.Builder()
-                .baseUrl(baseUrl)
-                .addCallAdapterFactory(RxJavaCallAdapterFactory.create())
-                .addConverterFactory(GsonConverterFactory.create())
-                .client(okHttpClient)
                 .build();
     }
 }

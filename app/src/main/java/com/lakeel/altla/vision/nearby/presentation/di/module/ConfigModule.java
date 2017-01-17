@@ -115,11 +115,4 @@ public final class ConfigModule {
     String provideInformationUrl() {
         return "https://profile-notification-95441.firebaseio.com/information";
     }
-
-    @InjectScope
-    @Provides
-    @Named("geocodeBaseUrl")
-    String provideGeoCodeBaseUrl() {
-        return "https://maps.googleapis.com/maps/api/geocode/";
-    }
 }
