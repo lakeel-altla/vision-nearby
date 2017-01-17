@@ -18,7 +18,6 @@ import com.lakeel.altla.vision.nearby.data.repository.FirebaseNotificationsRepos
 import com.lakeel.altla.vision.nearby.data.repository.FirebaseTokensRepositoryImpl;
 import com.lakeel.altla.vision.nearby.data.repository.FirebaseUsersRepositoryImpl;
 import com.lakeel.altla.vision.nearby.data.repository.PreferenceRepositoryImpl;
-import com.lakeel.altla.vision.nearby.data.repository.RestCmRepositoryImpl;
 import com.lakeel.altla.vision.nearby.data.repository.RestGeocodeRepositoryImpl;
 import com.lakeel.altla.vision.nearby.domain.repository.FirebaseBeaconsRepository;
 import com.lakeel.altla.vision.nearby.domain.repository.FirebaseCmLinksRepository;
@@ -35,7 +34,6 @@ import com.lakeel.altla.vision.nearby.domain.repository.FirebaseNotificationsRep
 import com.lakeel.altla.vision.nearby.domain.repository.FirebaseTokensRepository;
 import com.lakeel.altla.vision.nearby.domain.repository.FirebaseUsersRepository;
 import com.lakeel.altla.vision.nearby.domain.repository.PreferenceRepository;
-import com.lakeel.altla.vision.nearby.domain.repository.RestCmRepository;
 import com.lakeel.altla.vision.nearby.domain.repository.RestGeocodeRepository;
 import com.lakeel.altla.vision.nearby.presentation.di.InjectScope;
 
@@ -145,12 +143,6 @@ public class RepositoryModule {
     @Provides
     FirebaseInformationRepository provideFirebaseInformationRepository(@Named("informationUrl") String url) {
         return new FirebaseInformationRepositoryImpl(url);
-    }
-
-    @InjectScope
-    @Provides
-    RestCmRepository provideCmApiRepository(RestCmRepositoryImpl repository) {
-        return repository;
     }
 
     @InjectScope

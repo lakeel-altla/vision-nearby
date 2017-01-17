@@ -1,5 +1,2 @@
-include ':app', ':cm-rest'
-project(':cm-rest').projectDir = new File(settingsDir, '../../../tmp/cm-rest/library')
-
 include ':app', ':nearby-library'
 project(':nearby-library').projectDir = new File(settingsDir, './subtree/nearby-messages/library')

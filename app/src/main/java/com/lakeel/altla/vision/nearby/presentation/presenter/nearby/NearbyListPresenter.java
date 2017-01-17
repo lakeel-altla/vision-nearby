@@ -119,14 +119,13 @@ public final class NearbyListPresenter extends BasePresenter<NearbyListView> {
     }
 
     public void onResume() {
-        getView().showIndicator();
-
         BleChecker checker = new BleChecker(context);
         BleChecker.State state = checker.checkState();
         if (state == BleChecker.State.OFF) {
             getView().showBleEnabledActivity(new Intent(BluetoothAdapter.ACTION_REQUEST_ENABLE));
         }
-        if (state == BleChecker.State.ENABLE) {
+        if (state == BleChecker.State.ENABLE || state == BleChecker.State.SUBSCRIBE_ONLY) {
+            getView().showIndicator();
             subscribe();
         }
     }

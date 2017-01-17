@@ -16,14 +16,11 @@ import android.widget.LinearLayout;
 
 import com.flipboard.bottomsheet.BottomSheetLayout;
 import com.lakeel.altla.vision.nearby.R;
-import com.lakeel.altla.vision.nearby.android.SendMessageDialog;
-import com.lakeel.altla.vision.nearby.core.StringUtils;
 import com.lakeel.altla.vision.nearby.presentation.constants.FragmentBundle;
 import com.lakeel.altla.vision.nearby.presentation.presenter.model.PresenceModel;
 import com.lakeel.altla.vision.nearby.presentation.presenter.model.UserModel;
 import com.lakeel.altla.vision.nearby.presentation.presenter.user.UserProfilePresenter;
 import com.lakeel.altla.vision.nearby.presentation.view.DateFormatter;
-import com.lakeel.altla.vision.nearby.presentation.view.GridShareSheet;
 import com.lakeel.altla.vision.nearby.presentation.view.UserProfileView;
 import com.lakeel.altla.vision.nearby.presentation.view.activity.MainActivity;
 import com.lakeel.altla.vision.nearby.presentation.view.fragment.FragmentController;
@@ -40,7 +37,6 @@ import butterknife.BindView;
 import butterknife.ButterKnife;
 
 import static com.lakeel.altla.vision.nearby.R.id.find;
-import static com.lakeel.altla.vision.nearby.R.id.share;
 
 public final class UserProfileFragment extends Fragment implements UserProfileView {
 
@@ -111,15 +107,6 @@ public final class UserProfileFragment extends Fragment implements UserProfileVi
     }
 
     @Override
-    public void onPrepareOptionsMenu(Menu menu) {
-        super.onPrepareOptionsMenu(menu);
-
-        boolean isCmLinkEnabled = presenter.isCmLinkEnabled();
-        MenuItem menuItem = menu.findItem(R.id.share);
-        menuItem.setVisible(isCmLinkEnabled);
-    }
-
-    @Override
     public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
         inflater.inflate(R.menu.menu_profile, menu);
     }
@@ -129,9 +116,6 @@ public final class UserProfileFragment extends Fragment implements UserProfileVi
         switch (item.getItemId()) {
             case android.R.id.home:
                 getActivity().getSupportFragmentManager().popBackStack();
-                break;
-            case share:
-                presenter.onShare();
                 break;
             case find:
                 presenter.onFindDeviceMenuClick();
@@ -172,50 +156,9 @@ public final class UserProfileFragment extends Fragment implements UserProfileVi
     }
 
     @Override
-    public void showShareSheet() {
-        GridShareSheet shareSheet = new GridShareSheet(getContext(), this.shareSheet, R.menu.menu_share);
-        shareSheet.setOnMenuItemClickListener(item -> {
-            switch (item.getItemId()) {
-                case R.id.menu_cm_favorites:
-                    presenter.onAddFavoriteMenuClick();
-                    break;
-                case R.id.menu_cm_message:
-                    presenter.onSendMenuClick();
-                    break;
-                default:
-                    break;
-            }
-            return true;
-        });
-
-        if (!presenter.isCmLinkEnabled()) {
-            shareSheet.hideMenuItem(R.id.menu_cm_favorites);
-        }
-        shareSheet.show();
-    }
-
-    @Override
-    public void initializeOptionMenu() {
-        getActivity().invalidateOptionsMenu();
-    }
-
-    @Override
     public void showLineUrl(String url) {
         snsLayout.textViewLineUrl.setAutoLinkMask(Linkify.WEB_URLS);
         snsLayout.textViewLineUrl.setText(url);
-    }
-
-    @Override
-    public void showMessageInputDialog() {
-        SendMessageDialog dialog = new SendMessageDialog(getContext(), (dialog1, input) -> {
-            String message = input.toString();
-            if (StringUtils.isEmpty(message)) {
-                showSnackBar(R.string.error_required);
-                return;
-            }
-            presenter.onSendMessage(message);
-        });
-        dialog.show();
     }
 
     @Override

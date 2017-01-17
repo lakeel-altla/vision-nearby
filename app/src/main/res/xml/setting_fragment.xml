@@ -20,10 +20,6 @@
                 android:key="lineScreen"
                 android:title="@string/title_line"/>
 
-        <PreferenceScreen
-                android:key="cmScreen"
-                android:title="@string/title_cm"/>
-
     </PreferenceCategory>
 
     <PreferenceCategory

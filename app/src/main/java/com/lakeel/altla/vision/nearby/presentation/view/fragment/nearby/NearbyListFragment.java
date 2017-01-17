@@ -71,7 +71,6 @@ public final class NearbyListFragment extends Fragment implements NearbyListView
 
         presenter.onCreateView(this);
 
-        hideOptionMenu();
         drawNormalActionBarColor();
 
         return view;
@@ -102,18 +101,6 @@ public final class NearbyListFragment extends Fragment implements NearbyListView
     @Override
     public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
         inflater.inflate(R.menu.menu_nearby, menu);
-    }
-
-    @Override
-    public boolean onOptionsItemSelected(MenuItem item) {
-        switch (item.getItemId()) {
-            case share:
-                presenter.onShareSelected();
-                break;
-            default:
-                break;
-        }
-        return false;
     }
 
     @Override
@@ -189,28 +176,7 @@ public final class NearbyListFragment extends Fragment implements NearbyListView
     }
 
     @Override
-    public void showOptionMenu() {
-        setHasOptionsMenu(true);
-        getActivity().invalidateOptionsMenu();
-    }
-
-    @Override
     public void hideOptionMenu() {
         setHasOptionsMenu(false);
-    }
-
-    @Override
-    public void showShareSheet() {
-        GridShareSheet shareSheet = new GridShareSheet(getContext(), this.shareSheet, R.menu.menu_share);
-        shareSheet.setOnMenuItemClickListener(item -> {
-            if (item.getItemId() == R.id.menu_cm_favorites) {
-                presenter.onAddToCmFavorite();
-            }
-            return true;
-        });
-        if (!presenter.isCmLinkEnabled()) {
-            shareSheet.hideMenuItem(R.id.menu_cm_favorites);
-        }
-        shareSheet.show();
     }
 }

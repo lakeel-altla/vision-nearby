@@ -8,16 +8,12 @@ import android.support.annotation.NonNull;
 import com.firebase.ui.auth.AuthUI;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.iid.FirebaseInstanceId;
-import com.lakeel.altla.cm.CmApplication;
-import com.lakeel.altla.cm.config.AccessConfig;
 import com.lakeel.altla.vision.nearby.R;
 import com.lakeel.altla.vision.nearby.core.StringUtils;
 import com.lakeel.altla.vision.nearby.data.entity.PreferenceEntity;
 import com.lakeel.altla.vision.nearby.domain.usecase.FindBeaconIdUseCase;
-import com.lakeel.altla.vision.nearby.domain.usecase.FindCmLinkUseCase;
 import com.lakeel.altla.vision.nearby.domain.usecase.FindPreferencesUseCase;
 import com.lakeel.altla.vision.nearby.domain.usecase.FindSubscribeSettingUseCase;
-import com.lakeel.altla.vision.nearby.domain.usecase.FindTokenUseCase;
 import com.lakeel.altla.vision.nearby.domain.usecase.ObserveConnectionUseCase;
 import com.lakeel.altla.vision.nearby.domain.usecase.OfflineUseCase;
 import com.lakeel.altla.vision.nearby.domain.usecase.SaveBeaconUseCase;
@@ -28,7 +24,6 @@ import com.lakeel.altla.vision.nearby.presentation.ble.BleChecker;
 import com.lakeel.altla.vision.nearby.presentation.ble.BleChecker.State;
 import com.lakeel.altla.vision.nearby.presentation.firebase.MyUser;
 import com.lakeel.altla.vision.nearby.presentation.presenter.BasePresenter;
-import com.lakeel.altla.vision.nearby.presentation.presenter.mapper.CmAuthConfigMapper;
 import com.lakeel.altla.vision.nearby.presentation.service.AdvertiseService;
 import com.lakeel.altla.vision.nearby.presentation.service.RunningService;
 import com.lakeel.altla.vision.nearby.presentation.view.ActivityView;
@@ -46,16 +41,10 @@ import rx.schedulers.Schedulers;
 public final class ActivityPresenter extends BasePresenter<ActivityView> {
 
     @Inject
-    AccessConfig accessConfig;
-
-    @Inject
     SavePreferenceBeaconIdUseCase saveBeaconIdUseCase;
 
     @Inject
     ObserveConnectionUseCase observeConnectionUseCase;
-
-    @Inject
-    FindCmLinkUseCase findCmLinkUseCase;
 
     @Inject
     FindBeaconIdUseCase findBeaconIdUseCase;
@@ -70,9 +59,6 @@ public final class ActivityPresenter extends BasePresenter<ActivityView> {
     SaveBeaconUseCase saveBeaconUseCase;
 
     @Inject
-    FindTokenUseCase findTokenUseCase;
-
-    @Inject
     SaveTokenUseCase saveTokenUseCase;
 
     @Inject
@@ -84,8 +70,6 @@ public final class ActivityPresenter extends BasePresenter<ActivityView> {
     private static final Logger LOGGER = LoggerFactory.getLogger(ActivityPresenter.class);
 
     private FirebaseInstanceId instanceId = FirebaseInstanceId.getInstance();
-
-    private CmAuthConfigMapper cmAuthConfigMapper = new CmAuthConfigMapper();
 
     private final Context context;
 
@@ -151,15 +135,6 @@ public final class ActivityPresenter extends BasePresenter<ActivityView> {
                     }
                 }, e -> LOGGER.error("Failed to process.", e));
         subscriptions.add(subscription1);
-
-        // TODO: UseCase
-        Subscription subscription2 = findCmLinkUseCase
-                .execute(MyUser.getUid())
-                .map(entity -> cmAuthConfigMapper.map(entity))
-                .subscribeOn(Schedulers.io())
-                .subscribe(authConfig -> CmApplication.initialize(authConfig, accessConfig),
-                        e -> LOGGER.error("Failed to initialize CM settings.", e));
-        subscriptions.add(subscription2);
     }
 
     public void onBleEnabled() {

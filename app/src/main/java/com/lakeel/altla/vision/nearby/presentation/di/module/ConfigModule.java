@@ -1,6 +1,5 @@
 package com.lakeel.altla.vision.nearby.presentation.di.module;
 
-import com.lakeel.altla.cm.config.AccessConfig;
 import com.lakeel.altla.vision.nearby.presentation.di.InjectScope;
 
 import javax.inject.Named;
@@ -122,25 +121,5 @@ public final class ConfigModule {
     @Named("geocodeBaseUrl")
     String provideGeoCodeBaseUrl() {
         return "https://maps.googleapis.com/maps/api/geocode/";
-    }
-
-    @InjectScope
-    @Provides
-    @Named("cmHost")
-    String provideCmHost() {
-        return "172.16.10.237";
-    }
-
-    @InjectScope
-    @Provides
-    @Named("cmPort")
-    int provideCmPort() {
-        return 9080;
-    }
-
-    @InjectScope
-    @Provides
-    AccessConfig provideAccessConfig(@Named("cmHost") String host, @Named("cmPort") int port) {
-        return new AccessConfig(host, port);
     }
 }

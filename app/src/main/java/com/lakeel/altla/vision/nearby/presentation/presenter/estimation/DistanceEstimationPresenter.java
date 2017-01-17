@@ -89,7 +89,7 @@ public final class DistanceEstimationPresenter extends BasePresenter<DistanceEst
         if (state == BleChecker.State.OFF) {
             getView().showBleEnabledActivity(new Intent(BluetoothAdapter.ACTION_REQUEST_ENABLE));
         }
-        if (state == BleChecker.State.ENABLE) {
+        if (state == BleChecker.State.ENABLE || state == BleChecker.State.SUBSCRIBE_ONLY) {
             subscribe();
         }
     }

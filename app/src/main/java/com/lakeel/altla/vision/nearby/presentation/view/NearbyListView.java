@@ -18,9 +18,5 @@ public interface NearbyListView {
 
     void drawNormalActionBarColor();
 
-    void showOptionMenu();
-
     void hideOptionMenu();
-
-    void showShareSheet();
 }

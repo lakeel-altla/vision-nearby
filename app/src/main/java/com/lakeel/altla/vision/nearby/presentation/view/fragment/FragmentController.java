@@ -8,7 +8,6 @@ import android.support.v4.app.FragmentTransaction;
 import com.lakeel.altla.vision.nearby.R;
 import com.lakeel.altla.vision.nearby.presentation.view.bundle.HistoryBundle;
 import com.lakeel.altla.vision.nearby.presentation.view.fragment.bluetooth.BleSettingFragment;
-import com.lakeel.altla.vision.nearby.presentation.view.fragment.cm.CmSettingFragment;
 import com.lakeel.altla.vision.nearby.presentation.view.fragment.device.DeviceListFragment;
 import com.lakeel.altla.vision.nearby.presentation.view.fragment.estimation.DistanceEstimationFragment;
 import com.lakeel.altla.vision.nearby.presentation.view.fragment.favorite.FavoriteListFragment;
@@ -51,8 +50,6 @@ public final class FragmentController {
     private final String SETTING_BLE_FRAGMENT_TAG = BleSettingFragment.class.getSimpleName();
 
     private final String SETTING_LINE_FRAGMENT_TAG = LineSettingFragment.class.getSimpleName();
-
-    private final String SETTING_CM_FRAGMENT_TAG = CmSettingFragment.class.getSimpleName();
 
     private FragmentManager fragmentManager;
 
@@ -113,11 +110,6 @@ public final class FragmentController {
     public void showLineSettingsFragment() {
         LineSettingFragment fragment = LineSettingFragment.newInstance();
         replaceFragment(R.id.fragmentPlaceholder, fragment, SETTING_LINE_FRAGMENT_TAG);
-    }
-
-    public void showCmSettingsFragment() {
-        CmSettingFragment fragment = CmSettingFragment.newInstance();
-        replaceFragment(R.id.fragmentPlaceholder, fragment, SETTING_CM_FRAGMENT_TAG);
     }
 
     public void showInformationFragment() {

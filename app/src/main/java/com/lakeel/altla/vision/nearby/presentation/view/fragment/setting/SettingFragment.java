@@ -1,36 +1,27 @@
 package com.lakeel.altla.vision.nearby.presentation.view.fragment.setting;
 
+import android.os.Bundle;
+import android.support.annotation.StringRes;
+import android.support.design.widget.Snackbar;
+import android.support.v7.preference.PreferenceFragmentCompat;
+import android.support.v7.preference.PreferenceScreen;
+import android.view.View;
+
 import com.lakeel.altla.vision.nearby.R;
 import com.lakeel.altla.vision.nearby.presentation.presenter.setting.SettingPresenter;
 import com.lakeel.altla.vision.nearby.presentation.view.SettingView;
 import com.lakeel.altla.vision.nearby.presentation.view.activity.MainActivity;
 import com.lakeel.altla.vision.nearby.presentation.view.fragment.FragmentController;
 
-import android.os.Bundle;
-import android.support.annotation.StringRes;
-import android.support.design.widget.Snackbar;
-import android.support.v7.preference.PreferenceCategory;
-import android.support.v7.preference.PreferenceFragmentCompat;
-import android.support.v7.preference.PreferenceScreen;
-import android.view.View;
-
 import javax.inject.Inject;
 
 public final class SettingFragment extends PreferenceFragmentCompat implements SettingView {
-
-    private static final String KEY_SNS_CATEGORY = "snsCategory";
 
     private static final String KEY_BLUETOOTH_SCREEN = "bluetoothScreen";
 
     private static final String KEY_LINE_SCREEN = "lineScreen";
 
-    private static final String KEY_CM_SCREEN = "cmScreen";
-
     private static final String KEY_TRACKING_SCREEN = "trackingScreen";
-
-    private PreferenceCategory snsCategory;
-
-    private PreferenceScreen cmScreen;
 
     @Inject
     SettingPresenter presenter;
@@ -64,18 +55,6 @@ public final class SettingFragment extends PreferenceFragmentCompat implements S
             return false;
         });
 
-        // COMPANY Messenger
-        cmScreen = (PreferenceScreen) findPreference(KEY_CM_SCREEN);
-        cmScreen.setOnPreferenceClickListener(preference -> {
-            FragmentController controller = new FragmentController(getActivity().getSupportFragmentManager());
-            controller.showCmSettingsFragment();
-            return false;
-        });
-
-        // Once, hide the menu of COMPANY Messenger.
-        snsCategory = (PreferenceCategory) findPreference(KEY_SNS_CATEGORY);
-        snsCategory.removePreference(cmScreen);
-
         // Tracking
         PreferenceScreen trackingScreen = (PreferenceScreen) findPreference(KEY_TRACKING_SCREEN);
         trackingScreen.setOnPreferenceClickListener(preference -> {
@@ -95,19 +74,12 @@ public final class SettingFragment extends PreferenceFragmentCompat implements S
 
         MainActivity activity = (MainActivity) getActivity();
         activity.setDrawerIndicatorEnabled(true);
-
-        presenter.onActivityCreated();
     }
 
     @Override
     public void onStop() {
         super.onStop();
         presenter.onStop();
-    }
-
-    @Override
-    public void showCmPreferences() {
-        snsCategory.addPreference(cmScreen);
     }
 
     @Override

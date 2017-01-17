@@ -1,9 +1,9 @@
 package com.lakeel.altla.vision.nearby.presentation.view;
 
-import com.lakeel.altla.vision.nearby.presentation.presenter.model.UserModel;
-import com.lakeel.altla.vision.nearby.presentation.presenter.model.PresenceModel;
-
 import android.support.annotation.StringRes;
+
+import com.lakeel.altla.vision.nearby.presentation.presenter.model.PresenceModel;
+import com.lakeel.altla.vision.nearby.presentation.presenter.model.UserModel;
 
 import java.util.ArrayList;
 
@@ -15,13 +15,7 @@ public interface UserProfileView {
 
     void showProfile(UserModel model);
 
-    void showShareSheet();
-
-    void initializeOptionMenu();
-
     void showLineUrl(String url);
-
-    void showMessageInputDialog();
 
     void showDistanceEstimationFragment(ArrayList<String> beaconIds, String targetName);
 }
