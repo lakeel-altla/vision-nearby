@@ -4,6 +4,7 @@ import android.bluetooth.BluetoothAdapter;
 import android.bluetooth.BluetoothManager;
 import android.content.Context;
 
+import com.lakeel.altla.vision.nearby.presentation.beacon.distance.Distance;
 import com.lakeel.altla.vision.nearby.presentation.presenter.BasePresenter;
 import com.lakeel.altla.vision.nearby.presentation.view.DistanceEstimationView;
 import com.neovisionaries.bluetooth.ble.advertising.ADPayloadParser;
@@ -11,7 +12,6 @@ import com.neovisionaries.bluetooth.ble.advertising.ADStructure;
 import com.neovisionaries.bluetooth.ble.advertising.EddystoneUID;
 
 import java.util.List;
-import java.util.Locale;
 
 import javax.inject.Inject;
 
@@ -42,11 +42,8 @@ public final class DistanceEstimationPresenter extends BasePresenter<DistanceEst
                         .observeOn(AndroidSchedulers.mainThread())
                         .subscribe(beaconId -> {
                             // Calculate distance.
-                            int txPower = eddystoneUID.getTxPower();
-                            double distance = Math.pow(10d, ((double) txPower - rssi) / 20.0) / 100;
-
-                            String meters = String.format(Locale.getDefault(), "%.2f", distance);
-                            getView().showDistance(meters);
+                            Distance distance = new Distance(eddystoneUID.getTxPower(), rssi);
+                            getView().showDistance(distance.getDistance());
                         });
                 subscriptions.add(subscription);
             }
