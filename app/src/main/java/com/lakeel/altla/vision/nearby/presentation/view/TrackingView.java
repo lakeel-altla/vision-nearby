@@ -1,6 +1,7 @@
 package com.lakeel.altla.vision.nearby.presentation.view;
 
 import com.firebase.geofire.GeoLocation;
+import com.lakeel.altla.vision.nearby.presentation.intent.GoogleMapDirectionIntent;
 
 import java.util.ArrayList;
 
@@ -12,7 +13,7 @@ public interface TrackingView {
 
     void showFoundDate(long foundTime);
 
-    void launchGoogleMapApp(String latitude, String longitude);
+    void launchGoogleMapApp(GoogleMapDirectionIntent intent);
 
     void showOptionMenu();
 

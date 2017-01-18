@@ -1,9 +1,16 @@
 package com.lakeel.altla.vision.nearby.presentation.presenter.tracking;
 
+import android.os.Bundle;
+
 import com.firebase.geofire.GeoLocation;
+import com.google.firebase.analytics.FirebaseAnalytics;
 import com.lakeel.altla.vision.nearby.data.entity.LocationDataEntity;
 import com.lakeel.altla.vision.nearby.domain.usecase.FindLocationDataUseCase;
 import com.lakeel.altla.vision.nearby.domain.usecase.FindLocationUseCase;
+import com.lakeel.altla.vision.nearby.presentation.constants.AnalyticsEvent;
+import com.lakeel.altla.vision.nearby.presentation.constants.AnalyticsParam;
+import com.lakeel.altla.vision.nearby.presentation.firebase.MyUser;
+import com.lakeel.altla.vision.nearby.presentation.intent.GoogleMapDirectionIntent;
 import com.lakeel.altla.vision.nearby.presentation.presenter.BasePresenter;
 import com.lakeel.altla.vision.nearby.presentation.view.TrackingView;
 
@@ -21,6 +28,9 @@ import rx.functions.Func1;
 import rx.schedulers.Schedulers;
 
 public final class TrackingPresenter extends BasePresenter<TrackingView> {
+
+    @Inject
+    FirebaseAnalytics firebaseAnalytics;
 
     @Inject
     FindLocationDataUseCase findLocationDataUseCase;
@@ -91,13 +101,23 @@ public final class TrackingPresenter extends BasePresenter<TrackingView> {
     }
 
     public void onDistanceEstimationMenuClick() {
+
+
+
         ArrayList<String> beaconIds = new ArrayList<>();
         beaconIds.add(beaconId);
         getView().showDistanceEstimationFragment(beaconIds, beaconName);
     }
 
     public void onDirectionMenuClick() {
-        getView().launchGoogleMapApp(String.valueOf(geoLocation.latitude), String.valueOf(geoLocation.longitude));
+        MyUser.UserData userData = MyUser.getUserData();
+        Bundle bundle = new Bundle();
+        bundle.putString(AnalyticsParam.USER_ID.getValue(), userData.userId);
+        bundle.getString(AnalyticsParam.USER_NAME.getValue(), userData.displayName);
+        firebaseAnalytics.logEvent(AnalyticsEvent.LAUNCH_GOOGLE_MAP.getValue(), bundle);
+
+        GoogleMapDirectionIntent intent = new GoogleMapDirectionIntent(String.valueOf(geoLocation.latitude), String.valueOf(geoLocation.longitude));
+        getView().launchGoogleMapApp(intent);
     }
 
     private Single<GeoLocation> findLocation(String uniqueKey) {

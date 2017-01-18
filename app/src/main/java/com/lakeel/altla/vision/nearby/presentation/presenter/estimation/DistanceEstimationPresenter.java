@@ -8,9 +8,14 @@ import android.bluetooth.le.ScanRecord;
 import android.bluetooth.le.ScanResult;
 import android.content.Context;
 import android.content.Intent;
+import android.os.Bundle;
 
+import com.google.firebase.analytics.FirebaseAnalytics;
 import com.lakeel.altla.vision.nearby.presentation.beacon.distance.Distance;
 import com.lakeel.altla.vision.nearby.presentation.ble.BleChecker;
+import com.lakeel.altla.vision.nearby.presentation.constants.AnalyticsEvent;
+import com.lakeel.altla.vision.nearby.presentation.constants.AnalyticsParam;
+import com.lakeel.altla.vision.nearby.presentation.firebase.MyUser;
 import com.lakeel.altla.vision.nearby.presentation.presenter.BasePresenter;
 import com.lakeel.altla.vision.nearby.presentation.view.DistanceEstimationView;
 import com.neovisionaries.bluetooth.ble.advertising.ADPayloadParser;
@@ -27,6 +32,9 @@ import rx.android.schedulers.AndroidSchedulers;
 import rx.schedulers.Schedulers;
 
 public final class DistanceEstimationPresenter extends BasePresenter<DistanceEstimationView> {
+
+    @Inject
+    FirebaseAnalytics firebaseAnalytics;
 
     private final Context context;
 
@@ -83,6 +91,16 @@ public final class DistanceEstimationPresenter extends BasePresenter<DistanceEst
         scanner.stopScan(scanCallback);
     }
 
+    public void onActivityCreated(List<String> beaconIds) {
+        this.beaconIds = beaconIds;
+
+        MyUser.UserData userData = MyUser.getUserData();
+        Bundle bundle = new Bundle();
+        bundle.putString(AnalyticsParam.USER_ID.getValue(), userData.userId);
+        bundle.getString(AnalyticsParam.USER_NAME.getValue(), userData.displayName);
+        firebaseAnalytics.logEvent(AnalyticsEvent.ESTIMATE_DISTANCE.getValue(), bundle);
+    }
+
     public void onResume() {
         BleChecker checker = new BleChecker(context);
         BleChecker.State state = checker.checkState();
@@ -92,10 +110,6 @@ public final class DistanceEstimationPresenter extends BasePresenter<DistanceEst
         if (state == BleChecker.State.ENABLE || state == BleChecker.State.SUBSCRIBE_ONLY) {
             subscribe();
         }
-    }
-
-    public void setBeaconIds(List<String> beaconIds) {
-        this.beaconIds = beaconIds;
     }
 
     public void subscribe() {

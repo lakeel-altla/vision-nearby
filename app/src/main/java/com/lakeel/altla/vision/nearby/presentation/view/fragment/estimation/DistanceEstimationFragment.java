@@ -100,7 +100,7 @@ public final class DistanceEstimationFragment extends Fragment implements Distan
         String message = getResources().getString(R.string.message_finding_for_nearby_device_format, targetName);
         distanceDescriptionText.setText(message);
 
-        presenter.setBeaconIds(beaconIds);
+        presenter.onActivityCreated(beaconIds);
     }
 
     @Override

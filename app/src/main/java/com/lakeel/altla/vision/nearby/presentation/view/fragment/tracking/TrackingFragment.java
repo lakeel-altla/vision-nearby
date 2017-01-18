@@ -204,8 +204,7 @@ public final class TrackingFragment extends Fragment implements TrackingView, On
     }
 
     @Override
-    public void launchGoogleMapApp(String latitude, String longitude) {
-        GoogleMapDirectionIntent intent = new GoogleMapDirectionIntent(latitude, longitude);
+    public void launchGoogleMapApp(GoogleMapDirectionIntent intent) {
         startActivity(intent);
     }
 

@@ -1,7 +1,9 @@
 package com.lakeel.altla.vision.nearby.presentation.presenter.device;
 
+import android.os.Bundle;
 import android.support.annotation.IntRange;
 
+import com.google.firebase.analytics.FirebaseAnalytics;
 import com.lakeel.altla.vision.nearby.R;
 import com.lakeel.altla.vision.nearby.core.CollectionUtils;
 import com.lakeel.altla.vision.nearby.data.entity.BeaconEntity;
@@ -12,6 +14,8 @@ import com.lakeel.altla.vision.nearby.domain.usecase.FoundDeviceUseCase;
 import com.lakeel.altla.vision.nearby.domain.usecase.LostDeviceUseCase;
 import com.lakeel.altla.vision.nearby.domain.usecase.RemoveBeaconUseCase;
 import com.lakeel.altla.vision.nearby.domain.usecase.RemoveUserBeaconUseCase;
+import com.lakeel.altla.vision.nearby.presentation.constants.AnalyticsEvent;
+import com.lakeel.altla.vision.nearby.presentation.constants.AnalyticsParam;
 import com.lakeel.altla.vision.nearby.presentation.firebase.MyUser;
 import com.lakeel.altla.vision.nearby.presentation.presenter.BaseItemPresenter;
 import com.lakeel.altla.vision.nearby.presentation.presenter.BasePresenter;
@@ -36,6 +40,9 @@ import rx.android.schedulers.AndroidSchedulers;
 import rx.schedulers.Schedulers;
 
 public class DeviceListPresenter extends BasePresenter<DeviceListView> {
+
+    @Inject
+    FirebaseAnalytics firebaseAnalytics;
 
     @Inject
     FindUserUseCase findUserUseCase;
@@ -94,6 +101,12 @@ public class DeviceListPresenter extends BasePresenter<DeviceListView> {
         }
 
         public void onRemove(DeviceModel model) {
+            MyUser.UserData userData = MyUser.getUserData();
+            Bundle bundle = new Bundle();
+            bundle.putString(AnalyticsParam.USER_ID.getValue(), userData.userId);
+            bundle.putString(AnalyticsParam.USER_NAME.getValue(), userData.displayName);
+            firebaseAnalytics.logEvent(AnalyticsEvent.REMOVE_DEVICE.getValue(), bundle);
+
             Subscription subscription = removeBeaconUseCase
                     .execute(model.beaconId)
                     .flatMap(beaconId -> removeUserBeacon(MyUser.getUid(), model.beaconId))
@@ -113,22 +126,34 @@ public class DeviceListPresenter extends BasePresenter<DeviceListView> {
             subscriptions.add(subscription);
         }
 
-        public void onLost(String beaconId) {
-            Subscription subscription = lostDeviceUseCase
-                    .execute(beaconId)
-                    .subscribeOn(Schedulers.io())
-                    .observeOn(AndroidSchedulers.mainThread())
-                    .subscribe(e -> LOGGER.error("Failed to save lost state of the device.", e),
-                            DeviceListPresenter.this::findUserBeacons);
-            subscriptions.add(subscription);
-        }
-
         public void onFound(String beaconId) {
+            MyUser.UserData userData = MyUser.getUserData();
+            Bundle bundle = new Bundle();
+            bundle.putString(AnalyticsParam.USER_ID.getValue(), userData.userId);
+            bundle.putString(AnalyticsParam.USER_NAME.getValue(), userData.displayName);
+            firebaseAnalytics.logEvent(AnalyticsEvent.FOUND_DEVICE.getValue(), bundle);
+
             Subscription subscription = foundDeviceUseCase
                     .execute(beaconId)
                     .subscribeOn(Schedulers.io())
                     .observeOn(AndroidSchedulers.mainThread())
                     .subscribe(e -> LOGGER.error("Failed to save found state of the device.", e),
+                            DeviceListPresenter.this::findUserBeacons);
+            subscriptions.add(subscription);
+        }
+
+        public void onLost(String beaconId) {
+            MyUser.UserData userData = MyUser.getUserData();
+            Bundle bundle = new Bundle();
+            bundle.putString(AnalyticsParam.USER_ID.getValue(), userData.userId);
+            bundle.putString(AnalyticsParam.USER_NAME.getValue(), userData.displayName);
+            firebaseAnalytics.logEvent(AnalyticsEvent.LOST_DEVICE.getValue(), bundle);
+
+            Subscription subscription = lostDeviceUseCase
+                    .execute(beaconId)
+                    .subscribeOn(Schedulers.io())
+                    .observeOn(AndroidSchedulers.mainThread())
+                    .subscribe(e -> LOGGER.error("Failed to save lost state of the device.", e),
                             DeviceListPresenter.this::findUserBeacons);
             subscriptions.add(subscription);
         }
