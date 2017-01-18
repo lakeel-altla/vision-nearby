@@ -39,6 +39,7 @@ public final class LocationService extends IntentService {
     private GoogleApiClient googleApiClient;
 
     public LocationService() {
+        // This constructor is need.
         super(LocationService.class.getSimpleName());
     }
 

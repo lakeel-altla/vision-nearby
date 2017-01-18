@@ -39,6 +39,51 @@ import rx.schedulers.Schedulers;
 
 public class HistoryService extends IntentService {
 
+    private class ConnectionCallback implements GoogleApiClient.ConnectionCallbacks {
+
+        private Context context;
+
+        private String beaconId;
+
+        ConnectionCallback(Context context, String beaconId) {
+            this.context = context;
+            this.beaconId = beaconId;
+        }
+
+        @Override
+        public void onConnected(@Nullable Bundle bundle) {
+            findBeaconUseCase
+                    .execute(beaconId)
+                    .subscribeOn(Schedulers.io())
+                    .flatMap(entity -> findUser(entity.userId))
+                    .flatMap(entity -> saveHistory(MyUser.getUid(), entity.userId))
+                    .subscribeOn(Schedulers.io())
+                    .subscribe(uniqueKey -> {
+                        getUserActivity()
+                                .flatMap(detectedActivity -> saveDetectedActivityUseCase.execute(uniqueKey, MyUser.getUid(), detectedActivity).subscribeOn(Schedulers.io()))
+                                .subscribeOn(Schedulers.io())
+                                .subscribe(entity -> {
+                                }, e -> LOGGER.error("Failed to save user activity.", e));
+
+                        getUserLocation(context)
+                                .flatMap(location -> saveUserLocationUseCase.execute(uniqueKey, MyUser.getUid(), location).subscribeOn(Schedulers.io()))
+                                .subscribeOn(Schedulers.io())
+                                .subscribe(entity -> {
+                                }, e -> LOGGER.error("Failed to save user current location.", e));
+
+                        getWeather(context)
+                                .flatMap(weather -> saveWeatherUseCase.execute(uniqueKey, MyUser.getUid(), weather).subscribeOn(Schedulers.io()))
+                                .subscribeOn(Schedulers.io())
+                                .subscribe(entity -> {
+                                }, e -> LOGGER.error("Failed to save weather.", e));
+                    }, e -> LOGGER.error("Failed to save to recently.", e));
+        }
+
+        @Override
+        public void onConnectionSuspended(int i) {
+        }
+    }
+
     @Inject
     FindBeaconUseCase findBeaconUseCase;
 
@@ -62,7 +107,8 @@ public class HistoryService extends IntentService {
     private GoogleApiClient googleApiClient;
 
     public HistoryService() {
-        super(HistoryService.class.getSimpleName());
+        // This constructor is need.
+        this(HistoryService.class.getSimpleName());
     }
 
     public HistoryService(String name) {
@@ -74,46 +120,12 @@ public class HistoryService extends IntentService {
         ServiceComponent serviceComponent = DaggerServiceComponent.create();
         serviceComponent.inject(this);
 
+        Context context = getApplicationContext();
         String beaconId = intent.getStringExtra(IntentKey.BEACON_ID.name());
 
-        Context context = getApplicationContext();
         googleApiClient = new GoogleApiClient.Builder(context)
                 .addApi(Awareness.API)
-                .addConnectionCallbacks(new GoogleApiClient.ConnectionCallbacks() {
-
-                    @Override
-                    public void onConnected(@Nullable Bundle bundle) {
-                        findBeaconUseCase
-                                .execute(beaconId)
-                                .subscribeOn(Schedulers.io())
-                                .flatMap(entity -> findUser(entity.userId))
-                                .flatMap(entity -> saveHistory(MyUser.getUid(), entity.userId))
-                                .subscribeOn(Schedulers.io())
-                                .subscribe(uniqueKey -> {
-                                    getUserCurrentActivity()
-                                            .flatMap(detectedActivity -> saveDetectedActivityUseCase.execute(uniqueKey, MyUser.getUid(), detectedActivity).subscribeOn(Schedulers.io()))
-                                            .subscribeOn(Schedulers.io())
-                                            .doOnError(e -> LOGGER.error("Failed to save user activity.", e))
-                                            .subscribe();
-
-                                    getUserCurrentLocation(context)
-                                            .flatMap(location -> saveUserLocationUseCase.execute(uniqueKey, MyUser.getUid(), location).subscribeOn(Schedulers.io()))
-                                            .subscribeOn(Schedulers.io())
-                                            .doOnError(e -> LOGGER.error("Failed to save user current location.", e))
-                                            .subscribe();
-
-                                    getWeather(context)
-                                            .flatMap(weather -> saveWeatherUseCase.execute(uniqueKey, MyUser.getUid(), weather).subscribeOn(Schedulers.io()))
-                                            .subscribeOn(Schedulers.io())
-                                            .doOnError(e -> LOGGER.error("Failed to save weather.", e))
-                                            .subscribe();
-                                }, e -> LOGGER.error("Failed to save to recently.", e));
-                    }
-
-                    @Override
-                    public void onConnectionSuspended(int i) {
-                    }
-                })
+                .addConnectionCallbacks(new ConnectionCallback(context, beaconId))
                 .build();
 
         googleApiClient.connect();
@@ -127,14 +139,14 @@ public class HistoryService extends IntentService {
         return saveHistoryUseCase.execute(myUserId, otherUserId).subscribeOn(Schedulers.io());
     }
 
-    private Single<DetectedActivity> getUserCurrentActivity() {
+    private Single<DetectedActivity> getUserActivity() {
         return Single.create(new Single.OnSubscribe<DetectedActivity>() {
             @Override
             public void call(SingleSubscriber<? super DetectedActivity> subscriber) {
                 Awareness.SnapshotApi.getDetectedActivity(googleApiClient)
                         .setResultCallback(result -> {
                             if (!result.getStatus().isSuccess()) {
-                                subscriber.onError(new AwarenessException("Could not get user detected activity."));
+                                subscriber.onError(new AwarenessException("Could not get user activity."));
                                 return;
                             }
                             ActivityRecognitionResult ar = result.getActivityRecognitionResult();
@@ -145,13 +157,13 @@ public class HistoryService extends IntentService {
         });
     }
 
-    private Single<Location> getUserCurrentLocation(Context context) {
+    private Single<Location> getUserLocation(Context context) {
         return Single.create(subscriber -> {
             if (ContextCompat.checkSelfPermission(context, Manifest.permission.ACCESS_FINE_LOCATION) == PackageManager.PERMISSION_GRANTED) {
                 Awareness.SnapshotApi.getLocation(googleApiClient)
                         .setResultCallback(result -> {
                             if (!result.getStatus().isSuccess()) {
-                                subscriber.onError(new AwarenessException("Could not get user location. User may be turning off the gps."));
+                                subscriber.onError(new AwarenessException("Could not get user location. User might be turning off the gps."));
                                 return;
                             }
                             Location location = result.getLocation();
@@ -170,7 +182,7 @@ public class HistoryService extends IntentService {
                 Awareness.SnapshotApi.getWeather(googleApiClient)
                         .setResultCallback(result -> {
                             if (!result.getStatus().isSuccess()) {
-                                subscriber.onError(new AwarenessException("Could not get weather data. User may be turning off the gps."));
+                                subscriber.onError(new AwarenessException("Could not get weather data. User might be turning off the gps."));
                                 return;
                             }
                             Weather weather = result.getWeather();

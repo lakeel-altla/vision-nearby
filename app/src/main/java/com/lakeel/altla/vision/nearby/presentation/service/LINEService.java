@@ -31,6 +31,7 @@ public class LineService extends IntentService {
     private static final Logger LOGGER = LoggerFactory.getLogger(LineService.class);
 
     public LineService() {
+        // This constructor is need.
         this(LineService.class.getSimpleName());
     }
 
