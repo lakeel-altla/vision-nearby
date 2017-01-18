@@ -11,7 +11,7 @@
     <!-- Nearby API Key -->
     <meta-data
         android:name="com.google.android.nearby.messages.API_KEY"
-        android:value="${NEARBY_MESSAGES_API_KEY}" />
+        android:value="${API_KEY}" />
 
     <application
         android:name=".presentation.application.App"
@@ -23,12 +23,12 @@
         <!-- Awareness API -->
         <meta-data
             android:name="com.google.android.awareness.API_KEY"
-            android:value="${GOOGLE_AWARENESS_API_KEY}" />
+            android:value="${API_KEY}" />
 
         <!-- Google Map API -->
         <meta-data
             android:name="com.google.android.geo.API_KEY"
-            android:value="${GOOGLE_MAPS_API_KEY}" />
+            android:value="${API_KEY}" />
 
         <activity
             android:name=".presentation.view.activity.MainActivity"
