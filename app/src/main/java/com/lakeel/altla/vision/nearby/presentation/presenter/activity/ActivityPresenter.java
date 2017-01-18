@@ -23,9 +23,9 @@ import com.lakeel.altla.vision.nearby.domain.usecase.SavePreferenceBeaconIdUseCa
 import com.lakeel.altla.vision.nearby.domain.usecase.SaveTokenUseCase;
 import com.lakeel.altla.vision.nearby.domain.usecase.SaveUserBeaconUseCase;
 import com.lakeel.altla.vision.nearby.presentation.ble.BleChecker;
-import com.lakeel.altla.vision.nearby.presentation.ble.BleChecker.State;
 import com.lakeel.altla.vision.nearby.presentation.constants.AnalyticsEvent;
 import com.lakeel.altla.vision.nearby.presentation.constants.AnalyticsParam;
+import com.lakeel.altla.vision.nearby.presentation.constants.AnalyticsProperty;
 import com.lakeel.altla.vision.nearby.presentation.firebase.MyUser;
 import com.lakeel.altla.vision.nearby.presentation.presenter.BasePresenter;
 import com.lakeel.altla.vision.nearby.presentation.service.AdvertiseService;
@@ -196,14 +196,17 @@ public final class ActivityPresenter extends BasePresenter<ActivityView> {
 
     private void checkBle() {
         BleChecker checker = new BleChecker(context);
-        State state = checker.checkState();
-        if (state == State.OFF) {
+        BleChecker.State state = checker.checkState();
+
+        if (state == BleChecker.State.OFF) {
             isAdvertiseAvailability = false;
             getView().showBleEnabledActivity();
-        } else if (state == State.SUBSCRIBE_ONLY) {
+        } else if (state == BleChecker.State.SUBSCRIBE_ONLY) {
             isAdvertiseAvailability = false;
             getView().showAdvertiseDisableConfirmDialog();
         }
+
+        firebaseAnalytics.setUserProperty(AnalyticsProperty.BLE_STATE.getValue(), state.getValue());
     }
 
     private void showProfile() {

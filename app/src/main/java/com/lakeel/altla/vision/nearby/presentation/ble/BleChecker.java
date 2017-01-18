@@ -17,7 +17,17 @@ import static org.altbeacon.beacon.BeaconTransmitter.NOT_SUPPORTED_CANNOT_GET_AD
 public final class BleChecker {
 
     public enum State {
-        OFF, DISABLE, ENABLE, SUBSCRIBE_ONLY
+        OFF("off"), ENABLE("enable"), DISABLE("disable"), SUBSCRIBE_ONLY("subscribe_only");
+
+        private String value;
+
+        State(String value) {
+            this.value = value;
+        }
+
+        public String getValue() {
+            return value;
+        }
     }
 
     private Context context;
