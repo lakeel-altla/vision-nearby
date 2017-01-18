@@ -40,7 +40,7 @@ public final class SignInPresenter extends BasePresenter<SignInView> {
     private static final String GOOGLE_TOS_URL =
             "https://www.google.com/policies/terms/";
 
-    public void onSignIn() {
+    public void onActivityCreated() {
         Intent intent = AuthUI.getInstance()
                 .createSignInIntentBuilder()
                 .setProviders(AuthUI.GOOGLE_PROVIDER)

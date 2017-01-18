@@ -20,7 +20,6 @@ import javax.inject.Inject;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
-import butterknife.OnClick;
 
 public final class SignInFragment extends Fragment implements SignInView {
 
@@ -60,22 +59,14 @@ public final class SignInFragment extends Fragment implements SignInView {
         super.onActivityCreated(savedInstanceState);
 
         getActivity().setTitle(R.string.title_sign_in);
-    }
 
-    @Override
-    public void onResume() {
-        super.onResume();
+        presenter.onActivityCreated();
     }
 
     @Override
     public void onStop() {
         super.onStop();
         presenter.onStop();
-    }
-
-    @OnClick(R.id.button_signIn)
-    public void onSignInButtonClick(View view) {
-        presenter.onSignIn();
     }
 
     @Override
