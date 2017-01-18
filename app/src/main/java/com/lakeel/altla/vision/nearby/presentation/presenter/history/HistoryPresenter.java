@@ -1,6 +1,5 @@
 package com.lakeel.altla.vision.nearby.presentation.presenter.history;
 
-import android.os.Bundle;
 import android.support.annotation.IntRange;
 
 import com.google.firebase.analytics.FirebaseAnalytics;
@@ -11,11 +10,12 @@ import com.lakeel.altla.vision.nearby.data.entity.UserEntity;
 import com.lakeel.altla.vision.nearby.domain.usecase.FindHistoryUseCase;
 import com.lakeel.altla.vision.nearby.domain.usecase.FindUserUseCase;
 import com.lakeel.altla.vision.nearby.domain.usecase.RemoveHistoryUseCase;
-import com.lakeel.altla.vision.nearby.presentation.constants.AnalyticsEvent;
-import com.lakeel.altla.vision.nearby.presentation.constants.AnalyticsParam;
+import com.lakeel.altla.vision.nearby.presentation.analytics.AnalyticsEvent;
+import com.lakeel.altla.vision.nearby.presentation.analytics.AnalyticsParam;
 import com.lakeel.altla.vision.nearby.presentation.firebase.MyUser;
 import com.lakeel.altla.vision.nearby.presentation.presenter.BaseItemPresenter;
 import com.lakeel.altla.vision.nearby.presentation.presenter.BasePresenter;
+import com.lakeel.altla.vision.nearby.presentation.analytics.UserParam;
 import com.lakeel.altla.vision.nearby.presentation.presenter.mapper.HistoryModelMapper;
 import com.lakeel.altla.vision.nearby.presentation.presenter.model.HistoryModel;
 import com.lakeel.altla.vision.nearby.presentation.presenter.model.LocationModel;
@@ -135,11 +135,11 @@ public final class HistoryPresenter extends BasePresenter<HistoryView> {
         }
 
         public void onRemove(HistoryModel model) {
-            MyUser.UserData userData = MyUser.getUserData();
-            Bundle bundle = new Bundle();
-            bundle.putString(AnalyticsParam.USER_ID.getValue(), userData.userId);
-            bundle.putString(AnalyticsParam.USER_NAME.getValue(), userData.displayName);
-            firebaseAnalytics.logEvent(AnalyticsEvent.REMOVE_HISTORY.getValue(), bundle);
+            // Analytics
+            UserParam userParam = new UserParam();
+            userParam.putString(AnalyticsParam.HISTORY_USER_ID.getValue(), model.userId);
+            userParam.putString(AnalyticsParam.HISTORY_USER_NAME.getValue(), model.name);
+            firebaseAnalytics.logEvent(AnalyticsEvent.REMOVE_HISTORY.getValue(), userParam.toBundle());
 
             Subscription subscription = removeHistoryUseCase
                     .execute(MyUser.getUid(), model.uniqueId)

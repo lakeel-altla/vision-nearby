@@ -1,10 +1,14 @@
 package com.lakeel.altla.vision.nearby.presentation.presenter.user;
 
+import com.google.firebase.analytics.FirebaseAnalytics;
 import com.lakeel.altla.vision.nearby.core.StringUtils;
 import com.lakeel.altla.vision.nearby.domain.usecase.FindLineLinkUseCase;
 import com.lakeel.altla.vision.nearby.domain.usecase.FindPresenceUseCase;
 import com.lakeel.altla.vision.nearby.domain.usecase.FindUserBeaconsUseCase;
 import com.lakeel.altla.vision.nearby.domain.usecase.FindUserUseCase;
+import com.lakeel.altla.vision.nearby.presentation.analytics.AnalyticsEvent;
+import com.lakeel.altla.vision.nearby.presentation.analytics.AnalyticsParam;
+import com.lakeel.altla.vision.nearby.presentation.analytics.UserParam;
 import com.lakeel.altla.vision.nearby.presentation.presenter.BasePresenter;
 import com.lakeel.altla.vision.nearby.presentation.presenter.mapper.PresencesModelMapper;
 import com.lakeel.altla.vision.nearby.presentation.presenter.mapper.UserModelMapper;
@@ -22,6 +26,9 @@ import rx.android.schedulers.AndroidSchedulers;
 import rx.schedulers.Schedulers;
 
 public final class UserProfilePresenter extends BasePresenter<UserProfileView> {
+
+    @Inject
+    FirebaseAnalytics firebaseAnalytics;
 
     @Inject
     FindPresenceUseCase findPresenceUseCase;
@@ -55,6 +62,12 @@ public final class UserProfilePresenter extends BasePresenter<UserProfileView> {
     }
 
     public void onActivityCreated() {
+        // Analytics
+        UserParam userParam = new UserParam();
+        userParam.putString(AnalyticsParam.FAVORITE_USER_ID.getValue(), userId);
+        userParam.putString(AnalyticsParam.FAVORITE_USER_NAME.getValue(), userName);
+        firebaseAnalytics.logEvent(AnalyticsEvent.VIEW_FAVORITE_ITEM.getValue(), userParam.toBundle());
+
         Subscription presenceSubscription = findPresenceUseCase
                 .execute(userId)
                 .map(entity -> presencesModelMapper.map(entity))
@@ -94,6 +107,11 @@ public final class UserProfilePresenter extends BasePresenter<UserProfileView> {
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribe(beacons -> {
+                    // Analytics
+                    UserParam userParam = new UserParam();
+                    userParam.putString(AnalyticsParam.TARGET_NAME.getValue(), userName);
+                    firebaseAnalytics.logEvent(AnalyticsEvent.ESTIMATE_DISTANCE.getValue(), userParam.toBundle());
+
                     ArrayList<String> beaconIds = new ArrayList<>(beacons.size());
                     beaconIds.addAll(beacons);
                     getView().showDistanceEstimationFragment(beaconIds, userName);

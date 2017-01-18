@@ -1,6 +1,5 @@
 package com.lakeel.altla.vision.nearby.presentation.presenter.device;
 
-import android.os.Bundle;
 import android.support.annotation.IntRange;
 
 import com.google.firebase.analytics.FirebaseAnalytics;
@@ -14,11 +13,12 @@ import com.lakeel.altla.vision.nearby.domain.usecase.FoundDeviceUseCase;
 import com.lakeel.altla.vision.nearby.domain.usecase.LostDeviceUseCase;
 import com.lakeel.altla.vision.nearby.domain.usecase.RemoveBeaconUseCase;
 import com.lakeel.altla.vision.nearby.domain.usecase.RemoveUserBeaconUseCase;
-import com.lakeel.altla.vision.nearby.presentation.constants.AnalyticsEvent;
-import com.lakeel.altla.vision.nearby.presentation.constants.AnalyticsParam;
+import com.lakeel.altla.vision.nearby.presentation.analytics.AnalyticsEvent;
+import com.lakeel.altla.vision.nearby.presentation.analytics.AnalyticsParam;
 import com.lakeel.altla.vision.nearby.presentation.firebase.MyUser;
 import com.lakeel.altla.vision.nearby.presentation.presenter.BaseItemPresenter;
 import com.lakeel.altla.vision.nearby.presentation.presenter.BasePresenter;
+import com.lakeel.altla.vision.nearby.presentation.analytics.UserParam;
 import com.lakeel.altla.vision.nearby.presentation.presenter.mapper.BeaconModelMapper;
 import com.lakeel.altla.vision.nearby.presentation.presenter.model.DeviceModel;
 import com.lakeel.altla.vision.nearby.presentation.view.DeviceItemView;
@@ -101,11 +101,11 @@ public class DeviceListPresenter extends BasePresenter<DeviceListView> {
         }
 
         public void onRemove(DeviceModel model) {
-            MyUser.UserData userData = MyUser.getUserData();
-            Bundle bundle = new Bundle();
-            bundle.putString(AnalyticsParam.USER_ID.getValue(), userData.userId);
-            bundle.putString(AnalyticsParam.USER_NAME.getValue(), userData.displayName);
-            firebaseAnalytics.logEvent(AnalyticsEvent.REMOVE_DEVICE.getValue(), bundle);
+            // Analytics
+            UserParam userParam = new UserParam();
+            userParam.putString(AnalyticsParam.DEVICE_ID.getValue(), model.beaconId);
+            userParam.putString(AnalyticsParam.DEVICE_NAME.getValue(), model.name);
+            firebaseAnalytics.logEvent(AnalyticsEvent.REMOVE_DEVICE.getValue(), userParam.toBundle());
 
             Subscription subscription = removeBeaconUseCase
                     .execute(model.beaconId)
@@ -126,15 +126,15 @@ public class DeviceListPresenter extends BasePresenter<DeviceListView> {
             subscriptions.add(subscription);
         }
 
-        public void onFound(String beaconId) {
-            MyUser.UserData userData = MyUser.getUserData();
-            Bundle bundle = new Bundle();
-            bundle.putString(AnalyticsParam.USER_ID.getValue(), userData.userId);
-            bundle.putString(AnalyticsParam.USER_NAME.getValue(), userData.displayName);
-            firebaseAnalytics.logEvent(AnalyticsEvent.FOUND_DEVICE.getValue(), bundle);
+        public void onFound(DeviceModel model) {
+            // Analytics
+            UserParam userParam = new UserParam();
+            userParam.putString(AnalyticsParam.DEVICE_ID.getValue(), model.beaconId);
+            userParam.putString(AnalyticsParam.DEVICE_NAME.getValue(), model.name);
+            firebaseAnalytics.logEvent(AnalyticsEvent.FOUND_DEVICE.getValue(), userParam.toBundle());
 
             Subscription subscription = foundDeviceUseCase
-                    .execute(beaconId)
+                    .execute(model.beaconId)
                     .subscribeOn(Schedulers.io())
                     .observeOn(AndroidSchedulers.mainThread())
                     .subscribe(e -> LOGGER.error("Failed to save found state of the device.", e),
@@ -142,15 +142,15 @@ public class DeviceListPresenter extends BasePresenter<DeviceListView> {
             subscriptions.add(subscription);
         }
 
-        public void onLost(String beaconId) {
-            MyUser.UserData userData = MyUser.getUserData();
-            Bundle bundle = new Bundle();
-            bundle.putString(AnalyticsParam.USER_ID.getValue(), userData.userId);
-            bundle.putString(AnalyticsParam.USER_NAME.getValue(), userData.displayName);
-            firebaseAnalytics.logEvent(AnalyticsEvent.LOST_DEVICE.getValue(), bundle);
+        public void onLost(DeviceModel model) {
+            // Analytics
+            UserParam userParam = new UserParam();
+            userParam.putString(AnalyticsParam.DEVICE_ID.getValue(), model.beaconId);
+            userParam.putString(AnalyticsParam.DEVICE_NAME.getValue(), model.name);
+            firebaseAnalytics.logEvent(AnalyticsEvent.LOST_DEVICE.getValue(), userParam.toBundle());
 
             Subscription subscription = lostDeviceUseCase
-                    .execute(beaconId)
+                    .execute(model.beaconId)
                     .subscribeOn(Schedulers.io())
                     .observeOn(AndroidSchedulers.mainThread())
                     .subscribe(e -> LOGGER.error("Failed to save lost state of the device.", e),

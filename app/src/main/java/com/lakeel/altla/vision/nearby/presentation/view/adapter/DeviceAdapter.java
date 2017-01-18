@@ -95,13 +95,13 @@ public final class DeviceAdapter extends RecyclerView.Adapter<DeviceAdapter.Devi
 
             if (model.isLost) {
                 lostButton.setText(R.string.button_found);
-                lostButton.setOnClickListener(view -> itemPresenter.onFound(model.beaconId));
+                lostButton.setOnClickListener(view -> itemPresenter.onFound(model));
 
                 lostImage.setVisibility(View.VISIBLE);
                 lostImage.setImageResource(R.drawable.ic_search);
             } else {
                 lostButton.setText(R.string.button_lost);
-                lostButton.setOnClickListener(view -> itemPresenter.onLost(model.beaconId));
+                lostButton.setOnClickListener(view -> itemPresenter.onLost(model));
 
                 lostImage.setVisibility(View.INVISIBLE);
             }

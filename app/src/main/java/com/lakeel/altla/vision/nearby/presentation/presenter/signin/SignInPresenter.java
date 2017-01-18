@@ -1,15 +1,13 @@
 package com.lakeel.altla.vision.nearby.presentation.presenter.signin;
 
 import android.content.Intent;
-import android.os.Bundle;
 
 import com.firebase.ui.auth.AuthUI;
 import com.google.firebase.analytics.FirebaseAnalytics;
 import com.google.firebase.auth.FirebaseAuth;
 import com.lakeel.altla.vision.nearby.R;
 import com.lakeel.altla.vision.nearby.domain.usecase.SaveUserUseCase;
-import com.lakeel.altla.vision.nearby.presentation.constants.AnalyticsEvent;
-import com.lakeel.altla.vision.nearby.presentation.constants.AnalyticsParam;
+import com.lakeel.altla.vision.nearby.presentation.analytics.UserParam;
 import com.lakeel.altla.vision.nearby.presentation.firebase.MyUser;
 import com.lakeel.altla.vision.nearby.presentation.presenter.BasePresenter;
 import com.lakeel.altla.vision.nearby.presentation.view.SignInView;
@@ -52,10 +50,9 @@ public final class SignInPresenter extends BasePresenter<SignInView> {
     }
 
     public void onSignedIn() {
-        Bundle params = new Bundle();
-        params.putString(AnalyticsParam.USER_ID.getValue(), MyUser.getUid());
-        params.putString(AnalyticsParam.USER_NAME.getValue(), MyUser.getUserData().displayName);
-        firebaseAnalytics.logEvent(AnalyticsEvent.LOG_IN.getValue(), params);
+        // Analytics
+        UserParam userParam = new UserParam();
+        firebaseAnalytics.logEvent(FirebaseAnalytics.Event.LOGIN, userParam.toBundle());
 
         Subscription subscription = saveUserUseCase
                 .execute(MyUser.getUid())

@@ -1,7 +1,5 @@
 package com.lakeel.altla.vision.nearby.presentation.presenter.user;
 
-import android.os.Bundle;
-
 import com.google.firebase.analytics.FirebaseAnalytics;
 import com.lakeel.altla.vision.nearby.R;
 import com.lakeel.altla.vision.nearby.domain.usecase.FindFavoriteUseCase;
@@ -10,8 +8,9 @@ import com.lakeel.altla.vision.nearby.domain.usecase.FindPresenceUseCase;
 import com.lakeel.altla.vision.nearby.domain.usecase.FindTimesUseCase;
 import com.lakeel.altla.vision.nearby.domain.usecase.FindUserUseCase;
 import com.lakeel.altla.vision.nearby.domain.usecase.SaveFavoriteUseCase;
-import com.lakeel.altla.vision.nearby.presentation.constants.AnalyticsEvent;
-import com.lakeel.altla.vision.nearby.presentation.constants.AnalyticsParam;
+import com.lakeel.altla.vision.nearby.presentation.analytics.AnalyticsEvent;
+import com.lakeel.altla.vision.nearby.presentation.analytics.AnalyticsParam;
+import com.lakeel.altla.vision.nearby.presentation.analytics.UserParam;
 import com.lakeel.altla.vision.nearby.presentation.firebase.MyUser;
 import com.lakeel.altla.vision.nearby.presentation.presenter.BasePresenter;
 import com.lakeel.altla.vision.nearby.presentation.presenter.mapper.PresencesModelMapper;
@@ -56,7 +55,7 @@ public final class UserPassingPresenter extends BasePresenter<UserPassingView> {
 
     private UserModelMapper userModelMapper = new UserModelMapper();
 
-    private String otherUserId;
+    private String userId;
 
     private String userName;
 
@@ -68,16 +67,22 @@ public final class UserPassingPresenter extends BasePresenter<UserPassingView> {
     UserPassingPresenter() {
     }
 
-    public void setUserLocationData(String otherUserId, String userName, String latitude, String longitude) {
-        this.otherUserId = otherUserId;
+    public void setUserLocationData(String userId, String userName, String latitude, String longitude) {
+        this.userId = userId;
         this.userName = userName;
         this.latitude = latitude;
         this.longitude = longitude;
     }
 
     public void onActivityCreated() {
+        // Analytics
+        UserParam userParam = new UserParam();
+        userParam.putString(AnalyticsParam.HISTORY_USER_ID.getValue(), userId);
+        userParam.putString(AnalyticsParam.HISTORY_USER_NAME.getValue(), userName);
+        firebaseAnalytics.logEvent(AnalyticsEvent.VIEW_HISTORY_ITEM.getValue(), userParam.toBundle());
+
         Subscription presenceSubscription = findPresenceUseCase
-                .execute(otherUserId)
+                .execute(userId)
                 .map(entity -> presencesModelMapper.map(entity))
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
@@ -85,14 +90,14 @@ public final class UserPassingPresenter extends BasePresenter<UserPassingView> {
                         e -> LOGGER.error("Failed to find presence.", e));
         subscriptions.add(presenceSubscription);
 
-        Subscription timesSubscription = findTimesUseCase.execute(MyUser.getUid(), otherUserId)
+        Subscription timesSubscription = findTimesUseCase.execute(MyUser.getUid(), userId)
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribe(times -> getView().showTimes(times),
                         e -> LOGGER.error("Failed to find times.", e));
         subscriptions.add(timesSubscription);
 
-        Subscription userSubscription = findUserUseCase.execute(otherUserId)
+        Subscription userSubscription = findUserUseCase.execute(userId)
                 .map(entity -> userModelMapper.map(entity))
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
@@ -101,7 +106,7 @@ public final class UserPassingPresenter extends BasePresenter<UserPassingView> {
         subscriptions.add(userSubscription);
 
         Subscription lineLinkSubscription = findLineLinkUseCase
-                .execute(otherUserId)
+                .execute(userId)
                 .map(lineLinksEntity -> lineLinksEntity.url)
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
@@ -110,7 +115,7 @@ public final class UserPassingPresenter extends BasePresenter<UserPassingView> {
         subscriptions.add(lineLinkSubscription);
 
         Subscription favoriteSubscription = findFavoriteUseCase
-                .execute(MyUser.getUid(), otherUserId)
+                .execute(MyUser.getUid(), userId)
                 .toObservable()
                 .filter(entity -> entity == null)
                 .subscribeOn(Schedulers.io())
@@ -129,13 +134,14 @@ public final class UserPassingPresenter extends BasePresenter<UserPassingView> {
     }
 
     public void onAdd() {
-        Bundle params = new Bundle();
-        params.putString(AnalyticsParam.USER_ID.getValue(), otherUserId);
-        params.putString(AnalyticsParam.USER_NAME.getValue(), userName);
-        firebaseAnalytics.logEvent(AnalyticsEvent.ADD_FAVORITE.getValue(), params);
+        // Analytics
+        UserParam userParam = new UserParam();
+        userParam.putString(AnalyticsParam.FAVORITE_USER_ID.getValue(), userId);
+        userParam.putString(AnalyticsParam.FAVORITE_USER_NAME.getValue(), userName);
+        firebaseAnalytics.logEvent(AnalyticsEvent.ADD_FAVORITE.getValue(), userParam.toBundle());
 
         Subscription subscription = saveFavoriteUseCase
-                .execute(MyUser.getUid(), otherUserId)
+                .execute(MyUser.getUid(), userId)
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribe(

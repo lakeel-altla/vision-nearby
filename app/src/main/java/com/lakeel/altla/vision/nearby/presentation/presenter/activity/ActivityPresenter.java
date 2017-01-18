@@ -23,9 +23,9 @@ import com.lakeel.altla.vision.nearby.domain.usecase.SavePreferenceBeaconIdUseCa
 import com.lakeel.altla.vision.nearby.domain.usecase.SaveTokenUseCase;
 import com.lakeel.altla.vision.nearby.domain.usecase.SaveUserBeaconUseCase;
 import com.lakeel.altla.vision.nearby.presentation.ble.BleChecker;
-import com.lakeel.altla.vision.nearby.presentation.constants.AnalyticsEvent;
-import com.lakeel.altla.vision.nearby.presentation.constants.AnalyticsParam;
-import com.lakeel.altla.vision.nearby.presentation.constants.AnalyticsProperty;
+import com.lakeel.altla.vision.nearby.presentation.analytics.AnalyticsEvent;
+import com.lakeel.altla.vision.nearby.presentation.analytics.AnalyticsParam;
+import com.lakeel.altla.vision.nearby.presentation.analytics.AnalyticsProperty;
 import com.lakeel.altla.vision.nearby.presentation.firebase.MyUser;
 import com.lakeel.altla.vision.nearby.presentation.presenter.BasePresenter;
 import com.lakeel.altla.vision.nearby.presentation.service.AdvertiseService;
@@ -171,7 +171,7 @@ public final class ActivityPresenter extends BasePresenter<ActivityView> {
                                 if (result.isSuccessful()) {
                                     Bundle params = new Bundle();
                                     params.putString(AnalyticsParam.USER_ID.getValue(), userData.userId);
-                                    params.putString(AnalyticsParam.USER_NAME.getValue(), userData.displayName);
+                                    params.putString(AnalyticsParam.USER_NAME.getValue(), userData.userName);
                                     firebaseAnalytics.logEvent(AnalyticsEvent.LOG_OUT.getValue(), params);
 
                                     RunningService runningService = new RunningService(context, AdvertiseService.class);
@@ -212,7 +212,7 @@ public final class ActivityPresenter extends BasePresenter<ActivityView> {
 
     private void showProfile() {
         MyUser.UserData userData = MyUser.getUserData();
-        getView().showProfile(userData.displayName, userData.email, userData.imageUri);
+        getView().showProfile(userData.userName, userData.email, userData.imageUri);
     }
 
     private void stopMonitorBeacons() {

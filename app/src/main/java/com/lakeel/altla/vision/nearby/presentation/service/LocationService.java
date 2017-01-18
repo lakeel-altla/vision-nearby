@@ -12,10 +12,11 @@ import android.support.v4.content.ContextCompat;
 
 import com.google.android.gms.awareness.Awareness;
 import com.google.android.gms.common.api.GoogleApiClient;
-import com.lakeel.altla.vision.nearby.domain.usecase.SaveLocationDataUseCase;
 import com.lakeel.altla.vision.nearby.domain.usecase.SaveDeviceLocationUseCase;
+import com.lakeel.altla.vision.nearby.domain.usecase.SaveLocationDataUseCase;
 import com.lakeel.altla.vision.nearby.presentation.di.component.DaggerServiceComponent;
 import com.lakeel.altla.vision.nearby.presentation.di.component.ServiceComponent;
+import com.lakeel.altla.vision.nearby.presentation.di.module.ServiceModule;
 import com.lakeel.altla.vision.nearby.presentation.intent.IntentKey;
 
 import org.slf4j.Logger;
@@ -27,6 +28,32 @@ import rx.Single;
 import rx.schedulers.Schedulers;
 
 public final class LocationService extends IntentService {
+
+    private class ConnectionCallback implements GoogleApiClient.ConnectionCallbacks {
+
+        private final Context context;
+
+        private final String beaconId;
+
+        ConnectionCallback(Context context, String beaconId) {
+            this.context = context;
+            this.beaconId = beaconId;
+        }
+
+        @Override
+        public void onConnected(@Nullable Bundle bundle) {
+            getUserCurrentLocation(context)
+                    .flatMap(location -> saveDeviceLocationUseCase.execute(location).subscribeOn(Schedulers.io()))
+                    .flatMap(uniqueId -> saveLocationDataUseCase.execute(uniqueId, beaconId).subscribeOn(Schedulers.io()))
+                    .subscribeOn(Schedulers.io())
+                    .subscribe(aVoid -> LOGGER.debug("Succeeded to save location data."),
+                            e -> LOGGER.error("Failed to save location data.", e));
+        }
+
+        @Override
+        public void onConnectionSuspended(int i) {
+        }
+    }
 
     @Inject
     SaveDeviceLocationUseCase saveDeviceLocationUseCase;
@@ -40,7 +67,7 @@ public final class LocationService extends IntentService {
 
     public LocationService() {
         // This constructor is need.
-        super(LocationService.class.getSimpleName());
+        this(LocationService.class.getSimpleName());
     }
 
     public LocationService(String name) {
@@ -49,7 +76,9 @@ public final class LocationService extends IntentService {
 
     @Override
     protected void onHandleIntent(Intent intent) {
-        ServiceComponent component = DaggerServiceComponent.create();
+        ServiceComponent component = DaggerServiceComponent.builder()
+                .serviceModule(new ServiceModule(getApplicationContext()))
+                .build();
         component.inject(this);
 
         String beaconId = intent.getStringExtra(IntentKey.BEACON_ID.name());
@@ -57,22 +86,7 @@ public final class LocationService extends IntentService {
 
         googleApiClient = new GoogleApiClient.Builder(context)
                 .addApi(Awareness.API)
-                .addConnectionCallbacks(new GoogleApiClient.ConnectionCallbacks() {
-
-                    @Override
-                    public void onConnected(@Nullable Bundle bundle) {
-                        getUserCurrentLocation(context)
-                                .flatMap(location -> saveDeviceLocationUseCase.execute(location).subscribeOn(Schedulers.io()))
-                                .flatMap(uniqueId -> saveLocationDataUseCase.execute(uniqueId, beaconId).subscribeOn(Schedulers.io()))
-                                .subscribeOn(Schedulers.io())
-                                .subscribe(aVoid -> LOGGER.debug("Succeeded to save location data."),
-                                        e -> LOGGER.error("Failed to save location data.", e));
-                    }
-
-                    @Override
-                    public void onConnectionSuspended(int i) {
-                    }
-                })
+                .addConnectionCallbacks(new ConnectionCallback(context, beaconId))
                 .build();
 
         googleApiClient.connect();

@@ -9,6 +9,7 @@ import com.lakeel.altla.vision.nearby.domain.usecase.FindLineLinkUseCase;
 import com.lakeel.altla.vision.nearby.domain.usecase.FindUserUseCase;
 import com.lakeel.altla.vision.nearby.presentation.di.component.DaggerServiceComponent;
 import com.lakeel.altla.vision.nearby.presentation.di.component.ServiceComponent;
+import com.lakeel.altla.vision.nearby.presentation.di.module.ServiceModule;
 import com.lakeel.altla.vision.nearby.presentation.intent.IntentKey;
 import com.lakeel.altla.vision.nearby.presentation.intent.UriIntent;
 import com.lakeel.altla.vision.nearby.presentation.notification.LocalNotification;
@@ -41,7 +42,9 @@ public class LineService extends IntentService {
 
     @Override
     protected void onHandleIntent(Intent intent) {
-        ServiceComponent component = DaggerServiceComponent.create();
+        ServiceComponent component = DaggerServiceComponent.builder()
+                .serviceModule(new ServiceModule(getApplicationContext()))
+                .build();
         component.inject(this);
 
         String userId = intent.getStringExtra(IntentKey.USER_ID.name());

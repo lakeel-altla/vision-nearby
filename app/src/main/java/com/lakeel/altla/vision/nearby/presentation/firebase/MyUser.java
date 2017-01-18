@@ -12,7 +12,7 @@ public final class MyUser {
 
         public String userId;
 
-        public String displayName;
+        public String userName;
 
         public String email;
 
@@ -36,7 +36,7 @@ public final class MyUser {
         UserData userData = new UserData();
 
         userData.userId = myUser.getUid();
-        userData.displayName = myUser.getDisplayName();
+        userData.userName = myUser.getDisplayName();
         userData.email = myUser.getEmail();
 
         Uri uri = myUser.getPhotoUrl();

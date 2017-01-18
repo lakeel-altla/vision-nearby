@@ -8,14 +8,10 @@ import android.bluetooth.le.ScanRecord;
 import android.bluetooth.le.ScanResult;
 import android.content.Context;
 import android.content.Intent;
-import android.os.Bundle;
 
 import com.google.firebase.analytics.FirebaseAnalytics;
 import com.lakeel.altla.vision.nearby.presentation.beacon.distance.Distance;
 import com.lakeel.altla.vision.nearby.presentation.ble.BleChecker;
-import com.lakeel.altla.vision.nearby.presentation.constants.AnalyticsEvent;
-import com.lakeel.altla.vision.nearby.presentation.constants.AnalyticsParam;
-import com.lakeel.altla.vision.nearby.presentation.firebase.MyUser;
 import com.lakeel.altla.vision.nearby.presentation.presenter.BasePresenter;
 import com.lakeel.altla.vision.nearby.presentation.view.DistanceEstimationView;
 import com.neovisionaries.bluetooth.ble.advertising.ADPayloadParser;
@@ -91,14 +87,8 @@ public final class DistanceEstimationPresenter extends BasePresenter<DistanceEst
         scanner.stopScan(scanCallback);
     }
 
-    public void onActivityCreated(List<String> beaconIds) {
+    public void setBeaconIds(List<String> beaconIds) {
         this.beaconIds = beaconIds;
-
-        MyUser.UserData userData = MyUser.getUserData();
-        Bundle bundle = new Bundle();
-        bundle.putString(AnalyticsParam.USER_ID.getValue(), userData.userId);
-        bundle.getString(AnalyticsParam.USER_NAME.getValue(), userData.displayName);
-        firebaseAnalytics.logEvent(AnalyticsEvent.ESTIMATE_DISTANCE.getValue(), bundle);
     }
 
     public void onResume() {

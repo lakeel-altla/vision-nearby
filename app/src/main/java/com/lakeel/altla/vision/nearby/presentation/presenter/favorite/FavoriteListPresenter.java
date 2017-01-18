@@ -1,6 +1,5 @@
 package com.lakeel.altla.vision.nearby.presentation.presenter.favorite;
 
-import android.os.Bundle;
 import android.support.annotation.IntRange;
 
 import com.google.firebase.analytics.FirebaseAnalytics;
@@ -10,11 +9,12 @@ import com.lakeel.altla.vision.nearby.data.entity.UserEntity;
 import com.lakeel.altla.vision.nearby.domain.usecase.FindFavoritesUseCase;
 import com.lakeel.altla.vision.nearby.domain.usecase.FindUserUseCase;
 import com.lakeel.altla.vision.nearby.domain.usecase.RemoveFavoriteUseCase;
-import com.lakeel.altla.vision.nearby.presentation.constants.AnalyticsEvent;
-import com.lakeel.altla.vision.nearby.presentation.constants.AnalyticsParam;
+import com.lakeel.altla.vision.nearby.presentation.analytics.AnalyticsEvent;
+import com.lakeel.altla.vision.nearby.presentation.analytics.AnalyticsParam;
 import com.lakeel.altla.vision.nearby.presentation.firebase.MyUser;
 import com.lakeel.altla.vision.nearby.presentation.presenter.BaseItemPresenter;
 import com.lakeel.altla.vision.nearby.presentation.presenter.BasePresenter;
+import com.lakeel.altla.vision.nearby.presentation.analytics.UserParam;
 import com.lakeel.altla.vision.nearby.presentation.presenter.mapper.FavoriteModelMapper;
 import com.lakeel.altla.vision.nearby.presentation.presenter.model.FavoriteModel;
 import com.lakeel.altla.vision.nearby.presentation.view.FavoriteItemView;
@@ -95,10 +95,11 @@ public final class FavoriteListPresenter extends BasePresenter<FavoriteListView>
         }
 
         public void onRemove(FavoriteModel model) {
-            Bundle params = new Bundle();
-            params.putString(AnalyticsParam.USER_ID.getValue(), model.userId);
-            params.putString(AnalyticsParam.USER_NAME.getValue(), model.name);
-            firebaseAnalytics.logEvent(AnalyticsEvent.REMOVE_FAVORITE.getValue(), params);
+            // Analytics
+            UserParam userParam = new UserParam();
+            userParam.putString(AnalyticsParam.FAVORITE_USER_ID.getValue(), model.userId);
+            userParam.putString(AnalyticsParam.FAVORITE_USER_NAME.getValue(), model.name);
+            firebaseAnalytics.logEvent(AnalyticsEvent.REMOVE_FAVORITE.getValue(), userParam.toBundle());
 
             Subscription subscription = removeFavoriteUseCase
                     .execute(MyUser.getUid(), model.userId)

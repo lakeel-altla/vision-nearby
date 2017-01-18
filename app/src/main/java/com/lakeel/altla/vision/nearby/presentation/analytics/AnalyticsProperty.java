@@ -1,4 +1,4 @@
-package com.lakeel.altla.vision.nearby.presentation.constants;
+package com.lakeel.altla.vision.nearby.presentation.analytics;
 
 public enum AnalyticsProperty {
     BLE_STATE("ble_state");

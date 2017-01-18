@@ -15,6 +15,7 @@ import com.google.android.gms.awareness.state.Weather;
 import com.google.android.gms.common.api.GoogleApiClient;
 import com.google.android.gms.location.ActivityRecognitionResult;
 import com.google.android.gms.location.DetectedActivity;
+import com.google.firebase.analytics.FirebaseAnalytics;
 import com.lakeel.altla.vision.nearby.data.entity.UserEntity;
 import com.lakeel.altla.vision.nearby.domain.usecase.FindBeaconUseCase;
 import com.lakeel.altla.vision.nearby.domain.usecase.FindUserUseCase;
@@ -22,17 +23,22 @@ import com.lakeel.altla.vision.nearby.domain.usecase.SaveDetectedActivityUseCase
 import com.lakeel.altla.vision.nearby.domain.usecase.SaveHistoryUseCase;
 import com.lakeel.altla.vision.nearby.domain.usecase.SaveUserLocationUseCase;
 import com.lakeel.altla.vision.nearby.domain.usecase.SaveWeatherUseCase;
+import com.lakeel.altla.vision.nearby.presentation.analytics.AnalyticsEvent;
+import com.lakeel.altla.vision.nearby.presentation.analytics.AnalyticsParam;
 import com.lakeel.altla.vision.nearby.presentation.di.component.DaggerServiceComponent;
 import com.lakeel.altla.vision.nearby.presentation.di.component.ServiceComponent;
+import com.lakeel.altla.vision.nearby.presentation.di.module.ServiceModule;
 import com.lakeel.altla.vision.nearby.presentation.exception.AwarenessException;
 import com.lakeel.altla.vision.nearby.presentation.firebase.MyUser;
 import com.lakeel.altla.vision.nearby.presentation.intent.IntentKey;
+import com.lakeel.altla.vision.nearby.presentation.analytics.UserParam;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import javax.inject.Inject;
 
+import rx.Observable;
 import rx.Single;
 import rx.SingleSubscriber;
 import rx.schedulers.Schedulers;
@@ -56,6 +62,8 @@ public class HistoryService extends IntentService {
                     .execute(beaconId)
                     .subscribeOn(Schedulers.io())
                     .flatMap(entity -> findUser(entity.userId))
+                    .toObservable()
+                    .doOnNext(HistoryService.this::reportAnalytics)
                     .flatMap(entity -> saveHistory(MyUser.getUid(), entity.userId))
                     .subscribeOn(Schedulers.io())
                     .subscribe(uniqueKey -> {
@@ -83,6 +91,9 @@ public class HistoryService extends IntentService {
         public void onConnectionSuspended(int i) {
         }
     }
+
+    @Inject
+    FirebaseAnalytics firebaseAnalytics;
 
     @Inject
     FindBeaconUseCase findBeaconUseCase;
@@ -117,7 +128,9 @@ public class HistoryService extends IntentService {
 
     @Override
     protected void onHandleIntent(Intent intent) {
-        ServiceComponent serviceComponent = DaggerServiceComponent.create();
+        ServiceComponent serviceComponent = DaggerServiceComponent.builder()
+                .serviceModule(new ServiceModule(getApplicationContext()))
+                .build();
         serviceComponent.inject(this);
 
         Context context = getApplicationContext();
@@ -135,8 +148,16 @@ public class HistoryService extends IntentService {
         return findUserUseCase.execute(userId).subscribeOn(Schedulers.io());
     }
 
-    private Single<String> saveHistory(String myUserId, String otherUserId) {
-        return saveHistoryUseCase.execute(myUserId, otherUserId).subscribeOn(Schedulers.io());
+    private Observable<String> saveHistory(String myUserId, String otherUserId) {
+        return saveHistoryUseCase.execute(myUserId, otherUserId).subscribeOn(Schedulers.io()).toObservable();
+    }
+
+    private void reportAnalytics(UserEntity entity) {
+        // Analytics
+        UserParam userParam = new UserParam();
+        userParam.putString(AnalyticsParam.HISTORY_USER_ID.getValue(), entity.userId);
+        userParam.putString(AnalyticsParam.HISTORY_USER_NAME.getValue(), entity.name);
+        firebaseAnalytics.logEvent(AnalyticsEvent.ADD_HISTORY.getValue(), userParam.toBundle());
     }
 
     private Single<DetectedActivity> getUserActivity() {

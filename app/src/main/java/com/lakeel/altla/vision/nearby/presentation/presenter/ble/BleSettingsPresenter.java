@@ -7,8 +7,8 @@ import com.google.firebase.analytics.FirebaseAnalytics;
 import com.lakeel.altla.vision.nearby.domain.usecase.FindBeaconIdUseCase;
 import com.lakeel.altla.vision.nearby.presentation.ble.BleChecker;
 import com.lakeel.altla.vision.nearby.presentation.ble.BleChecker.State;
-import com.lakeel.altla.vision.nearby.presentation.constants.AnalyticsEvent;
-import com.lakeel.altla.vision.nearby.presentation.constants.AnalyticsParam;
+import com.lakeel.altla.vision.nearby.presentation.analytics.AnalyticsEvent;
+import com.lakeel.altla.vision.nearby.presentation.analytics.AnalyticsParam;
 import com.lakeel.altla.vision.nearby.presentation.firebase.MyUser;
 import com.lakeel.altla.vision.nearby.presentation.presenter.BasePresenter;
 import com.lakeel.altla.vision.nearby.presentation.service.AdvertiseService;
@@ -52,7 +52,7 @@ public final class BleSettingsPresenter extends BasePresenter<BleSettingsView> {
     public void onStartAdvertise() {
         Bundle bundle = new Bundle();
         bundle.putString(AnalyticsParam.USER_ID.getValue(), MyUser.getUserData().userId);
-        bundle.putString(AnalyticsParam.USER_NAME.getValue(), MyUser.getUserData().displayName);
+        bundle.putString(AnalyticsParam.USER_NAME.getValue(), MyUser.getUserData().userName);
         firebaseAnalytics.logEvent(AnalyticsEvent.ON_ADVERTISE.getValue(), bundle);
 
         Subscription subscription = findBeaconIdUseCase
@@ -67,7 +67,7 @@ public final class BleSettingsPresenter extends BasePresenter<BleSettingsView> {
     public void onStopAdvertise() {
         Bundle bundle = new Bundle();
         bundle.putString(AnalyticsParam.USER_ID.getValue(), MyUser.getUserData().userId);
-        bundle.putString(AnalyticsParam.USER_NAME.getValue(), MyUser.getUserData().displayName);
+        bundle.putString(AnalyticsParam.USER_NAME.getValue(), MyUser.getUserData().userName);
         firebaseAnalytics.logEvent(AnalyticsEvent.OFF_ADVERTISE.getValue(), bundle);
 
         RunningService runningService = new RunningService(context, AdvertiseService.class);
@@ -77,7 +77,7 @@ public final class BleSettingsPresenter extends BasePresenter<BleSettingsView> {
     public void onStartSubscribe() {
         Bundle bundle = new Bundle();
         bundle.putString(AnalyticsParam.USER_ID.getValue(), MyUser.getUserData().userId);
-        bundle.putString(AnalyticsParam.USER_NAME.getValue(), MyUser.getUserData().displayName);
+        bundle.putString(AnalyticsParam.USER_NAME.getValue(), MyUser.getUserData().userName);
         firebaseAnalytics.logEvent(AnalyticsEvent.ON_SUBSCRIBE.getValue(), bundle);
 
         getView().startSubscribe();
@@ -86,7 +86,7 @@ public final class BleSettingsPresenter extends BasePresenter<BleSettingsView> {
     public void onStopSubscribe() {
         Bundle bundle = new Bundle();
         bundle.putString(AnalyticsParam.USER_ID.getValue(), MyUser.getUserData().userId);
-        bundle.putString(AnalyticsParam.USER_NAME.getValue(), MyUser.getUserData().displayName);
+        bundle.putString(AnalyticsParam.USER_NAME.getValue(), MyUser.getUserData().userName);
         firebaseAnalytics.logEvent(AnalyticsEvent.OFF_SUBSCRIBE.getValue(), bundle);
 
         getView().stopSubscribe();

@@ -6,8 +6,8 @@ import com.google.firebase.analytics.FirebaseAnalytics;
 import com.lakeel.altla.vision.nearby.R;
 import com.lakeel.altla.vision.nearby.domain.usecase.FindLineLinkUseCase;
 import com.lakeel.altla.vision.nearby.domain.usecase.SaveLineUrlUseCase;
-import com.lakeel.altla.vision.nearby.presentation.constants.AnalyticsEvent;
-import com.lakeel.altla.vision.nearby.presentation.constants.AnalyticsParam;
+import com.lakeel.altla.vision.nearby.presentation.analytics.AnalyticsEvent;
+import com.lakeel.altla.vision.nearby.presentation.analytics.AnalyticsParam;
 import com.lakeel.altla.vision.nearby.presentation.firebase.MyUser;
 import com.lakeel.altla.vision.nearby.presentation.presenter.BasePresenter;
 import com.lakeel.altla.vision.nearby.presentation.view.LineSettingsView;
@@ -55,7 +55,7 @@ public final class LineSettingsPresenter extends BasePresenter<LineSettingsView>
         MyUser.UserData userData = MyUser.getUserData();
         Bundle bundle = new Bundle();
         bundle.putString(AnalyticsParam.USER_ID.getValue(), userData.userId);
-        bundle.getString(AnalyticsParam.USER_NAME.getValue(), userData.displayName);
+        bundle.getString(AnalyticsParam.USER_NAME.getValue(), userData.userName);
         firebaseAnalytics.logEvent(AnalyticsEvent.SAVE_LINE_URL.getValue(), bundle);
 
         Subscription subscription = saveLineUrlUseCase

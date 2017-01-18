@@ -9,11 +9,17 @@ import dagger.Module;
 import dagger.Provides;
 
 @Module
-public final class PresenterModule {
+public class ServiceModule {
+
+    private final FirebaseAnalytics firebaseAnalytics;
+
+    public ServiceModule(Context context) {
+        firebaseAnalytics = FirebaseAnalytics.getInstance(context);
+    }
 
     @InjectScope
     @Provides
-    FirebaseAnalytics provideFirebaseAnalytics(Context context) {
-        return FirebaseAnalytics.getInstance(context);
+    FirebaseAnalytics provideFirebaseAnalytics() {
+        return firebaseAnalytics;
     }
 }

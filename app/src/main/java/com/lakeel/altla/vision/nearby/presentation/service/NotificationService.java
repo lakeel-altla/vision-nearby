@@ -14,6 +14,7 @@ import com.lakeel.altla.vision.nearby.domain.usecase.SaveInformationUseCase;
 import com.lakeel.altla.vision.nearby.domain.usecase.SaveNotificationUseCase;
 import com.lakeel.altla.vision.nearby.presentation.di.component.DaggerServiceComponent;
 import com.lakeel.altla.vision.nearby.presentation.di.component.ServiceComponent;
+import com.lakeel.altla.vision.nearby.presentation.di.module.ServiceModule;
 import com.lakeel.altla.vision.nearby.presentation.intent.IntentKey;
 
 import org.slf4j.Logger;
@@ -55,7 +56,9 @@ public class NotificationService extends IntentService {
 
     @Override
     protected void onHandleIntent(Intent intent) {
-        ServiceComponent component = DaggerServiceComponent.create();
+        ServiceComponent component = DaggerServiceComponent.builder()
+                .serviceModule(new ServiceModule(getApplicationContext()))
+                .build();
         component.inject(this);
 
         String beaconId = intent.getStringExtra(IntentKey.BEACON_ID.name());
