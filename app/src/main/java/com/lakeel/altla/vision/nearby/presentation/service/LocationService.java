@@ -12,6 +12,7 @@ import android.support.v4.content.ContextCompat;
 
 import com.google.android.gms.awareness.Awareness;
 import com.google.android.gms.common.api.GoogleApiClient;
+import com.lakeel.altla.vision.nearby.data.entity.LocationDataEntity;
 import com.lakeel.altla.vision.nearby.domain.usecase.SaveDeviceLocationUseCase;
 import com.lakeel.altla.vision.nearby.domain.usecase.SaveLocationDataUseCase;
 import com.lakeel.altla.vision.nearby.presentation.di.component.DaggerServiceComponent;
@@ -43,8 +44,8 @@ public final class LocationService extends IntentService {
         @Override
         public void onConnected(@Nullable Bundle bundle) {
             getUserCurrentLocation(context)
-                    .flatMap(location -> saveDeviceLocationUseCase.execute(location).subscribeOn(Schedulers.io()))
-                    .flatMap(uniqueId -> saveLocationDataUseCase.execute(uniqueId, beaconId).subscribeOn(Schedulers.io()))
+                    .flatMap(LocationService.this::saveDeviceLocation)
+                    .flatMap(uniqueId -> saveLocationData(uniqueId, beaconId))
                     .subscribeOn(Schedulers.io())
                     .subscribe(aVoid -> LOGGER.debug("Succeeded to save location data."),
                             e -> LOGGER.error("Failed to save location data.", e));
@@ -92,7 +93,7 @@ public final class LocationService extends IntentService {
         googleApiClient.connect();
     }
 
-    Single<Location> getUserCurrentLocation(Context context) {
+    private Single<Location> getUserCurrentLocation(Context context) {
         return Single.create(subscriber -> {
             if (ContextCompat.checkSelfPermission(context, Manifest.permission.ACCESS_FINE_LOCATION) == PackageManager.PERMISSION_GRANTED) {
                 Awareness.SnapshotApi.getLocation(googleApiClient)
@@ -110,5 +111,13 @@ public final class LocationService extends IntentService {
                 subscriber.onSuccess(null);
             }
         });
+    }
+
+    private Single<String> saveDeviceLocation(Location location) {
+        return saveDeviceLocationUseCase.execute(location).subscribeOn(Schedulers.io());
+    }
+
+    private Single<LocationDataEntity> saveLocationData(String uniqueId, String beaconId) {
+        return saveLocationDataUseCase.execute(uniqueId, beaconId).subscribeOn(Schedulers.io());
     }
 }

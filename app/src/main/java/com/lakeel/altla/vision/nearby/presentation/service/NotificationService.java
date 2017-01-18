@@ -87,19 +87,19 @@ public class NotificationService extends IntentService {
                 .subscribe();
     }
 
-    Observable<BeaconEntity> findUserId(String beaconId) {
+    private Observable<BeaconEntity> findUserId(String beaconId) {
         return findUserIdByBeaconIdUseCase.execute(beaconId).subscribeOn(Schedulers.io()).toObservable();
     }
 
-    Observable<TokenEntity> findTokens(String userId) {
+    private Observable<TokenEntity> findTokens(String userId) {
         return findTokensUseCase.execute(userId).subscribeOn(Schedulers.io());
     }
 
-    Observable<Object> saveInformation(String userId, String title, String message) {
+    private Observable<Object> saveInformation(String userId, String title, String message) {
         return saveInformationUseCase.execute(userId, title, message).toObservable();
     }
 
-    Observable<NotificationEntity> saveNotification(String token, String title, String message) {
+    private Observable<NotificationEntity> saveNotification(String token, String title, String message) {
         return saveNotificationUseCase.execute(token, title, message).subscribeOn(Schedulers.io()).toObservable();
     }
 }

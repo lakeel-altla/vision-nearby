@@ -16,6 +16,7 @@ import com.google.android.gms.common.api.GoogleApiClient;
 import com.google.android.gms.location.ActivityRecognitionResult;
 import com.google.android.gms.location.DetectedActivity;
 import com.google.firebase.analytics.FirebaseAnalytics;
+import com.lakeel.altla.vision.nearby.data.entity.HistoryEntity;
 import com.lakeel.altla.vision.nearby.data.entity.UserEntity;
 import com.lakeel.altla.vision.nearby.domain.usecase.FindBeaconUseCase;
 import com.lakeel.altla.vision.nearby.domain.usecase.FindUserUseCase;
@@ -25,13 +26,13 @@ import com.lakeel.altla.vision.nearby.domain.usecase.SaveUserLocationUseCase;
 import com.lakeel.altla.vision.nearby.domain.usecase.SaveWeatherUseCase;
 import com.lakeel.altla.vision.nearby.presentation.analytics.AnalyticsEvent;
 import com.lakeel.altla.vision.nearby.presentation.analytics.AnalyticsParam;
+import com.lakeel.altla.vision.nearby.presentation.analytics.UserParam;
 import com.lakeel.altla.vision.nearby.presentation.di.component.DaggerServiceComponent;
 import com.lakeel.altla.vision.nearby.presentation.di.component.ServiceComponent;
 import com.lakeel.altla.vision.nearby.presentation.di.module.ServiceModule;
 import com.lakeel.altla.vision.nearby.presentation.exception.AwarenessException;
 import com.lakeel.altla.vision.nearby.presentation.firebase.MyUser;
 import com.lakeel.altla.vision.nearby.presentation.intent.IntentKey;
-import com.lakeel.altla.vision.nearby.presentation.analytics.UserParam;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -66,21 +67,21 @@ public class HistoryService extends IntentService {
                     .doOnNext(HistoryService.this::reportAnalytics)
                     .flatMap(entity -> saveHistory(MyUser.getUid(), entity.userId))
                     .subscribeOn(Schedulers.io())
-                    .subscribe(uniqueKey -> {
+                    .subscribe(uniqueId -> {
                         getUserActivity()
-                                .flatMap(detectedActivity -> saveDetectedActivityUseCase.execute(uniqueKey, MyUser.getUid(), detectedActivity).subscribeOn(Schedulers.io()))
+                                .flatMap(detectedActivity -> saveUserActivity(uniqueId, detectedActivity))
                                 .subscribeOn(Schedulers.io())
                                 .subscribe(entity -> {
                                 }, e -> LOGGER.error("Failed to save user activity.", e));
 
                         getUserLocation(context)
-                                .flatMap(location -> saveUserLocationUseCase.execute(uniqueKey, MyUser.getUid(), location).subscribeOn(Schedulers.io()))
+                                .flatMap(location -> saveUserLocation(uniqueId, location))
                                 .subscribeOn(Schedulers.io())
                                 .subscribe(entity -> {
                                 }, e -> LOGGER.error("Failed to save user current location.", e));
 
                         getWeather(context)
-                                .flatMap(weather -> saveWeatherUseCase.execute(uniqueKey, MyUser.getUid(), weather).subscribeOn(Schedulers.io()))
+                                .flatMap(weather -> saveWeather(uniqueId, weather))
                                 .subscribeOn(Schedulers.io())
                                 .subscribe(entity -> {
                                 }, e -> LOGGER.error("Failed to save weather.", e));
@@ -214,5 +215,17 @@ public class HistoryService extends IntentService {
                 subscriber.onSuccess(null);
             }
         });
+    }
+
+    private Single<HistoryEntity> saveUserActivity(String uniqueId, DetectedActivity detectedActivity) {
+        return saveDetectedActivityUseCase.execute(uniqueId, MyUser.getUid(), detectedActivity).subscribeOn(Schedulers.io());
+    }
+
+    private Single<HistoryEntity> saveUserLocation(String uniqueId, Location location) {
+        return saveUserLocationUseCase.execute(uniqueId, MyUser.getUid(), location).subscribeOn(Schedulers.io());
+    }
+
+    private Single<HistoryEntity> saveWeather(String uniqueId, Weather weather) {
+        return saveWeatherUseCase.execute(uniqueId, MyUser.getUid(), weather).subscribeOn(Schedulers.io());
     }
 }
