@@ -6,13 +6,13 @@ import javax.inject.Inject;
 
 import rx.Single;
 
-public final class FindSubscribeSettingUseCase {
+public final class FindSubscribeSettingsUseCase {
 
     @Inject
     PreferenceRepository repository;
 
     @Inject
-    FindSubscribeSettingUseCase() {
+    FindSubscribeSettingsUseCase() {
     }
 
     public Single<Boolean> execute() {

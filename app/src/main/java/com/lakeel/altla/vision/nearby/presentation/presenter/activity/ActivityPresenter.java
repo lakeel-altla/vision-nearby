@@ -15,7 +15,7 @@ import com.lakeel.altla.vision.nearby.core.StringUtils;
 import com.lakeel.altla.vision.nearby.data.entity.PreferenceEntity;
 import com.lakeel.altla.vision.nearby.domain.usecase.FindBeaconIdUseCase;
 import com.lakeel.altla.vision.nearby.domain.usecase.FindPreferencesUseCase;
-import com.lakeel.altla.vision.nearby.domain.usecase.FindSubscribeSettingUseCase;
+import com.lakeel.altla.vision.nearby.domain.usecase.FindSubscribeSettingsUseCase;
 import com.lakeel.altla.vision.nearby.domain.usecase.ObserveConnectionUseCase;
 import com.lakeel.altla.vision.nearby.domain.usecase.OfflineUseCase;
 import com.lakeel.altla.vision.nearby.domain.usecase.SaveBeaconUseCase;
@@ -72,7 +72,7 @@ public final class ActivityPresenter extends BasePresenter<ActivityView> {
     OfflineUseCase offlineUseCase;
 
     @Inject
-    FindSubscribeSettingUseCase findSubscribeSettingUseCase;
+    FindSubscribeSettingsUseCase findSubscribeSettingsUseCase;
 
     private static final Logger LOGGER = LoggerFactory.getLogger(ActivityPresenter.class);
 
@@ -107,7 +107,7 @@ public final class ActivityPresenter extends BasePresenter<ActivityView> {
         // Observe user presence.
         observeConnectionUseCase.execute(MyUser.getUid());
 
-        Subscription subscription = findSubscribeSettingUseCase
+        Subscription subscription = findSubscribeSettingsUseCase
                 .execute()
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
@@ -121,6 +121,7 @@ public final class ActivityPresenter extends BasePresenter<ActivityView> {
         subscriptions.add(subscription);
 
         // TODO: UseCase
+        // SaveBeacon/SaveToken
         Subscription subscription1 = findBeaconIdUseCase
                 .execute(MyUser.getUid())
                 .flatMap(beaconId -> {
