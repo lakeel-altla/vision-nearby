@@ -80,7 +80,7 @@ public final class TrackingPresenter extends BasePresenter<TrackingView> {
                             getView().showOptionMenu();
                         }
                     }
-                }, e -> LOGGER.error("Failed to find location.", e));
+                }, e -> LOGGER.error("Failed to findList location.", e));
         subscriptions.add(subscription);
     }
 

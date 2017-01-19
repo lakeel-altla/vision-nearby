@@ -4,5 +4,5 @@ public interface InformationListView {
 
     void updateItems();
 
-//    void addAll(List<> );
+    void showInformationFragment(String informationId);
 }

@@ -67,7 +67,7 @@ public final class UserProfilePresenter extends BasePresenter<UserProfileView> {
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribe(model -> getView().showPresence(model),
-                        e -> LOGGER.error("Failed to find presence.", e));
+                        e -> LOGGER.error("Failed to findList presence.", e));
         subscriptions.add(presenceSubscription);
 
         Subscription userSubscription = findUserUseCase
@@ -76,7 +76,7 @@ public final class UserProfilePresenter extends BasePresenter<UserProfileView> {
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribe(model -> getView().showProfile(model),
-                        e -> LOGGER.error("Failed to find user.", e));
+                        e -> LOGGER.error("Failed to findList user.", e));
         subscriptions.add(userSubscription);
 
         Subscription lineLinkSubscription = findLineLinkUseCase
@@ -88,7 +88,7 @@ public final class UserProfilePresenter extends BasePresenter<UserProfileView> {
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribe(lineUrl -> getView().showLineUrl(lineUrl),
-                        e -> LOGGER.error("Failed to find LINE links.", e)
+                        e -> LOGGER.error("Failed to findList LINE links.", e)
                 );
         subscriptions.add(lineLinkSubscription);
     }
@@ -106,7 +106,7 @@ public final class UserProfilePresenter extends BasePresenter<UserProfileView> {
                     beaconIds.addAll(beacons);
                     getView().showDistanceEstimationFragment(beaconIds, userName);
                 }, e -> {
-                    LOGGER.error("Failed to find user beacons.", e);
+                    LOGGER.error("Failed to findList user beacons.", e);
                 });
         subscriptions.add(subscription);
     }

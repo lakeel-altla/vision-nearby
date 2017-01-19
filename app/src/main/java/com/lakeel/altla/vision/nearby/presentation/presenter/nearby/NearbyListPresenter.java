@@ -99,7 +99,7 @@ public final class NearbyListPresenter extends BasePresenter<NearbyListView> {
                                 }
                                 nearbyItemModels.add(scannedModel);
                                 getView().updateItems();
-                            }, e -> LOGGER.error("Failed to find nearby item.", e));
+                            }, e -> LOGGER.error("Failed to findList nearby item.", e));
                     subscriptions.add(subscription);
                 }
             }

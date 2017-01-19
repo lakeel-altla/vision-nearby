@@ -16,6 +16,7 @@ import javax.inject.Inject;
 
 import rx.Completable;
 import rx.Observable;
+import rx.Single;
 
 public class FirebaseInformationRepositoryImpl implements FirebaseInformationRepository {
 
@@ -49,7 +50,7 @@ public class FirebaseInformationRepositoryImpl implements FirebaseInformationRep
     }
 
     @Override
-    public Observable<InformationEntity> find(String userId) {
+    public Observable<InformationEntity> findList(String userId) {
         return Observable.create(subscriber -> {
             reference
                     .child(userId)
@@ -58,6 +59,7 @@ public class FirebaseInformationRepositoryImpl implements FirebaseInformationRep
                         public void onDataChange(DataSnapshot dataSnapshot) {
                             for (DataSnapshot snapshot : dataSnapshot.getChildren()) {
                                 InformationEntity entity = snapshot.getValue(InformationEntity.class);
+                                entity.informationId = snapshot.getKey();
                                 subscriber.onNext(entity);
                             }
                             subscriber.onCompleted();
@@ -69,5 +71,25 @@ public class FirebaseInformationRepositoryImpl implements FirebaseInformationRep
                         }
                     });
         });
+    }
+
+    @Override
+    public Single<InformationEntity> find(String userId, String informationId) {
+        return Single.create(subscriber ->
+                reference
+                        .child(userId)
+                        .child(informationId)
+                        .addListenerForSingleValueEvent(new ValueEventListener() {
+                            @Override
+                            public void onDataChange(DataSnapshot snapshot) {
+                                InformationEntity entity = snapshot.getValue(InformationEntity.class);
+                                subscriber.onSuccess(entity);
+                            }
+
+                            @Override
+                            public void onCancelled(DatabaseError databaseError) {
+                                subscriber.onError(databaseError.toException());
+                            }
+                        }));
     }
 }

@@ -13,8 +13,9 @@ import com.lakeel.altla.vision.nearby.R;
 import com.lakeel.altla.vision.nearby.presentation.presenter.information.InformationListPresenter;
 import com.lakeel.altla.vision.nearby.presentation.view.InformationListView;
 import com.lakeel.altla.vision.nearby.presentation.view.activity.MainActivity;
-import com.lakeel.altla.vision.nearby.presentation.view.adapter.InformationAdapter;
+import com.lakeel.altla.vision.nearby.presentation.view.adapter.InformationListAdapter;
 import com.lakeel.altla.vision.nearby.presentation.view.divider.DividerItemDecoration;
+import com.lakeel.altla.vision.nearby.presentation.view.fragment.FragmentController;
 
 import javax.inject.Inject;
 
@@ -61,7 +62,7 @@ public final class InformationListFragment extends Fragment implements Informati
         recyclerView.setHasFixedSize(false);
         recyclerView.addItemDecoration(new DividerItemDecoration(getContext()));
 
-        InformationAdapter adapter = new InformationAdapter(presenter);
+        InformationListAdapter adapter = new InformationListAdapter(presenter);
         recyclerView.setAdapter(adapter);
 
         presenter.onActivityCreated();
@@ -76,5 +77,11 @@ public final class InformationListFragment extends Fragment implements Informati
     @Override
     public void updateItems() {
         recyclerView.getAdapter().notifyDataSetChanged();
+    }
+
+    @Override
+    public void showInformationFragment(String informationId) {
+        FragmentController controller = new FragmentController(getActivity().getSupportFragmentManager());
+        controller.showInformationFragment(informationId);
     }
 }

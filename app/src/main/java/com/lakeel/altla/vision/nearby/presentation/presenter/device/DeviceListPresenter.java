@@ -158,7 +158,7 @@ public class DeviceListPresenter extends BasePresenter<DeviceListView> {
                     deviceModels.addAll(models);
                     getView().updateItems();
                 }, e -> {
-                    LOGGER.error("Failed to find user beacons.", e);
+                    LOGGER.error("Failed to findList user beacons.", e);
                 });
         subscriptions.add(subscription);
     }

@@ -36,12 +36,12 @@ public class NotificationMessagingService extends FirebaseMessagingService {
     @Override
     public void onDeletedMessages() {
         super.onDeletedMessages();
-        LOGGER.debug("This message has been deleted.");
+        LOGGER.debug("This body has been deleted.");
     }
 
     @Override
     public void onSendError(String msgId, Exception e) {
         super.onSendError(msgId, e);
-        LOGGER.error("FCM has failed to send a notification message.", e);
+        LOGGER.error("FCM has failed to send a notification body.", e);
     }
 }

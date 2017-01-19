@@ -7,8 +7,9 @@ public final class InformationModelMapper {
 
     public InformationModel map(InformationEntity entity) {
         InformationModel model = new InformationModel();
+        model.informationId = entity.informationId;
         model.title = entity.title;
-        model.message = entity.message;
+        model.body = entity.body;
         model.postTime = entity.postTime;
         return model;
     }

@@ -54,7 +54,7 @@ public final class BleSettingsPresenter extends BasePresenter<BleSettingsView> {
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribe(beaconId -> getView().startAdvertise(beaconId),
-                        e -> LOGGER.error("Failed to find a beacon ID.", e));
+                        e -> LOGGER.error("Failed to findList a beacon ID.", e));
         subscriptions.add(subscription);
     }
 

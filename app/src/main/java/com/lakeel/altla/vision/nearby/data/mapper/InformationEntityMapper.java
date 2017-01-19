@@ -7,7 +7,7 @@ public final class InformationEntityMapper {
     public InformationEntity map(String title, String message) {
         InformationEntity entity = new InformationEntity();
         entity.title = title;
-        entity.message = message;
+        entity.body = message;
         return entity;
     }
 

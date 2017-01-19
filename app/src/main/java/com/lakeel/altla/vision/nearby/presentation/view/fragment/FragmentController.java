@@ -12,6 +12,7 @@ import com.lakeel.altla.vision.nearby.presentation.view.fragment.device.DeviceLi
 import com.lakeel.altla.vision.nearby.presentation.view.fragment.estimation.DistanceEstimationFragment;
 import com.lakeel.altla.vision.nearby.presentation.view.fragment.favorite.FavoriteListFragment;
 import com.lakeel.altla.vision.nearby.presentation.view.fragment.history.HistoryListFragment;
+import com.lakeel.altla.vision.nearby.presentation.view.fragment.information.InformationFragment;
 import com.lakeel.altla.vision.nearby.presentation.view.fragment.information.InformationListFragment;
 import com.lakeel.altla.vision.nearby.presentation.view.fragment.line.LineSettingsFragment;
 import com.lakeel.altla.vision.nearby.presentation.view.fragment.nearby.NearbyListFragment;
@@ -44,6 +45,8 @@ public final class FragmentController {
     private final String USER_PROFILE_FRAGMENT_TAG = UserProfileFragment.class.getSimpleName();
 
     private final String INFORMATION_LIST_FRAGMENT_TAG = InformationListFragment.class.getSimpleName();
+
+    private final String INFORMATION_FRAGMENT_TAG = InformationFragment.class.getSimpleName();
 
     private final String SETTINGS_FRAGMENT_TAG = SettingsFragment.class.getSimpleName();
 
@@ -115,6 +118,11 @@ public final class FragmentController {
     public void showInformationListFragment() {
         InformationListFragment fragment = InformationListFragment.newInstance();
         replaceFragment(R.id.fragmentPlaceholder, fragment, INFORMATION_LIST_FRAGMENT_TAG);
+    }
+
+    public void showInformationFragment(String informationId) {
+        InformationFragment fragment = InformationFragment.newInstance(informationId);
+        replaceFragment(R.id.fragmentPlaceholder, fragment, INFORMATION_FRAGMENT_TAG);
     }
 
     public void showSettingsFragment() {

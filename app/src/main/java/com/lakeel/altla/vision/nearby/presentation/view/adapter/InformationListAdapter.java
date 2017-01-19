@@ -5,7 +5,6 @@ import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import com.lakeel.altla.vision.nearby.R;
@@ -13,23 +12,22 @@ import com.lakeel.altla.vision.nearby.presentation.presenter.information.Informa
 import com.lakeel.altla.vision.nearby.presentation.presenter.model.InformationModel;
 import com.lakeel.altla.vision.nearby.presentation.view.DateFormatter;
 import com.lakeel.altla.vision.nearby.presentation.view.InformationItemView;
-import com.lakeel.altla.vision.nearby.presentation.view.animation.ExpandAnimation;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
 
-public final class InformationAdapter extends RecyclerView.Adapter<InformationAdapter.InformationViewHolder> {
+public final class InformationListAdapter extends RecyclerView.Adapter<InformationListAdapter.InformationViewHolder> {
 
     public InformationListPresenter presenter;
 
-    public InformationAdapter(InformationListPresenter presenter) {
+    public InformationListAdapter(InformationListPresenter presenter) {
         this.presenter = presenter;
     }
 
     @Override
     public InformationViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
         View itemView = LayoutInflater.from(parent.getContext()).inflate(R.layout.information_item, parent, false);
-        InformationAdapter.InformationViewHolder viewHolder = new InformationAdapter.InformationViewHolder(itemView);
+        InformationListAdapter.InformationViewHolder viewHolder = new InformationListAdapter.InformationViewHolder(itemView);
         presenter.onCreateItemView(viewHolder);
         return viewHolder;
     }
@@ -44,7 +42,7 @@ public final class InformationAdapter extends RecyclerView.Adapter<InformationAd
         return presenter.getItemCount();
     }
 
-    public final class InformationViewHolder extends RecyclerView.ViewHolder implements InformationItemView, View.OnClickListener {
+    public final class InformationViewHolder extends RecyclerView.ViewHolder implements InformationItemView {
 
         @BindView(R.id.title)
         TextView title;
@@ -52,15 +50,7 @@ public final class InformationAdapter extends RecyclerView.Adapter<InformationAd
         @BindView(R.id.postTime)
         TextView postTime;
 
-        @BindView(R.id.subItem)
-        LinearLayout subView;
-
-        @BindView(R.id.message)
-        TextView message;
-
-        private ExpandAnimation expandAnimation;
-
-        private boolean isViewExpanded = false;
+        private View itemView;
 
         private InformationListPresenter.InformationItemPresenter itemPresenter;
 
@@ -68,9 +58,7 @@ public final class InformationAdapter extends RecyclerView.Adapter<InformationAd
             super(itemView);
             ButterKnife.bind(this, itemView);
 
-            itemView.setOnClickListener(this);
-
-            expandAnimation = new ExpandAnimation(subView);
+            this.itemView = itemView;
         }
 
         @Override
@@ -86,22 +74,12 @@ public final class InformationAdapter extends RecyclerView.Adapter<InformationAd
             String postTimeText = formatter.format();
             postTime.setText(postTimeText);
 
-            message.setText(model.message);
+            itemView.setOnClickListener(view -> itemPresenter.onClick(model.informationId));
         }
 
         @Override
         public void onBind(@IntRange(from = 0) int position) {
             itemPresenter.onBind(position);
-        }
-
-        @Override
-        public void onClick(View view) {
-            if (isViewExpanded) {
-                expandAnimation.close();
-            } else {
-                expandAnimation.show();
-            }
-            isViewExpanded = !isViewExpanded;
         }
     }
 }

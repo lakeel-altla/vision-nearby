@@ -80,14 +80,14 @@ public final class UserPassingPresenter extends BasePresenter<UserPassingView> {
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribe(model -> getView().showPresence(model),
-                        e -> LOGGER.error("Failed to find presence.", e));
+                        e -> LOGGER.error("Failed to findList presence.", e));
         subscriptions.add(presenceSubscription);
 
         Subscription timesSubscription = findTimesUseCase.execute(MyUser.getUid(), userId)
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribe(times -> getView().showTimes(times),
-                        e -> LOGGER.error("Failed to find times.", e));
+                        e -> LOGGER.error("Failed to findList times.", e));
         subscriptions.add(timesSubscription);
 
         Subscription userSubscription = findUserUseCase.execute(userId)
@@ -95,7 +95,7 @@ public final class UserPassingPresenter extends BasePresenter<UserPassingView> {
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribe(model -> getView().showProfile(model),
-                        e -> LOGGER.error("Failed to find user.", e));
+                        e -> LOGGER.error("Failed to findList user.", e));
         subscriptions.add(userSubscription);
 
         Subscription lineLinkSubscription = findLineLinkUseCase
@@ -104,7 +104,7 @@ public final class UserPassingPresenter extends BasePresenter<UserPassingView> {
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribe(lineUrl -> getView().showLineUrl(lineUrl),
-                        e -> LOGGER.error("Failed to find LINE link.", e));
+                        e -> LOGGER.error("Failed to findList LINE link.", e));
         subscriptions.add(lineLinkSubscription);
 
         Subscription favoriteSubscription = findFavoriteUseCase
@@ -114,7 +114,7 @@ public final class UserPassingPresenter extends BasePresenter<UserPassingView> {
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribe(entity -> getView().showAddButton(),
-                        e -> LOGGER.error("Failed to find the user data.", e));
+                        e -> LOGGER.error("Failed to findList the user data.", e));
         subscriptions.add(favoriteSubscription);
     }
 

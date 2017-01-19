@@ -7,16 +7,18 @@ import java.util.Map;
 
 public final class InformationEntity {
 
+    public String informationId;
+
     public String title;
 
-    public String message;
+    public String body;
 
     public long postTime;
 
     public Map<String, Object> toMap() {
         Map<String, Object> map = new HashMap<>();
         map.put("title", title);
-        map.put("message", message);
+        map.put("body", body);
         map.put("postTime", ServerValue.TIMESTAMP);
         return map;
     }

@@ -113,7 +113,7 @@ public final class ActivityPresenter extends BasePresenter<ActivityView> {
                     } else {
                         stopMonitorBeacons();
                     }
-                }, e -> LOGGER.error("Failed to find preference settings.", e));
+                }, e -> LOGGER.error("Failed to findList preference settings.", e));
         subscriptions.add(subscription);
 
         // TODO: UseCase
@@ -146,7 +146,7 @@ public final class ActivityPresenter extends BasePresenter<ActivityView> {
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribe(beaconId -> getView().startAdvertiseService(beaconId),
-                        e -> LOGGER.error("Failed to find beacon ID."));
+                        e -> LOGGER.error("Failed to findList beacon ID."));
         subscriptions.add(subscription);
     }
 

@@ -43,7 +43,7 @@ public final class LineSettingsPresenter extends BasePresenter<LineSettingsView>
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribe(url -> getView().showLineUrl(url),
-                        e -> LOGGER.error("Failed to find LINE url.", e));
+                        e -> LOGGER.error("Failed to findList LINE url.", e));
         subscriptions.add(subscription);
     }
 

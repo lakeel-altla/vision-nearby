@@ -89,7 +89,7 @@ public final class HistoryListPresenter extends BasePresenter<HistoryListView> {
 
                     getView().updateItems();
                 }, e -> {
-                    LOGGER.error("Failed to find history.", e);
+                    LOGGER.error("Failed to findList history.", e);
                     getView().showSnackBar(R.string.error_process);
                 });
         subscriptions.add(subscription);

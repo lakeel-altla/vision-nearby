@@ -106,7 +106,7 @@
 
     <string name="notification_title_line_user_found">LINE user is found.</string>
     <string name="notification_title_advertise_ble">Advertising as a beacon.</string>
-    <string name="notification_title_device_found">Device Found.</string>
+    <string name="notification_title_device_found">Device Found</string>
 
     <string name="notification_message_user_using_line">%1$s uses LINE App.</string>
     <string name="notification_message_advertise_ble">BLE Advertise.</string>

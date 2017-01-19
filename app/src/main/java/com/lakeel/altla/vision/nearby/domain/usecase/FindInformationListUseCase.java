@@ -5,18 +5,18 @@ import com.lakeel.altla.vision.nearby.domain.repository.FirebaseInformationRepos
 
 import javax.inject.Inject;
 
-import rx.Single;
+import rx.Observable;
 
-public final class FindInformationUseCase {
+public final class FindInformationListUseCase {
 
     @Inject
     FirebaseInformationRepository repository;
 
     @Inject
-    FindInformationUseCase() {
+    FindInformationListUseCase() {
     }
 
-    public Single<InformationEntity> execute(String userId, String informationId) {
-        return repository.find(userId, informationId);
+    public Observable<InformationEntity> execute(String userId) {
+        return repository.findList(userId);
     }
 }
