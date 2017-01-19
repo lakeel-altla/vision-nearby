@@ -3,11 +3,10 @@ package com.lakeel.altla.vision.nearby.presentation.presenter.signin;
 import android.content.Intent;
 
 import com.firebase.ui.auth.AuthUI;
-import com.google.firebase.analytics.FirebaseAnalytics;
 import com.google.firebase.auth.FirebaseAuth;
 import com.lakeel.altla.vision.nearby.R;
 import com.lakeel.altla.vision.nearby.domain.usecase.SaveUserUseCase;
-import com.lakeel.altla.vision.nearby.presentation.analytics.UserParam;
+import com.lakeel.altla.vision.nearby.presentation.analytics.AnalyticsReporter;
 import com.lakeel.altla.vision.nearby.presentation.firebase.MyUser;
 import com.lakeel.altla.vision.nearby.presentation.presenter.BasePresenter;
 import com.lakeel.altla.vision.nearby.presentation.view.SignInView;
@@ -24,7 +23,7 @@ import rx.schedulers.Schedulers;
 public final class SignInPresenter extends BasePresenter<SignInView> {
 
     @Inject
-    FirebaseAnalytics firebaseAnalytics;
+    AnalyticsReporter analyticsReporter;
 
     @Inject
     SaveUserUseCase saveUserUseCase;
@@ -50,9 +49,7 @@ public final class SignInPresenter extends BasePresenter<SignInView> {
     }
 
     public void onSignedIn() {
-        // Analytics
-        UserParam userParam = new UserParam();
-        firebaseAnalytics.logEvent(FirebaseAnalytics.Event.LOGIN, userParam.toBundle());
+        analyticsReporter.login();
 
         Subscription subscription = saveUserUseCase
                 .execute(MyUser.getUid())

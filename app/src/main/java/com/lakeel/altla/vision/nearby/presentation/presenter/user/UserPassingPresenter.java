@@ -1,6 +1,5 @@
 package com.lakeel.altla.vision.nearby.presentation.presenter.user;
 
-import com.google.firebase.analytics.FirebaseAnalytics;
 import com.lakeel.altla.vision.nearby.R;
 import com.lakeel.altla.vision.nearby.domain.usecase.FindFavoriteUseCase;
 import com.lakeel.altla.vision.nearby.domain.usecase.FindLineLinkUseCase;
@@ -8,9 +7,7 @@ import com.lakeel.altla.vision.nearby.domain.usecase.FindPresenceUseCase;
 import com.lakeel.altla.vision.nearby.domain.usecase.FindTimesUseCase;
 import com.lakeel.altla.vision.nearby.domain.usecase.FindUserUseCase;
 import com.lakeel.altla.vision.nearby.domain.usecase.SaveFavoriteUseCase;
-import com.lakeel.altla.vision.nearby.presentation.analytics.AnalyticsEvent;
-import com.lakeel.altla.vision.nearby.presentation.analytics.AnalyticsParam;
-import com.lakeel.altla.vision.nearby.presentation.analytics.UserParam;
+import com.lakeel.altla.vision.nearby.presentation.analytics.AnalyticsReporter;
 import com.lakeel.altla.vision.nearby.presentation.firebase.MyUser;
 import com.lakeel.altla.vision.nearby.presentation.presenter.BasePresenter;
 import com.lakeel.altla.vision.nearby.presentation.presenter.mapper.PresencesModelMapper;
@@ -29,7 +26,7 @@ import rx.schedulers.Schedulers;
 public final class UserPassingPresenter extends BasePresenter<UserPassingView> {
 
     @Inject
-    FirebaseAnalytics firebaseAnalytics;
+    AnalyticsReporter analyticsReporter;
 
     @Inject
     FindUserUseCase findUserUseCase;
@@ -75,11 +72,7 @@ public final class UserPassingPresenter extends BasePresenter<UserPassingView> {
     }
 
     public void onActivityCreated() {
-        // Analytics
-        UserParam userParam = new UserParam();
-        userParam.putString(AnalyticsParam.HISTORY_USER_ID.getValue(), userId);
-        userParam.putString(AnalyticsParam.HISTORY_USER_NAME.getValue(), userName);
-        firebaseAnalytics.logEvent(AnalyticsEvent.VIEW_HISTORY_ITEM.getValue(), userParam.toBundle());
+        analyticsReporter.viewHistoryItem(userId, userName);
 
         Subscription presenceSubscription = findPresenceUseCase
                 .execute(userId)
@@ -134,11 +127,7 @@ public final class UserPassingPresenter extends BasePresenter<UserPassingView> {
     }
 
     public void onAdd() {
-        // Analytics
-        UserParam userParam = new UserParam();
-        userParam.putString(AnalyticsParam.FAVORITE_USER_ID.getValue(), userId);
-        userParam.putString(AnalyticsParam.FAVORITE_USER_NAME.getValue(), userName);
-        firebaseAnalytics.logEvent(AnalyticsEvent.ADD_FAVORITE.getValue(), userParam.toBundle());
+        analyticsReporter.addFavorite(userId, userName);
 
         Subscription subscription = saveFavoriteUseCase
                 .execute(MyUser.getUid(), userId)

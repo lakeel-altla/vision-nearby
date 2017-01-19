@@ -2,7 +2,7 @@ package com.lakeel.altla.vision.nearby.presentation.di.module;
 
 import android.content.Context;
 
-import com.google.firebase.analytics.FirebaseAnalytics;
+import com.lakeel.altla.vision.nearby.presentation.analytics.AnalyticsReporter;
 import com.lakeel.altla.vision.nearby.presentation.di.InjectScope;
 
 import dagger.Module;
@@ -13,7 +13,7 @@ public final class PresenterModule {
 
     @InjectScope
     @Provides
-    FirebaseAnalytics provideFirebaseAnalytics(Context context) {
-        return FirebaseAnalytics.getInstance(context);
+    AnalyticsReporter provideAnalyticsReporter(Context context) {
+        return new AnalyticsReporter(context);
     }
 }

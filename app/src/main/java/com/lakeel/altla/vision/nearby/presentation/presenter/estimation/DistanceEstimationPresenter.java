@@ -9,7 +9,6 @@ import android.bluetooth.le.ScanResult;
 import android.content.Context;
 import android.content.Intent;
 
-import com.google.firebase.analytics.FirebaseAnalytics;
 import com.lakeel.altla.vision.nearby.presentation.beacon.distance.Distance;
 import com.lakeel.altla.vision.nearby.presentation.ble.BleChecker;
 import com.lakeel.altla.vision.nearby.presentation.presenter.BasePresenter;
@@ -28,9 +27,6 @@ import rx.android.schedulers.AndroidSchedulers;
 import rx.schedulers.Schedulers;
 
 public final class DistanceEstimationPresenter extends BasePresenter<DistanceEstimationView> {
-
-    @Inject
-    FirebaseAnalytics firebaseAnalytics;
 
     private final Context context;
 

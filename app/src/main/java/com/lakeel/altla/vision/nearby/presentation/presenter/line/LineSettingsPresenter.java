@@ -1,13 +1,9 @@
 package com.lakeel.altla.vision.nearby.presentation.presenter.line;
 
-import android.os.Bundle;
-
-import com.google.firebase.analytics.FirebaseAnalytics;
 import com.lakeel.altla.vision.nearby.R;
 import com.lakeel.altla.vision.nearby.domain.usecase.FindLineLinkUseCase;
 import com.lakeel.altla.vision.nearby.domain.usecase.SaveLineUrlUseCase;
-import com.lakeel.altla.vision.nearby.presentation.analytics.AnalyticsEvent;
-import com.lakeel.altla.vision.nearby.presentation.analytics.AnalyticsParam;
+import com.lakeel.altla.vision.nearby.presentation.analytics.AnalyticsReporter;
 import com.lakeel.altla.vision.nearby.presentation.firebase.MyUser;
 import com.lakeel.altla.vision.nearby.presentation.presenter.BasePresenter;
 import com.lakeel.altla.vision.nearby.presentation.view.LineSettingsView;
@@ -24,7 +20,7 @@ import rx.schedulers.Schedulers;
 public final class LineSettingsPresenter extends BasePresenter<LineSettingsView> {
 
     @Inject
-    FirebaseAnalytics firebaseAnalytics;
+    AnalyticsReporter analyticsReporter;
 
     @Inject
     SaveLineUrlUseCase saveLineUrlUseCase;
@@ -52,11 +48,7 @@ public final class LineSettingsPresenter extends BasePresenter<LineSettingsView>
     }
 
     public void onSaveLineUrl(String url) {
-        MyUser.UserData userData = MyUser.getUserData();
-        Bundle bundle = new Bundle();
-        bundle.putString(AnalyticsParam.USER_ID.getValue(), userData.userId);
-        bundle.getString(AnalyticsParam.USER_NAME.getValue(), userData.userName);
-        firebaseAnalytics.logEvent(AnalyticsEvent.SAVE_LINE_URL.getValue(), bundle);
+        analyticsReporter.inputLineUrl();
 
         Subscription subscription = saveLineUrlUseCase
                 .execute(MyUser.getUid(), url)

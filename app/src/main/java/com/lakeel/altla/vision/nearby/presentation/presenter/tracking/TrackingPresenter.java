@@ -1,16 +1,10 @@
 package com.lakeel.altla.vision.nearby.presentation.presenter.tracking;
 
-import android.os.Bundle;
-
 import com.firebase.geofire.GeoLocation;
-import com.google.firebase.analytics.FirebaseAnalytics;
 import com.lakeel.altla.vision.nearby.data.entity.LocationDataEntity;
 import com.lakeel.altla.vision.nearby.domain.usecase.FindLocationDataUseCase;
 import com.lakeel.altla.vision.nearby.domain.usecase.FindLocationUseCase;
-import com.lakeel.altla.vision.nearby.presentation.analytics.AnalyticsEvent;
-import com.lakeel.altla.vision.nearby.presentation.analytics.AnalyticsParam;
-import com.lakeel.altla.vision.nearby.presentation.analytics.UserParam;
-import com.lakeel.altla.vision.nearby.presentation.firebase.MyUser;
+import com.lakeel.altla.vision.nearby.presentation.analytics.AnalyticsReporter;
 import com.lakeel.altla.vision.nearby.presentation.intent.GoogleMapDirectionIntent;
 import com.lakeel.altla.vision.nearby.presentation.presenter.BasePresenter;
 import com.lakeel.altla.vision.nearby.presentation.view.TrackingView;
@@ -31,7 +25,7 @@ import rx.schedulers.Schedulers;
 public final class TrackingPresenter extends BasePresenter<TrackingView> {
 
     @Inject
-    FirebaseAnalytics firebaseAnalytics;
+    AnalyticsReporter analyticsReporter;
 
     @Inject
     FindLocationDataUseCase findLocationDataUseCase;
@@ -102,10 +96,7 @@ public final class TrackingPresenter extends BasePresenter<TrackingView> {
     }
 
     public void onDistanceEstimationMenuClick() {
-        // Analytics
-        UserParam userParam = new UserParam();
-        userParam.putString(AnalyticsParam.TARGET_NAME.getValue(), beaconName);
-        firebaseAnalytics.logEvent(AnalyticsEvent.ESTIMATE_DISTANCE.getValue(), userParam.toBundle());
+        analyticsReporter.estimateDistance(beaconName);
 
         ArrayList<String> beaconIds = new ArrayList<>();
         beaconIds.add(beaconId);
@@ -113,11 +104,7 @@ public final class TrackingPresenter extends BasePresenter<TrackingView> {
     }
 
     public void onDirectionMenuClick() {
-        MyUser.UserData userData = MyUser.getUserData();
-        Bundle bundle = new Bundle();
-        bundle.putString(AnalyticsParam.USER_ID.getValue(), userData.userId);
-        bundle.getString(AnalyticsParam.USER_NAME.getValue(), userData.userName);
-        firebaseAnalytics.logEvent(AnalyticsEvent.LAUNCH_GOOGLE_MAP.getValue(), bundle);
+        analyticsReporter.launchGoogleMap();
 
         GoogleMapDirectionIntent intent = new GoogleMapDirectionIntent(String.valueOf(geoLocation.latitude), String.valueOf(geoLocation.longitude));
         getView().launchGoogleMapApp(intent);

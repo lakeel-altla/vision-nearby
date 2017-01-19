@@ -3,12 +3,10 @@ package com.lakeel.altla.vision.nearby.presentation.presenter.activity;
 import android.app.Activity;
 import android.content.Context;
 import android.os.Build;
-import android.os.Bundle;
 import android.support.annotation.NonNull;
 
 import com.firebase.ui.auth.AuthUI;
 import com.google.android.gms.tasks.Task;
-import com.google.firebase.analytics.FirebaseAnalytics;
 import com.google.firebase.iid.FirebaseInstanceId;
 import com.lakeel.altla.vision.nearby.R;
 import com.lakeel.altla.vision.nearby.core.StringUtils;
@@ -22,10 +20,8 @@ import com.lakeel.altla.vision.nearby.domain.usecase.SaveBeaconUseCase;
 import com.lakeel.altla.vision.nearby.domain.usecase.SavePreferenceBeaconIdUseCase;
 import com.lakeel.altla.vision.nearby.domain.usecase.SaveTokenUseCase;
 import com.lakeel.altla.vision.nearby.domain.usecase.SaveUserBeaconUseCase;
+import com.lakeel.altla.vision.nearby.presentation.analytics.AnalyticsReporter;
 import com.lakeel.altla.vision.nearby.presentation.ble.BleChecker;
-import com.lakeel.altla.vision.nearby.presentation.analytics.AnalyticsEvent;
-import com.lakeel.altla.vision.nearby.presentation.analytics.AnalyticsParam;
-import com.lakeel.altla.vision.nearby.presentation.analytics.AnalyticsProperty;
 import com.lakeel.altla.vision.nearby.presentation.firebase.MyUser;
 import com.lakeel.altla.vision.nearby.presentation.presenter.BasePresenter;
 import com.lakeel.altla.vision.nearby.presentation.service.AdvertiseService;
@@ -45,7 +41,7 @@ import rx.schedulers.Schedulers;
 public final class ActivityPresenter extends BasePresenter<ActivityView> {
 
     @Inject
-    FirebaseAnalytics firebaseAnalytics;
+    AnalyticsReporter analyticsReporter;
 
     @Inject
     SavePreferenceBeaconIdUseCase saveBeaconIdUseCase;
@@ -169,10 +165,7 @@ public final class ActivityPresenter extends BasePresenter<ActivityView> {
                             Task<Void> task = AuthUI.getInstance().signOut(activity);
                             task.addOnCompleteListener(result -> {
                                 if (result.isSuccessful()) {
-                                    Bundle params = new Bundle();
-                                    params.putString(AnalyticsParam.USER_ID.getValue(), userData.userId);
-                                    params.putString(AnalyticsParam.USER_NAME.getValue(), userData.userName);
-                                    firebaseAnalytics.logEvent(AnalyticsEvent.LOG_OUT.getValue(), params);
+                                    analyticsReporter.logout();
 
                                     RunningService runningService = new RunningService(context, AdvertiseService.class);
                                     runningService.stop();
@@ -207,7 +200,7 @@ public final class ActivityPresenter extends BasePresenter<ActivityView> {
             getView().showAdvertiseDisableConfirmDialog();
         }
 
-        firebaseAnalytics.setUserProperty(AnalyticsProperty.BLE_STATE.getValue(), state.getValue());
+        analyticsReporter.setBleProperty(state);
     }
 
     private void showProfile() {
