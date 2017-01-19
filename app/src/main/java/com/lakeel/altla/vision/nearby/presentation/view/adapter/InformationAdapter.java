@@ -9,7 +9,7 @@ import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import com.lakeel.altla.vision.nearby.R;
-import com.lakeel.altla.vision.nearby.presentation.presenter.information.InformationPresenter;
+import com.lakeel.altla.vision.nearby.presentation.presenter.information.InformationListPresenter;
 import com.lakeel.altla.vision.nearby.presentation.presenter.model.InformationModel;
 import com.lakeel.altla.vision.nearby.presentation.view.DateFormatter;
 import com.lakeel.altla.vision.nearby.presentation.view.InformationItemView;
@@ -20,9 +20,9 @@ import butterknife.ButterKnife;
 
 public final class InformationAdapter extends RecyclerView.Adapter<InformationAdapter.InformationViewHolder> {
 
-    public InformationPresenter presenter;
+    public InformationListPresenter presenter;
 
-    public InformationAdapter(InformationPresenter presenter) {
+    public InformationAdapter(InformationListPresenter presenter) {
         this.presenter = presenter;
     }
 
@@ -62,7 +62,7 @@ public final class InformationAdapter extends RecyclerView.Adapter<InformationAd
 
         private boolean isViewExpanded = false;
 
-        private InformationPresenter.InformationItemPresenter itemPresenter;
+        private InformationListPresenter.InformationItemPresenter itemPresenter;
 
         InformationViewHolder(View itemView) {
             super(itemView);
@@ -74,7 +74,7 @@ public final class InformationAdapter extends RecyclerView.Adapter<InformationAd
         }
 
         @Override
-        public void setItemPresenter(InformationPresenter.InformationItemPresenter itemPresenter) {
+        public void setItemPresenter(InformationListPresenter.InformationItemPresenter itemPresenter) {
             this.itemPresenter = itemPresenter;
         }
 

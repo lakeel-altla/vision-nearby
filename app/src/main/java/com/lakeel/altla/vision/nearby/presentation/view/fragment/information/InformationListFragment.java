@@ -10,8 +10,8 @@ import android.view.View;
 import android.view.ViewGroup;
 
 import com.lakeel.altla.vision.nearby.R;
-import com.lakeel.altla.vision.nearby.presentation.presenter.information.InformationPresenter;
-import com.lakeel.altla.vision.nearby.presentation.view.InformationView;
+import com.lakeel.altla.vision.nearby.presentation.presenter.information.InformationListPresenter;
+import com.lakeel.altla.vision.nearby.presentation.view.InformationListView;
 import com.lakeel.altla.vision.nearby.presentation.view.activity.MainActivity;
 import com.lakeel.altla.vision.nearby.presentation.view.adapter.InformationAdapter;
 import com.lakeel.altla.vision.nearby.presentation.view.divider.DividerItemDecoration;
@@ -21,20 +21,18 @@ import javax.inject.Inject;
 import butterknife.BindView;
 import butterknife.ButterKnife;
 
-public final class InformationFragment extends Fragment implements InformationView {
+public final class InformationListFragment extends Fragment implements InformationListView {
 
     @Inject
-    InformationPresenter presenter;
+    InformationListPresenter presenter;
 
     @BindView(R.id.recycler_view)
     RecyclerView recyclerView;
 
-//    private ExpandAdapter adapter;
-
-    public static InformationFragment newInstance() {
+    public static InformationListFragment newInstance() {
         Bundle args = new Bundle();
 
-        InformationFragment fragment = new InformationFragment();
+        InformationListFragment fragment = new InformationListFragment();
         fragment.setArguments(args);
         return fragment;
     }

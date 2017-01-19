@@ -12,7 +12,7 @@ import com.lakeel.altla.vision.nearby.presentation.view.fragment.device.DeviceLi
 import com.lakeel.altla.vision.nearby.presentation.view.fragment.estimation.DistanceEstimationFragment;
 import com.lakeel.altla.vision.nearby.presentation.view.fragment.favorite.FavoriteListFragment;
 import com.lakeel.altla.vision.nearby.presentation.view.fragment.history.HistoryListFragment;
-import com.lakeel.altla.vision.nearby.presentation.view.fragment.information.InformationFragment;
+import com.lakeel.altla.vision.nearby.presentation.view.fragment.information.InformationListFragment;
 import com.lakeel.altla.vision.nearby.presentation.view.fragment.line.LineSettingsFragment;
 import com.lakeel.altla.vision.nearby.presentation.view.fragment.nearby.NearbyListFragment;
 import com.lakeel.altla.vision.nearby.presentation.view.fragment.setting.SettingsFragment;
@@ -39,7 +39,7 @@ public interface ViewComponent {
 
     void inject(UserPassingFragment fragment);
 
-    void inject(InformationFragment fragment);
+    void inject(InformationListFragment fragment);
 
     void inject(SettingsFragment fragment);
 

@@ -9,7 +9,7 @@ import com.lakeel.altla.vision.nearby.presentation.presenter.BasePresenter;
 import com.lakeel.altla.vision.nearby.presentation.presenter.mapper.InformationModelMapper;
 import com.lakeel.altla.vision.nearby.presentation.presenter.model.InformationModel;
 import com.lakeel.altla.vision.nearby.presentation.view.InformationItemView;
-import com.lakeel.altla.vision.nearby.presentation.view.InformationView;
+import com.lakeel.altla.vision.nearby.presentation.view.InformationListView;
 import com.lakeel.altla.vision.nearby.presentation.view.adapter.InformationAdapter;
 
 import org.slf4j.Logger;
@@ -25,19 +25,19 @@ import rx.Subscription;
 import rx.android.schedulers.AndroidSchedulers;
 import rx.schedulers.Schedulers;
 
-public final class InformationPresenter extends BasePresenter<InformationView> {
+public final class InformationListPresenter extends BasePresenter<InformationListView> {
 
     @Inject
     FindInformationUseCase findInformationUseCase;
 
-    private static final Logger LOGGER = LoggerFactory.getLogger(InformationPresenter.class);
+    private static final Logger LOGGER = LoggerFactory.getLogger(InformationListPresenter.class);
 
     private InformationModelMapper modelMapper = new InformationModelMapper();
 
     private List<InformationModel> models = new ArrayList<>();
 
     @Inject
-    InformationPresenter() {
+    InformationListPresenter() {
     }
 
     public void onActivityCreated() {
@@ -61,7 +61,7 @@ public final class InformationPresenter extends BasePresenter<InformationView> {
     }
 
     public void onCreateItemView(InformationAdapter.InformationViewHolder viewHolder) {
-        InformationItemPresenter itemPresenter = new InformationPresenter.InformationItemPresenter();
+        InformationItemPresenter itemPresenter = new InformationListPresenter.InformationItemPresenter();
         itemPresenter.onCreateItemView(viewHolder);
         viewHolder.setItemPresenter(itemPresenter);
     }

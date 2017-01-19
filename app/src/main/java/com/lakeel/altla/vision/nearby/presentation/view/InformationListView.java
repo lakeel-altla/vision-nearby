@@ -1,6 +1,6 @@
 package com.lakeel.altla.vision.nearby.presentation.view;
 
-public interface InformationView {
+public interface InformationListView {
 
     void updateItems();
 

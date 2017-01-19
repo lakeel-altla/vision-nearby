@@ -152,7 +152,7 @@ public class MainActivity extends AppCompatActivity
             }
             case R.id.nav_information: {
                 FragmentController controller = new FragmentController(getSupportFragmentManager());
-                controller.showInformationFragment();
+                controller.showInformationListFragment();
                 break;
             }
             case R.id.nav_settings: {
