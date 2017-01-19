@@ -17,7 +17,7 @@ public final class SaveUserActivityUseCase {
     SaveUserActivityUseCase() {
     }
 
-    public Single<HistoryEntity> execute(String uniqueId, String userId, DetectedActivity detectedActivity) {
-        return repository.saveUserActivity(uniqueId, userId, detectedActivity);
+    public Single<HistoryEntity> execute(String uniqueId, String userId, DetectedActivity userActivity) {
+        return repository.saveUserActivity(uniqueId, userId, userActivity);
     }
 }
