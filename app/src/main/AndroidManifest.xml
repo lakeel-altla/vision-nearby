@@ -8,11 +8,6 @@
     <uses-permission android:name="android.permission.BLUETOOTH" />
     <uses-permission android:name="android.permission.RECEIVE_BOOT_COMPLETED" />
 
-    <!-- Nearby API Key -->
-    <meta-data
-        android:name="com.google.android.nearby.messages.API_KEY"
-        android:value="${API_KEY}" />
-
     <application
         android:name=".presentation.application.App"
         android:allowBackup="true"
@@ -20,15 +15,16 @@
         android:label="@string/app_name"
         android:theme="@style/AppTheme">
 
+        <!-- IntelliJ shows this errors but it does build and indeed work. -->
         <!-- Awareness API -->
         <meta-data
             android:name="com.google.android.awareness.API_KEY"
-            android:value="${API_KEY}" />
+            android:value="@string/google_api_key" />
 
         <!-- Google Map API -->
         <meta-data
             android:name="com.google.android.geo.API_KEY"
-            android:value="${API_KEY}" />
+            android:value="@string/google_api_key" />
 
         <activity
             android:name=".presentation.view.activity.MainActivity"
