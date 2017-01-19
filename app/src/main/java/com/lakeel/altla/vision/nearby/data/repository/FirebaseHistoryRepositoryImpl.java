@@ -106,7 +106,7 @@ public class FirebaseHistoryRepositoryImpl implements FirebaseHistoryRepository 
     }
 
     @Override
-    public Single<HistoryEntity> saveDetectedActivity(String uniqueId, String userId, DetectedActivity detectedActivity) {
+    public Single<HistoryEntity> saveUserActivity(String uniqueId, String userId, DetectedActivity detectedActivity) {
         return Single.create(subscriber -> {
             HistoryEntity entity = entityMapper.map(detectedActivity);
             Map<String, Object> map = entity.toUserActivityMap();

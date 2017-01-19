@@ -65,6 +65,12 @@ public final class FavoriteListPresenter extends BasePresenter<FavoriteListView>
                     favoriteModels.clear();
                     favoriteModels.addAll(favoritesModels);
 
+                    if (CollectionUtils.isEmpty(favoritesModels)) {
+                        getView().showEmptyView();
+                    } else {
+                        getView().hideEmptyView();
+                    }
+
                     getView().updateItems(favoriteModels);
                 }, e -> {
                     getView().showSnackBar(R.string.error_process);
@@ -108,7 +114,9 @@ public final class FavoriteListPresenter extends BasePresenter<FavoriteListView>
 
                                 if (CollectionUtils.isEmpty(favoriteModels)) {
                                     getView().removeAll(size);
+                                    getView().showEmptyView();
                                 } else {
+                                    getView().hideEmptyView();
                                     getView().updateItems(favoriteModels);
                                 }
 

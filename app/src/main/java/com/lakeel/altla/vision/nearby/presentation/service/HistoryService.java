@@ -19,7 +19,7 @@ import com.lakeel.altla.vision.nearby.data.entity.HistoryEntity;
 import com.lakeel.altla.vision.nearby.data.entity.UserEntity;
 import com.lakeel.altla.vision.nearby.domain.usecase.FindBeaconUseCase;
 import com.lakeel.altla.vision.nearby.domain.usecase.FindUserUseCase;
-import com.lakeel.altla.vision.nearby.domain.usecase.SaveDetectedActivityUseCase;
+import com.lakeel.altla.vision.nearby.domain.usecase.SaveUserActivityUseCase;
 import com.lakeel.altla.vision.nearby.domain.usecase.SaveHistoryUseCase;
 import com.lakeel.altla.vision.nearby.domain.usecase.SaveUserLocationUseCase;
 import com.lakeel.altla.vision.nearby.domain.usecase.SaveWeatherUseCase;
@@ -107,7 +107,7 @@ public class HistoryService extends IntentService {
     SaveUserLocationUseCase saveUserLocationUseCase;
 
     @Inject
-    SaveDetectedActivityUseCase saveDetectedActivityUseCase;
+    SaveUserActivityUseCase saveUserActivityUseCase;
 
     @Inject
     SaveWeatherUseCase saveWeatherUseCase;
@@ -208,7 +208,7 @@ public class HistoryService extends IntentService {
     }
 
     private Single<HistoryEntity> saveUserActivity(String uniqueId, DetectedActivity detectedActivity) {
-        return saveDetectedActivityUseCase.execute(uniqueId, MyUser.getUid(), detectedActivity).subscribeOn(Schedulers.io());
+        return saveUserActivityUseCase.execute(uniqueId, MyUser.getUid(), detectedActivity).subscribeOn(Schedulers.io());
     }
 
     private Single<HistoryEntity> saveUserLocation(String uniqueId, Location location) {

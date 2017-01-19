@@ -11,8 +11,8 @@ import android.view.ViewGroup;
 import android.widget.RelativeLayout;
 
 import com.lakeel.altla.vision.nearby.R;
-import com.lakeel.altla.vision.nearby.presentation.presenter.history.HistoryPresenter;
-import com.lakeel.altla.vision.nearby.presentation.view.HistoryView;
+import com.lakeel.altla.vision.nearby.presentation.presenter.history.HistoryListPresenter;
+import com.lakeel.altla.vision.nearby.presentation.view.HistoryListView;
 import com.lakeel.altla.vision.nearby.presentation.view.activity.MainActivity;
 import com.lakeel.altla.vision.nearby.presentation.view.adapter.HistoryAdapter;
 import com.lakeel.altla.vision.nearby.presentation.view.bundle.HistoryBundle;
@@ -27,10 +27,10 @@ import javax.inject.Inject;
 import butterknife.BindView;
 import butterknife.ButterKnife;
 
-public final class HistoryFragment extends Fragment implements HistoryView {
+public final class HistoryListFragment extends Fragment implements HistoryListView {
 
     @Inject
-    HistoryPresenter presenter;
+    HistoryListPresenter presenter;
 
     @BindView(R.id.layout)
     RelativeLayout mainLayout;
@@ -38,8 +38,8 @@ public final class HistoryFragment extends Fragment implements HistoryView {
     @BindView(R.id.recycler_view)
     UltimateRecyclerView recyclerView;
 
-    public static HistoryFragment newInstance() {
-        return new HistoryFragment();
+    public static HistoryListFragment newInstance() {
+        return new HistoryListFragment();
     }
 
     @Override
@@ -92,6 +92,17 @@ public final class HistoryFragment extends Fragment implements HistoryView {
     @Override
     public void removeAll(int size) {
         recyclerView.getAdapter().notifyItemRangeRemoved(0, size);
+    }
+
+    @Override
+    public void showEmptyView() {
+        recyclerView.setEmptyView(R.layout.empty_view, 0);
+        recyclerView.showEmptyView();
+    }
+
+    @Override
+    public void hideEmptyView() {
+        recyclerView.hideEmptyView();
     }
 
     @Override

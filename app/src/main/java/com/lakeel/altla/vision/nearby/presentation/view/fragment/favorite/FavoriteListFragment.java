@@ -10,7 +10,6 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.RelativeLayout;
 
-import com.google.firebase.analytics.FirebaseAnalytics;
 import com.lakeel.altla.vision.nearby.R;
 import com.lakeel.altla.vision.nearby.presentation.presenter.favorite.FavoriteListPresenter;
 import com.lakeel.altla.vision.nearby.presentation.presenter.model.FavoriteModel;
@@ -95,6 +94,17 @@ public final class FavoriteListFragment extends Fragment implements FavoriteList
     @Override
     public void removeAll(int size) {
         recyclerView.getAdapter().notifyItemRangeRemoved(0, size);
+    }
+
+    @Override
+    public void showEmptyView() {
+        recyclerView.setEmptyView(R.layout.empty_view, 0);
+        recyclerView.showEmptyView();
+    }
+
+    @Override
+    public void hideEmptyView() {
+        recyclerView.hideEmptyView();
     }
 
     @Override

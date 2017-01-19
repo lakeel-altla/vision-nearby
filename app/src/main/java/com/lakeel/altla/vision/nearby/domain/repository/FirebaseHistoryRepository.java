@@ -18,7 +18,7 @@ public interface FirebaseHistoryRepository {
 
     Single<String> saveHistory(String myUserId, String otherUserId);
 
-    Single<HistoryEntity> saveDetectedActivity(String uniqueId, String userId, DetectedActivity detectedActivity);
+    Single<HistoryEntity> saveUserActivity(String uniqueId, String userId, DetectedActivity detectedActivity);
 
     Single<HistoryEntity> saveCurrentLocation(String uniqueId, String userId, Location location);
 

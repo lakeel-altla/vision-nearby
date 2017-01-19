@@ -1,14 +1,18 @@
 package com.lakeel.altla.vision.nearby.presentation.view;
 
-import com.lakeel.altla.vision.nearby.presentation.view.bundle.HistoryBundle;
-
 import android.support.annotation.StringRes;
 
-public interface HistoryView {
+import com.lakeel.altla.vision.nearby.presentation.view.bundle.HistoryBundle;
+
+public interface HistoryListView {
 
     void updateItems();
 
     void removeAll(int size);
+
+    void showEmptyView();
+
+    void hideEmptyView();
 
     void showSnackBar(@StringRes int resId);
 

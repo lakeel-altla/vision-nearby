@@ -17,7 +17,7 @@ import com.lakeel.altla.vision.nearby.presentation.presenter.mapper.HistoryModel
 import com.lakeel.altla.vision.nearby.presentation.presenter.model.HistoryModel;
 import com.lakeel.altla.vision.nearby.presentation.presenter.model.LocationModel;
 import com.lakeel.altla.vision.nearby.presentation.view.HistoryItemView;
-import com.lakeel.altla.vision.nearby.presentation.view.HistoryView;
+import com.lakeel.altla.vision.nearby.presentation.view.HistoryListView;
 import com.lakeel.altla.vision.nearby.presentation.view.bundle.HistoryBundle;
 import com.lakeel.altla.vision.nearby.presentation.view.bundle.WeatherBundle;
 
@@ -35,7 +35,7 @@ import rx.Subscription;
 import rx.android.schedulers.AndroidSchedulers;
 import rx.schedulers.Schedulers;
 
-public final class HistoryPresenter extends BasePresenter<HistoryView> {
+public final class HistoryListPresenter extends BasePresenter<HistoryListView> {
 
     @Inject
     AnalyticsReporter analyticsReporter;
@@ -49,7 +49,7 @@ public final class HistoryPresenter extends BasePresenter<HistoryView> {
     @Inject
     RemoveHistoryUseCase removeHistoryUseCase;
 
-    private static final Logger LOGGER = LoggerFactory.getLogger(HistoryPresenter.class);
+    private static final Logger LOGGER = LoggerFactory.getLogger(HistoryListPresenter.class);
 
     private HistoryModelMapper historyModelMapper = new HistoryModelMapper();
 
@@ -60,7 +60,7 @@ public final class HistoryPresenter extends BasePresenter<HistoryView> {
     }
 
     @Inject
-    HistoryPresenter() {
+    HistoryListPresenter() {
     }
 
     public void onActivityCreated() {
@@ -80,6 +80,12 @@ public final class HistoryPresenter extends BasePresenter<HistoryView> {
 
                     historyModels.clear();
                     historyModels.addAll(historyItemModels);
+
+                    if (CollectionUtils.isEmpty(historyItemModels)) {
+                        getView().showEmptyView();
+                    } else {
+                        getView().hideEmptyView();
+                    }
 
                     getView().updateItems();
                 }, e -> {
@@ -148,7 +154,9 @@ public final class HistoryPresenter extends BasePresenter<HistoryView> {
 
                         if (CollectionUtils.isEmpty(historyModels)) {
                             getView().removeAll(size);
+                            getView().showEmptyView();
                         } else {
+                            getView().hideEmptyView();
                             getView().updateItems();
                         }
 

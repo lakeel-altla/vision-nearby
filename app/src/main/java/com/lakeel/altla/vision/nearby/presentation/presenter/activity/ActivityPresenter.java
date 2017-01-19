@@ -165,7 +165,7 @@ public final class ActivityPresenter extends BasePresenter<ActivityView> {
                             Task<Void> task = AuthUI.getInstance().signOut(activity);
                             task.addOnCompleteListener(result -> {
                                 if (result.isSuccessful()) {
-                                    analyticsReporter.logout();
+                                    analyticsReporter.logout(userData.userId, userData.userName);
 
                                     RunningService runningService = new RunningService(context, AdvertiseService.class);
                                     runningService.stop();

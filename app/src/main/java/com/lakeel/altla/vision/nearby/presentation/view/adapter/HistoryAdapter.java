@@ -11,7 +11,7 @@ import android.widget.TextView;
 import com.amulyakhare.textdrawable.TextDrawable;
 import com.lakeel.altla.vision.nearby.R;
 import com.lakeel.altla.vision.nearby.core.StringUtils;
-import com.lakeel.altla.vision.nearby.presentation.presenter.history.HistoryPresenter;
+import com.lakeel.altla.vision.nearby.presentation.presenter.history.HistoryListPresenter;
 import com.lakeel.altla.vision.nearby.presentation.presenter.model.HistoryModel;
 import com.lakeel.altla.vision.nearby.presentation.view.DateFormatter;
 import com.lakeel.altla.vision.nearby.presentation.view.HistoryItemView;
@@ -27,11 +27,11 @@ import butterknife.ButterKnife;
 
 public final class HistoryAdapter extends SwipeableUltimateViewAdapter<HistoryModel> {
 
-    private HistoryPresenter historyPresenter;
+    private HistoryListPresenter historyListPresenter;
 
-    public HistoryAdapter(HistoryPresenter historyPresenter) {
+    public HistoryAdapter(HistoryListPresenter historyListPresenter) {
         super(new ArrayList<>());
-        this.historyPresenter = historyPresenter;
+        this.historyListPresenter = historyListPresenter;
     }
 
     @Override
@@ -42,7 +42,7 @@ public final class HistoryAdapter extends SwipeableUltimateViewAdapter<HistoryMo
     @Override
     protected UltimateRecyclerviewViewHolder newViewHolder(View view) {
         HistoryItemsViewHolder viewHolder = new HistoryItemsViewHolder(view, true);
-        historyPresenter.onCreateItemView(viewHolder);
+        historyListPresenter.onCreateItemView(viewHolder);
         return viewHolder;
     }
 
@@ -72,7 +72,7 @@ public final class HistoryAdapter extends SwipeableUltimateViewAdapter<HistoryMo
         @BindView(R.id.swipe_layout)
         SwipeLayout swipeLayout;
 
-        private HistoryPresenter.HistoryItemPresenter itemPresenter;
+        private HistoryListPresenter.HistoryItemPresenter itemPresenter;
 
         HistoryItemsViewHolder(View itemView, boolean bind) {
             super(itemView);
@@ -84,7 +84,7 @@ public final class HistoryAdapter extends SwipeableUltimateViewAdapter<HistoryMo
         }
 
         @Override
-        public void setItemPresenter(HistoryPresenter.HistoryItemPresenter itemPresenter) {
+        public void setItemPresenter(HistoryListPresenter.HistoryItemPresenter itemPresenter) {
             this.itemPresenter = itemPresenter;
         }
 

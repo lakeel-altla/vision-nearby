@@ -11,7 +11,7 @@ import com.lakeel.altla.vision.nearby.presentation.view.fragment.bluetooth.BleSe
 import com.lakeel.altla.vision.nearby.presentation.view.fragment.device.DeviceListFragment;
 import com.lakeel.altla.vision.nearby.presentation.view.fragment.estimation.DistanceEstimationFragment;
 import com.lakeel.altla.vision.nearby.presentation.view.fragment.favorite.FavoriteListFragment;
-import com.lakeel.altla.vision.nearby.presentation.view.fragment.history.HistoryFragment;
+import com.lakeel.altla.vision.nearby.presentation.view.fragment.history.HistoryListFragment;
 import com.lakeel.altla.vision.nearby.presentation.view.fragment.information.InformationFragment;
 import com.lakeel.altla.vision.nearby.presentation.view.fragment.line.LineSettingsFragment;
 import com.lakeel.altla.vision.nearby.presentation.view.fragment.nearby.NearbyListFragment;
@@ -29,7 +29,7 @@ public final class FragmentController {
 
     private final String FAVORITE_LIST_FRAGMENT_TAG = FavoriteListFragment.class.getSimpleName();
 
-    private final String HISTORY_FRAGMENT_TAG = HistoryFragment.class.getSimpleName();
+    private final String HISTORY_FRAGMENT_TAG = HistoryListFragment.class.getSimpleName();
 
     private final String USER_PASSING_FRAGMENT_TAG = UserPassingFragment.class.getSimpleName();
 
@@ -72,8 +72,8 @@ public final class FragmentController {
         replaceFragment(R.id.fragmentPlaceholder, fragment, NEARBY_LIST_FRAGMENT);
     }
 
-    public void showHistoryFragment() {
-        HistoryFragment fragment = HistoryFragment.newInstance();
+    public void showHistoryListFragment() {
+        HistoryListFragment fragment = HistoryListFragment.newInstance();
         replaceFragment(R.id.fragmentPlaceholder, fragment, HISTORY_FRAGMENT_TAG);
     }
 

@@ -142,7 +142,7 @@ public class MainActivity extends AppCompatActivity
             }
             case R.id.nav_recently: {
                 FragmentController controller = new FragmentController(getSupportFragmentManager());
-                controller.showHistoryFragment();
+                controller.showHistoryListFragment();
                 break;
             }
             case R.id.nav_nearby: {

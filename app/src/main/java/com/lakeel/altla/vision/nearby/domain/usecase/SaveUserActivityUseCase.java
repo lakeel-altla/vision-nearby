@@ -8,16 +8,16 @@ import javax.inject.Inject;
 
 import rx.Single;
 
-public final class SaveDetectedActivityUseCase {
+public final class SaveUserActivityUseCase {
 
     @Inject
     FirebaseHistoryRepository repository;
 
     @Inject
-    SaveDetectedActivityUseCase() {
+    SaveUserActivityUseCase() {
     }
 
-    public Single<HistoryEntity> execute(String uniqueKey, String userId, DetectedActivity detectedActivity) {
-        return repository.saveDetectedActivity(uniqueKey, userId, detectedActivity);
+    public Single<HistoryEntity> execute(String uniqueId, String userId, DetectedActivity detectedActivity) {
+        return repository.saveUserActivity(uniqueId, userId, detectedActivity);
     }
 }

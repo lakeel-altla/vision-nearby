@@ -1,6 +1,7 @@
 package com.lakeel.altla.vision.nearby.presentation.analytics;
 
 import android.content.Context;
+import android.os.Bundle;
 
 import com.google.firebase.analytics.FirebaseAnalytics;
 import com.lakeel.altla.vision.nearby.presentation.ble.BleChecker;
@@ -18,9 +19,13 @@ public final class AnalyticsReporter {
         logEvent(FirebaseAnalytics.Event.LOGIN, userParam);
     }
 
-    public void logout() {
-        UserParam userParam = new UserParam();
-        logEvent(AnalyticsEvent.LOG_OUT, userParam);
+    public void logout(String userId, String userName) {
+        // When logout, user is not authenticated.
+        // Must not use the UserParam class.
+        Bundle bundle = new Bundle();
+        bundle.putString(AnalyticsParam.USER_ID.getValue(), userId);
+        bundle.putString(AnalyticsParam.USER_NAME.getValue(), userName);
+        logEvent(AnalyticsEvent.LOG_OUT, bundle);
     }
 
     public void viewFavoriteItem(String userId, String userName) {
@@ -132,6 +137,10 @@ public final class AnalyticsReporter {
 
     private void logEvent(String event, UserParam param) {
         firebaseAnalytics.logEvent(event, param.toBundle());
+    }
+
+    private void logEvent(AnalyticsEvent event, Bundle bundle) {
+        firebaseAnalytics.logEvent(event.getValue(), bundle);
     }
 
     private void setUserProperty(AnalyticsProperty property, String value) {
