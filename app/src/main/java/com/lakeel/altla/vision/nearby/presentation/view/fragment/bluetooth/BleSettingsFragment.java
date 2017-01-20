@@ -7,6 +7,7 @@ import android.support.v7.preference.SwitchPreferenceCompat;
 import android.view.MenuItem;
 
 import com.lakeel.altla.vision.nearby.R;
+import com.lakeel.altla.vision.nearby.presentation.application.App;
 import com.lakeel.altla.vision.nearby.presentation.intent.IntentKey;
 import com.lakeel.altla.vision.nearby.presentation.presenter.ble.BleSettingsPresenter;
 import com.lakeel.altla.vision.nearby.presentation.service.AdvertiseService;
@@ -22,7 +23,7 @@ public final class BleSettingsFragment extends PreferenceFragmentCompat implemen
 
     private static final String KEY_ADVERTISE_IN_BACKGROUND = "advertiseInBackground";
 
-    private static final String KEY_SUBSCRIBE_IN_BACKGROUND = "startMonitorBeacons";
+    private static final String KEY_SUBSCRIBE_IN_BACKGROUND = "subscribeInBackground";
 
     private SwitchPreferenceCompat advertisePreference;
 
@@ -106,7 +107,7 @@ public final class BleSettingsFragment extends PreferenceFragmentCompat implemen
 
     @Override
     public void startSubscribe() {
-        ((MainActivity) getActivity()).startMonitorBeacons();
+        App.startMonitorBeacons(this);
     }
 
     @Override

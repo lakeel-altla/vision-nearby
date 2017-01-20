@@ -5,8 +5,12 @@ import android.content.Context;
 import org.altbeacon.beacon.Region;
 import org.altbeacon.beacon.startup.BootstrapNotifier;
 import org.altbeacon.beacon.startup.RegionBootstrap;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 final class BeaconNotifier implements BootstrapNotifier {
+
+    private static final Logger LOGGER = LoggerFactory.getLogger(BeaconNotifier.class);
 
     private final Context context;
 
@@ -38,15 +42,19 @@ final class BeaconNotifier implements BootstrapNotifier {
 
     @Override
     public void didEnterRegion(Region region) {
+        LOGGER.debug("Enter region.");
+
         // If enter the region of the beacons, start to subscribe.
         subscriber.subscribe(region);
     }
 
     @Override
     public void didExitRegion(Region region) {
+        LOGGER.debug("Exit region.");
     }
 
     @Override
     public void didDetermineStateForRegion(int i, Region region) {
+        LOGGER.debug("Region state is changed.");
     }
 }

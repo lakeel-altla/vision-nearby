@@ -20,8 +20,6 @@ public interface ActivityView {
 
     void showBleEnabledActivity();
 
-    void startMonitorBeacons();
-
     void stopMonitorBeacons();
 
     void startAdvertiseService(String beaconId);

@@ -23,7 +23,6 @@ import com.lakeel.altla.vision.nearby.R;
 import com.lakeel.altla.vision.nearby.android.ConfirmDialog;
 import com.lakeel.altla.vision.nearby.presentation.application.App;
 import com.lakeel.altla.vision.nearby.presentation.di.component.ViewComponent;
-import com.lakeel.altla.vision.nearby.presentation.di.module.ActivityModule;
 import com.lakeel.altla.vision.nearby.presentation.intent.IntentKey;
 import com.lakeel.altla.vision.nearby.presentation.presenter.activity.ActivityPresenter;
 import com.lakeel.altla.vision.nearby.presentation.presenter.model.UserModel;
@@ -70,8 +69,7 @@ public class MainActivity extends AppCompatActivity
         // because the NullPointerException occurs, create an instance of the Dagger before super#onCreate().
 
         // Dagger
-        viewComponent = App.getApplicationComponent(this)
-                .viewComponent(new ActivityModule(this));
+        viewComponent = App.getApplicationComponent(this).viewComponent();
         viewComponent.inject(this);
 
         super.onCreate(savedInstanceState);
@@ -219,11 +217,6 @@ public class MainActivity extends AppCompatActivity
     public void showBleEnabledActivity() {
         Intent enableBtIntent = new Intent(BluetoothAdapter.ACTION_REQUEST_ENABLE);
         startActivityForResult(enableBtIntent, REQUEST_CODE_ENABLE_BLE);
-    }
-
-    @Override
-    public void startMonitorBeacons() {
-        ((App) getApplication()).startMonitorBeacons();
     }
 
     @Override

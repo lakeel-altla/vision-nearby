@@ -13,7 +13,6 @@ import com.lakeel.altla.vision.nearby.core.StringUtils;
 import com.lakeel.altla.vision.nearby.data.entity.PreferenceEntity;
 import com.lakeel.altla.vision.nearby.domain.usecase.FindBeaconIdUseCase;
 import com.lakeel.altla.vision.nearby.domain.usecase.FindPreferencesUseCase;
-import com.lakeel.altla.vision.nearby.domain.usecase.FindSubscribeSettingsUseCase;
 import com.lakeel.altla.vision.nearby.domain.usecase.ObserveConnectionUseCase;
 import com.lakeel.altla.vision.nearby.domain.usecase.ObserveUserProfileUseCase;
 import com.lakeel.altla.vision.nearby.domain.usecase.OfflineUseCase;
@@ -72,9 +71,6 @@ public final class ActivityPresenter extends BasePresenter<ActivityView> {
     @Inject
     OfflineUseCase offlineUseCase;
 
-    @Inject
-    FindSubscribeSettingsUseCase findSubscribeSettingsUseCase;
-
     private static final Logger LOGGER = LoggerFactory.getLogger(ActivityPresenter.class);
 
     private FirebaseInstanceId instanceId = FirebaseInstanceId.getInstance();
@@ -86,8 +82,8 @@ public final class ActivityPresenter extends BasePresenter<ActivityView> {
     private boolean isAdvertiseAvailability = true;
 
     @Inject
-    ActivityPresenter(Activity activity) {
-        context = activity.getApplicationContext();
+    ActivityPresenter(Context context) {
+        this.context = context;
     }
 
     @Override
@@ -122,21 +118,8 @@ public final class ActivityPresenter extends BasePresenter<ActivityView> {
                     LOGGER.error("Failed to observe user profile.", e);
                 });
 
-        Subscription subscription = findSubscribeSettingsUseCase
-                .execute()
-                .subscribeOn(Schedulers.io())
-                .observeOn(AndroidSchedulers.mainThread())
-                .subscribe(isSubscribeEnabled -> {
-                    if (isSubscribeEnabled) {
-                        getView().startMonitorBeacons();
-                    } else {
-                        stopMonitorBeacons();
-                    }
-                }, e -> LOGGER.error("Failed to findList preference settings.", e));
-        subscriptions.add(subscription);
-
         // TODO: UseCase
-        // SaveBeacon/SaveToken
+        // SaveBeacon/SaveToken/
         Subscription subscription1 = findBeaconIdUseCase
                 .execute(MyUser.getUid())
                 .flatMap(beaconId -> {

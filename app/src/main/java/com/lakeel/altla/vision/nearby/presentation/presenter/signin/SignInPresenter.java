@@ -56,8 +56,7 @@ public final class SignInPresenter extends BasePresenter<SignInView> {
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribe(e -> {
-                    LOGGER.error("Failed to sign in", e);
-
+                    LOGGER.error("Failed to login.", e);
                     getView().showSnackBar(R.string.error_not_signed_in);
                     FirebaseAuth.getInstance().signOut();
                 }, () -> getView().onSignedIn());

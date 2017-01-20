@@ -7,8 +7,6 @@ import org.altbeacon.beacon.BeaconParser;
 import org.altbeacon.beacon.Region;
 import org.altbeacon.beacon.powersave.BackgroundPowerSaver;
 
-import java.util.UUID;
-
 public final class BeaconClient {
 
     private static final String I_BEACON_LAYOUT = "m:2-3=0215,i:4-19,i:20-21,i:22-23,p:24-24";
@@ -22,7 +20,7 @@ public final class BeaconClient {
     private final BeaconNotifier beaconNotifier;
 
     public BeaconClient(Context context) {
-        Region region = new Region(UUID.randomUUID().toString(), null, null, null);
+        Region region = new Region("background-region", null, null, null);
         beaconNotifier = new BeaconNotifier(context, region);
 
         BeaconManager beaconManager = BeaconManager.getInstanceForApplication(context);

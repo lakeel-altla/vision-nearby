@@ -1,7 +1,7 @@
 package com.lakeel.altla.vision.nearby.presentation.di.component;
 
+import com.lakeel.altla.vision.nearby.presentation.application.App;
 import com.lakeel.altla.vision.nearby.presentation.di.InjectScope;
-import com.lakeel.altla.vision.nearby.presentation.di.module.ActivityModule;
 import com.lakeel.altla.vision.nearby.presentation.di.module.ConfigModule;
 import com.lakeel.altla.vision.nearby.presentation.di.module.PresenterModule;
 import com.lakeel.altla.vision.nearby.presentation.di.module.RepositoryModule;
@@ -25,8 +25,10 @@ import com.lakeel.altla.vision.nearby.presentation.view.fragment.user.UserProfil
 import dagger.Subcomponent;
 
 @InjectScope
-@Subcomponent(modules = {ActivityModule.class, PresenterModule.class, RepositoryModule.class, ConfigModule.class})
+@Subcomponent(modules = {PresenterModule.class, RepositoryModule.class, ConfigModule.class})
 public interface ViewComponent {
+
+    void inject(App app);
 
     void inject(MainActivity activity);
 
