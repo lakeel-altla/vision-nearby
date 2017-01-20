@@ -12,7 +12,7 @@ public final class UserEntityMapper {
 
         MyUser.UserData user = MyUser.getUserData();
 
-        map.put("name", user.userName);
+        map.put("userName", user.userName);
         map.put("imageUri", user.imageUri);
         map.put("email", user.email);
 

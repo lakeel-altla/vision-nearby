@@ -4,7 +4,7 @@ public final class UserModel {
 
     public String userId;
 
-    public String name;
+    public String userName;
 
     public String imageUri;
 

@@ -252,7 +252,7 @@ public final class UserPassingFragment extends Fragment implements UserPassingVi
         ImageLoader imageLoader = ImageLoader.getInstance();
         imageLoader.displayImage(model.imageUri, userImageView);
 
-        profileLayout.textViewName.setText(model.name);
+        profileLayout.textViewName.setText(model.userName);
         profileLayout.textViewEmail.setAutoLinkMask(Linkify.EMAIL_ADDRESSES);
         profileLayout.textViewEmail.setText(model.email);
     }

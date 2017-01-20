@@ -15,6 +15,7 @@ import com.lakeel.altla.vision.nearby.domain.usecase.FindBeaconIdUseCase;
 import com.lakeel.altla.vision.nearby.domain.usecase.FindPreferencesUseCase;
 import com.lakeel.altla.vision.nearby.domain.usecase.FindSubscribeSettingsUseCase;
 import com.lakeel.altla.vision.nearby.domain.usecase.ObserveConnectionUseCase;
+import com.lakeel.altla.vision.nearby.domain.usecase.ObserveUserProfileUseCase;
 import com.lakeel.altla.vision.nearby.domain.usecase.OfflineUseCase;
 import com.lakeel.altla.vision.nearby.domain.usecase.SaveBeaconUseCase;
 import com.lakeel.altla.vision.nearby.domain.usecase.SavePreferenceBeaconIdUseCase;
@@ -24,6 +25,7 @@ import com.lakeel.altla.vision.nearby.presentation.analytics.AnalyticsReporter;
 import com.lakeel.altla.vision.nearby.presentation.ble.BleChecker;
 import com.lakeel.altla.vision.nearby.presentation.firebase.MyUser;
 import com.lakeel.altla.vision.nearby.presentation.presenter.BasePresenter;
+import com.lakeel.altla.vision.nearby.presentation.presenter.mapper.UserModelMapper;
 import com.lakeel.altla.vision.nearby.presentation.service.AdvertiseService;
 import com.lakeel.altla.vision.nearby.presentation.service.RunningService;
 import com.lakeel.altla.vision.nearby.presentation.view.ActivityView;
@@ -39,6 +41,9 @@ import rx.android.schedulers.AndroidSchedulers;
 import rx.schedulers.Schedulers;
 
 public final class ActivityPresenter extends BasePresenter<ActivityView> {
+
+    @Inject
+    ObserveUserProfileUseCase observeUserProfileUseCase;
 
     @Inject
     AnalyticsReporter analyticsReporter;
@@ -74,6 +79,8 @@ public final class ActivityPresenter extends BasePresenter<ActivityView> {
 
     private FirebaseInstanceId instanceId = FirebaseInstanceId.getInstance();
 
+    private UserModelMapper userModelMapper = new UserModelMapper();
+
     private final Context context;
 
     private boolean isAdvertiseAvailability = true;
@@ -102,6 +109,18 @@ public final class ActivityPresenter extends BasePresenter<ActivityView> {
 
         // Observe user presence.
         observeConnectionUseCase.execute(MyUser.getUid());
+
+        // Observe user profile
+        observeUserProfileUseCase
+                .execute(MyUser.getUid())
+                .map(entity -> userModelMapper.map(entity))
+                .subscribeOn(Schedulers.io())
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribe(model -> {
+                    getView().updateProfile(model);
+                }, e -> {
+                    LOGGER.error("Failed to observe user profile.", e);
+                });
 
         Subscription subscription = findSubscribeSettingsUseCase
                 .execute()

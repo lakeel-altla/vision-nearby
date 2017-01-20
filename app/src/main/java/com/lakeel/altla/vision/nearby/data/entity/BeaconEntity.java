@@ -19,7 +19,7 @@ public final class BeaconEntity {
 
     public Map<String, Object> toMap() {
         Map<String, Object> map = new HashMap<>();
-        map.put("name", name);
+        map.put("userName", name);
         map.put("userId", userId);
         map.put("lastUsedTime", ServerValue.TIMESTAMP);
         return map;

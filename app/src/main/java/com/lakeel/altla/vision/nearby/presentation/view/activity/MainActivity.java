@@ -26,6 +26,7 @@ import com.lakeel.altla.vision.nearby.presentation.di.component.ViewComponent;
 import com.lakeel.altla.vision.nearby.presentation.di.module.ActivityModule;
 import com.lakeel.altla.vision.nearby.presentation.intent.IntentKey;
 import com.lakeel.altla.vision.nearby.presentation.presenter.activity.ActivityPresenter;
+import com.lakeel.altla.vision.nearby.presentation.presenter.model.UserModel;
 import com.lakeel.altla.vision.nearby.presentation.service.AdvertiseService;
 import com.lakeel.altla.vision.nearby.presentation.view.ActivityView;
 import com.lakeel.altla.vision.nearby.presentation.view.fragment.FragmentController;
@@ -192,6 +193,15 @@ public class MainActivity extends AppCompatActivity
 
         drawerHeaderLayout.textViewUserName.setText(displayName);
         drawerHeaderLayout.textViewEmail.setText(email);
+    }
+
+    @Override
+    public void updateProfile(UserModel model) {
+        ImageLoader imageLoader = ImageLoader.getInstance();
+        imageLoader.displayImage(model.imageUri, drawerHeaderLayout.userImageView);
+
+        drawerHeaderLayout.textViewUserName.setText(model.userName);
+        drawerHeaderLayout.textViewEmail.setText(model.email);
     }
 
     @Override

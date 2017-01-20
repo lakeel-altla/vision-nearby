@@ -121,6 +121,25 @@ public final class FirebaseUsersRepositoryImpl implements FirebaseUsersRepositor
     }
 
     @Override
+    public Observable<UserEntity> observeUserProfile(String userId) {
+        return Observable.create(subscriber ->
+                reference
+                        .child(userId)
+                        .addValueEventListener(new ValueEventListener() {
+                            @Override
+                            public void onDataChange(DataSnapshot dataSnapshot) {
+                                UserEntity entity = dataSnapshot.getValue(UserEntity.class);
+                                subscriber.onNext(entity);
+                            }
+
+                            @Override
+                            public void onCancelled(DatabaseError databaseError) {
+                                subscriber.onError(databaseError.toException());
+                            }
+                        }));
+    }
+
+    @Override
     public Single<UserEntity> findUserByUserId(String userId) {
         return Single.create(new Single.OnSubscribe<UserEntity>() {
 

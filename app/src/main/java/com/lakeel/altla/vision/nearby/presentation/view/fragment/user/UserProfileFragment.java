@@ -150,7 +150,7 @@ public final class UserProfileFragment extends Fragment implements UserProfileVi
         ImageLoader imageLoader = ImageLoader.getInstance();
         imageLoader.displayImage(model.imageUri, userImageView);
 
-        profileLayout.textViewName.setText(model.name);
+        profileLayout.textViewName.setText(model.userName);
         profileLayout.textViewEmail.setAutoLinkMask(Linkify.EMAIL_ADDRESSES);
         profileLayout.textViewEmail.setText(model.email);
     }

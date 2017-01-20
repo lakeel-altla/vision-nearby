@@ -5,7 +5,6 @@ import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
-
 import com.lakeel.altla.vision.nearby.domain.repository.FirebaseConnectionRepository;
 
 import org.slf4j.Logger;
@@ -40,7 +39,7 @@ public final class FirebaseConnectionRepositoryImpl implements FirebaseConnectio
 
                 @Override
                 public void onCancelled(DatabaseError databaseError) {
-                    LOGGER.error("Connection event was canceled.", databaseError.toException());
+                    subscriber.onError(databaseError.toException());
                 }
             });
         });
