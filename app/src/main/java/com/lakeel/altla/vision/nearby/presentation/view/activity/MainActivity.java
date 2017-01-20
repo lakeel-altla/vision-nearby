@@ -254,6 +254,6 @@ public class MainActivity extends AppCompatActivity
     }
 
     public void onSignedIn() {
-        presenter.onSignIn();
+        presenter.onSignedIn();
     }
 }

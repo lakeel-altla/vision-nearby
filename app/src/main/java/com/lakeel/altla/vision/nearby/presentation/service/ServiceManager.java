@@ -8,13 +8,13 @@ import java.util.List;
 
 import static android.content.Context.ACTIVITY_SERVICE;
 
-public final class RunningService {
+public final class ServiceManager {
 
     private final Class clazz;
 
     private final Context context;
 
-    public RunningService(Context context, Class clazz) {
+    public ServiceManager(Context context, Class clazz) {
         this.context = context;
         this.clazz = clazz;
     }

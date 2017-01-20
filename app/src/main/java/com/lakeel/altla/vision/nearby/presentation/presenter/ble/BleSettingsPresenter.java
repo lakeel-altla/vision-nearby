@@ -6,10 +6,9 @@ import com.lakeel.altla.vision.nearby.domain.usecase.FindBeaconIdUseCase;
 import com.lakeel.altla.vision.nearby.presentation.analytics.AnalyticsReporter;
 import com.lakeel.altla.vision.nearby.presentation.ble.BleChecker;
 import com.lakeel.altla.vision.nearby.presentation.ble.BleChecker.State;
-import com.lakeel.altla.vision.nearby.presentation.firebase.MyUser;
 import com.lakeel.altla.vision.nearby.presentation.presenter.BasePresenter;
 import com.lakeel.altla.vision.nearby.presentation.service.AdvertiseService;
-import com.lakeel.altla.vision.nearby.presentation.service.RunningService;
+import com.lakeel.altla.vision.nearby.presentation.service.ServiceManager;
 import com.lakeel.altla.vision.nearby.presentation.view.BleSettingsView;
 
 import org.slf4j.Logger;
@@ -19,7 +18,6 @@ import javax.inject.Inject;
 
 import rx.Subscription;
 import rx.android.schedulers.AndroidSchedulers;
-import rx.schedulers.Schedulers;
 
 public final class BleSettingsPresenter extends BasePresenter<BleSettingsView> {
 
@@ -49,9 +47,7 @@ public final class BleSettingsPresenter extends BasePresenter<BleSettingsView> {
     public void onStartAdvertise() {
         analyticsReporter.onAdvertise();
 
-        Subscription subscription = findBeaconIdUseCase
-                .execute(MyUser.getUid())
-                .subscribeOn(Schedulers.io())
+        Subscription subscription = findBeaconIdUseCase.execute()
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribe(beaconId -> getView().startAdvertise(beaconId),
                         e -> LOGGER.error("Failed to findList a beacon ID.", e));
@@ -61,7 +57,7 @@ public final class BleSettingsPresenter extends BasePresenter<BleSettingsView> {
     public void onStopAdvertise() {
         analyticsReporter.offAdvertise();
 
-        RunningService service = new RunningService(context, AdvertiseService.class);
+        ServiceManager service = new ServiceManager(context, AdvertiseService.class);
         service.stop();
     }
 

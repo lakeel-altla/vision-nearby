@@ -7,7 +7,6 @@ import com.google.firebase.auth.FirebaseAuth;
 import com.lakeel.altla.vision.nearby.R;
 import com.lakeel.altla.vision.nearby.domain.usecase.SaveUserUseCase;
 import com.lakeel.altla.vision.nearby.presentation.analytics.AnalyticsReporter;
-import com.lakeel.altla.vision.nearby.presentation.firebase.MyUser;
 import com.lakeel.altla.vision.nearby.presentation.presenter.BasePresenter;
 import com.lakeel.altla.vision.nearby.presentation.view.SignInView;
 
@@ -18,7 +17,6 @@ import javax.inject.Inject;
 
 import rx.Subscription;
 import rx.android.schedulers.AndroidSchedulers;
-import rx.schedulers.Schedulers;
 
 public final class SignInPresenter extends BasePresenter<SignInView> {
 
@@ -51,12 +49,11 @@ public final class SignInPresenter extends BasePresenter<SignInView> {
     public void onSignedIn() {
         analyticsReporter.signIn();
 
-        Subscription subscription = saveUserUseCase
-                .execute(MyUser.getUid())
-                .subscribeOn(Schedulers.io())
+        Subscription subscription = saveUserUseCase.execute()
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribe(e -> {
-                    LOGGER.error("Failed to signIn.", e);
+                    LOGGER.error("Failed to sign in.", e);
+
                     getView().showSnackBar(R.string.error_not_signed_in);
                     FirebaseAuth.getInstance().signOut();
                 }, () -> getView().onSignedIn());
