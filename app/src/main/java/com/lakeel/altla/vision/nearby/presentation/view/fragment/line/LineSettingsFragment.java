@@ -22,7 +22,7 @@ public final class LineSettingsFragment extends PreferenceFragmentCompat impleme
 
     private static final String KEY_LINE_URL = "lineUrl";
 
-    private EditTextPreference lineUrlPreference;
+    private EditTextPreference preference;
 
     public static LineSettingsFragment newInstance() {
         return new LineSettingsFragment();
@@ -43,10 +43,10 @@ public final class LineSettingsFragment extends PreferenceFragmentCompat impleme
 
         presenter.onCreateView(this);
 
-        lineUrlPreference = (EditTextPreference) findPreference(KEY_LINE_URL);
-        lineUrlPreference.setOnPreferenceChangeListener((preference, newValue) -> {
-            String lineUrl = (String) newValue;
-            presenter.onSaveLineUrl(lineUrl);
+        preference = (EditTextPreference) findPreference(KEY_LINE_URL);
+        preference.setOnPreferenceChangeListener((preference, value) -> {
+            String uri = (String) value;
+            presenter.onSave(uri);
             return false;
         });
     }
@@ -77,8 +77,8 @@ public final class LineSettingsFragment extends PreferenceFragmentCompat impleme
 
     @Override
     public void showLineUrl(String url) {
-        lineUrlPreference.setText(url);
-        lineUrlPreference.setSummary(url);
+        preference.setText(url);
+        preference.setSummary(url);
     }
 
     @Override
