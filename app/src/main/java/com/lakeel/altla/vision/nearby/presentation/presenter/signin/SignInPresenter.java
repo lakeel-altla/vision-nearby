@@ -49,14 +49,14 @@ public final class SignInPresenter extends BasePresenter<SignInView> {
     }
 
     public void onSignedIn() {
-        analyticsReporter.login();
+        analyticsReporter.signIn();
 
         Subscription subscription = saveUserUseCase
                 .execute(MyUser.getUid())
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribe(e -> {
-                    LOGGER.error("Failed to login.", e);
+                    LOGGER.error("Failed to signIn.", e);
                     getView().showSnackBar(R.string.error_not_signed_in);
                     FirebaseAuth.getInstance().signOut();
                 }, () -> getView().onSignedIn());

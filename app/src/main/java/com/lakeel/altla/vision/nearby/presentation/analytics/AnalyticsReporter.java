@@ -14,7 +14,7 @@ public final class AnalyticsReporter {
         firebaseAnalytics = FirebaseAnalytics.getInstance(context);
     }
 
-    public void login() {
+    public void signIn() {
         UserParam userParam = new UserParam();
         logEvent(FirebaseAnalytics.Event.LOGIN, userParam);
     }
