@@ -102,9 +102,9 @@ public final class AnalyticsReporter {
         logEvent(AnalyticsEvent.REMOVE_HISTORY, userParam);
     }
 
-    public void inputLineUrl() {
+    public void inputLineUri() {
         UserParam userParam = new UserParam();
-        logEvent(AnalyticsEvent.INPUT_LINE_URL, userParam);
+        logEvent(AnalyticsEvent.INPUT_LINE_URI, userParam);
     }
 
     public void onAdvertise() {

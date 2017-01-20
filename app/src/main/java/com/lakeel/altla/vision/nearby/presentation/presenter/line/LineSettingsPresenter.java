@@ -47,15 +47,17 @@ public final class LineSettingsPresenter extends BasePresenter<LineSettingsView>
         subscriptions.add(subscription);
     }
 
-    public void onSaveLineUrl(String url) {
-        analyticsReporter.inputLineUrl();
+    public void onSave(String uri) {
+        // TODO: Validation
+
+        analyticsReporter.inputLineUri();
 
         Subscription subscription = saveLineUrlUseCase
-                .execute(MyUser.getUid(), url)
+                .execute(MyUser.getUid(), uri)
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribe(s -> {
-                            getView().showLineUrl(url);
+                            getView().showLineUrl(uri);
                             getView().showSnackBar(R.string.message_added);
                         },
                         e -> {

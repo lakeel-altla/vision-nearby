@@ -9,7 +9,7 @@ public enum AnalyticsEvent {
     OFF_ADVERTISE("off_advertise"),
     ON_SUBSCRIBE("on_subscribe"),
     OFF_SUBSCRIBE("off_subscribe"),
-    INPUT_LINE_URL("input_line_url"),
+    INPUT_LINE_URI("input_line_uri"),
     FOUND_DEVICE("found_device"),
     LOST_DEVICE("lost_device"),
     REMOVE_DEVICE("remove_device"),
