@@ -59,6 +59,8 @@ public final class LineSettingsFragment extends Fragment implements LineSettings
 
         getActivity().setTitle(R.string.title_line_settings);
 
+        ((MainActivity) getActivity()).setDrawerIndicatorEnabled(false);
+
         mainLayout.setOnClickListener(view ->
                 new MaterialDialog.Builder(getContext())
                         .title(R.string.dialog_title_line_url)
@@ -98,9 +100,6 @@ public final class LineSettingsFragment extends Fragment implements LineSettings
 
     @Override
     public void showSnackBar(@StringRes int resId) {
-        View view = getView();
-        if (view != null) {
-            Snackbar.make(getView(), resId, Snackbar.LENGTH_SHORT).show();
-        }
+        Snackbar.make(mainLayout, resId, Snackbar.LENGTH_SHORT).show();
     }
 }
