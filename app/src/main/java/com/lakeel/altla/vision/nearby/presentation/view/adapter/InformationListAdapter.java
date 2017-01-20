@@ -10,7 +10,7 @@ import android.widget.TextView;
 import com.lakeel.altla.vision.nearby.R;
 import com.lakeel.altla.vision.nearby.presentation.presenter.information.InformationListPresenter;
 import com.lakeel.altla.vision.nearby.presentation.presenter.model.InformationModel;
-import com.lakeel.altla.vision.nearby.presentation.view.DateFormatter;
+import com.lakeel.altla.vision.nearby.presentation.view.date.DateFormatter;
 import com.lakeel.altla.vision.nearby.presentation.view.InformationItemView;
 
 import butterknife.BindView;

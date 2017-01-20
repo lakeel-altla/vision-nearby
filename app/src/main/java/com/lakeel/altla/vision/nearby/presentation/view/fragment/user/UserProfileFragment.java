@@ -20,7 +20,7 @@ import com.lakeel.altla.vision.nearby.presentation.constants.FragmentBundle;
 import com.lakeel.altla.vision.nearby.presentation.presenter.model.PresenceModel;
 import com.lakeel.altla.vision.nearby.presentation.presenter.model.UserModel;
 import com.lakeel.altla.vision.nearby.presentation.presenter.user.UserProfilePresenter;
-import com.lakeel.altla.vision.nearby.presentation.view.DateFormatter;
+import com.lakeel.altla.vision.nearby.presentation.view.date.DateFormatter;
 import com.lakeel.altla.vision.nearby.presentation.view.UserProfileView;
 import com.lakeel.altla.vision.nearby.presentation.view.activity.MainActivity;
 import com.lakeel.altla.vision.nearby.presentation.view.fragment.FragmentController;

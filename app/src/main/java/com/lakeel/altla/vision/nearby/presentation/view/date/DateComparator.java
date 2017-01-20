@@ -1,4 +1,4 @@
-package com.lakeel.altla.vision.nearby.presentation.view;
+package com.lakeel.altla.vision.nearby.presentation.view.date;
 
 import org.joda.time.DateTime;
 

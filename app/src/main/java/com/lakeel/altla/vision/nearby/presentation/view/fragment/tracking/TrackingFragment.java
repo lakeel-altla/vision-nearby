@@ -27,7 +27,7 @@ import com.lakeel.altla.vision.nearby.presentation.constants.FragmentBundle;
 import com.lakeel.altla.vision.nearby.presentation.constants.Radius;
 import com.lakeel.altla.vision.nearby.presentation.intent.GoogleMapDirectionIntent;
 import com.lakeel.altla.vision.nearby.presentation.presenter.tracking.TrackingPresenter;
-import com.lakeel.altla.vision.nearby.presentation.view.DateFormatter;
+import com.lakeel.altla.vision.nearby.presentation.view.date.DateFormatter;
 import com.lakeel.altla.vision.nearby.presentation.view.TrackingView;
 import com.lakeel.altla.vision.nearby.presentation.view.activity.MainActivity;
 import com.lakeel.altla.vision.nearby.presentation.view.fragment.FragmentController;

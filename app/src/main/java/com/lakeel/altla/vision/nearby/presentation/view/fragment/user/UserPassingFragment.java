@@ -30,7 +30,7 @@ import com.lakeel.altla.vision.nearby.presentation.constants.WeatherCondition;
 import com.lakeel.altla.vision.nearby.presentation.presenter.model.PresenceModel;
 import com.lakeel.altla.vision.nearby.presentation.presenter.model.UserModel;
 import com.lakeel.altla.vision.nearby.presentation.presenter.user.UserPassingPresenter;
-import com.lakeel.altla.vision.nearby.presentation.view.DateFormatter;
+import com.lakeel.altla.vision.nearby.presentation.view.date.DateFormatter;
 import com.lakeel.altla.vision.nearby.presentation.view.UserPassingView;
 import com.lakeel.altla.vision.nearby.presentation.view.activity.MainActivity;
 import com.lakeel.altla.vision.nearby.presentation.view.bundle.HistoryBundle;

@@ -13,7 +13,7 @@ import com.lakeel.altla.vision.nearby.R;
 import com.lakeel.altla.vision.nearby.core.StringUtils;
 import com.lakeel.altla.vision.nearby.presentation.presenter.history.HistoryListPresenter;
 import com.lakeel.altla.vision.nearby.presentation.presenter.model.HistoryModel;
-import com.lakeel.altla.vision.nearby.presentation.view.DateFormatter;
+import com.lakeel.altla.vision.nearby.presentation.view.date.DateFormatter;
 import com.lakeel.altla.vision.nearby.presentation.view.HistoryItemView;
 import com.marshalchen.ultimaterecyclerview.SwipeableUltimateViewAdapter;
 import com.marshalchen.ultimaterecyclerview.UltimateRecyclerviewViewHolder;
