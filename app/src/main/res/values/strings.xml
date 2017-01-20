@@ -8,6 +8,7 @@
     <string name="dialog_button_cancel">Cancel</string>
     <string name="dialog_button_send">Send</string>
     <string name="dialog_message_confirm_find_nearby_devices">Are you sure you want to find the nearby device?</string>
+    <string name="dialog_title_line_url">URL</string>
 
     <string name="textView_state">State</string>
     <string name="textView_presence">Presence</string>
@@ -46,7 +47,7 @@
     <string name="title_bluetooth">Bluetooth</string>
     <string name="title_link">LINK</string>
     <string name="title_line">LINE</string>
-    <string name="title_user_url">User URL</string>
+    <string name="title_line_url">LINE URL</string>
     <string name="title_cm">COMPANY Messenger</string>
     <string name="title_cm_api_key">API Key</string>
     <string name="title_cm_secret_key">Secret Key</string>

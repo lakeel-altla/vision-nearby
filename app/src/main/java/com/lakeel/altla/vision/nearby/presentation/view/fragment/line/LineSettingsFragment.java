@@ -1,59 +1,75 @@
 package com.lakeel.altla.vision.nearby.presentation.view.fragment.line;
 
 import android.os.Bundle;
+import android.support.annotation.Nullable;
 import android.support.annotation.StringRes;
 import android.support.design.widget.Snackbar;
-import android.support.v7.preference.EditTextPreference;
-import android.support.v7.preference.PreferenceFragmentCompat;
+import android.support.v4.app.Fragment;
+import android.text.InputType;
+import android.view.LayoutInflater;
 import android.view.MenuItem;
 import android.view.View;
+import android.view.ViewGroup;
+import android.widget.LinearLayout;
+import android.widget.TextView;
 
+import com.afollestad.materialdialogs.MaterialDialog;
 import com.lakeel.altla.vision.nearby.R;
+import com.lakeel.altla.vision.nearby.core.StringUtils;
 import com.lakeel.altla.vision.nearby.presentation.presenter.line.LineSettingsPresenter;
 import com.lakeel.altla.vision.nearby.presentation.view.LineSettingsView;
 import com.lakeel.altla.vision.nearby.presentation.view.activity.MainActivity;
 
 import javax.inject.Inject;
 
-public final class LineSettingsFragment extends PreferenceFragmentCompat implements LineSettingsView {
+import butterknife.BindView;
+import butterknife.ButterKnife;
+
+public final class LineSettingsFragment extends Fragment implements LineSettingsView {
 
     @Inject
     LineSettingsPresenter presenter;
 
-    private static final String KEY_LINE_URL = "lineUrl";
+    @BindView(R.id.mainLayout)
+    LinearLayout mainLayout;
 
-    private EditTextPreference preference;
+    @BindView(R.id.textViewLineUrl)
+    TextView lineUrl;
 
     public static LineSettingsFragment newInstance() {
         return new LineSettingsFragment();
     }
 
     @Override
-    public void onCreatePreferences(Bundle savedInstanceState, String rootKey) {
-        addPreferencesFromResource(R.xml.settings_line);
+    @Nullable
+    public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
+        View view = inflater.inflate(R.layout.fragment_line_settings, container, false);
+        ButterKnife.bind(this, view);
 
-        setHasOptionsMenu(true);
-
-        getActivity().setTitle(R.string.title_line_settings);
-
-        ((MainActivity) getActivity()).setDrawerIndicatorEnabled(false);
-
-        // Dagger
         MainActivity.getUserComponent(this).inject(this);
 
         presenter.onCreateView(this);
 
-        preference = (EditTextPreference) findPreference(KEY_LINE_URL);
-        preference.setOnPreferenceChangeListener((preference, value) -> {
-            String uri = (String) value;
-            presenter.onSave(uri);
-            return false;
-        });
+        return view;
     }
 
     @Override
     public void onActivityCreated(Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
+
+        getActivity().setTitle(R.string.title_line_settings);
+
+        mainLayout.setOnClickListener(view ->
+                new MaterialDialog.Builder(getContext())
+                        .title(R.string.dialog_title_line_url)
+                        .inputType(InputType.TYPE_CLASS_TEXT)
+                        .negativeText(R.string.dialog_button_cancel)
+                        .cancelable(true)
+                        .input(StringUtils.EMPTY, StringUtils.EMPTY, false, (dialog1, input) ->
+                                presenter.onSave(input.toString())
+                        )
+                        .show());
+
         presenter.onActivityCreated();
     }
 
@@ -77,8 +93,7 @@ public final class LineSettingsFragment extends PreferenceFragmentCompat impleme
 
     @Override
     public void showLineUrl(String url) {
-        preference.setText(url);
-        preference.setSummary(url);
+        lineUrl.setText(url);
     }
 
     @Override

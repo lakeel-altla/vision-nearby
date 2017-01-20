@@ -1,34 +1,30 @@
 <?xml version="1.0" encoding="utf-8"?>
-<PreferenceScreen
-        xmlns:android="http://schemas.android.com/apk/res/android"
-        android:key="preferenceScreen">
+<PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android"
+    android:key="preferenceScreen">
 
-    <PreferenceCategory
-            android:title="@string/title_wireless_networks">
+    <PreferenceCategory android:title="@string/title_wireless_networks">
 
         <PreferenceScreen
-                android:key="bluetoothScreen"
-                android:title="@string/title_bluetooth"/>
+            android:key="bluetoothScreen"
+            android:title="@string/title_bluetooth" />
 
     </PreferenceCategory>
 
     <PreferenceCategory
-            android:key="snsCategory"
-            android:title="@string/title_sns">
+        android:key="snsCategory"
+        android:title="@string/title_sns">
 
         <PreferenceScreen
-                android:key="lineScreen"
-                android:title="@string/title_line"/>
+            android:key="lineScreen"
+            android:title="@string/title_line" />
 
     </PreferenceCategory>
 
-    <PreferenceCategory
-            android:title="@string/title_cloud_tracking">
+    <PreferenceCategory android:title="@string/title_cloud_tracking">
 
         <PreferenceScreen
-                android:key="trackingScreen"
-                android:title="@string/title_devices"
-                android:dialogTitle="@string/title_user_url"/>
+            android:key="trackingScreen"
+            android:title="@string/title_devices" />
 
     </PreferenceCategory>
 
