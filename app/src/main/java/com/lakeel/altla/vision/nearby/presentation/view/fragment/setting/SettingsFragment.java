@@ -22,7 +22,7 @@ public final class SettingsFragment extends PreferenceFragmentCompat {
 
     @Override
     public void onCreatePreferences(Bundle savedInstanceState, String rootKey) {
-        addPreferencesFromResource(R.xml.setting_fragment);
+        addPreferencesFromResource(R.xml.settings_fragment);
 
         // Dagger
         MainActivity.getUserComponent(this).inject(this);
