@@ -1,11 +1,10 @@
 <?xml version="1.0" encoding="utf-8"?>
 <PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android">
 
-
     <EditTextPreference
-            android:key="lineUrl"
-            android:title="@string/title_user_url"
-            android:summary=""
-            android:dialogTitle="@string/title_user_url"/>
+        android:dialogTitle="@string/title_user_url"
+        android:key="lineUrl"
+        android:summary=""
+        android:title="@string/title_user_url" />
 
 </PreferenceScreen>
