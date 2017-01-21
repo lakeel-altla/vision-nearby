@@ -21,7 +21,7 @@ import javax.inject.Inject;
 
 import rx.schedulers.Schedulers;
 
-public class LineService extends IntentService {
+public class LINEService extends IntentService {
 
     @Inject
     FindUserUseCase findUserUseCase;
@@ -29,14 +29,14 @@ public class LineService extends IntentService {
     @Inject
     FindLineLinkUseCase findLineLinkUseCase;
 
-    private static final Logger LOGGER = LoggerFactory.getLogger(LineService.class);
+    private static final Logger LOGGER = LoggerFactory.getLogger(LINEService.class);
 
-    public LineService() {
+    public LINEService() {
         // This constructor is need.
-        this(LineService.class.getSimpleName());
+        this(LINEService.class.getSimpleName());
     }
 
-    public LineService(String name) {
+    public LINEService(String name) {
         super(name);
     }
 

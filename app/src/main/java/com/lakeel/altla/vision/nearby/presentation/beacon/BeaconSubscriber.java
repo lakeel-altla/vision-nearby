@@ -11,7 +11,7 @@ import com.lakeel.altla.vision.nearby.presentation.di.component.DefaultComponent
 import com.lakeel.altla.vision.nearby.presentation.firebase.MyUser;
 import com.lakeel.altla.vision.nearby.presentation.intent.IntentKey;
 import com.lakeel.altla.vision.nearby.presentation.service.HistoryService;
-import com.lakeel.altla.vision.nearby.presentation.service.LineService;
+import com.lakeel.altla.vision.nearby.presentation.service.LINEService;
 import com.lakeel.altla.vision.nearby.presentation.service.LocationService;
 import com.lakeel.altla.vision.nearby.presentation.service.NotificationService;
 
@@ -73,7 +73,7 @@ public final class BeaconSubscriber {
                             locationIntent.putExtra(IntentKey.BEACON_ID.name(), beaconId);
                             context.startService(locationIntent);
 
-                            Intent lineIntent = new Intent(context, LineService.class);
+                            Intent lineIntent = new Intent(context, LINEService.class);
                             lineIntent.putExtra(IntentKey.USER_ID.name(), entity.userId);
                             context.startService(lineIntent);
                         });

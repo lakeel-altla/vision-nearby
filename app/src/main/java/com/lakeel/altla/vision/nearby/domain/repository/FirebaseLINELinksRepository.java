@@ -4,7 +4,7 @@ import com.lakeel.altla.vision.nearby.data.entity.LineLinkEntity;
 
 import rx.Single;
 
-public interface FirebaseLineLinksRepository {
+public interface FirebaseLINELinksRepository {
 
     Single<String> saveUrl(String userId, String url);
 

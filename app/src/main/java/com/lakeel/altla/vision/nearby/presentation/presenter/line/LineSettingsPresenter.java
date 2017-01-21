@@ -2,7 +2,7 @@ package com.lakeel.altla.vision.nearby.presentation.presenter.line;
 
 import com.lakeel.altla.vision.nearby.R;
 import com.lakeel.altla.vision.nearby.domain.usecase.FindLineLinkUseCase;
-import com.lakeel.altla.vision.nearby.domain.usecase.SaveLineUrlUseCase;
+import com.lakeel.altla.vision.nearby.domain.usecase.SaveLINEUrlUseCase;
 import com.lakeel.altla.vision.nearby.presentation.analytics.AnalyticsReporter;
 import com.lakeel.altla.vision.nearby.presentation.firebase.MyUser;
 import com.lakeel.altla.vision.nearby.presentation.presenter.BasePresenter;
@@ -26,7 +26,7 @@ public final class LineSettingsPresenter extends BasePresenter<LineSettingsView>
     AnalyticsReporter analyticsReporter;
 
     @Inject
-    SaveLineUrlUseCase saveLineUrlUseCase;
+    SaveLINEUrlUseCase saveLineUrlUseCase;
 
     @Inject
     FindLineLinkUseCase findLineLinkUseCase;

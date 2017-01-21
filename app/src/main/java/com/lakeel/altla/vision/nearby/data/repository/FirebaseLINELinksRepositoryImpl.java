@@ -9,7 +9,7 @@ import com.google.firebase.database.ValueEventListener;
 import com.lakeel.altla.vision.nearby.data.entity.LineLinkEntity;
 import com.lakeel.altla.vision.nearby.data.execption.DataStoreException;
 import com.lakeel.altla.vision.nearby.data.mapper.LineLinkEntityMapper;
-import com.lakeel.altla.vision.nearby.domain.repository.FirebaseLineLinksRepository;
+import com.lakeel.altla.vision.nearby.domain.repository.FirebaseLINELinksRepository;
 
 import java.util.Iterator;
 
@@ -19,7 +19,7 @@ import rx.Single;
 import rx.SingleSubscriber;
 
 
-public class FirebaseLineLinksRepositoryImpl implements FirebaseLineLinksRepository {
+public class FirebaseLINELinksRepositoryImpl implements FirebaseLINELinksRepository {
 
     private static final String URL_KEY = "url";
 
@@ -28,7 +28,7 @@ public class FirebaseLineLinksRepositoryImpl implements FirebaseLineLinksReposit
     private DatabaseReference reference;
 
     @Inject
-    public FirebaseLineLinksRepositoryImpl(String url) {
+    public FirebaseLINELinksRepositoryImpl(String url) {
         reference = FirebaseDatabase.getInstance().getReferenceFromUrl(url);
     }
 
