@@ -36,7 +36,7 @@ public final class HistoryAdapter extends SwipeableUltimateViewAdapter<HistoryMo
 
     @Override
     protected int getNormalLayoutResId() {
-        return R.layout.recently_item;
+        return R.layout.history_item;
     }
 
     @Override
@@ -54,22 +54,22 @@ public final class HistoryAdapter extends SwipeableUltimateViewAdapter<HistoryMo
 
     static class HistoryItemsViewHolder extends UltimateRecyclerviewViewHolder implements HistoryItemView {
 
-        @BindView(R.id.layout_row)
+        @BindView(R.id.layoutItem)
         LinearLayout itemLayout;
 
-        @BindView(R.id.textView_user_item)
+        @BindView(R.id.textViewUserName)
         TextView userName;
 
-        @BindView(R.id.imageView_user_profile)
+        @BindView(R.id.imageViewUser)
         ImageView userImage;
 
-        @BindView(R.id.timestamp)
+        @BindView(R.id.textViewPassingTime)
         TextView passingTime;
 
         @BindView(R.id.buttonRemove)
         Button removeButton;
 
-        @BindView(R.id.swipe_layout)
+        @BindView(R.id.swipeLayout)
         SwipeLayout swipeLayout;
 
         private HistoryListPresenter.HistoryItemPresenter itemPresenter;

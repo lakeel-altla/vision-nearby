@@ -13,7 +13,7 @@ import com.lakeel.altla.vision.nearby.R;
 import com.lakeel.altla.vision.nearby.presentation.presenter.information.InformationListPresenter;
 import com.lakeel.altla.vision.nearby.presentation.view.InformationListView;
 import com.lakeel.altla.vision.nearby.presentation.view.activity.MainActivity;
-import com.lakeel.altla.vision.nearby.presentation.view.adapter.InformationListAdapter;
+import com.lakeel.altla.vision.nearby.presentation.view.adapter.InformationAdapter;
 import com.lakeel.altla.vision.nearby.presentation.view.divider.DividerItemDecoration;
 import com.lakeel.altla.vision.nearby.presentation.view.fragment.FragmentController;
 
@@ -27,7 +27,7 @@ public final class InformationListFragment extends Fragment implements Informati
     @Inject
     InformationListPresenter presenter;
 
-    @BindView(R.id.recycler_view)
+    @BindView(R.id.recyclerView)
     RecyclerView recyclerView;
 
     public static InformationListFragment newInstance() {
@@ -62,7 +62,7 @@ public final class InformationListFragment extends Fragment implements Informati
         recyclerView.setHasFixedSize(false);
         recyclerView.addItemDecoration(new DividerItemDecoration(getContext()));
 
-        InformationListAdapter adapter = new InformationListAdapter(presenter);
+        InformationAdapter adapter = new InformationAdapter(presenter);
         recyclerView.setAdapter(adapter);
 
         presenter.onActivityCreated();

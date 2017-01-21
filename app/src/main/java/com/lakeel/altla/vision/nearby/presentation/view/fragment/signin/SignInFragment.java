@@ -27,7 +27,7 @@ public final class SignInFragment extends Fragment implements SignInView {
     @Inject
     SignInPresenter presenter;
 
-    @BindView(R.id.layout)
+    @BindView(R.id.mainLayout)
     RelativeLayout mainLayout;
 
     private static final int SIGN_IN_REQUEST_CODE = 1;

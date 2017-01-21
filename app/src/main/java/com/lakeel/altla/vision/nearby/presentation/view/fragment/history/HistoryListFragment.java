@@ -32,10 +32,10 @@ public final class HistoryListFragment extends Fragment implements HistoryListVi
     @Inject
     HistoryListPresenter presenter;
 
-    @BindView(R.id.layout)
+    @BindView(R.id.mainLayout)
     RelativeLayout mainLayout;
 
-    @BindView(R.id.recycler_view)
+    @BindView(R.id.recyclerView)
     UltimateRecyclerView recyclerView;
 
     public static HistoryListFragment newInstance() {

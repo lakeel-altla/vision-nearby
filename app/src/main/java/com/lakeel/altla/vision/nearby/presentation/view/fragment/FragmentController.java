@@ -16,7 +16,7 @@ import com.lakeel.altla.vision.nearby.presentation.view.fragment.information.Inf
 import com.lakeel.altla.vision.nearby.presentation.view.fragment.information.InformationListFragment;
 import com.lakeel.altla.vision.nearby.presentation.view.fragment.line.LineSettingsFragment;
 import com.lakeel.altla.vision.nearby.presentation.view.fragment.nearby.NearbyListFragment;
-import com.lakeel.altla.vision.nearby.presentation.view.fragment.setting.SettingsFragment;
+import com.lakeel.altla.vision.nearby.presentation.view.fragment.settings.SettingsFragment;
 import com.lakeel.altla.vision.nearby.presentation.view.fragment.signin.SignInFragment;
 import com.lakeel.altla.vision.nearby.presentation.view.fragment.tracking.TrackingFragment;
 import com.lakeel.altla.vision.nearby.presentation.view.fragment.user.UserPassingFragment;

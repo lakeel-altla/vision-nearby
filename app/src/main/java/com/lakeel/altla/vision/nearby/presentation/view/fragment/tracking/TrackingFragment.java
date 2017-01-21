@@ -47,7 +47,7 @@ public final class TrackingFragment extends Fragment implements TrackingView, On
     @BindView(R.id.trackingLayout)
     LinearLayout mainLayout;
 
-    @BindView(R.id.textView_detected_date)
+    @BindView(R.id.textViewDetectedDate)
     TextView foundDate;
 
     private View mapView;
@@ -90,10 +90,10 @@ public final class TrackingFragment extends Fragment implements TrackingView, On
         ((MainActivity) getActivity()).setDrawerIndicatorEnabled(false);
 
         FragmentManager fm = getChildFragmentManager();
-        supportMapFragment = (SupportMapFragment) fm.findFragmentById(R.id.tracking_map_layout);
+        supportMapFragment = (SupportMapFragment) fm.findFragmentById(R.id.trackingMapLayout);
         if (supportMapFragment == null) {
             supportMapFragment = SupportMapFragment.newInstance();
-            fm.beginTransaction().replace(R.id.tracking_map_layout, supportMapFragment).commit();
+            fm.beginTransaction().replace(R.id.trackingMapLayout, supportMapFragment).commit();
         }
         supportMapFragment.getMapAsync(this);
 

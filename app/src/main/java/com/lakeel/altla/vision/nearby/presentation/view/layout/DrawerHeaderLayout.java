@@ -12,10 +12,10 @@ public class DrawerHeaderLayout {
     @BindView(R.id.imageView_header_profile)
     public ImageView userImageView;
 
-    @BindView(R.id.textView_header_userName)
+    @BindView(R.id.textViewUserName)
     public TextView textViewUserName;
 
-    @BindView(R.id.textView_header_user_address)
+    @BindView(R.id.textViewEmail)
     public TextView textViewEmail;
 }
 

@@ -38,7 +38,7 @@
                 android:text="@string/textView_name"/>
 
         <TextView
-                android:id="@+id/nameText"
+                android:id="@+id/textViewUserName"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"/>
 
@@ -60,7 +60,7 @@
                 android:text="@string/textView_email"/>
 
         <TextView
-                android:id="@+id/emailText"
+                android:id="@+id/textViewEmail"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"/>
 

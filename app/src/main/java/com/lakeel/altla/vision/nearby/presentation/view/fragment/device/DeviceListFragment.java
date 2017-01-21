@@ -10,6 +10,7 @@ import android.view.LayoutInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.RelativeLayout;
 
 import com.lakeel.altla.vision.nearby.R;
 import com.lakeel.altla.vision.nearby.presentation.presenter.device.DeviceListPresenter;
@@ -29,7 +30,10 @@ public final class DeviceListFragment extends Fragment implements DeviceListView
     @Inject
     DeviceListPresenter presenter;
 
-    @BindView(R.id.recycler_view)
+    @BindView(R.id.mainLayout)
+    RelativeLayout mainLayout;
+
+    @BindView(R.id.recyclerView)
     RecyclerView recyclerView;
 
     public static DeviceListFragment newInstance() {
@@ -107,6 +111,6 @@ public final class DeviceListFragment extends Fragment implements DeviceListView
 
     @Override
     public void showSnackBar(@StringRes int resId) {
-        Snackbar.make(recyclerView, resId, Snackbar.LENGTH_SHORT).show();
+        Snackbar.make(mainLayout, resId, Snackbar.LENGTH_SHORT).show();
     }
 }

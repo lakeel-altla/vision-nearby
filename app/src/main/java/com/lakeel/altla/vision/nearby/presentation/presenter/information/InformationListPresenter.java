@@ -10,7 +10,7 @@ import com.lakeel.altla.vision.nearby.presentation.presenter.mapper.InformationM
 import com.lakeel.altla.vision.nearby.presentation.presenter.model.InformationModel;
 import com.lakeel.altla.vision.nearby.presentation.view.InformationItemView;
 import com.lakeel.altla.vision.nearby.presentation.view.InformationListView;
-import com.lakeel.altla.vision.nearby.presentation.view.adapter.InformationListAdapter;
+import com.lakeel.altla.vision.nearby.presentation.view.adapter.InformationAdapter;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -60,7 +60,7 @@ public final class InformationListPresenter extends BasePresenter<InformationLis
         subscriptions.add(subscription);
     }
 
-    public void onCreateItemView(InformationListAdapter.InformationViewHolder viewHolder) {
+    public void onCreateItemView(InformationAdapter.InformationViewHolder viewHolder) {
         InformationItemPresenter itemPresenter = new InformationListPresenter.InformationItemPresenter();
         itemPresenter.onCreateItemView(viewHolder);
         viewHolder.setItemPresenter(itemPresenter);

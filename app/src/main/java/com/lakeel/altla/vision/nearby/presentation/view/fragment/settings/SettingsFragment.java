@@ -1,4 +1,4 @@
-package com.lakeel.altla.vision.nearby.presentation.view.fragment.setting;
+package com.lakeel.altla.vision.nearby.presentation.view.fragment.settings;
 
 import android.os.Bundle;
 import android.support.v7.preference.PreferenceFragmentCompat;

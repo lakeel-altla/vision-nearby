@@ -12,14 +12,12 @@ import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuInflater;
-import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 
 import com.flipboard.bottomsheet.BottomSheetLayout;
 import com.lakeel.altla.vision.nearby.R;
 import com.lakeel.altla.vision.nearby.presentation.presenter.nearby.NearbyListPresenter;
-import com.lakeel.altla.vision.nearby.presentation.view.GridShareSheet;
 import com.lakeel.altla.vision.nearby.presentation.view.NearbyListView;
 import com.lakeel.altla.vision.nearby.presentation.view.actionBar.ActionBarColor;
 import com.lakeel.altla.vision.nearby.presentation.view.actionBar.BarColor;
@@ -37,7 +35,6 @@ import butterknife.BindView;
 import butterknife.ButterKnife;
 
 import static android.app.Activity.RESULT_OK;
-import static com.lakeel.altla.vision.nearby.R.id.share;
 
 public final class NearbyListFragment extends Fragment implements NearbyListView {
 
@@ -47,10 +44,10 @@ public final class NearbyListFragment extends Fragment implements NearbyListView
     @BindView(R.id.shareSheet)
     BottomSheetLayout shareSheet;
 
-    @BindView(R.id.layout)
+    @BindView(R.id.swipeLayout)
     SwipeRefreshLayout swipeRefreshLayout;
 
-    @BindView(R.id.recycler_view)
+    @BindView(R.id.recyclerView)
     RecyclerView recyclerView;
 
     private static final Logger LOGGER = LoggerFactory.getLogger(NearbyListFragment.class);

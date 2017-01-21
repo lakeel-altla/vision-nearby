@@ -20,10 +20,10 @@
             android:layout_height="wrap_content"
             android:paddingBottom="10dp"
             android:gravity="center_horizontal"
-            android:layout_above="@+id/imageView_user"/>
+            android:layout_above="@+id/imageViewUser"/>
 
     <de.hdodenhof.circleimageview.CircleImageView
-            android:id="@+id/imageView_user"
+            android:id="@+id/imageViewUser"
             android:layout_width="80dp"
             android:layout_height="80dp"
             android:layout_gravity="center"

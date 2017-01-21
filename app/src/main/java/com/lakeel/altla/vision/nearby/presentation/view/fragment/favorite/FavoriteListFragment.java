@@ -30,10 +30,10 @@ import butterknife.ButterKnife;
 
 public final class FavoriteListFragment extends Fragment implements FavoriteListView {
 
-    @BindView(R.id.layout)
+    @BindView(R.id.mainLayout)
     RelativeLayout mainLayout;
 
-    @BindView(R.id.recycler_view)
+    @BindView(R.id.recyclerView)
     UltimateRecyclerView recyclerView;
 
     @Inject

@@ -16,18 +16,18 @@ import com.lakeel.altla.vision.nearby.presentation.view.InformationItemView;
 import butterknife.BindView;
 import butterknife.ButterKnife;
 
-public final class InformationListAdapter extends RecyclerView.Adapter<InformationListAdapter.InformationViewHolder> {
+public final class InformationAdapter extends RecyclerView.Adapter<InformationAdapter.InformationViewHolder> {
 
     public InformationListPresenter presenter;
 
-    public InformationListAdapter(InformationListPresenter presenter) {
+    public InformationAdapter(InformationListPresenter presenter) {
         this.presenter = presenter;
     }
 
     @Override
     public InformationViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
         View itemView = LayoutInflater.from(parent.getContext()).inflate(R.layout.information_item, parent, false);
-        InformationListAdapter.InformationViewHolder viewHolder = new InformationListAdapter.InformationViewHolder(itemView);
+        InformationAdapter.InformationViewHolder viewHolder = new InformationAdapter.InformationViewHolder(itemView);
         presenter.onCreateItemView(viewHolder);
         return viewHolder;
     }
@@ -44,10 +44,10 @@ public final class InformationListAdapter extends RecyclerView.Adapter<Informati
 
     public final class InformationViewHolder extends RecyclerView.ViewHolder implements InformationItemView {
 
-        @BindView(R.id.title)
+        @BindView(R.id.textViewTitle)
         TextView title;
 
-        @BindView(R.id.postTime)
+        @BindView(R.id.textViewPostTime)
         TextView postTime;
 
         private View itemView;

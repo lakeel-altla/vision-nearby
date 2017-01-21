@@ -5,7 +5,7 @@
     android:orientation="horizontal">
 
     <com.marshalchen.ultimaterecyclerview.swipe.SwipeLayout
-        android:id="@+id/swipe_layout"
+        android:id="@+id/swipeLayout"
         android:layout_width="match_parent"
         android:layout_height="wrap_content">
 
@@ -26,13 +26,13 @@
         </LinearLayout>
 
         <LinearLayout
-            android:id="@+id/layout_row"
+            android:id="@+id/layoutItem"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:padding="16dp">
 
             <de.hdodenhof.circleimageview.CircleImageView
-                android:id="@+id/imageView_user_profile"
+                android:id="@+id/imageViewUser"
                 android:layout_width="60dp"
                 android:layout_height="60dp"
                 android:layout_gravity="center"
@@ -40,14 +40,14 @@
                 android:paddingStart="5dp" />
 
             <TextView
-                android:id="@+id/textView_user_item"
+                android:id="@+id/textViewUserName"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:layout_gravity="center"
                 android:layout_weight="1" />
 
             <TextView
-                android:id="@+id/timestamp"
+                android:id="@+id/textViewPassingTime"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:paddingEnd="5dp"

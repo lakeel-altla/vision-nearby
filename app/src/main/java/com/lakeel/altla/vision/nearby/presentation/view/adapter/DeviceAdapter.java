@@ -47,7 +47,7 @@ public final class DeviceAdapter extends RecyclerView.Adapter<DeviceAdapter.Devi
 
     public final class DeviceViewHolder extends RecyclerView.ViewHolder implements DeviceItemView {
 
-        @BindView(R.id.layout)
+        @BindView(R.id.swipeLayout)
         RelativeLayout itemLayout;
 
         @BindView(R.id.buttonLost)

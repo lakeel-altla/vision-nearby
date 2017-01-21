@@ -9,16 +9,16 @@ import butterknife.BindView;
 
 public final class PassingLayout {
 
-    @BindView(R.id.dateText)
+    @BindView(R.id.textViewPassingTime)
     public TextView textViewDate;
 
-    @BindView(R.id.weatherText)
+    @BindView(R.id.textViewWeather)
     public TextView textViewWeather;
 
-    @BindView(R.id.userActivityText)
+    @BindView(R.id.textViewUserActivity)
     public TextView textViewUserActivity;
 
-    @BindView(R.id.timesText)
+    @BindView(R.id.textViewTimes)
     public TextView textViewTimes;
 
     @BindView(R.id.locationLayout)

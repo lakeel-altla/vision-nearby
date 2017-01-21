@@ -51,13 +51,13 @@ public final class NearbyAdapter extends RecyclerView.Adapter<NearbyAdapter.Near
 
         private NearbyListPresenter.NearbyItemPresenter itemPresenter;
 
-        @BindView(R.id.layout)
+        @BindView(R.id.itemLayout)
         LinearLayout itemLayout;
 
-        @BindView(R.id.textView_user_item)
+        @BindView(R.id.textViewUserName)
         TextView userName;
 
-        @BindView(R.id.imageView_user_profile)
+        @BindView(R.id.imageViewUser)
         ImageView userImage;
 
         NearbyViewHolder(View itemView) {

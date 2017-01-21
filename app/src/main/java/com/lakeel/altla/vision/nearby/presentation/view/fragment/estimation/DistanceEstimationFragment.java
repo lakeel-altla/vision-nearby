@@ -46,7 +46,7 @@ public final class DistanceEstimationFragment extends Fragment implements Distan
     @BindView(R.id.textViewDistance)
     TextView distanceText;
 
-    @BindView(R.id.imageView_user)
+    @BindView(R.id.imageViewUser)
     ImageView userImageView;
 
     @BindView(R.id.imageViewCircle)
@@ -69,7 +69,7 @@ public final class DistanceEstimationFragment extends Fragment implements Distan
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
-        View view = inflater.inflate(R.layout.fragment_find_nearby_device, container, false);
+        View view = inflater.inflate(R.layout.fragment_estimate_distance, container, false);
         ButterKnife.bind(this, view);
 
         setHasOptionsMenu(true);
