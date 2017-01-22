@@ -20,8 +20,7 @@ public final class BeaconClient {
     private final BeaconNotifier beaconNotifier;
 
     public BeaconClient(Context context) {
-        Region region = new Region("background-region", null, null, null);
-        beaconNotifier = new BeaconNotifier(context, region);
+        beaconNotifier = new BeaconNotifier(context);
 
         BeaconManager beaconManager = BeaconManager.getInstanceForApplication(context);
 
@@ -47,11 +46,11 @@ public final class BeaconClient {
         new BackgroundPowerSaver(context);
     }
 
-    public void startMonitor() {
+    public void startSubscribeInBackground() {
         beaconNotifier.start();
     }
 
-    public void stopMonitor() {
+    public void stopSubscribeInBackground() {
         beaconNotifier.stop();
     }
 }

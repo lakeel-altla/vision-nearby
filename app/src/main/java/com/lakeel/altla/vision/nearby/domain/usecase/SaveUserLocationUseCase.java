@@ -2,7 +2,7 @@ package com.lakeel.altla.vision.nearby.domain.usecase;
 
 import android.location.Location;
 
-import com.lakeel.altla.vision.nearby.data.entity.HistoryEntity;
+import com.lakeel.altla.vision.nearby.domain.entity.HistoryEntity;
 import com.lakeel.altla.vision.nearby.domain.repository.FirebaseHistoryRepository;
 
 import javax.inject.Inject;

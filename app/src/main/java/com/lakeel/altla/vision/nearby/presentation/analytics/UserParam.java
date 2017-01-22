@@ -4,21 +4,21 @@ import android.os.Bundle;
 
 import com.lakeel.altla.vision.nearby.presentation.firebase.MyUser;
 
-public final class UserParam {
+final class UserParam {
 
     private final Bundle bundle = new Bundle();
 
-    public UserParam() {
-        MyUser.UserData userData = MyUser.getUserData();
-        bundle.putString(AnalyticsParam.USER_ID.getValue(), userData.userId);
-        bundle.putString(AnalyticsParam.USER_NAME.getValue(), userData.userName);
+    UserParam() {
+        MyUser.UserProfile userProfile = MyUser.getUserData();
+        bundle.putString(AnalyticsParam.USER_ID.getValue(), userProfile.userId);
+        bundle.putString(AnalyticsParam.USER_NAME.getValue(), userProfile.userName);
     }
 
-    public void putString(String key, String value) {
+    void putString(String key, String value) {
         bundle.putString(key, value);
     }
 
-    public Bundle toBundle() {
+    Bundle toBundle() {
         return bundle;
     }
 }

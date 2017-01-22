@@ -1,4 +1,4 @@
-package com.lakeel.altla.vision.nearby.presentation.constants;
+package com.lakeel.altla.vision.nearby.presentation.awareness;
 
 import com.google.android.gms.awareness.state.Weather;
 import com.lakeel.altla.vision.nearby.R;

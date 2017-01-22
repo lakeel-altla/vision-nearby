@@ -30,7 +30,7 @@ public final class SettingsFragment extends PreferenceFragmentCompat {
         // BLE
         PreferenceScreen bleScreen = (PreferenceScreen) findPreference(KEY_BLUETOOTH_SCREEN);
         bleScreen.setOnPreferenceClickListener(preference -> {
-            FragmentController controller = new FragmentController(getActivity().getSupportFragmentManager());
+            FragmentController controller = new FragmentController(this);
             controller.showBleSettingsFragment();
             return false;
         });
@@ -38,7 +38,7 @@ public final class SettingsFragment extends PreferenceFragmentCompat {
         // LINE
         PreferenceScreen lineScreen = (PreferenceScreen) findPreference(KEY_LINE_SCREEN);
         lineScreen.setOnPreferenceClickListener(preference -> {
-            FragmentController controller = new FragmentController(getActivity().getSupportFragmentManager());
+            FragmentController controller = new FragmentController(this);
             controller.showLineSettingsFragment();
             return false;
         });
@@ -46,7 +46,7 @@ public final class SettingsFragment extends PreferenceFragmentCompat {
         // Tracking
         PreferenceScreen trackingScreen = (PreferenceScreen) findPreference(KEY_TRACKING_SCREEN);
         trackingScreen.setOnPreferenceClickListener(preference -> {
-            FragmentController controller = new FragmentController(getActivity().getSupportFragmentManager());
+            FragmentController controller = new FragmentController(this);
             controller.showDeviceListFragment();
             return false;
         });

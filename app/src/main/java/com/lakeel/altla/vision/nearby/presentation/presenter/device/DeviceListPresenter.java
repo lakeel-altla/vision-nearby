@@ -4,7 +4,7 @@ import android.support.annotation.IntRange;
 
 import com.lakeel.altla.vision.nearby.R;
 import com.lakeel.altla.vision.nearby.core.CollectionUtils;
-import com.lakeel.altla.vision.nearby.data.entity.BeaconEntity;
+import com.lakeel.altla.vision.nearby.domain.entity.BeaconEntity;
 import com.lakeel.altla.vision.nearby.domain.usecase.FindBeaconUseCase;
 import com.lakeel.altla.vision.nearby.domain.usecase.FindUserBeaconsUseCase;
 import com.lakeel.altla.vision.nearby.domain.usecase.FindUserUseCase;
@@ -102,7 +102,7 @@ public class DeviceListPresenter extends BasePresenter<DeviceListView> {
 
             Subscription subscription = removeBeaconUseCase
                     .execute(model.beaconId)
-                    .flatMap(beaconId -> removeUserBeacon(MyUser.getUid(), model.beaconId))
+                    .flatMap(beaconId -> removeUserBeacon(MyUser.getUserId(), model.beaconId))
                     .subscribeOn(Schedulers.io())
                     .observeOn(AndroidSchedulers.mainThread())
                     .subscribe(s -> {
@@ -146,7 +146,7 @@ public class DeviceListPresenter extends BasePresenter<DeviceListView> {
 
     private void findUserBeacons() {
         Subscription subscription = findUserBeaconsUseCase
-                .execute(MyUser.getUid())
+                .execute(MyUser.getUserId())
                 .flatMap(this::findBeacon)
                 .filter(entity -> entity != null)
                 .map(modelMapper::map)

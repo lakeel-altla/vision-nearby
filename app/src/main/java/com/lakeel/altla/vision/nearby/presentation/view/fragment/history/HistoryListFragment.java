@@ -15,7 +15,6 @@ import com.lakeel.altla.vision.nearby.presentation.presenter.history.HistoryList
 import com.lakeel.altla.vision.nearby.presentation.view.HistoryListView;
 import com.lakeel.altla.vision.nearby.presentation.view.activity.MainActivity;
 import com.lakeel.altla.vision.nearby.presentation.view.adapter.HistoryAdapter;
-import com.lakeel.altla.vision.nearby.presentation.view.bundle.HistoryBundle;
 import com.lakeel.altla.vision.nearby.presentation.view.divider.DividerItemDecoration;
 import com.lakeel.altla.vision.nearby.presentation.view.fragment.FragmentController;
 import com.marshalchen.ultimaterecyclerview.UltimateRecyclerView;
@@ -111,8 +110,8 @@ public final class HistoryListFragment extends Fragment implements HistoryListVi
     }
 
     @Override
-    public void showHistoryFragment(HistoryBundle data) {
-        FragmentController controller = new FragmentController(getActivity().getSupportFragmentManager());
-        controller.showUserPassingFragment(data);
+    public void showUserPassingFragment(String historyId) {
+        FragmentController controller = new FragmentController(this);
+        controller.showUserPassingFragment(historyId);
     }
 }

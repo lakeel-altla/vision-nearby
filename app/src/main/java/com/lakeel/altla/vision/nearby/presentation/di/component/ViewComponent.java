@@ -1,6 +1,5 @@
 package com.lakeel.altla.vision.nearby.presentation.di.component;
 
-import com.lakeel.altla.vision.nearby.presentation.application.App;
 import com.lakeel.altla.vision.nearby.presentation.di.InjectScope;
 import com.lakeel.altla.vision.nearby.presentation.di.module.ConfigModule;
 import com.lakeel.altla.vision.nearby.presentation.di.module.PresenterModule;
@@ -9,7 +8,7 @@ import com.lakeel.altla.vision.nearby.presentation.service.LINEService;
 import com.lakeel.altla.vision.nearby.presentation.view.activity.MainActivity;
 import com.lakeel.altla.vision.nearby.presentation.view.fragment.bluetooth.BleSettingsFragment;
 import com.lakeel.altla.vision.nearby.presentation.view.fragment.device.DeviceListFragment;
-import com.lakeel.altla.vision.nearby.presentation.view.fragment.estimation.DistanceEstimationFragment;
+import com.lakeel.altla.vision.nearby.presentation.view.fragment.distance.DistanceEstimationFragment;
 import com.lakeel.altla.vision.nearby.presentation.view.fragment.favorite.FavoriteListFragment;
 import com.lakeel.altla.vision.nearby.presentation.view.fragment.history.HistoryListFragment;
 import com.lakeel.altla.vision.nearby.presentation.view.fragment.information.InformationFragment;
@@ -27,8 +26,6 @@ import dagger.Subcomponent;
 @InjectScope
 @Subcomponent(modules = {PresenterModule.class, RepositoryModule.class, ConfigModule.class})
 public interface ViewComponent {
-
-    void inject(App app);
 
     void inject(MainActivity activity);
 

@@ -4,7 +4,7 @@ import android.location.Location;
 
 import com.google.android.gms.awareness.state.Weather;
 import com.google.android.gms.location.DetectedActivity;
-import com.lakeel.altla.vision.nearby.data.entity.HistoryEntity;
+import com.lakeel.altla.vision.nearby.domain.entity.HistoryEntity;
 
 import rx.Completable;
 import rx.Observable;
@@ -12,9 +12,11 @@ import rx.Single;
 
 public interface FirebaseHistoryRepository {
 
-    Observable<HistoryEntity> findHistoryByUserId(String userId);
+    Observable<HistoryEntity> findHistoryList(String userId);
 
-    Single<Long> findTimes(String userId, String otherId);
+    Single<HistoryEntity> findHistory(String userId, String historyId);
+
+    Single<Long> findTimes(String myUserId, String passingUserId);
 
     Single<String> saveHistory(String myUserId, String otherUserId);
 

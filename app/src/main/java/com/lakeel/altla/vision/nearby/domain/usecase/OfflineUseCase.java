@@ -18,7 +18,7 @@ public final class OfflineUseCase {
     }
 
     public Completable execute() {
-        String userId = MyUser.getUid();
+        String userId = MyUser.getUserId();
         return repository.saveOffline(userId).subscribeOn(Schedulers.io());
     }
 }

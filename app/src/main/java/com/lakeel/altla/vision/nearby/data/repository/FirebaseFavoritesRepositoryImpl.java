@@ -6,8 +6,8 @@ import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
-import com.lakeel.altla.vision.nearby.data.entity.FavoriteEntity;
 import com.lakeel.altla.vision.nearby.data.execption.DataStoreException;
+import com.lakeel.altla.vision.nearby.domain.entity.FavoriteEntity;
 import com.lakeel.altla.vision.nearby.domain.repository.FirebaseFavoritesRepository;
 
 import javax.inject.Inject;
@@ -26,10 +26,10 @@ public class FirebaseFavoritesRepositoryImpl implements FirebaseFavoritesReposit
     }
 
     @Override
-    public Observable<FavoriteEntity> findFavoritesByUserId(String userId) {
+    public Observable<FavoriteEntity> findFavoritesByUserId(String myUserId) {
         return Observable.create(subscriber -> {
             reference
-                    .child(userId)
+                    .child(myUserId)
                     .addListenerForSingleValueEvent(new ValueEventListener() {
 
                         @Override
@@ -56,11 +56,11 @@ public class FirebaseFavoritesRepositoryImpl implements FirebaseFavoritesReposit
     }
 
     @Override
-    public Single<FavoriteEntity> findFavorite(String userId, String otherUserId) {
+    public Single<FavoriteEntity> findFavorite(String myUserId, String favoriteUserId) {
         return Single.create(subscriber ->
                 reference
-                        .child(userId)
-                        .child(otherUserId)
+                        .child(myUserId)
+                        .child(favoriteUserId)
                         .addListenerForSingleValueEvent(new ValueEventListener() {
                             @Override
                             public void onDataChange(DataSnapshot dataSnapshot) {
@@ -82,11 +82,11 @@ public class FirebaseFavoritesRepositoryImpl implements FirebaseFavoritesReposit
     }
 
     @Override
-    public Completable saveFavorite(String myUserId, String otherUserId) {
+    public Completable saveFavorite(String myUserId, String favoriteUserId) {
         return Completable.create(subscriber -> {
             Task<Void> task = reference
                     .child(myUserId)
-                    .child(otherUserId)
+                    .child(favoriteUserId)
                     .setValue(true);
 
             Exception exception = task.getException();
@@ -99,11 +99,11 @@ public class FirebaseFavoritesRepositoryImpl implements FirebaseFavoritesReposit
     }
 
     @Override
-    public Completable removeFavorite(String userId, String otherUserId) {
+    public Completable removeFavorite(String myUserId, String favoriteUserId) {
         return Completable.create(subscriber -> {
             Task task = reference
-                    .child(userId)
-                    .child(otherUserId)
+                    .child(myUserId)
+                    .child(favoriteUserId)
                     .removeValue();
 
             Exception e = task.getException();

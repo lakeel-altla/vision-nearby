@@ -7,6 +7,7 @@ import com.lakeel.altla.vision.nearby.domain.repository.FirebaseLocationsReposit
 import javax.inject.Inject;
 
 import rx.Single;
+import rx.schedulers.Schedulers;
 
 public final class SaveDeviceLocationUseCase {
 
@@ -18,6 +19,6 @@ public final class SaveDeviceLocationUseCase {
     }
 
     public Single<String> execute(Location location) {
-        return repository.saveLocation(location);
+        return repository.saveLocation(location).subscribeOn(Schedulers.io());
     }
 }

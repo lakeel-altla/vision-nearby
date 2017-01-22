@@ -1,24 +1,23 @@
 package com.lakeel.altla.vision.nearby.presentation.presenter.user;
 
 import com.lakeel.altla.vision.nearby.R;
+import com.lakeel.altla.vision.nearby.domain.usecase.FindConnectionUseCase;
 import com.lakeel.altla.vision.nearby.domain.usecase.FindFavoriteUseCase;
+import com.lakeel.altla.vision.nearby.domain.usecase.FindHistoryUseCase;
 import com.lakeel.altla.vision.nearby.domain.usecase.FindLineLinkUseCase;
-import com.lakeel.altla.vision.nearby.domain.usecase.FindPresenceUseCase;
 import com.lakeel.altla.vision.nearby.domain.usecase.FindTimesUseCase;
 import com.lakeel.altla.vision.nearby.domain.usecase.FindUserUseCase;
 import com.lakeel.altla.vision.nearby.domain.usecase.SaveFavoriteUseCase;
 import com.lakeel.altla.vision.nearby.presentation.analytics.AnalyticsReporter;
-import com.lakeel.altla.vision.nearby.presentation.firebase.MyUser;
 import com.lakeel.altla.vision.nearby.presentation.presenter.BasePresenter;
-import com.lakeel.altla.vision.nearby.presentation.presenter.mapper.PresencesModelMapper;
-import com.lakeel.altla.vision.nearby.presentation.presenter.mapper.UserModelMapper;
+import com.lakeel.altla.vision.nearby.presentation.presenter.mapper.UserPassingModelMapper;
+import com.lakeel.altla.vision.nearby.presentation.presenter.model.UserPassingModel;
 import com.lakeel.altla.vision.nearby.presentation.view.UserPassingView;
-
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import com.lakeel.altla.vision.nearby.rx.ErrorAction;
 
 import javax.inject.Inject;
 
+import rx.Single;
 import rx.Subscription;
 import rx.android.schedulers.AndroidSchedulers;
 import rx.schedulers.Schedulers;
@@ -27,6 +26,9 @@ public final class UserPassingPresenter extends BasePresenter<UserPassingView> {
 
     @Inject
     AnalyticsReporter analyticsReporter;
+
+    @Inject
+    FindHistoryUseCase findHistoryUseCase;
 
     @Inject
     FindUserUseCase findUserUseCase;
@@ -38,7 +40,7 @@ public final class UserPassingPresenter extends BasePresenter<UserPassingView> {
     SaveFavoriteUseCase saveFavoriteUseCase;
 
     @Inject
-    FindPresenceUseCase findPresenceUseCase;
+    FindConnectionUseCase findConnectionUseCase;
 
     @Inject
     FindFavoriteUseCase findFavoriteUseCase;
@@ -46,101 +48,116 @@ public final class UserPassingPresenter extends BasePresenter<UserPassingView> {
     @Inject
     FindLineLinkUseCase findLineLinkUseCase;
 
-    private static final Logger LOGGER = LoggerFactory.getLogger(UserPassingPresenter.class);
+    private UserPassingModel model = new UserPassingModel();
 
-    private PresencesModelMapper presencesModelMapper = new PresencesModelMapper();
+    private UserPassingModelMapper modelMapper = new UserPassingModelMapper();
 
-    private UserModelMapper userModelMapper = new UserModelMapper();
+    private String historyId;
 
-    private String userId;
-
-    private String userName;
-
-    private String latitude;
-
-    private String longitude;
+    private boolean isMapReady;
 
     @Inject
     UserPassingPresenter() {
     }
 
-    public void setUserLocationData(String userId, String userName, String latitude, String longitude) {
-        this.userId = userId;
-        this.userName = userName;
-        this.latitude = latitude;
-        this.longitude = longitude;
+    public void setHistoryId(String historyId) {
+        this.historyId = historyId;
     }
 
     public void onActivityCreated() {
-        analyticsReporter.viewHistoryItem(userId, userName);
-
-        Subscription presenceSubscription = findPresenceUseCase
-                .execute(userId)
-                .map(entity -> presencesModelMapper.map(entity))
-                .subscribeOn(Schedulers.io())
+        Subscription subscription = findHistoryUseCase.execute(historyId)
+                .map(entity -> {
+                    model = modelMapper.map(entity);
+                    return model;
+                })
+                .flatMap(model1 -> findUser(model1.userId))
                 .observeOn(AndroidSchedulers.mainThread())
-                .subscribe(model -> getView().showPresence(model),
-                        e -> LOGGER.error("Failed to findList presence.", e));
-        subscriptions.add(presenceSubscription);
+                .subscribe(model -> {
+                    analyticsReporter.viewHistoryItem(model.userId, model.userName);
 
-        Subscription timesSubscription = findTimesUseCase.execute(MyUser.getUid(), userId)
-                .subscribeOn(Schedulers.io())
-                .observeOn(AndroidSchedulers.mainThread())
-                .subscribe(times -> getView().showTimes(times),
-                        e -> LOGGER.error("Failed to findList times.", e));
-        subscriptions.add(timesSubscription);
+                    getView().showProfile(model);
+                    getView().showPassingData(model);
 
-        Subscription userSubscription = findUserUseCase.execute(userId)
-                .map(entity -> userModelMapper.map(entity))
-                .subscribeOn(Schedulers.io())
-                .observeOn(AndroidSchedulers.mainThread())
-                .subscribe(model -> getView().showProfile(model),
-                        e -> LOGGER.error("Failed to findList user.", e));
-        subscriptions.add(userSubscription);
+                    if (isMapReady) {
+                        onMapReady();
+                    }
 
-        Subscription lineLinkSubscription = findLineLinkUseCase
-                .execute(userId)
-                .map(lineLinksEntity -> lineLinksEntity.url)
-                .subscribeOn(Schedulers.io())
-                .observeOn(AndroidSchedulers.mainThread())
-                .subscribe(lineUrl -> getView().showLineUrl(lineUrl),
-                        e -> LOGGER.error("Failed to findList LINE link.", e));
-        subscriptions.add(lineLinkSubscription);
-
-        Subscription favoriteSubscription = findFavoriteUseCase
-                .execute(MyUser.getUid(), userId)
-                .toObservable()
-                .filter(entity -> entity == null)
-                .subscribeOn(Schedulers.io())
-                .observeOn(AndroidSchedulers.mainThread())
-                .subscribe(entity -> getView().showAddButton(),
-                        e -> LOGGER.error("Failed to findList the user data.", e));
-        subscriptions.add(favoriteSubscription);
+                    showPresence(model.userId);
+                    showTimes(model.userId);
+                    showLineUrl(model.userId);
+                    showAddFavoriteButtonIfNeeded(model.userId);
+                }, new ErrorAction<>());
+        subscriptions.add(subscription);
     }
 
     public void onMapReady() {
-        if (latitude == null && longitude == null) {
+        isMapReady = true;
+        if (model.latitude == null && model.longitude == null) {
             getView().hideLocation();
         } else {
-            getView().showLocationMap(latitude, longitude);
+            getView().showLocationMap(model.latitude, model.longitude);
         }
     }
 
     public void onAdd() {
-        analyticsReporter.addFavorite(userId, userName);
+        analyticsReporter.addFavorite(model.userId, model.userName);
 
-        Subscription subscription = saveFavoriteUseCase
-                .execute(MyUser.getUid(), userId)
-                .subscribeOn(Schedulers.io())
+        Subscription subscription = saveFavoriteUseCase.execute(model.userId)
                 .observeOn(AndroidSchedulers.mainThread())
-                .subscribe(
-                        e -> {
-                            LOGGER.error("Failed to add favorites.", e);
-                            getView().showSnackBar(R.string.error_not_added);
-                        }, () -> {
+                .subscribe(new ErrorAction<>(),
+                        () -> {
                             getView().hideAddButton();
                             getView().showSnackBar(R.string.message_added);
                         });
+        subscriptions.add(subscription);
+    }
+
+    private Single<UserPassingModel> findUser(String userId) {
+        return findUserUseCase.execute(userId)
+                .subscribeOn(Schedulers.io())
+                .map(entity -> {
+                    model.userName = entity.name;
+                    model.imageUri = entity.imageUri;
+                    model.email = entity.email;
+                    return model;
+                });
+    }
+
+    private void showPresence(String userId) {
+        Subscription subscription = findConnectionUseCase.execute(userId)
+                .map(entity -> {
+                    model.isConnected = entity.isConnected;
+                    model.lastOnlineTime = entity.lastOnlineTime;
+                    return model;
+                })
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribe(model -> getView().showPresence(model), new ErrorAction<>());
+        subscriptions.add(subscription);
+    }
+
+    private void showTimes(String userId) {
+        Subscription timesSubscription = findTimesUseCase.execute(userId)
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribe(times -> getView().showTimes(times), new ErrorAction<>());
+        subscriptions.add(timesSubscription);
+    }
+
+    private void showLineUrl(String userId) {
+        Subscription subscription = findLineLinkUseCase.execute(userId)
+                .toObservable()
+                .filter(entity -> entity != null)
+                .map(entity -> entity.url)
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribe(lineUrl -> getView().showLineUrl(lineUrl), new ErrorAction<>());
+        subscriptions.add(subscription);
+    }
+
+    private void showAddFavoriteButtonIfNeeded(String userId) {
+        Subscription subscription = findFavoriteUseCase.execute(userId)
+                .toObservable()
+                .filter(entity -> entity == null)
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribe(entity -> getView().showAddButton(), new ErrorAction<>());
         subscriptions.add(subscription);
     }
 }

@@ -1,6 +1,6 @@
 package com.lakeel.altla.vision.nearby.data.mapper;
 
-import com.lakeel.altla.vision.nearby.data.entity.LineLinkEntity;
+import com.lakeel.altla.vision.nearby.domain.entity.LineLinkEntity;
 
 public final class LineLinkEntityMapper {
 

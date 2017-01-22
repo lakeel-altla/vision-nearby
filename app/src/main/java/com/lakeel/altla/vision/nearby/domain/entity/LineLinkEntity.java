@@ -1,4 +1,4 @@
-package com.lakeel.altla.vision.nearby.data.entity;
+package com.lakeel.altla.vision.nearby.domain.entity;
 
 public final class LineLinkEntity {
 

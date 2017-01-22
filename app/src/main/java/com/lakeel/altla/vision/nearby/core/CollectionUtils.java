@@ -9,18 +9,10 @@ public final class CollectionUtils {
     }
 
     public static boolean isEmpty(List list) {
-        if (list == null || list.size() == 0) {
-            return true;
-        }
-
-        return false;
+        return list == null || list.size() == 0;
     }
 
     public static boolean isEmpty(Map map) {
-        if (map == null || map.isEmpty()) {
-            return true;
-        }
-
-        return false;
+        return map == null || map.isEmpty();
     }
 }

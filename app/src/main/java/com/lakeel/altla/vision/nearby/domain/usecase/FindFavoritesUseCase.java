@@ -1,22 +1,34 @@
 package com.lakeel.altla.vision.nearby.domain.usecase;
 
-import com.lakeel.altla.vision.nearby.data.entity.FavoriteEntity;
+import com.lakeel.altla.vision.nearby.domain.entity.UserEntity;
 import com.lakeel.altla.vision.nearby.domain.repository.FirebaseFavoritesRepository;
+import com.lakeel.altla.vision.nearby.domain.repository.FirebaseUsersRepository;
+import com.lakeel.altla.vision.nearby.presentation.firebase.MyUser;
 
 import javax.inject.Inject;
 
 import rx.Observable;
+import rx.schedulers.Schedulers;
 
 public final class FindFavoritesUseCase {
 
     @Inject
-    FirebaseFavoritesRepository repository;
+    FirebaseFavoritesRepository favoritesRepository;
+
+    @Inject
+    FirebaseUsersRepository usersRepository;
 
     @Inject
     FindFavoritesUseCase() {
     }
 
-    public Observable<FavoriteEntity> execute(String userId) {
-        return repository.findFavoritesByUserId(userId);
+    public Observable<UserEntity> execute() {
+        String userId = MyUser.getUserId();
+        return favoritesRepository.findFavoritesByUserId(userId).subscribeOn(Schedulers.io())
+                .flatMap(entity -> findUser(entity.userId));
+    }
+
+    private Observable<UserEntity> findUser(String userId) {
+        return usersRepository.findUserByUserId(userId).subscribeOn(Schedulers.io()).toObservable();
     }
 }

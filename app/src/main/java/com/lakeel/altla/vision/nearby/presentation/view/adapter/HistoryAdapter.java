@@ -90,7 +90,7 @@ public final class HistoryAdapter extends SwipeableUltimateViewAdapter<HistoryMo
 
         @Override
         public void showItem(HistoryModel model) {
-            String userName = model.name;
+            String userName = model.userName;
             String imageUri = model.imageUri;
 
             this.userName.setText(userName);

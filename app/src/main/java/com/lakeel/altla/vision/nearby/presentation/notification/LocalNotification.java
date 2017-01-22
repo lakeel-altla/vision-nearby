@@ -13,13 +13,12 @@ import java.util.UUID;
 
 public final class LocalNotification {
 
-    private Context context;
+    private final Context context;
 
-    private Notification notification;
+    private final Notification notification;
 
     public LocalNotification(Context context, String title, String message, PendingIntent intent) {
         this.context = context;
-
         notification = new NotificationCompat.Builder(context)
                 .setContentTitle(title)
                 .setTicker(title)

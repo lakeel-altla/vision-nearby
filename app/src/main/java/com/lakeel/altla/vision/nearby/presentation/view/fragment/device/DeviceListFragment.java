@@ -100,7 +100,7 @@ public final class DeviceListFragment extends Fragment implements DeviceListView
 
     @Override
     public void showTrackingFragment(String beaconId, String beaconName) {
-        FragmentController controller = new FragmentController(getActivity().getSupportFragmentManager());
+        FragmentController controller = new FragmentController(this);
         controller.showTrackingFragment(beaconId, beaconName);
     }
 

@@ -1,6 +1,6 @@
 package com.lakeel.altla.vision.nearby.domain.usecase;
 
-import com.lakeel.altla.vision.nearby.data.entity.LineLinkEntity;
+import com.lakeel.altla.vision.nearby.domain.entity.LineLinkEntity;
 import com.lakeel.altla.vision.nearby.domain.repository.FirebaseLINELinksRepository;
 
 import javax.inject.Inject;

@@ -29,7 +29,7 @@ public final class SaveBeaconUseCase {
     }
 
     public Single<String> execute() {
-        String userId = MyUser.getUid();
+        String userId = MyUser.getUserId();
         return preferenceRepository.findBeaconId(userId)
                 .flatMap(this::saveBeaconId)
                 .flatMap(beaconId -> saveUserBeacon(userId, beaconId))

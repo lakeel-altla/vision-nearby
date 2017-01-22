@@ -1,4 +1,4 @@
-package com.lakeel.altla.vision.nearby.presentation.constants;
+package com.lakeel.altla.vision.nearby.presentation.awareness;
 
 import com.lakeel.altla.vision.nearby.R;
 
@@ -25,12 +25,15 @@ public enum UserActivity {
         return resValue;
     }
 
-    public static UserActivity toUserActivity(int intValue) {
-        for (UserActivity currentActivity : UserActivity.values()) {
-            if (currentActivity.intValue == intValue) {
+    public static UserActivity toUserActivity(Integer integerValue) {
+        if (integerValue == null) {
+            return UNKNOWN;
+        }
+        for (UserActivity currentActivity : values()) {
+            if (currentActivity.intValue == integerValue) {
                 return currentActivity;
             }
         }
-        return UserActivity.UNKNOWN;
+        return UNKNOWN;
     }
 }

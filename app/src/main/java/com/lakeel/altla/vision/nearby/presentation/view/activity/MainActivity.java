@@ -135,27 +135,27 @@ public class MainActivity extends AppCompatActivity
 
         switch (id) {
             case R.id.nav_favorites: {
-                FragmentController controller = new FragmentController(getSupportFragmentManager());
+                FragmentController controller = new FragmentController(this);
                 controller.showFavoriteListFragment();
                 break;
             }
-            case R.id.nav_recently: {
-                FragmentController controller = new FragmentController(getSupportFragmentManager());
+            case R.id.nav_history: {
+                FragmentController controller = new FragmentController(this);
                 controller.showHistoryListFragment();
                 break;
             }
             case R.id.nav_nearby: {
-                FragmentController controller = new FragmentController(getSupportFragmentManager());
+                FragmentController controller = new FragmentController(this);
                 controller.showNearbyListFragment();
                 break;
             }
             case R.id.nav_information: {
-                FragmentController controller = new FragmentController(getSupportFragmentManager());
+                FragmentController controller = new FragmentController(this);
                 controller.showInformationListFragment();
                 break;
             }
             case R.id.nav_settings: {
-                FragmentController controller = new FragmentController(getSupportFragmentManager());
+                FragmentController controller = new FragmentController(this);
                 controller.showSettingsFragment();
                 break;
             }
@@ -180,7 +180,7 @@ public class MainActivity extends AppCompatActivity
 
         drawerLayout.setDrawerLockMode(DrawerLayout.LOCK_MODE_LOCKED_CLOSED);
 
-        FragmentController fragmentController = new FragmentController(getSupportFragmentManager());
+        FragmentController fragmentController = new FragmentController(this);
         fragmentController.showSignInFragment();
     }
 
@@ -221,11 +221,11 @@ public class MainActivity extends AppCompatActivity
 
     @Override
     public void stopMonitorBeacons() {
-        ((App) getApplication()).stopMonitorBeacons();
+        ((App) getApplication()).stopSubscribeInBackground();
     }
 
     @Override
-    public void startAdvertiseService(String beaconId) {
+    public void startAdvertise(String beaconId) {
         Intent intent = new Intent(getApplicationContext(), AdvertiseService.class);
         intent.putExtra(IntentKey.BEACON_ID.name(), beaconId);
         getApplicationContext().startService(intent);
@@ -241,7 +241,7 @@ public class MainActivity extends AppCompatActivity
         toggle.setDrawerIndicatorEnabled(true);
         drawerLayout.setDrawerLockMode(DrawerLayout.LOCK_MODE_UNLOCKED);
 
-        FragmentController fragmentController = new FragmentController(getSupportFragmentManager());
+        FragmentController fragmentController = new FragmentController(this);
         fragmentController.showFavoriteListFragment();
     }
 
@@ -253,7 +253,7 @@ public class MainActivity extends AppCompatActivity
         toggle.setDrawerIndicatorEnabled(enabled);
     }
 
-    public void onSignedIn() {
-        presenter.onSignedIn();
+    public void postSignIn() {
+        presenter.postSignIn();
     }
 }

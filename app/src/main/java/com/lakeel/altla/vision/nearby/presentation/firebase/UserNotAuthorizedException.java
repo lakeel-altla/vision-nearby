@@ -1,4 +1,4 @@
-package com.lakeel.altla.vision.nearby.presentation.exception;
+package com.lakeel.altla.vision.nearby.presentation.firebase;
 
 public class UserNotAuthorizedException extends RuntimeException {
 

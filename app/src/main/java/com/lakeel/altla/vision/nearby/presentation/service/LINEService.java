@@ -31,8 +31,8 @@ public class LINEService extends IntentService {
 
     private static final Logger LOGGER = LoggerFactory.getLogger(LINEService.class);
 
+    // This constructor is need.
     public LINEService() {
-        // This constructor is need.
         this(LINEService.class.getSimpleName());
     }
 
@@ -59,7 +59,6 @@ public class LINEService extends IntentService {
         findLineLinkUseCase.execute(userId)
                 .toObservable()
                 .filter(entity -> entity != null)
-                .subscribeOn(Schedulers.io())
                 .subscribe(entity -> {
                     String title = getString(R.string.notification_title_line_user_found);
                     String message = getString(R.string.notification_message_user_using_line, userName);

@@ -18,7 +18,7 @@ public final class SaveUserUseCase {
     }
 
     public Completable execute() {
-        String userId = MyUser.getUid();
+        String userId = MyUser.getUserId();
         return repository.saveUser(userId).subscribeOn(Schedulers.io());
     }
 }

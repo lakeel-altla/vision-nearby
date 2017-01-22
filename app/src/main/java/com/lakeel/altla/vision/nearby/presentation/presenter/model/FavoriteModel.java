@@ -4,7 +4,7 @@ public final class FavoriteModel {
 
     public String userId;
 
-    public String name;
+    public String userName;
 
     public String imageUri;
 }

@@ -1,6 +1,6 @@
 package com.lakeel.altla.vision.nearby.data.mapper;
 
-import com.lakeel.altla.vision.nearby.data.entity.NotificationEntity;
+import com.lakeel.altla.vision.nearby.domain.entity.NotificationEntity;
 
 public final class NotificationEntityMapper {
 

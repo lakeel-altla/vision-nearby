@@ -1,10 +1,12 @@
 package com.lakeel.altla.vision.nearby.domain.usecase;
 
 import com.lakeel.altla.vision.nearby.domain.repository.FirebaseFavoritesRepository;
+import com.lakeel.altla.vision.nearby.presentation.firebase.MyUser;
 
 import javax.inject.Inject;
 
 import rx.Completable;
+import rx.schedulers.Schedulers;
 
 public final class SaveFavoriteUseCase {
 
@@ -15,7 +17,8 @@ public final class SaveFavoriteUseCase {
     SaveFavoriteUseCase() {
     }
 
-    public Completable execute(String myUserId, String otherUserId) {
-        return repository.saveFavorite(myUserId, otherUserId);
+    public Completable execute(String favoriteUserId) {
+        String myUserId = MyUser.getUserId();
+        return repository.saveFavorite(myUserId, favoriteUserId).subscribeOn(Schedulers.io());
     }
 }

@@ -14,9 +14,8 @@ import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 
-import com.flipboard.bottomsheet.BottomSheetLayout;
 import com.lakeel.altla.vision.nearby.R;
-import com.lakeel.altla.vision.nearby.presentation.constants.FragmentBundle;
+import com.lakeel.altla.vision.nearby.presentation.bundle.FragmentBundle;
 import com.lakeel.altla.vision.nearby.presentation.presenter.model.PresenceModel;
 import com.lakeel.altla.vision.nearby.presentation.presenter.model.UserModel;
 import com.lakeel.altla.vision.nearby.presentation.presenter.user.UserProfilePresenter;
@@ -36,8 +35,9 @@ import javax.inject.Inject;
 import butterknife.BindView;
 import butterknife.ButterKnife;
 
-import static com.lakeel.altla.vision.nearby.R.id.find;
+import static com.lakeel.altla.vision.nearby.R.id.estimate;
 
+// TODO: FavoriteUserFragment
 public final class UserProfileFragment extends Fragment implements UserProfileView {
 
     @Inject
@@ -45,9 +45,6 @@ public final class UserProfileFragment extends Fragment implements UserProfileVi
 
     @BindView(R.id.mainLayout)
     LinearLayout mainLayout;
-
-    @BindView(R.id.shareSheet)
-    BottomSheetLayout shareSheet;
 
     @BindView(R.id.imageViewUser)
     ImageView userImageView;
@@ -71,7 +68,7 @@ public final class UserProfileFragment extends Fragment implements UserProfileVi
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
-        View view = inflater.inflate(R.layout.fragment_favorite, container, false);
+        View view = inflater.inflate(R.layout.fragment_user_profile, container, false);
 
         ButterKnife.bind(this, view);
 
@@ -101,7 +98,7 @@ public final class UserProfileFragment extends Fragment implements UserProfileVi
 
         getActivity().setTitle(userName);
 
-        presenter.setUserData(userId, userName);
+        presenter.setUserIdAndUserName(userId, userName);
 
         presenter.onActivityCreated();
     }
@@ -117,8 +114,8 @@ public final class UserProfileFragment extends Fragment implements UserProfileVi
             case android.R.id.home:
                 getActivity().getSupportFragmentManager().popBackStack();
                 break;
-            case find:
-                presenter.onFindDeviceMenuClick();
+            case estimate:
+                presenter.onEstimateDistanceMenuClick();
                 break;
             default:
                 break;
@@ -151,6 +148,7 @@ public final class UserProfileFragment extends Fragment implements UserProfileVi
         imageLoader.displayImage(model.imageUri, userImageView);
 
         profileLayout.textViewName.setText(model.userName);
+
         profileLayout.textViewEmail.setAutoLinkMask(Linkify.EMAIL_ADDRESSES);
         profileLayout.textViewEmail.setText(model.email);
     }
@@ -163,7 +161,7 @@ public final class UserProfileFragment extends Fragment implements UserProfileVi
 
     @Override
     public void showDistanceEstimationFragment(ArrayList<String> beaconIds, String targetName) {
-        FragmentController controller = new FragmentController(getActivity().getSupportFragmentManager());
+        FragmentController controller = new FragmentController(this);
         controller.showDistanceEstimationFragment(beaconIds, targetName);
     }
 }

@@ -86,7 +86,7 @@ public final class FavoriteAdapter extends SwipeableUltimateViewAdapter<Favorite
 
         @Override
         public void showItem(FavoriteModel model) {
-            String displayName = model.name;
+            String displayName = model.userName;
             userName.setText(displayName);
 
             if (StringUtils.isEmpty(model.imageUri)) {

@@ -39,7 +39,7 @@ public final class LineSettingsPresenter extends BasePresenter<LineSettingsView>
 
     public void onActivityCreated() {
         Subscription subscription = findLineLinkUseCase
-                .execute(MyUser.getUid())
+                .execute(MyUser.getUserId())
                 .toObservable()
                 .filter(entity -> entity != null)
                 .map(entity -> entity.url)
@@ -61,7 +61,7 @@ public final class LineSettingsPresenter extends BasePresenter<LineSettingsView>
         analyticsReporter.inputLineUrl();
 
         Subscription subscription = saveLineUrlUseCase
-                .execute(MyUser.getUid(), url)
+                .execute(MyUser.getUserId(), url)
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribe(s -> {

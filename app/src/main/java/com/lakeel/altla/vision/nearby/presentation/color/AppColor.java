@@ -1,4 +1,4 @@
-package com.lakeel.altla.vision.nearby.presentation.constants;
+package com.lakeel.altla.vision.nearby.presentation.color;
 
 public enum AppColor {
     PRIMARY(android.graphics.Color.argb(100, 255, 193, 7));

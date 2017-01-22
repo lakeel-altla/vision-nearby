@@ -1,8 +1,7 @@
 package com.lakeel.altla.vision.nearby.presentation.presenter.user;
 
-import com.lakeel.altla.vision.nearby.core.StringUtils;
 import com.lakeel.altla.vision.nearby.domain.usecase.FindLineLinkUseCase;
-import com.lakeel.altla.vision.nearby.domain.usecase.FindPresenceUseCase;
+import com.lakeel.altla.vision.nearby.domain.usecase.FindConnectionUseCase;
 import com.lakeel.altla.vision.nearby.domain.usecase.FindUserBeaconsUseCase;
 import com.lakeel.altla.vision.nearby.domain.usecase.FindUserUseCase;
 import com.lakeel.altla.vision.nearby.presentation.analytics.AnalyticsReporter;
@@ -10,9 +9,7 @@ import com.lakeel.altla.vision.nearby.presentation.presenter.BasePresenter;
 import com.lakeel.altla.vision.nearby.presentation.presenter.mapper.PresencesModelMapper;
 import com.lakeel.altla.vision.nearby.presentation.presenter.mapper.UserModelMapper;
 import com.lakeel.altla.vision.nearby.presentation.view.UserProfileView;
-
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import com.lakeel.altla.vision.nearby.rx.ErrorAction;
 
 import java.util.ArrayList;
 
@@ -20,7 +17,6 @@ import javax.inject.Inject;
 
 import rx.Subscription;
 import rx.android.schedulers.AndroidSchedulers;
-import rx.schedulers.Schedulers;
 
 public final class UserProfilePresenter extends BasePresenter<UserProfileView> {
 
@@ -28,7 +24,7 @@ public final class UserProfilePresenter extends BasePresenter<UserProfileView> {
     AnalyticsReporter analyticsReporter;
 
     @Inject
-    FindPresenceUseCase findPresenceUseCase;
+    FindConnectionUseCase findConnectionUseCase;
 
     @Inject
     FindUserUseCase findUserUseCase;
@@ -39,75 +35,60 @@ public final class UserProfilePresenter extends BasePresenter<UserProfileView> {
     @Inject
     FindUserBeaconsUseCase findUserBeaconsUseCase;
 
-    private static final Logger LOGGER = LoggerFactory.getLogger(UserProfilePresenter.class);
-
     private PresencesModelMapper presencesModelMapper = new PresencesModelMapper();
 
     private UserModelMapper userModelMapper = new UserModelMapper();
 
-    private String userId;
+    private String favoriteUserId;
 
-    private String userName;
+    private String favoriteUserName;
 
     @Inject
     UserProfilePresenter() {
     }
 
-    public void setUserData(String userId, String userName) {
-        this.userId = userId;
-        this.userName = userName;
+    public void setUserIdAndUserName(String favoriteUserId, String favoriteUserName) {
+        this.favoriteUserId = favoriteUserId;
+        this.favoriteUserName = favoriteUserName;
     }
 
     public void onActivityCreated() {
-        analyticsReporter.viewFavoriteItem(userId, userName);
+        analyticsReporter.viewFavoriteItem(favoriteUserId, favoriteUserName);
 
-        Subscription presenceSubscription = findPresenceUseCase
-                .execute(userId)
+        // Presence.
+        Subscription subscription = findConnectionUseCase.execute(favoriteUserId)
                 .map(entity -> presencesModelMapper.map(entity))
-                .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
-                .subscribe(model -> getView().showPresence(model),
-                        e -> LOGGER.error("Failed to findList presence.", e));
-        subscriptions.add(presenceSubscription);
+                .subscribe(model -> getView().showPresence(model), new ErrorAction<>());
+        subscriptions.add(subscription);
 
-        Subscription userSubscription = findUserUseCase
-                .execute(userId)
+        // Profile.
+        Subscription subscription1 = findUserUseCase.execute(favoriteUserId)
                 .map(entity -> userModelMapper.map(entity))
-                .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
-                .subscribe(model -> getView().showProfile(model),
-                        e -> LOGGER.error("Failed to findList user.", e));
-        subscriptions.add(userSubscription);
+                .subscribe(model -> getView().showProfile(model), new ErrorAction<>());
+        subscriptions.add(subscription1);
 
-        Subscription lineLinkSubscription = findLineLinkUseCase
-                .execute(userId)
-                .map(entity -> {
-                    if (entity == null) return StringUtils.EMPTY;
-                    return entity.url;
-                })
-                .subscribeOn(Schedulers.io())
+        // LINE URL.
+        Subscription subscription2 = findLineLinkUseCase.execute(favoriteUserId)
+                .toObservable()
+                .filter(entity -> entity != null)
                 .observeOn(AndroidSchedulers.mainThread())
-                .subscribe(lineUrl -> getView().showLineUrl(lineUrl),
-                        e -> LOGGER.error("Failed to findList LINE links.", e)
-                );
-        subscriptions.add(lineLinkSubscription);
+                .subscribe(entity -> getView().showLineUrl(entity.url), new ErrorAction<>());
+        subscriptions.add(subscription2);
     }
 
-    public void onFindDeviceMenuClick() {
-        Subscription subscription = findUserBeaconsUseCase
-                .execute(userId)
+    public void onEstimateDistanceMenuClick() {
+        Subscription subscription = findUserBeaconsUseCase.execute(favoriteUserId)
                 .toList()
-                .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribe(beacons -> {
-                    analyticsReporter.estimateDistance(userName);
+                    analyticsReporter.estimateDistance(favoriteUserName);
 
                     ArrayList<String> beaconIds = new ArrayList<>(beacons.size());
                     beaconIds.addAll(beacons);
-                    getView().showDistanceEstimationFragment(beaconIds, userName);
-                }, e -> {
-                    LOGGER.error("Failed to findList user beacons.", e);
-                });
+                    getView().showDistanceEstimationFragment(beaconIds, favoriteUserName);
+                }, new ErrorAction<>());
         subscriptions.add(subscription);
     }
 }

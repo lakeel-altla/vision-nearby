@@ -42,7 +42,7 @@ public final class InformationListPresenter extends BasePresenter<InformationLis
 
     public void onActivityCreated() {
         Subscription subscription = findInformationListUseCase
-                .execute(MyUser.getUid())
+                .execute(MyUser.getUserId())
                 .map(entity -> modelMapper.map(entity))
                 .toList()
                 .subscribeOn(Schedulers.io())

@@ -4,31 +4,24 @@ import android.support.annotation.IntRange;
 
 import com.lakeel.altla.vision.nearby.R;
 import com.lakeel.altla.vision.nearby.core.CollectionUtils;
-import com.lakeel.altla.vision.nearby.data.entity.UserEntity;
 import com.lakeel.altla.vision.nearby.domain.usecase.FindFavoritesUseCase;
-import com.lakeel.altla.vision.nearby.domain.usecase.FindUserUseCase;
 import com.lakeel.altla.vision.nearby.domain.usecase.RemoveFavoriteUseCase;
 import com.lakeel.altla.vision.nearby.presentation.analytics.AnalyticsReporter;
-import com.lakeel.altla.vision.nearby.presentation.firebase.MyUser;
 import com.lakeel.altla.vision.nearby.presentation.presenter.BaseItemPresenter;
 import com.lakeel.altla.vision.nearby.presentation.presenter.BasePresenter;
 import com.lakeel.altla.vision.nearby.presentation.presenter.mapper.FavoriteModelMapper;
 import com.lakeel.altla.vision.nearby.presentation.presenter.model.FavoriteModel;
 import com.lakeel.altla.vision.nearby.presentation.view.FavoriteItemView;
 import com.lakeel.altla.vision.nearby.presentation.view.FavoriteListView;
-
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import com.lakeel.altla.vision.nearby.rx.ErrorAction;
 
 import java.util.ArrayList;
 import java.util.List;
 
 import javax.inject.Inject;
 
-import rx.Observable;
 import rx.Subscription;
 import rx.android.schedulers.AndroidSchedulers;
-import rx.schedulers.Schedulers;
 
 public final class FavoriteListPresenter extends BasePresenter<FavoriteListView> {
 
@@ -36,15 +29,10 @@ public final class FavoriteListPresenter extends BasePresenter<FavoriteListView>
     AnalyticsReporter analyticsReporter;
 
     @Inject
-    FindUserUseCase findUserUseCase;
-
-    @Inject
     FindFavoritesUseCase findFavoritesUseCase;
 
     @Inject
     RemoveFavoriteUseCase removeFavoriteUseCase;
-
-    private static final Logger LOGGER = LoggerFactory.getLogger(FavoriteListPresenter.class);
 
     private FavoriteModelMapper favoriteModelMapper = new FavoriteModelMapper();
 
@@ -55,10 +43,7 @@ public final class FavoriteListPresenter extends BasePresenter<FavoriteListView>
     }
 
     public void onActivityCreated() {
-        Subscription subscription = findFavoritesUseCase
-                .execute(MyUser.getUid())
-                .filter(entity -> entity != null)
-                .flatMap(entity -> findUser(entity.userId))
+        Subscription subscription = findFavoritesUseCase.execute()
                 .map(entity -> favoriteModelMapper.map(entity))
                 .toList()
                 .subscribe(favoritesModels -> {
@@ -72,9 +57,7 @@ public final class FavoriteListPresenter extends BasePresenter<FavoriteListView>
                     }
 
                     getView().updateItems(favoriteModels);
-                }, e -> {
-                    getView().showSnackBar(R.string.error_process);
-                });
+                }, new ErrorAction<>());
         subscriptions.add(subscription);
     }
 
@@ -92,22 +75,15 @@ public final class FavoriteListPresenter extends BasePresenter<FavoriteListView>
         }
 
         public void onClick(FavoriteModel model) {
-            String userId = model.userId;
-            String userName = model.name;
-            getView().showFavoritesUserActivity(userId, userName);
+            getView().showUserProfileFragment(model);
         }
 
         public void onRemove(FavoriteModel model) {
-            analyticsReporter.removeFavorite(model.userId, model.name);
+            analyticsReporter.removeFavorite(model.userId, model.userName);
 
-            Subscription subscription = removeFavoriteUseCase
-                    .execute(MyUser.getUid(), model.userId)
-                    .subscribeOn(Schedulers.io())
+            Subscription subscription = removeFavoriteUseCase.execute(model.userId)
                     .observeOn(AndroidSchedulers.mainThread())
-                    .subscribe(e -> {
-                                LOGGER.error("Failed to remove favorite.", e);
-                                getView().showSnackBar(R.string.error_not_deleted);
-                            },
+                    .subscribe(new ErrorAction<>(),
                             () -> {
                                 int size = favoriteModels.size();
                                 favoriteModels.remove(model);
@@ -124,9 +100,5 @@ public final class FavoriteListPresenter extends BasePresenter<FavoriteListView>
                             });
             subscriptions.add(subscription);
         }
-    }
-
-    private Observable<UserEntity> findUser(String userId) {
-        return findUserUseCase.execute(userId).toObservable();
     }
 }

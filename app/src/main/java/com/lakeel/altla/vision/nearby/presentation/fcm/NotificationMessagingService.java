@@ -20,9 +20,10 @@ public class NotificationMessagingService extends FirebaseMessagingService {
 
         RemoteMessage.Notification payload = remoteMessage.getNotification();
         if (payload == null) {
-            LOGGER.error("Notification payload was empty.");
+            LOGGER.warn("Notification payload was empty.");
             return;
         }
+
         String title = payload.getTitle();
         String message = payload.getBody();
 
@@ -36,7 +37,7 @@ public class NotificationMessagingService extends FirebaseMessagingService {
     @Override
     public void onDeletedMessages() {
         super.onDeletedMessages();
-        LOGGER.debug("This body has been deleted.");
+        LOGGER.info("Payload body has been deleted.");
     }
 
     @Override

@@ -5,6 +5,7 @@ import com.lakeel.altla.vision.nearby.domain.repository.PreferenceRepository;
 import javax.inject.Inject;
 
 import rx.Single;
+import rx.schedulers.Schedulers;
 
 public final class FindSubscribeSettingsUseCase {
 
@@ -16,6 +17,6 @@ public final class FindSubscribeSettingsUseCase {
     }
 
     public Single<Boolean> execute() {
-        return repository.findSubscribeSetting();
+        return repository.findSubscribeSetting().subscribeOn(Schedulers.io());
     }
 }

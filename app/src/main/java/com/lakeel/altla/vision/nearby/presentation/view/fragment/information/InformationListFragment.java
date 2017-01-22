@@ -81,7 +81,7 @@ public final class InformationListFragment extends Fragment implements Informati
 
     @Override
     public void showInformationFragment(String informationId) {
-        FragmentController controller = new FragmentController(getActivity().getSupportFragmentManager());
+        FragmentController controller = new FragmentController(this);
         controller.showInformationFragment(informationId);
     }
 }

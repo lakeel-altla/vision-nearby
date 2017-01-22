@@ -2,13 +2,13 @@ package com.lakeel.altla.vision.nearby.presentation.presenter.model;
 
 public final class HistoryModel {
 
-    public String uniqueId;
+    public String historyId;
 
     public String userId;
 
     public String imageUri;
 
-    public String name;
+    public String userName;
 
     public LocationModel locationModel;
 

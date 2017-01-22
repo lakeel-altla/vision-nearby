@@ -3,7 +3,7 @@ package com.lakeel.altla.vision.nearby.data.repository;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
-import com.lakeel.altla.vision.nearby.data.entity.NotificationEntity;
+import com.lakeel.altla.vision.nearby.domain.entity.NotificationEntity;
 import com.lakeel.altla.vision.nearby.data.mapper.NotificationEntityMapper;
 import com.lakeel.altla.vision.nearby.domain.repository.FirebaseNotificationsRepository;
 

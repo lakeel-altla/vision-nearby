@@ -1,4 +1,4 @@
-package com.lakeel.altla.vision.nearby.presentation.view.fragment.estimation;
+package com.lakeel.altla.vision.nearby.presentation.view.fragment.distance;
 
 import android.content.Intent;
 import android.os.Bundle;
@@ -14,7 +14,7 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.lakeel.altla.vision.nearby.R;
-import com.lakeel.altla.vision.nearby.presentation.constants.FragmentBundle;
+import com.lakeel.altla.vision.nearby.presentation.bundle.FragmentBundle;
 import com.lakeel.altla.vision.nearby.presentation.firebase.MyUser;
 import com.lakeel.altla.vision.nearby.presentation.presenter.estimation.DistanceEstimationPresenter;
 import com.lakeel.altla.vision.nearby.presentation.view.DistanceEstimationView;

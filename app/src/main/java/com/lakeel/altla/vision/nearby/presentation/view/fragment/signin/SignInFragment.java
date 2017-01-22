@@ -87,9 +87,9 @@ public final class SignInFragment extends Fragment implements SignInView {
     }
 
     @Override
-    public void onSignedIn() {
-        App.startMonitorBeacons(this);
-        ((MainActivity) getActivity()).onSignedIn();
+    public void signInSuccess() {
+        App.startSubscribeInBackground(this);
+        ((MainActivity) getActivity()).postSignIn();
     }
 
     @Override

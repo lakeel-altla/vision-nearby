@@ -1,7 +1,7 @@
 package com.lakeel.altla.vision.nearby.presentation.presenter.tracking;
 
 import com.firebase.geofire.GeoLocation;
-import com.lakeel.altla.vision.nearby.data.entity.LocationDataEntity;
+import com.lakeel.altla.vision.nearby.domain.entity.LocationDataEntity;
 import com.lakeel.altla.vision.nearby.domain.usecase.FindLocationDataUseCase;
 import com.lakeel.altla.vision.nearby.domain.usecase.FindLocationUseCase;
 import com.lakeel.altla.vision.nearby.presentation.analytics.AnalyticsReporter;

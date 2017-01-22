@@ -15,7 +15,7 @@ public class UriChecker {
         OK, EMPTY, SYNTAX_ERROR
     }
 
-    private String uri;
+    private final String uri;
 
     public UriChecker(String uri) {
         this.uri = uri;

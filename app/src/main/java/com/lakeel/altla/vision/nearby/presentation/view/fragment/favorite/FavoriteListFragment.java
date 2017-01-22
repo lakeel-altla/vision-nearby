@@ -64,12 +64,9 @@ public final class FavoriteListFragment extends Fragment implements FavoriteList
 
         ((MainActivity) getActivity()).setDrawerIndicatorEnabled(true);
 
-        MainActivity activity = (MainActivity) getActivity();
-        activity.setDrawerIndicatorEnabled(true);
-
         RecyclerView.LayoutManager mLayoutManager = new ScrollSmoothLineaerLayoutManager(getContext(), LinearLayoutManager.VERTICAL, false, 500);
         recyclerView.setLayoutManager(mLayoutManager);
-        recyclerView.setHasFixedSize(false);
+        recyclerView.setHasFixedSize(true);
         recyclerView.addItemDecoration(new DividerItemDecoration(getContext()));
 
         FavoriteAdapter favoritesRecyclerAdapter = new FavoriteAdapter(presenter);
@@ -113,8 +110,8 @@ public final class FavoriteListFragment extends Fragment implements FavoriteList
     }
 
     @Override
-    public void showFavoritesUserActivity(String userId, String userName) {
-        FragmentController controller = new FragmentController(getFragmentManager());
-        controller.showUserProfileFragment(userId, userName);
+    public void showUserProfileFragment(FavoriteModel model) {
+        FragmentController controller = new FragmentController(this);
+        controller.showUserProfileFragment(model.userId, model.userName);
     }
 }

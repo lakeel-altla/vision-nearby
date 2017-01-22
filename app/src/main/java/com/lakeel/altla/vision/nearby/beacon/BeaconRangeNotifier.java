@@ -1,4 +1,4 @@
-package com.lakeel.altla.vision.nearby.altBeacon;
+package com.lakeel.altla.vision.nearby.beacon;
 
 import android.os.Handler;
 import android.os.Looper;

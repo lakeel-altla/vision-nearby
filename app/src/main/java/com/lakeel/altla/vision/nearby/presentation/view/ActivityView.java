@@ -22,5 +22,5 @@ public interface ActivityView {
 
     void stopMonitorBeacons();
 
-    void startAdvertiseService(String beaconId);
+    void startAdvertise(String beaconId);
 }

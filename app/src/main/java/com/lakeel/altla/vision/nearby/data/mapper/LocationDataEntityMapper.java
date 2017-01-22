@@ -1,6 +1,6 @@
 package com.lakeel.altla.vision.nearby.data.mapper;
 
-import com.lakeel.altla.vision.nearby.data.entity.LocationDataEntity;
+import com.lakeel.altla.vision.nearby.domain.entity.LocationDataEntity;
 
 public final class LocationDataEntityMapper {
 

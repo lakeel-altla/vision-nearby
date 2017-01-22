@@ -1,6 +1,5 @@
 package com.lakeel.altla.vision.nearby.presentation.di.module;
 
-import android.app.Application;
 import android.content.Context;
 
 import javax.inject.Singleton;
@@ -11,15 +10,15 @@ import dagger.Provides;
 @Module
 public class ApplicationModule {
 
-    private Application application;
+    private final Context context;
 
-    public ApplicationModule(Application application) {
-        this.application= application;
+    public ApplicationModule(Context context) {
+        this.context = context;
     }
 
     @Provides
     @Singleton
     Context provideContext() {
-        return application;
+        return context;
     }
 }
