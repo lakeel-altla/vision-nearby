@@ -10,7 +10,7 @@
                 android:title="@string/title_recently"/>
         <item
                 android:id="@+id/nav_nearby"
-                android:title="@string/title_nearby"/>
+                android:title="@string/title_nearby_user"/>
         <item
             android:id="@+id/nav_information"
             android:title="@string/title_information"/>
