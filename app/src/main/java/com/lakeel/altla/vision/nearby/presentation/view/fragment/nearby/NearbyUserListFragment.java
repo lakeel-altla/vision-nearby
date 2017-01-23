@@ -22,7 +22,7 @@ import com.lakeel.altla.vision.nearby.presentation.view.actionBar.BarColor;
 import com.lakeel.altla.vision.nearby.presentation.view.actionBar.DefaultBarColorFactory;
 import com.lakeel.altla.vision.nearby.presentation.view.actionBar.EditableBarColorFactory;
 import com.lakeel.altla.vision.nearby.presentation.view.activity.MainActivity;
-import com.lakeel.altla.vision.nearby.presentation.view.adapter.NearbyAdapter;
+import com.lakeel.altla.vision.nearby.presentation.view.adapter.NearbyUserAdapter;
 import com.lakeel.altla.vision.nearby.presentation.view.divider.DividerItemDecoration;
 
 import org.slf4j.Logger;
@@ -90,7 +90,7 @@ public final class NearbyUserListFragment extends Fragment implements NearbyUser
         recyclerView.setHasFixedSize(true);
         recyclerView.addItemDecoration(new DividerItemDecoration(getContext()));
 
-        NearbyAdapter adapter = new NearbyAdapter(presenter);
+        NearbyUserAdapter adapter = new NearbyUserAdapter(presenter);
         recyclerView.setAdapter(adapter);
     }
 

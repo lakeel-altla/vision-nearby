@@ -21,11 +21,11 @@ import com.nostra13.universalimageloader.core.ImageLoader;
 import butterknife.BindView;
 import butterknife.ButterKnife;
 
-public final class NearbyAdapter extends RecyclerView.Adapter<NearbyAdapter.NearbyViewHolder> {
+public final class NearbyUserAdapter extends RecyclerView.Adapter<NearbyUserAdapter.NearbyViewHolder> {
 
     private NearbyUserListPresenter nearbyUserListPresenter;
 
-    public NearbyAdapter(NearbyUserListPresenter presenter) {
+    public NearbyUserAdapter(NearbyUserListPresenter presenter) {
         nearbyUserListPresenter = presenter;
     }
 
