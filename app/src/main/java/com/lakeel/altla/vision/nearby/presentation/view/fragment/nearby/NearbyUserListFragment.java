@@ -118,6 +118,7 @@ public final class NearbyUserListFragment extends Fragment implements NearbyUser
                 presenter.subscribe();
             } else {
                 LOGGER.error("Failed to enable BLE.");
+                showSnackBar(R.string.error_not_enable_ble);
             }
         } else {
             super.onActivityResult(requestCode, resultCode, data);

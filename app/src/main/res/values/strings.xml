@@ -127,6 +127,7 @@
     <string name="error_not_saved">Could not save.</string>
     <string name="error_not_found">Could not find.</string>
     <string name="error_not_deleted">Could not delete.</string>
+    <string name="error_not_enable_ble">Could not enable BLE.</string>
     <string name="error_required">Required.</string>
     <string name="error_input_empty">Required.</string>
     <string name="error_uri_syntax">URI syntax is mistake.</string>
