@@ -2,6 +2,7 @@ package com.lakeel.altla.vision.nearby.presentation.view.fragment.distance;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.support.design.widget.Snackbar;
 import android.support.v4.app.Fragment;
 import android.support.v4.content.res.ResourcesCompat;
 import android.view.LayoutInflater;
@@ -11,6 +12,7 @@ import android.view.ViewGroup;
 import android.view.animation.Animation;
 import android.view.animation.ScaleAnimation;
 import android.widget.ImageView;
+import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import com.lakeel.altla.vision.nearby.R;
@@ -39,6 +41,9 @@ public final class DistanceEstimationFragment extends Fragment implements Distan
 
     @Inject
     DistanceEstimationPresenter presenter;
+
+    @BindView(R.id.mainLayout)
+    RelativeLayout mainLayout;
 
     @BindView(R.id.textViewDescription)
     TextView distanceDescriptionText;
@@ -131,6 +136,7 @@ public final class DistanceEstimationFragment extends Fragment implements Distan
                 presenter.subscribe();
             } else {
                 LOGGER.error("Failed to enable BLE.");
+                Snackbar.make(mainLayout, R.string.error_not_enable_ble, Snackbar.LENGTH_SHORT).show();
             }
         } else {
             super.onActivityResult(requestCode, resultCode, data);
