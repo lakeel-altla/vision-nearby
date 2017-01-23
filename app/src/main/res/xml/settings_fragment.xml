@@ -5,14 +5,12 @@
     <PreferenceCategory android:title="@string/title_wireless_networks">
 
         <PreferenceScreen
-            android:key="bluetoothScreen"
+            android:key="bleScreen"
             android:title="@string/title_bluetooth" />
 
     </PreferenceCategory>
 
-    <PreferenceCategory
-        android:key="snsCategory"
-        android:title="@string/title_sns">
+    <PreferenceCategory android:title="@string/title_sns">
 
         <PreferenceScreen
             android:key="lineScreen"

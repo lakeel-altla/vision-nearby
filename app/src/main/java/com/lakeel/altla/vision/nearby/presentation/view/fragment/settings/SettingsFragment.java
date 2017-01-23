@@ -10,7 +10,7 @@ import com.lakeel.altla.vision.nearby.presentation.view.fragment.FragmentControl
 
 public final class SettingsFragment extends PreferenceFragmentCompat {
 
-    private static final String KEY_BLUETOOTH_SCREEN = "bluetoothScreen";
+    private static final String KEY_BLUETOOTH_SCREEN = "bleScreen";
 
     private static final String KEY_LINE_SCREEN = "lineScreen";
 
@@ -59,8 +59,5 @@ public final class SettingsFragment extends PreferenceFragmentCompat {
         getActivity().setTitle(R.string.title_settings);
 
         ((MainActivity) getActivity()).setDrawerIndicatorEnabled(true);
-
-        MainActivity activity = (MainActivity) getActivity();
-        activity.setDrawerIndicatorEnabled(true);
     }
 }
