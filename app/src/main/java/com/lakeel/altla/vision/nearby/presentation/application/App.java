@@ -59,6 +59,11 @@ public class App extends Application {
         app.startSubscribeInBackground();
     }
 
+    public static void stopSubscribeInBackground(Fragment fragment) {
+        App app = ((App) fragment.getActivity().getApplication());
+        app.stopSubscribeInBackground();
+    }
+
     @Override
     public void onCreate() {
         super.onCreate();

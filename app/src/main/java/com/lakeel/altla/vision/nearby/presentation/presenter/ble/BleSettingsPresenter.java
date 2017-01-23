@@ -10,9 +10,7 @@ import com.lakeel.altla.vision.nearby.presentation.presenter.BasePresenter;
 import com.lakeel.altla.vision.nearby.presentation.service.AdvertiseService;
 import com.lakeel.altla.vision.nearby.presentation.service.ServiceManager;
 import com.lakeel.altla.vision.nearby.presentation.view.BleSettingsView;
-
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import com.lakeel.altla.vision.nearby.rx.ErrorAction;
 
 import javax.inject.Inject;
 
@@ -27,9 +25,7 @@ public final class BleSettingsPresenter extends BasePresenter<BleSettingsView> {
     @Inject
     FindBeaconIdUseCase findBeaconIdUseCase;
 
-    private static final Logger LOGGER = LoggerFactory.getLogger(BleSettingsPresenter.class);
-
-    private Context context;
+    private final Context context;
 
     @Inject
     BleSettingsPresenter(Context context) {
@@ -49,8 +45,7 @@ public final class BleSettingsPresenter extends BasePresenter<BleSettingsView> {
 
         Subscription subscription = findBeaconIdUseCase.execute()
                 .observeOn(AndroidSchedulers.mainThread())
-                .subscribe(beaconId -> getView().startAdvertise(beaconId),
-                        e -> LOGGER.error("Failed to findList a beacon ID.", e));
+                .subscribe(beaconId -> getView().startAdvertise(beaconId), new ErrorAction<>());
         subscriptions.add(subscription);
     }
 
