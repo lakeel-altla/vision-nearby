@@ -1,6 +1,5 @@
 package com.lakeel.altla.vision.nearby.presentation.view.adapter;
 
-import android.graphics.Color;
 import android.support.annotation.IntRange;
 import android.view.View;
 import android.widget.Button;
@@ -8,13 +7,13 @@ import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
-import com.amulyakhare.textdrawable.TextDrawable;
 import com.lakeel.altla.vision.nearby.R;
 import com.lakeel.altla.vision.nearby.core.StringUtils;
 import com.lakeel.altla.vision.nearby.presentation.presenter.history.HistoryListPresenter;
 import com.lakeel.altla.vision.nearby.presentation.presenter.model.HistoryModel;
-import com.lakeel.altla.vision.nearby.presentation.view.date.DateFormatter;
 import com.lakeel.altla.vision.nearby.presentation.view.HistoryItemView;
+import com.lakeel.altla.vision.nearby.presentation.view.date.DateFormatter;
+import com.lakeel.altla.vision.nearby.presentation.view.drawable.UserInitial;
 import com.marshalchen.ultimaterecyclerview.SwipeableUltimateViewAdapter;
 import com.marshalchen.ultimaterecyclerview.UltimateRecyclerviewViewHolder;
 import com.marshalchen.ultimaterecyclerview.swipe.SwipeLayout;
@@ -58,13 +57,13 @@ public final class HistoryAdapter extends SwipeableUltimateViewAdapter<HistoryMo
         LinearLayout itemLayout;
 
         @BindView(R.id.textViewUserName)
-        TextView userName;
+        TextView userNameTextView;
 
         @BindView(R.id.imageViewUser)
-        ImageView userImage;
+        ImageView userImageView;
 
         @BindView(R.id.textViewPassingTime)
-        TextView passingTime;
+        TextView passingTimeTextView;
 
         @BindView(R.id.buttonRemove)
         Button removeButton;
@@ -93,21 +92,20 @@ public final class HistoryAdapter extends SwipeableUltimateViewAdapter<HistoryMo
             String userName = model.userName;
             String imageUri = model.imageUri;
 
-            this.userName.setText(userName);
+            userNameTextView.setText(userName);
 
-            String initial = userName.substring(0, 1);
             if (StringUtils.isEmpty(imageUri)) {
-                TextDrawable drawable = TextDrawable.builder()
-                        .buildRound(initial, Color.RED);
-                userImage.post(() -> userImage.setImageDrawable(drawable));
+                userImageView.post(() -> {
+                    UserInitial initial = new UserInitial(userName);
+                    userImageView.setImageDrawable(initial.getDrawable());
+                });
             } else {
-                // Show profile on async.
                 ImageLoader imageLoader = ImageLoader.getInstance();
-                imageLoader.displayImage(imageUri, userImage);
+                imageLoader.displayImage(imageUri, userImageView);
             }
 
             DateFormatter dateFormatter = new DateFormatter(model.passingTime);
-            passingTime.setText(dateFormatter.format());
+            passingTimeTextView.setText(dateFormatter.format());
 
             itemLayout.setOnClickListener(view -> itemPresenter.onClick(model));
             removeButton.setOnClickListener(v -> itemPresenter.onRemove(model));

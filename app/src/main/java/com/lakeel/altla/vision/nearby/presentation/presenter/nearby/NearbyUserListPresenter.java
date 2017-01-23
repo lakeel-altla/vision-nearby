@@ -17,7 +17,7 @@ import com.lakeel.altla.vision.nearby.presentation.presenter.BaseItemPresenter;
 import com.lakeel.altla.vision.nearby.presentation.presenter.BasePresenter;
 import com.lakeel.altla.vision.nearby.presentation.presenter.mapper.NearbyUsersModelMapper;
 import com.lakeel.altla.vision.nearby.presentation.presenter.model.NearbyUserModel;
-import com.lakeel.altla.vision.nearby.presentation.view.NearbyItemView;
+import com.lakeel.altla.vision.nearby.presentation.view.NearbyUserItemView;
 import com.lakeel.altla.vision.nearby.presentation.view.NearbyUserListView;
 import com.lakeel.altla.vision.nearby.rx.ErrorAction;
 import com.neovisionaries.bluetooth.ble.advertising.ADPayloadParser;
@@ -128,10 +128,10 @@ public final class NearbyUserListPresenter extends BasePresenter<NearbyUserListV
         subscribe();
     }
 
-    public void onCreateItemView(NearbyItemView nearbyItemView) {
-        NearbyItemPresenter nearbyItemPresenter = new NearbyItemPresenter();
-        nearbyItemPresenter.onCreateItemView(nearbyItemView);
-        nearbyItemView.setItemPresenter(nearbyItemPresenter);
+    public void onCreateItemView(NearbyUserItemView nearbyUserItemView) {
+        NearbyUserItemPresenter nearbyUserItemPresenter = new NearbyUserItemPresenter();
+        nearbyUserItemPresenter.onCreateItemView(nearbyUserItemView);
+        nearbyUserItemView.setItemPresenter(nearbyUserItemPresenter);
     }
 
     public int getItemCount() {
@@ -159,7 +159,7 @@ public final class NearbyUserListPresenter extends BasePresenter<NearbyUserListV
         }, 10, TimeUnit.SECONDS);
     }
 
-    public final class NearbyItemPresenter extends BaseItemPresenter<NearbyItemView> {
+    public final class NearbyUserItemPresenter extends BaseItemPresenter<NearbyUserItemView> {
 
         @Override
         public void onBind(@IntRange(from = 0) int position) {

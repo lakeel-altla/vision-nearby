@@ -1,6 +1,5 @@
 package com.lakeel.altla.vision.nearby.presentation.view.adapter;
 
-import android.graphics.Color;
 import android.support.annotation.IntRange;
 import android.view.View;
 import android.widget.Button;
@@ -8,12 +7,12 @@ import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
-import com.amulyakhare.textdrawable.TextDrawable;
 import com.lakeel.altla.vision.nearby.R;
 import com.lakeel.altla.vision.nearby.core.StringUtils;
 import com.lakeel.altla.vision.nearby.presentation.presenter.favorite.FavoriteListPresenter;
 import com.lakeel.altla.vision.nearby.presentation.presenter.model.FavoriteModel;
 import com.lakeel.altla.vision.nearby.presentation.view.FavoriteItemView;
+import com.lakeel.altla.vision.nearby.presentation.view.drawable.UserInitial;
 import com.marshalchen.ultimaterecyclerview.SwipeableUltimateViewAdapter;
 import com.marshalchen.ultimaterecyclerview.UltimateRecyclerviewViewHolder;
 import com.marshalchen.ultimaterecyclerview.swipe.SwipeLayout;
@@ -59,13 +58,13 @@ public final class FavoriteAdapter extends SwipeableUltimateViewAdapter<Favorite
         LinearLayout itemLayout;
 
         @BindView(R.id.textViewUserName)
-        TextView userName;
+        TextView userNameTextView;
 
         @BindView(R.id.imageViewUser)
-        ImageView imageViewUser;
+        ImageView userImageView;
 
         @BindView(R.id.buttonRemove)
-        Button buttonRemove;
+        Button removeButton;
 
         @BindView(R.id.swipeLayout)
         SwipeLayout swipeLayout;
@@ -86,20 +85,20 @@ public final class FavoriteAdapter extends SwipeableUltimateViewAdapter<Favorite
 
         @Override
         public void showItem(FavoriteModel model) {
-            String displayName = model.userName;
-            userName.setText(displayName);
+            String userName = model.userName;
+            userNameTextView.setText(userName);
 
             if (StringUtils.isEmpty(model.imageUri)) {
-                String initial = displayName.substring(0, 1);
-                TextDrawable drawable = TextDrawable.builder()
-                        .buildRound(initial, Color.RED);
-                imageViewUser.post(() -> imageViewUser.setImageDrawable(drawable));
+                userImageView.post(() -> {
+                    UserInitial initial = new UserInitial(userName);
+                    userImageView.setImageDrawable(initial.getDrawable());
+                });
             } else {
                 ImageLoader imageLoader = ImageLoader.getInstance();
-                imageLoader.displayImage(model.imageUri, imageViewUser);
+                imageLoader.displayImage(model.imageUri, userImageView);
             }
 
-            buttonRemove.setOnClickListener(v -> itemPresenter.onRemove(model));
+            removeButton.setOnClickListener(v -> itemPresenter.onRemove(model));
             itemLayout.setOnClickListener(view -> itemPresenter.onClick(model));
         }
 

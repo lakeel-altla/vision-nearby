@@ -136,11 +136,6 @@ public final class NearbyUserListFragment extends Fragment implements NearbyUser
     }
 
     @Override
-    public void showSnackBar(int resId) {
-        Snackbar.make(recyclerView, resId, Snackbar.LENGTH_SHORT).show();
-    }
-
-    @Override
     public void showIndicator() {
         swipeRefreshLayout.setRefreshing(true);
     }
@@ -165,5 +160,10 @@ public final class NearbyUserListFragment extends Fragment implements NearbyUser
     @Override
     public void hideOptionMenu() {
         setHasOptionsMenu(false);
+    }
+
+    @Override
+    public void showSnackBar(int resId) {
+        Snackbar.make(recyclerView, resId, Snackbar.LENGTH_SHORT).show();
     }
 }
