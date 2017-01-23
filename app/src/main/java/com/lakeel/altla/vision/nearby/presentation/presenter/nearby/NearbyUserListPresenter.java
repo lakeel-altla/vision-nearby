@@ -133,7 +133,7 @@ public final class NearbyUserListPresenter extends BasePresenter<NearbyUserListV
         scanner.stopScan(scanCallback);
 
         getView().hideIndicator();
-        getView().drawNormalActionBarColor();
+        getView().drawDefaultActionBarColor();
     }
 
     public void onRefresh() {
@@ -200,7 +200,7 @@ public final class NearbyUserListPresenter extends BasePresenter<NearbyUserListV
                 getView().drawEditableActionBarColor();
             } else {
                 getView().hideOptionMenu();
-                getView().drawNormalActionBarColor();
+                getView().drawDefaultActionBarColor();
             }
         }
     }

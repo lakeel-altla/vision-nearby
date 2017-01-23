@@ -16,7 +16,7 @@ public interface NearbyUserListView {
 
     void drawEditableActionBarColor();
 
-    void drawNormalActionBarColor();
+    void drawDefaultActionBarColor();
 
     void hideOptionMenu();
 }

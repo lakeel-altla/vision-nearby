@@ -1,7 +1,6 @@
 package com.lakeel.altla.vision.nearby.presentation.view.fragment.nearby;
 
 import android.content.Intent;
-import android.os.Build;
 import android.os.Bundle;
 import android.os.Handler;
 import android.support.design.widget.Snackbar;
@@ -19,9 +18,9 @@ import com.flipboard.bottomsheet.BottomSheetLayout;
 import com.lakeel.altla.vision.nearby.R;
 import com.lakeel.altla.vision.nearby.presentation.presenter.nearby.NearbyUserListPresenter;
 import com.lakeel.altla.vision.nearby.presentation.view.NearbyUserListView;
-import com.lakeel.altla.vision.nearby.presentation.view.actionBar.ActionBarColor;
 import com.lakeel.altla.vision.nearby.presentation.view.actionBar.BarColor;
-import com.lakeel.altla.vision.nearby.presentation.view.actionBar.ToolBarColor;
+import com.lakeel.altla.vision.nearby.presentation.view.actionBar.DefaultBarColorFactory;
+import com.lakeel.altla.vision.nearby.presentation.view.actionBar.EditableBarColorFactory;
 import com.lakeel.altla.vision.nearby.presentation.view.activity.MainActivity;
 import com.lakeel.altla.vision.nearby.presentation.view.adapter.NearbyAdapter;
 import com.lakeel.altla.vision.nearby.presentation.view.divider.DividerItemDecoration;
@@ -68,7 +67,7 @@ public final class NearbyUserListFragment extends Fragment implements NearbyUser
 
         presenter.onCreateView(this);
 
-        drawNormalActionBarColor();
+        drawDefaultActionBarColor();
 
         return view;
     }
@@ -152,23 +151,13 @@ public final class NearbyUserListFragment extends Fragment implements NearbyUser
 
     @Override
     public void drawEditableActionBarColor() {
-        BarColor barColor;
-        if (Build.VERSION.SDK_INT >= 21) {
-            barColor = new ToolBarColor(getActivity(), R.color.darkgray, R.color.darkgray);
-        } else {
-            barColor = new ActionBarColor(getActivity(), R.color.darkgray);
-        }
+        BarColor barColor = EditableBarColorFactory.create(this);
         barColor.draw();
     }
 
     @Override
-    public void drawNormalActionBarColor() {
-        BarColor barColor;
-        if (Build.VERSION.SDK_INT >= 21) {
-            barColor = new ToolBarColor(getActivity(), R.color.colorPrimary, R.color.colorPrimaryDark);
-        } else {
-            barColor = new ActionBarColor(getActivity(), R.color.colorPrimary);
-        }
+    public void drawDefaultActionBarColor() {
+        BarColor barColor = DefaultBarColorFactory.create(this);
         barColor.draw();
     }
 
