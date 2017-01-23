@@ -13,7 +13,7 @@ import android.widget.TextView;
 import com.amulyakhare.textdrawable.TextDrawable;
 import com.lakeel.altla.vision.nearby.R;
 import com.lakeel.altla.vision.nearby.core.StringUtils;
-import com.lakeel.altla.vision.nearby.presentation.presenter.model.NearbyItemModel;
+import com.lakeel.altla.vision.nearby.presentation.presenter.model.NearbyUserModel;
 import com.lakeel.altla.vision.nearby.presentation.presenter.nearby.NearbyUserListPresenter;
 import com.lakeel.altla.vision.nearby.presentation.view.NearbyItemView;
 import com.nostra13.universalimageloader.core.ImageLoader;
@@ -76,8 +76,8 @@ public final class NearbyUserAdapter extends RecyclerView.Adapter<NearbyUserAdap
         }
 
         @Override
-        public void showItem(NearbyItemModel model) {
-            String displayName = model.name;
+        public void showItem(NearbyUserModel model) {
+            String displayName = model.userName;
             userName.setText(displayName);
 
             if (StringUtils.isEmpty(model.imageUri)) {

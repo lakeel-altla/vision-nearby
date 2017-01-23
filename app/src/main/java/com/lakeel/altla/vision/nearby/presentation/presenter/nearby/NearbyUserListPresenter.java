@@ -11,21 +11,18 @@ import android.content.Intent;
 import android.support.annotation.IntRange;
 
 import com.lakeel.altla.vision.nearby.R;
-import com.lakeel.altla.vision.nearby.domain.usecase.FindBeaconUseCase;
-import com.lakeel.altla.vision.nearby.domain.usecase.FindUserUseCase;
+import com.lakeel.altla.vision.nearby.domain.usecase.FindNearbyUsersUseCase;
 import com.lakeel.altla.vision.nearby.presentation.ble.BleChecker;
 import com.lakeel.altla.vision.nearby.presentation.presenter.BaseItemPresenter;
 import com.lakeel.altla.vision.nearby.presentation.presenter.BasePresenter;
-import com.lakeel.altla.vision.nearby.presentation.presenter.mapper.NearbyItemsModelMapper;
-import com.lakeel.altla.vision.nearby.presentation.presenter.model.NearbyItemModel;
+import com.lakeel.altla.vision.nearby.presentation.presenter.mapper.NearbyUsersModelMapper;
+import com.lakeel.altla.vision.nearby.presentation.presenter.model.NearbyUserModel;
 import com.lakeel.altla.vision.nearby.presentation.view.NearbyItemView;
 import com.lakeel.altla.vision.nearby.presentation.view.NearbyUserListView;
+import com.lakeel.altla.vision.nearby.rx.ErrorAction;
 import com.neovisionaries.bluetooth.ble.advertising.ADPayloadParser;
 import com.neovisionaries.bluetooth.ble.advertising.ADStructure;
 import com.neovisionaries.bluetooth.ble.advertising.EddystoneUID;
-
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 import java.util.ArrayList;
 import java.util.Iterator;
@@ -38,27 +35,21 @@ import javax.inject.Inject;
 
 import rx.Subscription;
 import rx.android.schedulers.AndroidSchedulers;
-import rx.schedulers.Schedulers;
 
 public final class NearbyUserListPresenter extends BasePresenter<NearbyUserListView> {
 
     @Inject
-    FindBeaconUseCase findBeaconUseCase;
-
-    @Inject
-    FindUserUseCase findUserUseCase;
-
-    private static Logger LOGGER = LoggerFactory.getLogger(NearbyUserListPresenter.class);
+    FindNearbyUsersUseCase findNearbyUsersUseCase;
 
     private final Context context;
 
     private final BluetoothLeScanner scanner;
 
-    private final List<NearbyItemModel> nearbyItemModels = new ArrayList<>();
+    private final List<NearbyUserModel> nearbyUserModels = new ArrayList<>();
 
-    private final List<NearbyItemModel> checkedModels = new LinkedList<>();
+    private final List<NearbyUserModel> checkedModels = new LinkedList<>();
 
-    private NearbyItemsModelMapper nearbyItemsModelMapper = new NearbyItemsModelMapper();
+    private NearbyUsersModelMapper modelMapper = new NearbyUsersModelMapper();
 
     private ScheduledThreadPoolExecutor executor = new ScheduledThreadPoolExecutor(1);
 
@@ -81,25 +72,20 @@ public final class NearbyUserListPresenter extends BasePresenter<NearbyUserListV
                     EddystoneUID eddystoneUID = (EddystoneUID) structure;
                     String beaconId = eddystoneUID.getBeaconIdAsString().toLowerCase();
 
-                    Subscription subscription = findBeaconUseCase.execute(beaconId)
-                            .subscribeOn(Schedulers.io())
-                            .toObservable()
-                            // Exclude public beacon.
-                            .filter(entity -> entity != null)
-                            .flatMap(entity -> findUserUseCase.execute(entity.userId).subscribeOn(Schedulers.io()).toObservable())
-                            .subscribeOn(Schedulers.io())
-                            .map(itemsEntity -> nearbyItemsModelMapper.map(itemsEntity))
-                            .subscribeOn(Schedulers.io())
+                    Subscription subscription = findNearbyUsersUseCase.execute(beaconId)
+                            .map(entity -> modelMapper.map(entity))
                             .observeOn(AndroidSchedulers.mainThread())
                             .subscribe(scannedModel -> {
-                                for (NearbyItemModel model : nearbyItemModels) {
+                                for (NearbyUserModel model : nearbyUserModels) {
+                                    // Check already scanned.
                                     if (model.userId.equals(scannedModel.userId)) {
                                         return;
                                     }
                                 }
-                                nearbyItemModels.add(scannedModel);
+
+                                nearbyUserModels.add(scannedModel);
                                 getView().updateItems();
-                            }, e -> LOGGER.error("Failed to findList nearby item.", e));
+                            }, new ErrorAction<>());
                     subscriptions.add(subscription);
                 }
             }
@@ -119,8 +105,7 @@ public final class NearbyUserListPresenter extends BasePresenter<NearbyUserListV
         BleChecker.State state = checker.checkState();
         if (state == BleChecker.State.OFF) {
             getView().showBleEnabledActivity(new Intent(BluetoothAdapter.ACTION_REQUEST_ENABLE));
-        }
-        if (state == BleChecker.State.ENABLE || state == BleChecker.State.SUBSCRIBE_ONLY) {
+        } else if (state == BleChecker.State.ENABLE || state == BleChecker.State.SUBSCRIBE_ONLY) {
             getView().showIndicator();
             subscribe();
         }
@@ -150,7 +135,7 @@ public final class NearbyUserListPresenter extends BasePresenter<NearbyUserListV
     }
 
     public int getItemCount() {
-        return nearbyItemModels.size();
+        return nearbyUserModels.size();
     }
 
     public void subscribe() {
@@ -166,7 +151,7 @@ public final class NearbyUserListPresenter extends BasePresenter<NearbyUserListV
 
             getView().hideIndicator();
 
-            if (nearbyItemModels.size() == 0) {
+            if (nearbyUserModels.size() == 0) {
                 getView().showSnackBar(R.string.message_not_found);
             }
 
@@ -178,15 +163,15 @@ public final class NearbyUserListPresenter extends BasePresenter<NearbyUserListV
 
         @Override
         public void onBind(@IntRange(from = 0) int position) {
-            getItemView().showItem(nearbyItemModels.get(position));
+            getItemView().showItem(nearbyUserModels.get(position));
         }
 
-        public void onCheck(NearbyItemModel model) {
+        public void onCheck(NearbyUserModel model) {
             if (model.isChecked) {
-                Iterator<NearbyItemModel> iterator = checkedModels.iterator();
+                Iterator<NearbyUserModel> iterator = checkedModels.iterator();
                 while (iterator.hasNext()) {
-                    NearbyItemModel nearbyItemModel = iterator.next();
-                    if (nearbyItemModel.userId.equals(model.userId)) {
+                    NearbyUserModel nearbyUserModel = iterator.next();
+                    if (nearbyUserModel.userId.equals(model.userId)) {
                         iterator.remove();
                     }
                 }

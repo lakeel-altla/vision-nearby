@@ -1,12 +1,12 @@
 package com.lakeel.altla.vision.nearby.presentation.presenter.model;
 
-public final class NearbyItemModel {
+public final class NearbyUserModel {
 
     public String userId;
 
-    public String imageUri;
+    public String userName;
 
-    public String name;
+    public String imageUri;
 
     public boolean isChecked;
 }
