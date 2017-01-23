@@ -6,7 +6,7 @@ import com.lakeel.altla.vision.nearby.R;
 
 import butterknife.BindView;
 
-public final class SnsLayout {
+public final class SNSLayout {
 
     @BindView(R.id.textViewLineUrl)
     public TextView textViewLineUrl;
