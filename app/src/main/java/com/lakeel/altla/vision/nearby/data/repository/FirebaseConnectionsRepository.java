@@ -8,18 +8,18 @@ import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ServerValue;
 import com.google.firebase.database.ValueEventListener;
 import com.lakeel.altla.vision.nearby.domain.entity.PresenceEntity;
-import com.lakeel.altla.vision.nearby.domain.repository.FirebaseConnectionsRepository;
 import com.lakeel.altla.vision.nearby.presentation.firebase.MyUser;
 
 import java.util.HashMap;
 import java.util.Map;
 
 import javax.inject.Inject;
+import javax.inject.Named;
 
 import rx.Completable;
 import rx.Single;
 
-public class FirebaseConnectionsRepositoryImpl implements FirebaseConnectionsRepository {
+public class FirebaseConnectionsRepository {
 
     private static final String IS_CONNECTED_KEY = "isConnected";
 
@@ -28,11 +28,10 @@ public class FirebaseConnectionsRepositoryImpl implements FirebaseConnectionsRep
     private DatabaseReference reference;
 
     @Inject
-    public FirebaseConnectionsRepositoryImpl(String url) {
+    public FirebaseConnectionsRepository(@Named("connectionsUrl") String url) {
         reference = FirebaseDatabase.getInstance().getReferenceFromUrl(url);
     }
 
-    @Override
     public void saveOnline(String userId) {
         // Check user authentication because when user sign out, this method is called and FirebaseUser instance become null.
         if (MyUser.isAuthenticated()) {
@@ -46,7 +45,6 @@ public class FirebaseConnectionsRepositoryImpl implements FirebaseConnectionsRep
         }
     }
 
-    @Override
     public Completable saveOffline(String userId) {
         return Completable.create(subscriber -> {
             Task task = reference
@@ -63,7 +61,6 @@ public class FirebaseConnectionsRepositoryImpl implements FirebaseConnectionsRep
         });
     }
 
-    @Override
     public void savePresenceOfflineOnDisconnect(String userId) {
         reference
                 .child(userId)
@@ -72,7 +69,6 @@ public class FirebaseConnectionsRepositoryImpl implements FirebaseConnectionsRep
                 .setValue(false);
     }
 
-    @Override
     public Single<PresenceEntity> findPresenceByUserId(String userId) {
         return Single.create(subscriber ->
                 reference.child(userId).addListenerForSingleValueEvent(new ValueEventListener() {
@@ -88,6 +84,4 @@ public class FirebaseConnectionsRepositoryImpl implements FirebaseConnectionsRep
                     }
                 }));
     }
-
-
 }

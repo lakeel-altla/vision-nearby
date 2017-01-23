@@ -8,24 +8,23 @@ import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
 import com.lakeel.altla.vision.nearby.data.execption.DataStoreException;
 import com.lakeel.altla.vision.nearby.domain.entity.FavoriteEntity;
-import com.lakeel.altla.vision.nearby.domain.repository.FirebaseFavoritesRepository;
 
 import javax.inject.Inject;
+import javax.inject.Named;
 
 import rx.Completable;
 import rx.Observable;
 import rx.Single;
 
-public class FirebaseFavoritesRepositoryImpl implements FirebaseFavoritesRepository {
+public class FirebaseFavoritesRepository {
 
     private DatabaseReference reference;
 
     @Inject
-    public FirebaseFavoritesRepositoryImpl(String url) {
+    public FirebaseFavoritesRepository(@Named("favoritesUrl") String url) {
         reference = FirebaseDatabase.getInstance().getReferenceFromUrl(url);
     }
 
-    @Override
     public Observable<FavoriteEntity> findFavoritesByUserId(String myUserId) {
         return Observable.create(subscriber -> {
             reference
@@ -55,7 +54,6 @@ public class FirebaseFavoritesRepositoryImpl implements FirebaseFavoritesReposit
         });
     }
 
-    @Override
     public Single<FavoriteEntity> findFavorite(String myUserId, String favoriteUserId) {
         return Single.create(subscriber ->
                 reference
@@ -81,7 +79,6 @@ public class FirebaseFavoritesRepositoryImpl implements FirebaseFavoritesReposit
                         }));
     }
 
-    @Override
     public Completable saveFavorite(String myUserId, String favoriteUserId) {
         return Completable.create(subscriber -> {
             Task<Void> task = reference
@@ -98,7 +95,6 @@ public class FirebaseFavoritesRepositoryImpl implements FirebaseFavoritesReposit
         });
     }
 
-    @Override
     public Completable removeFavorite(String myUserId, String favoriteUserId) {
         return Completable.create(subscriber -> {
             Task task = reference

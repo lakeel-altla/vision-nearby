@@ -1,6 +1,6 @@
 package com.lakeel.altla.vision.nearby.domain.usecase;
 
-import com.lakeel.altla.vision.nearby.domain.repository.FirebaseInformationRepository;
+import com.lakeel.altla.vision.nearby.data.repository.FirebaseInformationRepository;
 
 import javax.inject.Inject;
 

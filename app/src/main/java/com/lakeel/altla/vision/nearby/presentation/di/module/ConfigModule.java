@@ -47,20 +47,6 @@ public final class ConfigModule {
 
     @InjectScope
     @Provides
-    @Named("profilesUrl")
-    String provideProfilesUrl() {
-        return "https://profile-notification-95441.firebaseio.com/profiles";
-    }
-
-    @InjectScope
-    @Provides
-    @Named("configsUrl")
-    String provideConfigsUrl() {
-        return "https://profile-notification-95441.firebaseio.com/configs";
-    }
-
-    @InjectScope
-    @Provides
     @Named("connectionUrl")
     String provideConnectionUrl() {
         return "https://profile-notification-95441.firebaseio.com/.info/connected";
@@ -68,15 +54,7 @@ public final class ConfigModule {
 
     @InjectScope
     @Provides
-    @Named("cmLinksUrl")
-    String provideCmLinksUrl() {
-        return "https://profile-notification-95441.firebaseio.com/links/cm";
-    }
-
-
-    @InjectScope
-    @Provides
-    @Named("LineLinksUrl")
+    @Named("lineLinksUrl")
     String provideLineLinksUrl() {
         return "https://profile-notification-95441.firebaseio.com/links/line";
     }

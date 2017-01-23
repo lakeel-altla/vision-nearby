@@ -13,18 +13,18 @@ import com.google.firebase.database.ValueEventListener;
 import com.lakeel.altla.vision.nearby.data.execption.DataStoreException;
 import com.lakeel.altla.vision.nearby.data.mapper.HistoryEntityMapper;
 import com.lakeel.altla.vision.nearby.domain.entity.HistoryEntity;
-import com.lakeel.altla.vision.nearby.domain.repository.FirebaseHistoryRepository;
 
 import java.util.Map;
 
 import javax.inject.Inject;
+import javax.inject.Named;
 
 import rx.Completable;
 import rx.Observable;
 import rx.Single;
 import rx.Subscriber;
 
-public class FirebaseHistoryRepositoryImpl implements FirebaseHistoryRepository {
+public class FirebaseHistoryRepository {
 
     private static final String ID_KEY = "userId";
 
@@ -33,11 +33,10 @@ public class FirebaseHistoryRepositoryImpl implements FirebaseHistoryRepository 
     private HistoryEntityMapper entityMapper = new HistoryEntityMapper();
 
     @Inject
-    public FirebaseHistoryRepositoryImpl(String url) {
+    public FirebaseHistoryRepository(@Named("historyUrl") String url) {
         reference = FirebaseDatabase.getInstance().getReferenceFromUrl(url);
     }
 
-    @Override
     public Observable<HistoryEntity> findHistoryList(String userId) {
         return Observable.create(new Observable.OnSubscribe<HistoryEntity>() {
 
@@ -65,7 +64,6 @@ public class FirebaseHistoryRepositoryImpl implements FirebaseHistoryRepository 
         });
     }
 
-    @Override
     public Single<HistoryEntity> findHistory(String userId, String historyId) {
         return Single.create(subscriber ->
                 reference
@@ -85,7 +83,6 @@ public class FirebaseHistoryRepositoryImpl implements FirebaseHistoryRepository 
                         }));
     }
 
-    @Override
     public Single<Long> findTimes(String myUserId, String otherUserId) {
         return Single.create(subscriber ->
                 reference
@@ -105,7 +102,6 @@ public class FirebaseHistoryRepositoryImpl implements FirebaseHistoryRepository 
                         }));
     }
 
-    @Override
     public Single<String> saveHistory(String myUserId, String otherUserId) {
         return Single.create(subscriber -> {
             HistoryEntity entity = entityMapper.map(otherUserId);
@@ -125,7 +121,6 @@ public class FirebaseHistoryRepositoryImpl implements FirebaseHistoryRepository 
         });
     }
 
-    @Override
     public Single<HistoryEntity> saveUserActivity(String uniqueId, String userId, DetectedActivity userActivity) {
         return Single.create(subscriber -> {
             HistoryEntity entity = entityMapper.map(userActivity);
@@ -145,7 +140,6 @@ public class FirebaseHistoryRepositoryImpl implements FirebaseHistoryRepository 
         });
     }
 
-    @Override
     public Single<HistoryEntity> saveCurrentLocation(String uniqueId, String userId, Location location) {
         return Single.create(subscriber -> {
             HistoryEntity entity = entityMapper.map(location);
@@ -165,7 +159,6 @@ public class FirebaseHistoryRepositoryImpl implements FirebaseHistoryRepository 
         });
     }
 
-    @Override
     public Single<HistoryEntity> saveWeather(String uniqueId, String userId, Weather weather) {
         return Single.create(subscriber -> {
             HistoryEntity entity = entityMapper.map(weather);
@@ -185,7 +178,6 @@ public class FirebaseHistoryRepositoryImpl implements FirebaseHistoryRepository 
         });
     }
 
-    @Override
     public Completable removeByUniqueKey(String userId, String uniqueKey) {
         return Completable.create(subscriber -> {
             Task task = reference.

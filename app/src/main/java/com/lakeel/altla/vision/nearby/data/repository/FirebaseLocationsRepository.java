@@ -9,24 +9,23 @@ import com.firebase.geofire.LocationCallback;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
-import com.lakeel.altla.vision.nearby.domain.repository.FirebaseLocationsRepository;
 
 import javax.inject.Inject;
+import javax.inject.Named;
 
 import rx.Single;
 import rx.SingleSubscriber;
 
-public class FirebaseLocationsRepositoryImpl implements FirebaseLocationsRepository {
+public class FirebaseLocationsRepository {
 
     private GeoFire geoFire;
 
     @Inject
-    public FirebaseLocationsRepositoryImpl(String url) {
+    public FirebaseLocationsRepository(@Named("locationsUrl") String url) {
         DatabaseReference reference = FirebaseDatabase.getInstance().getReferenceFromUrl(url);
         geoFire = new GeoFire(reference);
     }
 
-    @Override
     public Single<GeoLocation> findLocationByKey(String key) {
         return Single.create(new Single.OnSubscribe<GeoLocation>() {
             @Override
@@ -50,7 +49,6 @@ public class FirebaseLocationsRepositoryImpl implements FirebaseLocationsReposit
         });
     }
 
-    @Override
     public Single<String> saveLocation(Location location) {
         String uniqueId = geoFire.getDatabaseReference().push().getKey();
         return Single.create(subscriber ->

@@ -5,27 +5,21 @@ import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
-import com.lakeel.altla.vision.nearby.domain.repository.FirebaseConnectionRepository;
-
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 import javax.inject.Inject;
+import javax.inject.Named;
 
 import rx.Observable;
 
-public final class FirebaseConnectionRepositoryImpl implements FirebaseConnectionRepository {
-
-    private static final Logger LOGGER = LoggerFactory.getLogger(FirebaseConnectionRepositoryImpl.class);
+public final class FirebaseConnectionRepository {
 
     private DatabaseReference reference;
 
     @Inject
-    public FirebaseConnectionRepositoryImpl(String url) {
+    public FirebaseConnectionRepository(@Named("connectionUrl") String url) {
         reference = FirebaseDatabase.getInstance().getReferenceFromUrl(url);
     }
 
-    @Override
     public Observable<Object> observeConnection() {
         return Observable.create(subscriber -> {
             reference.addValueEventListener(new ValueEventListener() {

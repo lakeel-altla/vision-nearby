@@ -6,26 +6,25 @@ import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
-import com.lakeel.altla.vision.nearby.domain.entity.TokenEntity;
 import com.lakeel.altla.vision.nearby.data.execption.DataStoreException;
-import com.lakeel.altla.vision.nearby.domain.repository.FirebaseTokensRepository;
+import com.lakeel.altla.vision.nearby.domain.entity.TokenEntity;
 
 import javax.inject.Inject;
+import javax.inject.Named;
 
 import rx.Observable;
 import rx.Single;
 import rx.Subscriber;
 
-public final class FirebaseTokensRepositoryImpl implements FirebaseTokensRepository {
+public final class FirebaseTokensRepository {
 
     private DatabaseReference reference;
 
     @Inject
-    public FirebaseTokensRepositoryImpl(String url) {
+    public FirebaseTokensRepository(@Named("tokensUrl") String url) {
         reference = FirebaseDatabase.getInstance().getReferenceFromUrl(url);
     }
 
-    @Override
     public Single<String> saveToken(String userId, String beaconId, String token) {
         return Single.create(subscriber -> {
             Task task = reference
@@ -42,7 +41,6 @@ public final class FirebaseTokensRepositoryImpl implements FirebaseTokensReposit
         });
     }
 
-    @Override
     public Single<String> findTokenByUserId(String userId) {
         return Single.create(subscriber ->
                 reference
@@ -61,7 +59,6 @@ public final class FirebaseTokensRepositoryImpl implements FirebaseTokensReposit
                         }));
     }
 
-    @Override
     public Observable<TokenEntity> findTokensByUserId(String userId) {
         return Observable.create(new Observable.OnSubscribe<TokenEntity>() {
             @Override

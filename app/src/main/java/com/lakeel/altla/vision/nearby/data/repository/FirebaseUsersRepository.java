@@ -6,15 +6,15 @@ import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
-import com.lakeel.altla.vision.nearby.domain.entity.UserEntity;
 import com.lakeel.altla.vision.nearby.data.execption.DataStoreException;
 import com.lakeel.altla.vision.nearby.data.mapper.UserEntityMapper;
-import com.lakeel.altla.vision.nearby.domain.repository.FirebaseUsersRepository;
+import com.lakeel.altla.vision.nearby.domain.entity.UserEntity;
 
 import java.util.HashMap;
 import java.util.Map;
 
 import javax.inject.Inject;
+import javax.inject.Named;
 
 import rx.Completable;
 import rx.Observable;
@@ -22,7 +22,7 @@ import rx.Single;
 import rx.SingleSubscriber;
 import rx.Subscriber;
 
-public final class FirebaseUsersRepositoryImpl implements FirebaseUsersRepository {
+public final class FirebaseUsersRepository {
 
     private static final String KEY_BEACONS = "beacons";
 
@@ -31,11 +31,10 @@ public final class FirebaseUsersRepositoryImpl implements FirebaseUsersRepositor
     private UserEntityMapper entityMapper = new UserEntityMapper();
 
     @Inject
-    public FirebaseUsersRepositoryImpl(String url) {
+    public FirebaseUsersRepository(@Named("usersUrl") String url) {
         reference = FirebaseDatabase.getInstance().getReferenceFromUrl(url);
     }
 
-    @Override
     public Completable saveUser(String userId) {
         return Completable.create(subscriber -> {
             Map<String, Object> map = entityMapper.map();
@@ -52,7 +51,6 @@ public final class FirebaseUsersRepositoryImpl implements FirebaseUsersRepositor
         });
     }
 
-    @Override
     public Single<String> saveBeacon(String userId, String beaconId) {
         return Single.create(new Single.OnSubscribe<String>() {
             @Override
@@ -75,7 +73,6 @@ public final class FirebaseUsersRepositoryImpl implements FirebaseUsersRepositor
         });
     }
 
-    @Override
     public Observable<String> findBeaconsByUserId(String userId) {
         return Observable.create(new Observable.OnSubscribe<String>() {
             @Override
@@ -102,7 +99,6 @@ public final class FirebaseUsersRepositoryImpl implements FirebaseUsersRepositor
         });
     }
 
-    @Override
     public Single<String> removeBeacon(String userId, String beaconId) {
         return Single.create(subscriber -> {
             Task task = reference
@@ -120,7 +116,6 @@ public final class FirebaseUsersRepositoryImpl implements FirebaseUsersRepositor
         });
     }
 
-    @Override
     public Observable<UserEntity> observeUserProfile(String userId) {
         return Observable.create(subscriber ->
                 reference
@@ -139,7 +134,6 @@ public final class FirebaseUsersRepositoryImpl implements FirebaseUsersRepositor
                         }));
     }
 
-    @Override
     public Single<UserEntity> findUserByUserId(String userId) {
         return Single.create(new Single.OnSubscribe<UserEntity>() {
 

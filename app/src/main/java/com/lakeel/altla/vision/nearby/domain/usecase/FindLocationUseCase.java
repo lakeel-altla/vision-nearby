@@ -1,7 +1,7 @@
 package com.lakeel.altla.vision.nearby.domain.usecase;
 
 import com.firebase.geofire.GeoLocation;
-import com.lakeel.altla.vision.nearby.domain.repository.FirebaseLocationsRepository;
+import com.lakeel.altla.vision.nearby.data.repository.FirebaseLocationsRepository;
 
 import javax.inject.Inject;
 

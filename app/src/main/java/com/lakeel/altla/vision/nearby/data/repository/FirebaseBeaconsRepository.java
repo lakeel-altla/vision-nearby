@@ -6,20 +6,20 @@ import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
-import com.lakeel.altla.vision.nearby.domain.entity.BeaconEntity;
 import com.lakeel.altla.vision.nearby.data.execption.DataStoreException;
 import com.lakeel.altla.vision.nearby.data.mapper.BeaconEntityMapper;
-import com.lakeel.altla.vision.nearby.domain.repository.FirebaseBeaconsRepository;
+import com.lakeel.altla.vision.nearby.domain.entity.BeaconEntity;
 
 import java.util.HashMap;
 import java.util.Map;
 
 import javax.inject.Inject;
+import javax.inject.Named;
 
 import rx.Completable;
 import rx.Single;
 
-public class FirebaseBeaconsRepositoryImpl implements FirebaseBeaconsRepository {
+public class FirebaseBeaconsRepository {
 
     private static final String KEY_IS_LOST = "isLost";
 
@@ -28,11 +28,10 @@ public class FirebaseBeaconsRepositoryImpl implements FirebaseBeaconsRepository 
     private BeaconEntityMapper entityMapper = new BeaconEntityMapper();
 
     @Inject
-    public FirebaseBeaconsRepositoryImpl(String url) {
+    public FirebaseBeaconsRepository(@Named("beaconsUrl") String url) {
         reference = FirebaseDatabase.getInstance().getReferenceFromUrl(url);
     }
 
-    @Override
     public Single<String> saveBeacon(String beaconId, String userId, String name) {
         return Single.create(subscriber -> {
             BeaconEntity entity = entityMapper.map(userId, name);
@@ -51,7 +50,6 @@ public class FirebaseBeaconsRepositoryImpl implements FirebaseBeaconsRepository 
         });
     }
 
-    @Override
     public Single<BeaconEntity> findBeacon(String beaconId) {
         return Single.create(subscriber ->
                 reference
@@ -75,7 +73,6 @@ public class FirebaseBeaconsRepositoryImpl implements FirebaseBeaconsRepository 
                         }));
     }
 
-    @Override
     public Single<String> removeBeacon(String beaconId) {
         return Single.create(subscriber -> {
             Task task = reference
@@ -91,7 +88,6 @@ public class FirebaseBeaconsRepositoryImpl implements FirebaseBeaconsRepository 
         });
     }
 
-    @Override
     public Completable lostDevice(String beaconId) {
         return Completable.create(subscriber -> {
             Map<String, Object> map = new HashMap<>();
@@ -110,7 +106,6 @@ public class FirebaseBeaconsRepositoryImpl implements FirebaseBeaconsRepository 
         });
     }
 
-    @Override
     public Completable foundDevice(String beaconId) {
         return Completable.create(subscriber -> {
             Map<String, Object> map = new HashMap<>();

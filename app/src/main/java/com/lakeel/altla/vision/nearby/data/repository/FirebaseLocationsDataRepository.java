@@ -6,18 +6,18 @@ import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
-import com.lakeel.altla.vision.nearby.domain.entity.LocationDataEntity;
 import com.lakeel.altla.vision.nearby.data.execption.DataStoreException;
 import com.lakeel.altla.vision.nearby.data.mapper.LocationDataEntityMapper;
-import com.lakeel.altla.vision.nearby.domain.repository.FirebaseLocationsDataRepository;
+import com.lakeel.altla.vision.nearby.domain.entity.LocationDataEntity;
 
 import java.util.Iterator;
 
 import javax.inject.Inject;
+import javax.inject.Named;
 
 import rx.Single;
 
-public final class FirebaseLocationsDataRepositoryImpl implements FirebaseLocationsDataRepository {
+public final class FirebaseLocationsDataRepository {
 
     private static final String KEY_BEACON_ID = "beaconId";
 
@@ -26,11 +26,10 @@ public final class FirebaseLocationsDataRepositoryImpl implements FirebaseLocati
     private final LocationDataEntityMapper entityMapper = new LocationDataEntityMapper();
 
     @Inject
-    public FirebaseLocationsDataRepositoryImpl(String url) {
+    public FirebaseLocationsDataRepository(@Named("locationDataUrl") String url) {
         reference = FirebaseDatabase.getInstance().getReferenceFromUrl(url);
     }
 
-    @Override
     public Single<LocationDataEntity> findLocationsDataByBeaconId(String beaconId) {
         return Single.create(subscriber ->
                 reference
@@ -62,7 +61,6 @@ public final class FirebaseLocationsDataRepositoryImpl implements FirebaseLocati
                         }));
     }
 
-    @Override
     public Single<LocationDataEntity> saveLocationData(String uniqueId, String beaconId) {
         return Single.create(subscriber -> {
             LocationDataEntity entity = entityMapper.map(beaconId);

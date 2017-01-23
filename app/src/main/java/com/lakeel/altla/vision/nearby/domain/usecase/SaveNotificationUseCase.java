@@ -1,7 +1,7 @@
 package com.lakeel.altla.vision.nearby.domain.usecase;
 
 import com.lakeel.altla.vision.nearby.domain.entity.NotificationEntity;
-import com.lakeel.altla.vision.nearby.domain.repository.FirebaseNotificationsRepository;
+import com.lakeel.altla.vision.nearby.data.repository.FirebaseNotificationsRepository;
 
 import javax.inject.Inject;
 

@@ -6,20 +6,20 @@ import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
-import com.lakeel.altla.vision.nearby.domain.entity.LineLinkEntity;
 import com.lakeel.altla.vision.nearby.data.execption.DataStoreException;
 import com.lakeel.altla.vision.nearby.data.mapper.LineLinkEntityMapper;
-import com.lakeel.altla.vision.nearby.domain.repository.FirebaseLINELinksRepository;
+import com.lakeel.altla.vision.nearby.domain.entity.LineLinkEntity;
 
 import java.util.Iterator;
 
 import javax.inject.Inject;
+import javax.inject.Named;
 
 import rx.Single;
 import rx.SingleSubscriber;
 
 
-public class FirebaseLINELinksRepositoryImpl implements FirebaseLINELinksRepository {
+public class FirebaseLINELinksRepository {
 
     private static final String URL_KEY = "url";
 
@@ -28,11 +28,10 @@ public class FirebaseLINELinksRepositoryImpl implements FirebaseLINELinksReposit
     private DatabaseReference reference;
 
     @Inject
-    public FirebaseLINELinksRepositoryImpl(String url) {
+    public FirebaseLINELinksRepository(@Named("lineLinksUrl") String url) {
         reference = FirebaseDatabase.getInstance().getReferenceFromUrl(url);
     }
 
-    @Override
     public Single<String> saveUrl(String userId, String url) {
         return Single.create(subscriber -> {
             LineLinkEntity entity = entityMapper.map(url);
@@ -50,7 +49,6 @@ public class FirebaseLINELinksRepositoryImpl implements FirebaseLINELinksReposit
         });
     }
 
-    @Override
     public Single<LineLinkEntity> findByUserId(String userId) {
         return Single.create(subscriber ->
                 reference
@@ -69,7 +67,6 @@ public class FirebaseLINELinksRepositoryImpl implements FirebaseLINELinksReposit
                         }));
     }
 
-    @Override
     public Single<LineLinkEntity> findUserIdByLineUrl(String url) {
         return Single.create(new Single.OnSubscribe<LineLinkEntity>() {
             @Override

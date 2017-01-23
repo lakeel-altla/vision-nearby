@@ -58,6 +58,8 @@ public final class InformationListFragment extends Fragment implements Informati
 
         getActivity().setTitle(R.string.title_information);
 
+        ((MainActivity) getActivity()).setDrawerIndicatorEnabled(true);
+
         recyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
         recyclerView.setHasFixedSize(false);
         recyclerView.addItemDecoration(new DividerItemDecoration(getContext()));

@@ -6,30 +6,29 @@ import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
-import com.lakeel.altla.vision.nearby.domain.entity.InformationEntity;
 import com.lakeel.altla.vision.nearby.data.mapper.InformationEntityMapper;
-import com.lakeel.altla.vision.nearby.domain.repository.FirebaseInformationRepository;
+import com.lakeel.altla.vision.nearby.domain.entity.InformationEntity;
 
 import java.util.Map;
 
 import javax.inject.Inject;
+import javax.inject.Named;
 
 import rx.Completable;
 import rx.Observable;
 import rx.Single;
 
-public class FirebaseInformationRepositoryImpl implements FirebaseInformationRepository {
+public class FirebaseInformationRepository {
 
     private DatabaseReference reference;
 
     private InformationEntityMapper entityMapper = new InformationEntityMapper();
 
     @Inject
-    public FirebaseInformationRepositoryImpl(String url) {
+    public FirebaseInformationRepository(@Named("informationUrl") String url) {
         reference = FirebaseDatabase.getInstance().getReferenceFromUrl(url);
     }
 
-    @Override
     public Completable save(String userId, String title, String message) {
         return Completable.create(subscriber -> {
             InformationEntity entity = entityMapper.map(title, message);
@@ -49,7 +48,6 @@ public class FirebaseInformationRepositoryImpl implements FirebaseInformationRep
         });
     }
 
-    @Override
     public Observable<InformationEntity> findList(String userId) {
         return Observable.create(subscriber -> {
             reference
@@ -73,7 +71,6 @@ public class FirebaseInformationRepositoryImpl implements FirebaseInformationRep
         });
     }
 
-    @Override
     public Single<InformationEntity> find(String userId, String informationId) {
         return Single.create(subscriber ->
                 reference

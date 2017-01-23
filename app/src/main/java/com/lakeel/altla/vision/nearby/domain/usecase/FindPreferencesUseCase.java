@@ -1,7 +1,7 @@
 package com.lakeel.altla.vision.nearby.domain.usecase;
 
 import com.lakeel.altla.vision.nearby.domain.entity.PreferenceEntity;
-import com.lakeel.altla.vision.nearby.domain.repository.PreferenceRepository;
+import com.lakeel.altla.vision.nearby.data.repository.PreferenceRepository;
 import com.lakeel.altla.vision.nearby.presentation.firebase.MyUser;
 
 import javax.inject.Inject;

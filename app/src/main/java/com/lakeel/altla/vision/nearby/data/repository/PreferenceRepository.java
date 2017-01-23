@@ -4,7 +4,6 @@ import android.content.SharedPreferences;
 
 import com.lakeel.altla.vision.nearby.core.StringUtils;
 import com.lakeel.altla.vision.nearby.domain.entity.PreferenceEntity;
-import com.lakeel.altla.vision.nearby.domain.repository.PreferenceRepository;
 
 import java.util.UUID;
 
@@ -13,22 +12,21 @@ import javax.inject.Inject;
 import rx.Single;
 import rx.SingleSubscriber;
 
-public class PreferenceRepositoryImpl implements PreferenceRepository {
+public class PreferenceRepository {
 
     private static final String KEY_BEACON_ID = "beaconId/";
 
     private static final String KEY_ADVERTISE_IN_BACKGROUND = "advertiseInBackground";
 
-    private static final String KEY_SUBSCRIBE_IN_BACKGROUND = "startSubscribeInBackground";
+    private static final String KEY_SUBSCRIBE_IN_BACKGROUND = "subscribeInBackground";
 
     private SharedPreferences preference;
 
     @Inject
-    public PreferenceRepositoryImpl(SharedPreferences preference) {
+    public PreferenceRepository(SharedPreferences preference) {
         this.preference = preference;
     }
 
-    @Override
     public Single<PreferenceEntity> findPreferences(String userId) {
         return Single.create(subscriber -> {
             String beaconId = preference.getString(KEY_BEACON_ID + userId, StringUtils.EMPTY);
@@ -44,7 +42,6 @@ public class PreferenceRepositoryImpl implements PreferenceRepository {
         });
     }
 
-    @Override
     public Single<Boolean> findSubscribeSetting() {
         return Single.create(subscriber -> {
             boolean isSubscribeInBackgroundEnabled = preference.getBoolean(KEY_SUBSCRIBE_IN_BACKGROUND, true);
@@ -52,7 +49,6 @@ public class PreferenceRepositoryImpl implements PreferenceRepository {
         });
     }
 
-    @Override
     public Single<String> findBeaconId(String userId) {
         return Single.create(new Single.OnSubscribe<String>() {
             @Override
@@ -69,7 +65,6 @@ public class PreferenceRepositoryImpl implements PreferenceRepository {
         });
     }
 
-    @Override
     public Single<String> saveBeaconId(String userId) {
         return Single.create(new Single.OnSubscribe<String>() {
             @Override

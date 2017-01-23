@@ -3,9 +3,9 @@ package com.lakeel.altla.vision.nearby.domain.usecase;
 import android.os.Build;
 
 import com.lakeel.altla.vision.nearby.core.StringUtils;
-import com.lakeel.altla.vision.nearby.domain.repository.FirebaseBeaconsRepository;
-import com.lakeel.altla.vision.nearby.domain.repository.FirebaseUsersRepository;
-import com.lakeel.altla.vision.nearby.domain.repository.PreferenceRepository;
+import com.lakeel.altla.vision.nearby.data.repository.FirebaseBeaconsRepository;
+import com.lakeel.altla.vision.nearby.data.repository.FirebaseUsersRepository;
+import com.lakeel.altla.vision.nearby.data.repository.PreferenceRepository;
 import com.lakeel.altla.vision.nearby.presentation.firebase.MyUser;
 
 import javax.inject.Inject;
