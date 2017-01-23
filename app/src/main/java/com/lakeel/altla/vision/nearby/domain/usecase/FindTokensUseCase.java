@@ -21,3 +21,4 @@ public final class FindTokensUseCase {
         return repository.findTokensByUserId(userId).subscribeOn(Schedulers.io());
     }
 }
+

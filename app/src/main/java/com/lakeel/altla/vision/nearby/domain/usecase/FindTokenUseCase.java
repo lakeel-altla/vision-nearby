@@ -14,7 +14,6 @@ public final class FindTokenUseCase {
     @Inject
     FindTokenUseCase() {
     }
-
     public Single<String> execute(String userId) {
         return repository.findTokenByUserId(userId);
     }
