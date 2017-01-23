@@ -5,6 +5,7 @@ import com.lakeel.altla.vision.nearby.domain.repository.FirebaseBeaconsRepositor
 import javax.inject.Inject;
 
 import rx.Completable;
+import rx.schedulers.Schedulers;
 
 public final class FoundDeviceUseCase {
 
@@ -16,6 +17,6 @@ public final class FoundDeviceUseCase {
     }
 
     public Completable execute(String beaconId) {
-        return repository.foundDevice(beaconId);
+        return repository.foundDevice(beaconId).subscribeOn(Schedulers.io());
     }
 }

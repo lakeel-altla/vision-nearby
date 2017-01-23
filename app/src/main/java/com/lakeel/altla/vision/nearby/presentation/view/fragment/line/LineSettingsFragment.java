@@ -34,7 +34,7 @@ public final class LineSettingsFragment extends Fragment implements LineSettings
     LinearLayout mainLayout;
 
     @BindView(R.id.textViewLineUrl)
-    TextView lineUrl;
+    TextView lineUrlTextView;
 
     public static LineSettingsFragment newInstance() {
         return new LineSettingsFragment();
@@ -95,7 +95,7 @@ public final class LineSettingsFragment extends Fragment implements LineSettings
 
     @Override
     public void showLineUrl(String url) {
-        lineUrl.setText(url);
+        lineUrlTextView.setText(url);
     }
 
     @Override

@@ -1,10 +1,12 @@
 package com.lakeel.altla.vision.nearby.domain.usecase;
 
 import com.lakeel.altla.vision.nearby.domain.repository.FirebaseLINELinksRepository;
+import com.lakeel.altla.vision.nearby.presentation.firebase.MyUser;
 
 import javax.inject.Inject;
 
 import rx.Single;
+import rx.schedulers.Schedulers;
 
 public final class SaveLINEUrlUseCase {
 
@@ -15,7 +17,8 @@ public final class SaveLINEUrlUseCase {
     SaveLINEUrlUseCase() {
     }
 
-    public Single<String> execute(String userId, String url) {
-        return repository.saveUrl(userId, url);
+    public Single<String> execute(String url) {
+        String userId = MyUser.getUserId();
+        return repository.saveUrl(userId, url).subscribeOn(Schedulers.io());
     }
 }

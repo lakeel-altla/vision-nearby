@@ -2,7 +2,7 @@ package com.lakeel.altla.vision.nearby.presentation.presenter.favorite;
 
 import com.lakeel.altla.vision.nearby.domain.usecase.FindLineLinkUseCase;
 import com.lakeel.altla.vision.nearby.domain.usecase.FindConnectionUseCase;
-import com.lakeel.altla.vision.nearby.domain.usecase.FindUserBeaconsUseCase;
+import com.lakeel.altla.vision.nearby.domain.usecase.FindUserBeaconIdsUseCase;
 import com.lakeel.altla.vision.nearby.domain.usecase.FindUserUseCase;
 import com.lakeel.altla.vision.nearby.presentation.analytics.AnalyticsReporter;
 import com.lakeel.altla.vision.nearby.presentation.presenter.BasePresenter;
@@ -33,7 +33,7 @@ public final class FavoriteUserPresenter extends BasePresenter<FavoriteUserView>
     FindLineLinkUseCase findLineLinkUseCase;
 
     @Inject
-    FindUserBeaconsUseCase findUserBeaconsUseCase;
+    FindUserBeaconIdsUseCase findUserBeaconIdsUseCase;
 
     private PresencesModelMapper presencesModelMapper = new PresencesModelMapper();
 
@@ -79,7 +79,7 @@ public final class FavoriteUserPresenter extends BasePresenter<FavoriteUserView>
     }
 
     public void onEstimateDistanceMenuClick() {
-        Subscription subscription = findUserBeaconsUseCase.execute(favoriteUserId)
+        Subscription subscription = findUserBeaconIdsUseCase.execute(favoriteUserId)
                 .toList()
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribe(beacons -> {
