@@ -6,6 +6,7 @@ import com.lakeel.altla.vision.nearby.domain.usecase.SaveLINEUrlUseCase;
 import com.lakeel.altla.vision.nearby.presentation.analytics.AnalyticsReporter;
 import com.lakeel.altla.vision.nearby.presentation.firebase.MyUser;
 import com.lakeel.altla.vision.nearby.presentation.presenter.BasePresenter;
+import com.lakeel.altla.vision.nearby.presentation.uri.UriChecker;
 import com.lakeel.altla.vision.nearby.presentation.view.LineSettingsView;
 
 import org.slf4j.Logger;

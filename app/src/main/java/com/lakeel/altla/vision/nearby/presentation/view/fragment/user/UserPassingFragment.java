@@ -35,6 +35,7 @@ import com.lakeel.altla.vision.nearby.presentation.view.date.DateFormatter;
 import com.lakeel.altla.vision.nearby.presentation.view.layout.PassingLayout;
 import com.lakeel.altla.vision.nearby.presentation.view.layout.PresenceLayout;
 import com.lakeel.altla.vision.nearby.presentation.view.layout.ProfileLayout;
+import com.lakeel.altla.vision.nearby.presentation.view.layout.SnsLayout;
 import com.nostra13.universalimageloader.core.ImageLoader;
 
 import java.math.BigDecimal;

@@ -22,6 +22,7 @@ import com.lakeel.altla.vision.nearby.domain.usecase.FindUserUseCase;
 import com.lakeel.altla.vision.nearby.domain.usecase.SaveHistoryUseCase;
 import com.lakeel.altla.vision.nearby.domain.usecase.SaveUserActivityUseCase;
 import com.lakeel.altla.vision.nearby.domain.usecase.SaveUserLocationUseCase;
+import com.lakeel.altla.vision.nearby.domain.usecase.SaveWeatherUseCase;
 import com.lakeel.altla.vision.nearby.presentation.analytics.AnalyticsReporter;
 import com.lakeel.altla.vision.nearby.presentation.awareness.AwarenessException;
 import com.lakeel.altla.vision.nearby.presentation.di.component.DaggerServiceComponent;
