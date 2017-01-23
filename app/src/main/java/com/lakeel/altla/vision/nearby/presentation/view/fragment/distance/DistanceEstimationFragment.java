@@ -46,16 +46,16 @@ public final class DistanceEstimationFragment extends Fragment implements Distan
     RelativeLayout mainLayout;
 
     @BindView(R.id.textViewDescription)
-    TextView distanceDescriptionText;
+    TextView descriptionTextView;
 
     @BindView(R.id.textViewDistance)
-    TextView distanceText;
+    TextView distanceTextView;
 
     @BindView(R.id.imageViewUser)
     ImageView userImageView;
 
     @BindView(R.id.imageViewCircle)
-    ImageView circleImage;
+    ImageView circleImageView;
 
     private static final Logger LOGGER = LoggerFactory.getLogger(DistanceEstimationFragment.class);
 
@@ -103,7 +103,7 @@ public final class DistanceEstimationFragment extends Fragment implements Distan
         String targetName = bundle.getString(FragmentBundle.TARGET_NAME.name());
 
         String message = getResources().getString(R.string.message_finding_for_nearby_device_format, targetName);
-        distanceDescriptionText.setText(message);
+        descriptionTextView.setText(message);
 
         presenter.setBeaconIds(beaconIds);
     }
@@ -114,13 +114,13 @@ public final class DistanceEstimationFragment extends Fragment implements Distan
 
         presenter.onResume();
 
-        circleImage.setImageDrawable(ResourcesCompat.getDrawable(getResources(), R.drawable.circle, null));
+        circleImageView.setImageDrawable(ResourcesCompat.getDrawable(getResources(), R.drawable.circle, null));
 
         ScaleAnimation animation = new ScaleAnimation(1, 3.0f, 1, 3.0f, Animation.RELATIVE_TO_SELF, 0.5f, Animation.RELATIVE_TO_SELF, 0.5f);
         animation.setDuration(2000);
         animation.setRepeatCount(INFINITE);
 
-        circleImage.startAnimation(animation);
+        circleImageView.startAnimation(animation);
     }
 
     @Override
@@ -159,7 +159,7 @@ public final class DistanceEstimationFragment extends Fragment implements Distan
     public void showDistance(String meters) {
         if (isResumed()) {
             String message = getResources().getString(R.string.message_device_distance_format, meters);
-            distanceText.setText(message);
+            distanceTextView.setText(message);
         }
     }
 
