@@ -4,25 +4,16 @@ import android.support.annotation.IntRange;
 
 import com.lakeel.altla.vision.nearby.R;
 import com.lakeel.altla.vision.nearby.core.CollectionUtils;
-import com.lakeel.altla.vision.nearby.data.entity.HistoryEntity;
-import com.lakeel.altla.vision.nearby.data.entity.UserEntity;
-import com.lakeel.altla.vision.nearby.domain.usecase.FindHistoryUseCase;
-import com.lakeel.altla.vision.nearby.domain.usecase.FindUserUseCase;
+import com.lakeel.altla.vision.nearby.domain.usecase.FindHistoryListUseCase;
 import com.lakeel.altla.vision.nearby.domain.usecase.RemoveHistoryUseCase;
 import com.lakeel.altla.vision.nearby.presentation.analytics.AnalyticsReporter;
-import com.lakeel.altla.vision.nearby.presentation.firebase.MyUser;
 import com.lakeel.altla.vision.nearby.presentation.presenter.BaseItemPresenter;
 import com.lakeel.altla.vision.nearby.presentation.presenter.BasePresenter;
 import com.lakeel.altla.vision.nearby.presentation.presenter.mapper.HistoryModelMapper;
 import com.lakeel.altla.vision.nearby.presentation.presenter.model.HistoryModel;
-import com.lakeel.altla.vision.nearby.presentation.presenter.model.LocationModel;
 import com.lakeel.altla.vision.nearby.presentation.view.HistoryItemView;
 import com.lakeel.altla.vision.nearby.presentation.view.HistoryListView;
-import com.lakeel.altla.vision.nearby.presentation.view.bundle.HistoryBundle;
-import com.lakeel.altla.vision.nearby.presentation.view.bundle.WeatherBundle;
-
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import com.lakeel.altla.vision.nearby.rx.ErrorAction;
 
 import java.util.ArrayList;
 import java.util.Collections;
@@ -30,10 +21,8 @@ import java.util.List;
 
 import javax.inject.Inject;
 
-import rx.Observable;
 import rx.Subscription;
 import rx.android.schedulers.AndroidSchedulers;
-import rx.schedulers.Schedulers;
 
 public final class HistoryListPresenter extends BasePresenter<HistoryListView> {
 
@@ -41,39 +30,23 @@ public final class HistoryListPresenter extends BasePresenter<HistoryListView> {
     AnalyticsReporter analyticsReporter;
 
     @Inject
-    FindUserUseCase findUserUseCase;
-
-    @Inject
-    FindHistoryUseCase findHistoryUseCase;
+    FindHistoryListUseCase findHistoryListUseCase;
 
     @Inject
     RemoveHistoryUseCase removeHistoryUseCase;
 
-    private static final Logger LOGGER = LoggerFactory.getLogger(HistoryListPresenter.class);
-
-    private HistoryModelMapper historyModelMapper = new HistoryModelMapper();
+    private HistoryModelMapper modelMapper = new HistoryModelMapper();
 
     private final List<HistoryModel> historyModels = new ArrayList<>();
-
-    public List<HistoryModel> getItems() {
-        return historyModels;
-    }
 
     @Inject
     HistoryListPresenter() {
     }
 
     public void onActivityCreated() {
-        Subscription subscription = findHistoryUseCase
-                .execute(MyUser.getUid())
-                .flatMap(entity -> {
-                    Observable<HistoryEntity> historyObservable = Observable.just(entity);
-                    Observable<UserEntity> userObservable = findUser(entity.userId);
-                    return Observable.zip(historyObservable, userObservable, (historyEntity, userEntity) ->
-                            historyModelMapper.map(historyEntity, userEntity));
-                })
+        Subscription subscription = findHistoryListUseCase.execute()
+                .map(entity -> modelMapper.map(entity))
                 .toList()
-                .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribe(historyItemModels -> {
                     Collections.reverse(historyItemModels);
@@ -88,17 +61,18 @@ public final class HistoryListPresenter extends BasePresenter<HistoryListView> {
                     }
 
                     getView().updateItems();
-                }, e -> {
-                    LOGGER.error("Failed to findList history.", e);
-                    getView().showSnackBar(R.string.error_process);
-                });
+                }, new ErrorAction<>());
         subscriptions.add(subscription);
     }
 
     public void onCreateItemView(HistoryItemView historyItemView) {
-        HistoryItemPresenter historyItemPresenter = new HistoryItemPresenter();
-        historyItemPresenter.onCreateItemView(historyItemView);
-        historyItemView.setItemPresenter(historyItemPresenter);
+        HistoryItemPresenter itemPresenter = new HistoryItemPresenter();
+        itemPresenter.onCreateItemView(historyItemView);
+        historyItemView.setItemPresenter(itemPresenter);
+    }
+
+    public List<HistoryModel> getItems() {
+        return historyModels;
     }
 
     public final class HistoryItemPresenter extends BaseItemPresenter<HistoryItemView> {
@@ -109,64 +83,31 @@ public final class HistoryListPresenter extends BasePresenter<HistoryListView> {
         }
 
         public void onClick(HistoryModel model) {
-            HistoryBundle data = new HistoryBundle();
-
-            data.userId = model.userId;
-            data.userName = model.name;
-
-            LocationModel locationModel = model.locationModel;
-            if (locationModel != null) {
-                data.latitude = locationModel.latitude;
-                data.longitude = locationModel.longitude;
-            }
-
-            if (model.userActivity != null) {
-                data.userActivity = model.userActivity;
-            }
-
-            if (model.weather != null) {
-                WeatherBundle weatherBundle = new WeatherBundle();
-                weatherBundle.conditions = model.weather.conditions;
-                weatherBundle.humidity = model.weather.humidity;
-                weatherBundle.temperature = model.weather.temperature;
-                data.weatherBundle = weatherBundle;
-            }
-
-            data.timestamp = model.passingTime;
-
-            getView().showHistoryFragment(data);
+            getView().showUserPassingFragment(model.historyId);
         }
 
         public void onRemove(HistoryModel model) {
-            analyticsReporter.removeHistory(model.userId, model.name);
+            analyticsReporter.removeHistory(model.userId, model.userName);
 
-            Subscription subscription = removeHistoryUseCase
-                    .execute(MyUser.getUid(), model.uniqueId)
-                    .subscribeOn(Schedulers.io())
+            Subscription subscription = removeHistoryUseCase.execute(model.historyId)
                     .observeOn(AndroidSchedulers.mainThread())
-                    .subscribe(e -> {
-                        LOGGER.error("Failed to add to favorites.", e);
-                        getView().showSnackBar(R.string.error_not_added);
-                    }, () -> {
-                        int size = historyModels.size();
+                    .subscribe(new ErrorAction<>(),
+                            () -> {
+                                int size = historyModels.size();
 
-                        historyModels.remove(model);
+                                historyModels.remove(model);
 
-                        if (CollectionUtils.isEmpty(historyModels)) {
-                            getView().removeAll(size);
-                            getView().showEmptyView();
-                        } else {
-                            getView().hideEmptyView();
-                            getView().updateItems();
-                        }
+                                if (CollectionUtils.isEmpty(historyModels)) {
+                                    getView().removeAll(size);
+                                    getView().showEmptyView();
+                                } else {
+                                    getView().hideEmptyView();
+                                    getView().updateItems();
+                                }
 
-                        getView().showSnackBar(R.string.message_removed);
-                    });
+                                getView().showSnackBar(R.string.message_removed);
+                            });
             subscriptions.add(subscription);
         }
-    }
-
-    private Observable<UserEntity> findUser(String userId) {
-        return findUserUseCase.execute(userId).subscribeOn(Schedulers.io()).toObservable();
     }
 }

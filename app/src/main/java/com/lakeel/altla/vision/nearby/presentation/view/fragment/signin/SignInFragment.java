@@ -27,7 +27,7 @@ public final class SignInFragment extends Fragment implements SignInView {
     @Inject
     SignInPresenter presenter;
 
-    @BindView(R.id.layout)
+    @BindView(R.id.mainLayout)
     RelativeLayout mainLayout;
 
     private static final int SIGN_IN_REQUEST_CODE = 1;
@@ -87,9 +87,9 @@ public final class SignInFragment extends Fragment implements SignInView {
     }
 
     @Override
-    public void onSignedIn() {
-        App.startMonitorBeacons(this);
-        ((MainActivity) getActivity()).onSignedIn();
+    public void signInSuccess() {
+        App.startSubscribeInBackground(this);
+        ((MainActivity) getActivity()).postSignIn();
     }
 
     @Override

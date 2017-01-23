@@ -2,21 +2,21 @@ package com.lakeel.altla.vision.nearby.presentation.view.fragment;
 
 import android.support.annotation.IdRes;
 import android.support.v4.app.Fragment;
+import android.support.v4.app.FragmentActivity;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentTransaction;
 
 import com.lakeel.altla.vision.nearby.R;
-import com.lakeel.altla.vision.nearby.presentation.view.bundle.HistoryBundle;
 import com.lakeel.altla.vision.nearby.presentation.view.fragment.bluetooth.BleSettingsFragment;
 import com.lakeel.altla.vision.nearby.presentation.view.fragment.device.DeviceListFragment;
-import com.lakeel.altla.vision.nearby.presentation.view.fragment.estimation.DistanceEstimationFragment;
+import com.lakeel.altla.vision.nearby.presentation.view.fragment.distance.DistanceEstimationFragment;
 import com.lakeel.altla.vision.nearby.presentation.view.fragment.favorite.FavoriteListFragment;
 import com.lakeel.altla.vision.nearby.presentation.view.fragment.history.HistoryListFragment;
 import com.lakeel.altla.vision.nearby.presentation.view.fragment.information.InformationFragment;
 import com.lakeel.altla.vision.nearby.presentation.view.fragment.information.InformationListFragment;
 import com.lakeel.altla.vision.nearby.presentation.view.fragment.line.LineSettingsFragment;
 import com.lakeel.altla.vision.nearby.presentation.view.fragment.nearby.NearbyListFragment;
-import com.lakeel.altla.vision.nearby.presentation.view.fragment.setting.SettingsFragment;
+import com.lakeel.altla.vision.nearby.presentation.view.fragment.settings.SettingsFragment;
 import com.lakeel.altla.vision.nearby.presentation.view.fragment.signin.SignInFragment;
 import com.lakeel.altla.vision.nearby.presentation.view.fragment.tracking.TrackingFragment;
 import com.lakeel.altla.vision.nearby.presentation.view.fragment.user.UserPassingFragment;
@@ -56,8 +56,12 @@ public final class FragmentController {
 
     private FragmentManager fragmentManager;
 
-    public FragmentController(FragmentManager fragmentManager) {
-        this.fragmentManager = fragmentManager;
+    public FragmentController(FragmentActivity activity) {
+        this.fragmentManager = activity.getSupportFragmentManager();
+    }
+
+    public FragmentController(Fragment fragment) {
+        this.fragmentManager = fragment.getActivity().getSupportFragmentManager();
     }
 
     public void showSignInFragment() {
@@ -80,8 +84,8 @@ public final class FragmentController {
         replaceFragment(R.id.fragmentPlaceholder, fragment, HISTORY_FRAGMENT_TAG);
     }
 
-    public void showUserPassingFragment(HistoryBundle data) {
-        UserPassingFragment fragment = UserPassingFragment.newInstance(data);
+    public void showUserPassingFragment(String historyId) {
+        UserPassingFragment fragment = UserPassingFragment.newInstance(historyId);
         replaceFragment(R.id.fragmentPlaceholder, fragment, USER_PASSING_FRAGMENT_TAG);
     }
 

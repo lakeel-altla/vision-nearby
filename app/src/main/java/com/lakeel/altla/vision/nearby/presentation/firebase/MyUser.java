@@ -4,11 +4,10 @@ import android.net.Uri;
 
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
-import com.lakeel.altla.vision.nearby.presentation.exception.UserNotAuthorizedException;
 
 public final class MyUser {
 
-    public static final class UserData {
+    public static final class UserProfile {
 
         public String userId;
 
@@ -26,25 +25,25 @@ public final class MyUser {
         return FirebaseAuth.getInstance().getCurrentUser() != null;
     }
 
-    public static String getUid() {
+    public static String getUserId() {
         return getMyUser().getUid();
     }
 
-    public static UserData getUserData() {
+    public static UserProfile getUserData() {
         FirebaseUser myUser = getMyUser();
 
-        UserData userData = new UserData();
+        UserProfile userProfile = new UserProfile();
 
-        userData.userId = myUser.getUid();
-        userData.userName = myUser.getDisplayName();
-        userData.email = myUser.getEmail();
+        userProfile.userId = myUser.getUid();
+        userProfile.userName = myUser.getDisplayName();
+        userProfile.email = myUser.getEmail();
 
         Uri uri = myUser.getPhotoUrl();
         if (uri != null) {
-            userData.imageUri = uri.toString();
+            userProfile.imageUri = uri.toString();
         }
 
-        return userData;
+        return userProfile;
     }
 
     private static FirebaseUser getMyUser() {

@@ -10,7 +10,7 @@ public final class UserEntityMapper {
     public Map<String, Object> map() {
         Map<String, Object> map = new HashMap<>();
 
-        MyUser.UserData user = MyUser.getUserData();
+        MyUser.UserProfile user = MyUser.getUserData();
 
         map.put("userName", user.userName);
         map.put("imageUri", user.imageUri);

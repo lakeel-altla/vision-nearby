@@ -37,7 +37,7 @@
             android:textAppearance="?android:attr/textAppearanceMedium" />
 
         <TextView
-            android:id="@+id/dateText"
+            android:id="@+id/textViewPassingTime"
             android:layout_width="match_parent"
             android:layout_height="wrap_content" />
 
@@ -59,7 +59,7 @@
             android:textAppearance="?android:attr/textAppearanceMedium" />
 
         <TextView
-            android:id="@+id/weatherText"
+            android:id="@+id/textViewWeather"
             android:layout_width="match_parent"
             android:layout_height="wrap_content" />
 
@@ -81,7 +81,7 @@
             android:textAppearance="?android:attr/textAppearanceMedium" />
 
         <TextView
-            android:id="@+id/userActivityText"
+            android:id="@+id/textViewUserActivity"
             android:layout_width="match_parent"
             android:layout_height="wrap_content" />
 
@@ -103,7 +103,7 @@
             android:textAppearance="?android:attr/textAppearanceMedium" />
 
         <TextView
-            android:id="@+id/timesText"
+            android:id="@+id/textViewTimes"
             android:layout_width="match_parent"
             android:layout_height="wrap_content" />
 

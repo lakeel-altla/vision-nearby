@@ -23,7 +23,7 @@ public final class BleSettingsFragment extends PreferenceFragmentCompat implemen
 
     private static final String KEY_ADVERTISE_IN_BACKGROUND = "advertiseInBackground";
 
-    private static final String KEY_SUBSCRIBE_IN_BACKGROUND = "subscribeInBackground";
+    private static final String KEY_SUBSCRIBE_IN_BACKGROUND = "startSubscribeInBackground";
 
     private SwitchPreferenceCompat advertisePreference;
 
@@ -107,7 +107,7 @@ public final class BleSettingsFragment extends PreferenceFragmentCompat implemen
 
     @Override
     public void startSubscribe() {
-        App.startMonitorBeacons(this);
+        App.startSubscribeInBackground(this);
     }
 
     @Override

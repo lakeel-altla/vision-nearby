@@ -23,7 +23,7 @@ import com.lakeel.altla.vision.nearby.presentation.presenter.mapper.UserModelMap
 import com.lakeel.altla.vision.nearby.presentation.service.AdvertiseService;
 import com.lakeel.altla.vision.nearby.presentation.service.ServiceManager;
 import com.lakeel.altla.vision.nearby.presentation.view.ActivityView;
-import com.lakeel.altla.vision.nearby.rx.EmptyAction;
+import com.lakeel.altla.vision.nearby.rx.ErrorAction;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -67,7 +67,7 @@ public final class ActivityPresenter extends BasePresenter<ActivityView> {
 
     private final Context context;
 
-    private boolean isAdvertiseAvailability = true;
+    private boolean isAdvertiseAvailableDevice = true;
 
     @Inject
     ActivityPresenter(Context context) {
@@ -79,20 +79,20 @@ public final class ActivityPresenter extends BasePresenter<ActivityView> {
         super.onCreateView(activityView);
 
         if (MyUser.isAuthenticated()) {
-            onSignedIn();
+            postSignIn();
         } else {
             getView().showSignInFragment();
         }
     }
 
-    public void onSignedIn() {
+    public void postSignIn() {
         getView().showFavoriteListFragment();
 
-        checkBle();
+        checkDeviceBle();
         showProfile();
 
         // Observe user presence.
-        observeConnectionUseCase.execute(MyUser.getUid());
+        observeConnectionUseCase.execute(MyUser.getUserId());
 
         // Observe user profile
         observeUserProfileUseCase.execute()
@@ -100,9 +100,7 @@ public final class ActivityPresenter extends BasePresenter<ActivityView> {
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribe(model -> {
                     getView().updateProfile(model);
-                }, e -> {
-                    LOGGER.error("Failed to observe user profile.", e);
-                });
+                }, new ErrorAction<>());
 
         Subscription subscription = saveBeaconUseCase.execute().subscribe();
         subscriptions.add(subscription);
@@ -110,39 +108,36 @@ public final class ActivityPresenter extends BasePresenter<ActivityView> {
         Subscription subscription1 = saveTokenUseCase.execute(instanceId.getToken()).subscribe();
         subscriptions.add(subscription1);
 
-        Subscription subscription2 = findPreferencesUseCase.execute()
+        Subscription subscription2 = findPreferencesUseCase.execute().observeOn(AndroidSchedulers.mainThread())
                 .subscribe(entity -> {
-                    if (entity.isAdvertiseInBackgroundEnabled && isAdvertiseAvailability) {
-                        getView().startAdvertiseService(entity.beaconId);
+                    if (entity.isAdvertiseInBackgroundEnabled && isAdvertiseAvailableDevice) {
+                        getView().startAdvertise(entity.beaconId);
                     }
-                }, new EmptyAction<>());
+                }, new ErrorAction<>());
         subscriptions.add(subscription2);
     }
 
     public void onBleEnabled() {
-        Subscription subscription = findBeaconIdUseCase.execute()
-                .observeOn(AndroidSchedulers.mainThread())
-                .subscribe(beaconId -> getView().startAdvertiseService(beaconId),
-                        e -> LOGGER.error("Failed to findList beacon ID."));
+        Subscription subscription = findBeaconIdUseCase.execute().observeOn(AndroidSchedulers.mainThread())
+                .subscribe(beaconId -> getView().startAdvertise(beaconId), new ErrorAction<>());
         subscriptions.add(subscription);
     }
 
     public void onSignOut(@NonNull Activity activity) {
-        Subscription subscription = offlineUseCase.execute()
-                .observeOn(AndroidSchedulers.mainThread())
-                .subscribe(e -> LOGGER.error("Failed to save offline status.", e),
+        Subscription subscription = offlineUseCase.execute().observeOn(AndroidSchedulers.mainThread())
+                .subscribe(e -> new ErrorAction<>(),
                         () -> {
-                            MyUser.UserData userData = MyUser.getUserData();
+                            MyUser.UserProfile userProfile = MyUser.getUserData();
 
                             // Unless you explicitly sign out, sign-in state continues.
                             // If you want to sign out, it is necessary to both sign out FirebaseAuth and Play Service Auth.
                             Task<Void> task = AuthUI.getInstance().signOut(activity);
                             task.addOnCompleteListener(result -> {
                                 if (result.isSuccessful()) {
-                                    analyticsReporter.logout(userData.userId, userData.userName);
+                                    analyticsReporter.logout(userProfile.userId, userProfile.userName);
 
                                     ServiceManager serviceManager = new ServiceManager(context, AdvertiseService.class);
-                                    serviceManager.stop();
+                                    serviceManager.stopService();
 
                                     stopMonitorBeacons();
                                     getView().showSignInFragment();
@@ -161,24 +156,25 @@ public final class ActivityPresenter extends BasePresenter<ActivityView> {
         subscriptions.add(subscription);
     }
 
-    private void checkBle() {
+    private void checkDeviceBle() {
         BleChecker checker = new BleChecker(context);
         BleChecker.State state = checker.checkState();
 
         if (state == BleChecker.State.OFF) {
-            isAdvertiseAvailability = false;
+            isAdvertiseAvailableDevice = false;
             getView().showBleEnabledActivity();
         } else if (state == BleChecker.State.SUBSCRIBE_ONLY) {
-            isAdvertiseAvailability = false;
+            isAdvertiseAvailableDevice = false;
             getView().showAdvertiseDisableConfirmDialog();
         }
 
+        // Set user property.
         analyticsReporter.setBleProperty(state);
     }
 
     private void showProfile() {
-        MyUser.UserData userData = MyUser.getUserData();
-        getView().showProfile(userData.userName, userData.email, userData.imageUri);
+        MyUser.UserProfile userProfile = MyUser.getUserData();
+        getView().showProfile(userProfile.userName, userProfile.email, userProfile.imageUri);
     }
 
     private void stopMonitorBeacons() {

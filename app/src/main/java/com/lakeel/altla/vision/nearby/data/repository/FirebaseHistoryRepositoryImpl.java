@@ -10,9 +10,9 @@ import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
-import com.lakeel.altla.vision.nearby.data.entity.HistoryEntity;
 import com.lakeel.altla.vision.nearby.data.execption.DataStoreException;
 import com.lakeel.altla.vision.nearby.data.mapper.HistoryEntityMapper;
+import com.lakeel.altla.vision.nearby.domain.entity.HistoryEntity;
 import com.lakeel.altla.vision.nearby.domain.repository.FirebaseHistoryRepository;
 
 import java.util.Map;
@@ -38,7 +38,7 @@ public class FirebaseHistoryRepositoryImpl implements FirebaseHistoryRepository 
     }
 
     @Override
-    public Observable<HistoryEntity> findHistoryByUserId(String userId) {
+    public Observable<HistoryEntity> findHistoryList(String userId) {
         return Observable.create(new Observable.OnSubscribe<HistoryEntity>() {
 
             @Override
@@ -63,6 +63,26 @@ public class FirebaseHistoryRepositoryImpl implements FirebaseHistoryRepository 
                         });
             }
         });
+    }
+
+    @Override
+    public Single<HistoryEntity> findHistory(String userId, String historyId) {
+        return Single.create(subscriber ->
+                reference
+                        .child(userId)
+                        .child(historyId)
+                        .addListenerForSingleValueEvent(new ValueEventListener() {
+                            @Override
+                            public void onDataChange(DataSnapshot snapshot) {
+                                HistoryEntity entity = snapshot.getValue(HistoryEntity.class);
+                                subscriber.onSuccess(entity);
+                            }
+
+                            @Override
+                            public void onCancelled(DatabaseError databaseError) {
+                                subscriber.onError(databaseError.toException());
+                            }
+                        }));
     }
 
     @Override

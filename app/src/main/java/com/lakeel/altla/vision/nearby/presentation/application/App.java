@@ -12,8 +12,12 @@ import com.lakeel.altla.vision.nearby.domain.usecase.FindSubscribeSettingsUseCas
 import com.lakeel.altla.vision.nearby.presentation.beacon.BeaconClient;
 import com.lakeel.altla.vision.nearby.presentation.di.component.ApplicationComponent;
 import com.lakeel.altla.vision.nearby.presentation.di.component.DaggerApplicationComponent;
+import com.lakeel.altla.vision.nearby.presentation.di.component.DaggerDefaultComponent;
+import com.lakeel.altla.vision.nearby.presentation.di.component.DefaultComponent;
 import com.lakeel.altla.vision.nearby.presentation.di.module.ApplicationModule;
+import com.lakeel.altla.vision.nearby.presentation.di.module.ContextModule;
 import com.lakeel.altla.vision.nearby.presentation.firebase.MyUser;
+import com.lakeel.altla.vision.nearby.rx.ErrorAction;
 import com.lakeel.altla.vision.nearby.rx.ReusableCompositeSubscription;
 import com.nostra13.universalimageloader.cache.memory.impl.UsingFreqLimitedMemoryCache;
 import com.nostra13.universalimageloader.core.DisplayImageOptions;
@@ -29,7 +33,6 @@ import javax.inject.Inject;
 
 import rx.Subscription;
 import rx.android.schedulers.AndroidSchedulers;
-import rx.schedulers.Schedulers;
 
 public class App extends Application {
 
@@ -50,10 +53,10 @@ public class App extends Application {
         return ((App) activity.getApplication()).applicationComponent;
     }
 
-    public static void startMonitorBeacons(Fragment fragment) {
+    public static void startSubscribeInBackground(Fragment fragment) {
         // When user enable ble, start to monitor beacons.
         App app = ((App) fragment.getActivity().getApplication());
-        app.startMonitorBeacons();
+        app.startSubscribeInBackground();
     }
 
     @Override
@@ -61,6 +64,11 @@ public class App extends Application {
         super.onCreate();
 
         LOGGER.debug("App launch.");
+
+        DefaultComponent component = DaggerDefaultComponent.builder()
+                .contextModule(new ContextModule(this))
+                .build();
+        component.inject(this);
 
         MultiDex.install(this);
         JodaTimeAndroid.init(this);
@@ -71,34 +79,26 @@ public class App extends Application {
             firebaseDatabase.setPersistenceEnabled(true);
         }
 
-        // TODO: Fix inject
         applicationComponent = DaggerApplicationComponent.builder()
                 .applicationModule(new ApplicationModule(this))
                 .build();
-        applicationComponent.viewComponent().inject(this);
 
         // Even if the application is killed, this onCreate method is called by AltBeacon library.
         // In that case, need to start to monitor beacons here.
         if (MyUser.isAuthenticated()) {
-            Subscription subscription = findSubscribeSettingsUseCase.execute().subscribeOn(Schedulers.io())
-                    .observeOn(AndroidSchedulers.mainThread())
-                    .subscribe(isEnabled -> {
-                        beaconClient = new BeaconClient(this);
-                        beaconClient.startMonitor();
-                    }, e -> LOGGER.error("Failed to find subscribe settings.", e));
-            subscriptions.add(subscription);
+            subscribeInBackgroundIfNeeded();
         }
     }
 
-    public void startMonitorBeacons() {
+    public void startSubscribeInBackground() {
         if (beaconClient == null) {
             beaconClient = new BeaconClient(this);
         }
-        beaconClient.startMonitor();
+        beaconClient.startSubscribeInBackground();
     }
 
-    public void stopMonitorBeacons() {
-        beaconClient.stopMonitor();
+    public void stopSubscribeInBackground() {
+        beaconClient.stopSubscribeInBackground();
     }
 
     private void initImageLoader() {
@@ -114,5 +114,17 @@ public class App extends Application {
                 .defaultDisplayImageOptions(displayImageOptions)
                 .build();
         ImageLoader.getInstance().init(config);
+    }
+
+    private void subscribeInBackgroundIfNeeded() {
+        Subscription subscription = findSubscribeSettingsUseCase.execute()
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribe(isEnabled -> {
+                    if (isEnabled) {
+                        beaconClient = new BeaconClient(this);
+                        beaconClient.startSubscribeInBackground();
+                    }
+                }, new ErrorAction<>());
+        subscriptions.add(subscription);
     }
 }

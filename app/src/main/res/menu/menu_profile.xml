@@ -1,16 +1,11 @@
 <?xml version="1.0" encoding="utf-8"?>
 <menu xmlns:android="http://schemas.android.com/apk/res/android"
-      xmlns:app="http://schemas.android.com/apk/res-auto">
+    xmlns:app="http://schemas.android.com/apk/res-auto">
 
     <item
-            android:id="@+id/share"
-            android:title="@string/title_share"
-            app:showAsAction="ifRoom|withText"
-            android:icon="@drawable/ic_share"/>
+        android:id="@+id/estimate"
+        android:icon="@drawable/ic_bluetooth_searching"
+        android:title="@string/title_find"
+        app:showAsAction="ifRoom|withText" />
 
-    <item
-            android:id="@+id/find"
-            android:title="@string/title_find"
-            app:showAsAction="ifRoom|withText"
-            android:icon="@drawable/ic_bluetooth_searching"/>
 </menu>

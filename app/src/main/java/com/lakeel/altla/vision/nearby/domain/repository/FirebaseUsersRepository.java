@@ -1,6 +1,6 @@
 package com.lakeel.altla.vision.nearby.domain.repository;
 
-import com.lakeel.altla.vision.nearby.data.entity.UserEntity;
+import com.lakeel.altla.vision.nearby.domain.entity.UserEntity;
 
 import rx.Completable;
 import rx.Observable;

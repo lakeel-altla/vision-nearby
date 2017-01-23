@@ -4,9 +4,9 @@ import android.app.IntentService;
 import android.content.Intent;
 
 import com.lakeel.altla.vision.nearby.R;
-import com.lakeel.altla.vision.nearby.data.entity.BeaconEntity;
-import com.lakeel.altla.vision.nearby.data.entity.NotificationEntity;
-import com.lakeel.altla.vision.nearby.data.entity.TokenEntity;
+import com.lakeel.altla.vision.nearby.domain.entity.BeaconEntity;
+import com.lakeel.altla.vision.nearby.domain.entity.NotificationEntity;
+import com.lakeel.altla.vision.nearby.domain.entity.TokenEntity;
 import com.lakeel.altla.vision.nearby.domain.usecase.FindBeaconUseCase;
 import com.lakeel.altla.vision.nearby.domain.usecase.FindTokensUseCase;
 import com.lakeel.altla.vision.nearby.domain.usecase.FindUserIdByBeaconIdUseCase;
@@ -16,6 +16,8 @@ import com.lakeel.altla.vision.nearby.presentation.di.component.DaggerServiceCom
 import com.lakeel.altla.vision.nearby.presentation.di.component.ServiceComponent;
 import com.lakeel.altla.vision.nearby.presentation.di.module.ServiceModule;
 import com.lakeel.altla.vision.nearby.presentation.intent.IntentKey;
+import com.lakeel.altla.vision.nearby.rx.EmptyAction;
+import com.lakeel.altla.vision.nearby.rx.ErrorAction;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -45,8 +47,8 @@ public class NotificationService extends IntentService {
 
     private static final Logger LOGGER = LoggerFactory.getLogger(NotificationService.class);
 
+    // This constructor is need.
     public NotificationService() {
-        // This constructor is need.
         this(NotificationService.class.getSimpleName());
     }
 
@@ -65,34 +67,29 @@ public class NotificationService extends IntentService {
         String title = getApplicationContext().getString(R.string.notification_title_device_found);
         String message = getApplicationContext().getString(R.string.notification_message_device_found);
 
-        Observable<String> observableForUserId = findBeaconUseCase
-                .execute(beaconId)
+        Observable<String> userIdObservable = findBeaconUseCase.execute(beaconId)
                 .toObservable()
                 .filter(entity -> entity.isLost)
                 .flatMap(entity -> findUserId(beaconId))
                 .map(entity -> entity.userId);
 
-        observableForUserId
-                .flatMap(this::findTokens)
+        userIdObservable.flatMap(this::findTokens)
                 .filter(entity -> !beaconId.equals(entity.beaconId))
                 .flatMap(entity -> saveNotification(entity.token, title, message))
                 .subscribeOn(Schedulers.io())
-                .doOnError(e -> LOGGER.error("Failed to save notification.", e))
-                .subscribe();
+                .subscribe(new EmptyAction<>(), new ErrorAction<>());
 
-        observableForUserId
-                .flatMap(userId -> saveInformation(userId, title, message))
+        userIdObservable.flatMap(userId -> saveInformation(userId, title, message))
                 .subscribeOn(Schedulers.io())
-                .doOnError(e -> LOGGER.error("Failed to save information.", e))
-                .subscribe();
+                .subscribe(new EmptyAction<>(), new ErrorAction<>());
     }
 
     private Observable<BeaconEntity> findUserId(String beaconId) {
-        return findUserIdByBeaconIdUseCase.execute(beaconId).subscribeOn(Schedulers.io()).toObservable();
+        return findUserIdByBeaconIdUseCase.execute(beaconId).toObservable();
     }
 
     private Observable<TokenEntity> findTokens(String userId) {
-        return findTokensUseCase.execute(userId).subscribeOn(Schedulers.io());
+        return findTokensUseCase.execute(userId);
     }
 
     private Observable<Object> saveInformation(String userId, String title, String message) {
@@ -100,6 +97,6 @@ public class NotificationService extends IntentService {
     }
 
     private Observable<NotificationEntity> saveNotification(String token, String title, String message) {
-        return saveNotificationUseCase.execute(token, title, message).subscribeOn(Schedulers.io()).toObservable();
+        return saveNotificationUseCase.execute(token, title, message).toObservable();
     }
 }

@@ -1,67 +1,67 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-              android:orientation="vertical"
-              android:layout_width="wrap_content"
-              android:layout_height="match_parent">
+    android:layout_width="wrap_content"
+    android:layout_height="match_parent"
+    android:orientation="vertical">
 
     <LinearLayout
-            android:orientation="vertical"
-            android:gravity="center_vertical"
-            android:paddingTop="8dp"
-            android:paddingStart="16dp"
-            android:paddingEnd="16dp"
-            android:layout_width="match_parent"
-            android:layout_height="30dp">
+        android:layout_width="match_parent"
+        android:layout_height="30dp"
+        android:gravity="center_vertical"
+        android:orientation="vertical"
+        android:paddingEnd="16dp"
+        android:paddingStart="16dp"
+        android:paddingTop="8dp">
 
         <TextView
-                android:gravity="center_vertical"
-                android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:text="@string/textView_state"/>
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:gravity="center_vertical"
+            android:text="@string/textView_state" />
 
     </LinearLayout>
 
     <LinearLayout
-            android:orientation="vertical"
-            android:gravity="center"
-            android:paddingStart="16dp"
-            android:paddingEnd="16dp"
+        android:layout_width="match_parent"
+        android:layout_height="72dp"
+        android:gravity="center"
+        android:orientation="vertical"
+        android:paddingEnd="16dp"
+        android:paddingStart="16dp">
+
+        <TextView
             android:layout_width="match_parent"
-            android:layout_height="72dp">
+            android:layout_height="wrap_content"
+            android:paddingBottom="4dp"
+            android:text="@string/textView_presence"
+            android:textAppearance="?android:attr/textAppearanceMedium" />
 
         <TextView
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:paddingBottom="4dp"
-                android:textAppearance="?android:attr/textAppearanceMedium"
-                android:text="@string/textView_presence"/>
-
-        <TextView
-                android:id="@+id/presenceText"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"/>
+            android:id="@+id/textViewPresence"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content" />
 
     </LinearLayout>
 
     <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-                  android:orientation="vertical"
-                  android:gravity="center"
-                  android:paddingStart="16dp"
-                  android:paddingEnd="16dp"
-                  android:layout_width="match_parent"
-                  android:layout_height="72dp">
+        android:layout_width="match_parent"
+        android:layout_height="72dp"
+        android:gravity="center"
+        android:orientation="vertical"
+        android:paddingEnd="16dp"
+        android:paddingStart="16dp">
 
         <TextView
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:paddingBottom="4dp"
-                android:textAppearance="?android:attr/textAppearanceMedium"
-                android:text="@string/textView_last_online"/>
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:paddingBottom="4dp"
+            android:text="@string/textView_last_online"
+            android:textAppearance="?android:attr/textAppearanceMedium" />
 
         <TextView
-                android:id="@+id/lastOnlineText"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"/>
+            android:id="@+id/textViewLastOnlineTime"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content" />
 
     </LinearLayout>
 

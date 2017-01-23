@@ -5,7 +5,7 @@
     android:orientation="horizontal">
 
     <com.marshalchen.ultimaterecyclerview.swipe.SwipeLayout
-        android:id="@+id/swipe_layout"
+        android:id="@+id/swipeLayout"
         android:layout_width="match_parent"
         android:layout_height="match_parent">
 
@@ -35,7 +35,7 @@
         </LinearLayout>
 
         <RelativeLayout
-            android:id="@+id/layout"
+            android:id="@+id/swipeLayout"
             android:layout_width="match_parent"
             android:layout_height="match_parent">
 

@@ -38,7 +38,7 @@
                 android:text="@string/textView_line_url"/>
 
         <TextView
-                android:id="@+id/lineUrlText"
+                android:id="@+id/textViewLineUrl"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"/>
 

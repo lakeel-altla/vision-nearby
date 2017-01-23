@@ -1,10 +1,10 @@
 package com.lakeel.altla.vision.nearby.domain.repository;
 
-import com.lakeel.altla.vision.nearby.data.entity.LineLinkEntity;
+import com.lakeel.altla.vision.nearby.domain.entity.LineLinkEntity;
 
 import rx.Single;
 
-public interface FirebaseLineLinksRepository {
+public interface FirebaseLINELinksRepository {
 
     Single<String> saveUrl(String userId, String url);
 

@@ -22,19 +22,16 @@ import com.google.android.gms.maps.model.CircleOptions;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.MarkerOptions;
 import com.lakeel.altla.vision.nearby.R;
-import com.lakeel.altla.vision.nearby.presentation.constants.AppColor;
-import com.lakeel.altla.vision.nearby.presentation.constants.FragmentBundle;
-import com.lakeel.altla.vision.nearby.presentation.constants.Radius;
-import com.lakeel.altla.vision.nearby.presentation.constants.UserActivity;
-import com.lakeel.altla.vision.nearby.presentation.constants.WeatherCondition;
-import com.lakeel.altla.vision.nearby.presentation.presenter.model.PresenceModel;
-import com.lakeel.altla.vision.nearby.presentation.presenter.model.UserModel;
+import com.lakeel.altla.vision.nearby.presentation.color.AppColor;
+import com.lakeel.altla.vision.nearby.presentation.bundle.FragmentBundle;
+import com.lakeel.altla.vision.nearby.presentation.map.Radius;
+import com.lakeel.altla.vision.nearby.presentation.awareness.UserActivity;
+import com.lakeel.altla.vision.nearby.presentation.awareness.WeatherCondition;
+import com.lakeel.altla.vision.nearby.presentation.presenter.model.UserPassingModel;
 import com.lakeel.altla.vision.nearby.presentation.presenter.user.UserPassingPresenter;
 import com.lakeel.altla.vision.nearby.presentation.view.date.DateFormatter;
 import com.lakeel.altla.vision.nearby.presentation.view.UserPassingView;
 import com.lakeel.altla.vision.nearby.presentation.view.activity.MainActivity;
-import com.lakeel.altla.vision.nearby.presentation.view.bundle.HistoryBundle;
-import com.lakeel.altla.vision.nearby.presentation.view.bundle.WeatherBundle;
 import com.lakeel.altla.vision.nearby.presentation.view.layout.PassingLayout;
 import com.lakeel.altla.vision.nearby.presentation.view.layout.PresenceLayout;
 import com.lakeel.altla.vision.nearby.presentation.view.layout.ProfileLayout;
@@ -77,9 +74,9 @@ public final class UserPassingFragment extends Fragment implements UserPassingVi
 
     private View mapView;
 
-    public static UserPassingFragment newInstance(HistoryBundle data) {
+    public static UserPassingFragment newInstance(String historyId) {
         Bundle args = new Bundle();
-        args.putSerializable(FragmentBundle.HISTORY.name(), data);
+        args.putString(FragmentBundle.HISTORY_ID.name(), historyId);
 
         UserPassingFragment fragment = new UserPassingFragment();
         fragment.setArguments(args);
@@ -113,53 +110,17 @@ public final class UserPassingFragment extends Fragment implements UserPassingVi
 
         ((MainActivity) getActivity()).setDrawerIndicatorEnabled(false);
 
-        FragmentManager fm = getChildFragmentManager();
-        supportMapFragment = (SupportMapFragment) fm.findFragmentById(R.id.locationMap);
+        FragmentManager fragmentManager = getChildFragmentManager();
+        supportMapFragment = (SupportMapFragment) fragmentManager.findFragmentById(R.id.locationMap);
         if (supportMapFragment == null) {
             supportMapFragment = SupportMapFragment.newInstance();
-            fm.beginTransaction().replace(R.id.locationLayout, supportMapFragment).commit();
+            fragmentManager.beginTransaction().replace(R.id.locationLayout, supportMapFragment).commit();
         }
         supportMapFragment.getMapAsync(this);
 
         Bundle bundle = getArguments();
-        HistoryBundle bundleData = (HistoryBundle) bundle.getSerializable(FragmentBundle.HISTORY.name());
-        if (bundleData == null) {
-            throw new NullPointerException("Bundle data is not set.");
-        }
-
-        getActivity().setTitle(bundleData.userName);
-        presenter.setUserLocationData(bundleData.userId, bundleData.userName, bundleData.latitude, bundleData.longitude);
-
-        DateFormatter dateFormatter = new DateFormatter(bundleData.timestamp);
-        passingLayout.textViewDate.setText(dateFormatter.format());
-
-        if (bundleData.weatherBundle == null) {
-            int resId = WeatherCondition.UNKNOWN.getResValue();
-            passingLayout.textViewWeather.setText(getContext().getString(resId));
-        } else {
-            WeatherBundle weatherBundle = bundleData.weatherBundle;
-            BigDecimal temperature = new BigDecimal(weatherBundle.temperature);
-            BigDecimal roundUppedTemperature = temperature.setScale(0, BigDecimal.ROUND_HALF_UP);
-
-            int humidity = weatherBundle.humidity;
-            int conditions[] = weatherBundle.conditions;
-
-            StringBuilder builder = new StringBuilder();
-            for (int value : conditions) {
-                WeatherCondition type = WeatherCondition.toWeatherCondition(value);
-                int resId = type.getResValue();
-                builder.append(getContext().getString(resId));
-                builder.append("  ");
-            }
-            builder.append(getString(R.string.message_temperature_format, String.valueOf(roundUppedTemperature)));
-            builder.append("  ");
-            builder.append(getString(R.string.message_humidity_format, String.valueOf(humidity)));
-
-            passingLayout.textViewWeather.setText(builder.toString());
-        }
-
-        int resId = UserActivity.toUserActivity(bundleData.userActivity).getResValue();
-        passingLayout.textViewUserActivity.setText(getContext().getString(resId));
+        String historyId = (String) bundle.get(FragmentBundle.HISTORY_ID.name());
+        presenter.setHistoryId(historyId);
 
         presenter.onActivityCreated();
     }
@@ -198,12 +159,59 @@ public final class UserPassingFragment extends Fragment implements UserPassingVi
     }
 
     @Override
-    public void showSnackBar(int resId) {
-        Snackbar.make(mainLayout, resId, Snackbar.LENGTH_SHORT).show();
+    public void showTitle(String title) {
+        getActivity().setTitle(title);
     }
 
     @Override
-    public void showPresence(PresenceModel model) {
+    public void showProfile(UserPassingModel model) {
+        ImageLoader imageLoader = ImageLoader.getInstance();
+        imageLoader.displayImage(model.imageUri, userImageView);
+
+        profileLayout.textViewName.setText(model.userName);
+        profileLayout.textViewEmail.setAutoLinkMask(Linkify.EMAIL_ADDRESSES);
+        profileLayout.textViewEmail.setText(model.email);
+    }
+
+    @Override
+    public void showTimes(long times) {
+        passingLayout.textViewTimes.setText(String.valueOf(times));
+    }
+
+    @Override
+    public void showPassingData(UserPassingModel model) {
+        DateFormatter dateFormatter = new DateFormatter(model.passingTime);
+        passingLayout.textViewDate.setText(dateFormatter.format());
+
+        if (model.conditions == null || model.conditions.length == 0) {
+            int resId = WeatherCondition.UNKNOWN.getResValue();
+            passingLayout.textViewWeather.setText(getContext().getString(resId));
+        } else {
+            BigDecimal temperature = new BigDecimal(model.temperature);
+            BigDecimal roundUppedTemperature = temperature.setScale(0, BigDecimal.ROUND_HALF_UP);
+            int humidity = model.humidity;
+            int conditions[] = model.conditions;
+
+            StringBuilder builder = new StringBuilder();
+            for (int value : conditions) {
+                WeatherCondition type = WeatherCondition.toWeatherCondition(value);
+                int resId = type.getResValue();
+                builder.append(getContext().getString(resId));
+                builder.append("  ");
+            }
+            builder.append(getString(R.string.message_temperature_format, String.valueOf(roundUppedTemperature)));
+            builder.append("  ");
+            builder.append(getString(R.string.message_humidity_format, String.valueOf(humidity)));
+
+            passingLayout.textViewWeather.setText(builder.toString());
+        }
+
+        int resId = UserActivity.toUserActivity(model.userActivity).getResValue();
+        passingLayout.textViewUserActivity.setText(getContext().getString(resId));
+    }
+
+    @Override
+    public void showPresence(UserPassingModel model) {
         int resId;
         if (model.isConnected) {
             resId = R.string.textView_connected;
@@ -237,24 +245,9 @@ public final class UserPassingFragment extends Fragment implements UserPassingVi
         passingLayout.locationLayout.setVisibility(View.GONE);
     }
 
-    @Override
-    public void showTimes(long times) {
-        passingLayout.textViewTimes.setText(String.valueOf(times));
-    }
-
     @OnClick(R.id.addButton)
     public void onAdd() {
         presenter.onAdd();
-    }
-
-    @Override
-    public void showProfile(UserModel model) {
-        ImageLoader imageLoader = ImageLoader.getInstance();
-        imageLoader.displayImage(model.imageUri, userImageView);
-
-        profileLayout.textViewName.setText(model.userName);
-        profileLayout.textViewEmail.setAutoLinkMask(Linkify.EMAIL_ADDRESSES);
-        profileLayout.textViewEmail.setText(model.email);
     }
 
     @Override
@@ -271,5 +264,10 @@ public final class UserPassingFragment extends Fragment implements UserPassingVi
     public void showLineUrl(String url) {
         snsLayout.textViewLineUrl.setAutoLinkMask(Linkify.WEB_URLS);
         snsLayout.textViewLineUrl.setText(url);
+    }
+
+    @Override
+    public void showSnackBar(int resId) {
+        Snackbar.make(mainLayout, resId, Snackbar.LENGTH_SHORT).show();
     }
 }

@@ -1,6 +1,6 @@
 package com.lakeel.altla.vision.nearby.domain.usecase;
 
-import com.lakeel.altla.vision.nearby.data.entity.UserEntity;
+import com.lakeel.altla.vision.nearby.domain.entity.UserEntity;
 import com.lakeel.altla.vision.nearby.domain.repository.FirebaseUsersRepository;
 import com.lakeel.altla.vision.nearby.presentation.firebase.MyUser;
 
@@ -19,7 +19,7 @@ public final class ObserveUserProfileUseCase {
     }
 
     public Observable<UserEntity> execute() {
-        String userId = MyUser.getUid();
+        String userId = MyUser.getUserId();
         return repository.observeUserProfile(userId).subscribeOn(Schedulers.io());
     }
 }

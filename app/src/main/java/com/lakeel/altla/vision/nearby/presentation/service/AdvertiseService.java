@@ -9,8 +9,8 @@ import android.os.IBinder;
 import android.support.annotation.Nullable;
 import android.support.v4.app.NotificationCompat;
 
-import com.lakeel.altla.library.EddystoneUid;
 import com.lakeel.altla.vision.nearby.R;
+import com.lakeel.altla.vision.nearby.beacon.EddystoneUid;
 import com.lakeel.altla.vision.nearby.core.StringUtils;
 import com.lakeel.altla.vision.nearby.presentation.intent.IntentKey;
 
@@ -36,7 +36,7 @@ public final class AdvertiseService extends Service {
             String namespaceId = eddystoneUID.getNamespaceId();
             String instanceId = eddystoneUID.getInstanceId();
 
-            LOGGER.debug("Namespace Id=" + namespaceId + " Instance Id=" + instanceId);
+            LOGGER.debug("Namespace ID=" + namespaceId + " Instance ID=" + instanceId);
 
             if (StringUtils.isEmpty(namespaceId) || StringUtils.isEmpty(instanceId)) {
                 LOGGER.error("Stop AdvertiseService because Namespace ID or Instance ID was empty.");
@@ -46,9 +46,8 @@ public final class AdvertiseService extends Service {
                         .setBeaconLayout(BeaconParser.EDDYSTONE_UID_LAYOUT);
 
                 BeaconTransmitter beaconTransmitter = new BeaconTransmitter(getApplicationContext(), beaconParser);
-
                 if (beaconTransmitter.isStarted()) {
-                    LOGGER.warn("Already started");
+                    LOGGER.warn("Already started.");
                 } else {
                     // Transmit as a Eddystone-UID.
                     Beacon beacon = new Beacon.Builder()
@@ -60,37 +59,34 @@ public final class AdvertiseService extends Service {
                         @Override
                         public void onStartSuccess(AdvertiseSettings settingsInEffect) {
                             super.onStartSuccess(settingsInEffect);
-                            LOGGER.debug("Succeeded to start advertising.");
 
                             NotificationCompat.Builder builder = new NotificationCompat.Builder(getApplicationContext());
                             builder.setContentTitle(getApplicationContext().getResources().getString(R.string.notification_title_advertise_ble));
                             builder.setContentText(getApplicationContext().getResources().getString(R.string.notification_message_advertise_ble));
                             builder.setSmallIcon(android.R.drawable.ic_lock_idle_alarm);
-
                             startForeground(UUID.randomUUID().variant(), builder.build());
                         }
 
                         @Override
                         public void onStartFailure(int errorCode) {
                             super.onStartFailure(errorCode);
-                            LOGGER.error("Failed to start advertising　Error code = " + errorCode);
+                            LOGGER.error("Failed to start to advertise:Error code=" + errorCode);
                         }
                     });
                 }
             }
         }
-
         return START_STICKY;
     }
 
     @Override
     public void onTaskRemoved(Intent rootIntent) {
-        LOGGER.info("App task is removed by user action");
+        LOGGER.info("App task is removed by user action.");
     }
 
     @Override
     public void onDestroy() {
-        LOGGER.info("Service is destroy");
+        LOGGER.info("AdvertiseService is destroy.");
     }
 
     @Nullable

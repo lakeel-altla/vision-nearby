@@ -52,7 +52,7 @@ public final class RefreshTokenService extends FirebaseInstanceIdService {
     Single<String> saveToken(String token) {
         return Single.create(subscriber -> {
             Task task = reference
-                    .child(MyUser.getUid())
+                    .child(MyUser.getUserId())
                     .setValue(token)
                     .addOnSuccessListener(aVoid -> subscriber.onSuccess(token))
                     .addOnFailureListener(subscriber::onError);

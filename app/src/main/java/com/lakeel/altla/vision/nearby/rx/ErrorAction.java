@@ -9,14 +9,8 @@ public final class ErrorAction<T> implements Action1<T> {
 
     private static final Logger LOGGER = LoggerFactory.getLogger(ErrorAction.class);
 
-    private final String errorMessage;
-
-    public ErrorAction(String errorMessage) {
-        this.errorMessage = errorMessage;
-    }
-
     @Override
     public void call(T t) {
-        LOGGER.error(errorMessage);
+        LOGGER.error("Failed to process.", t);
     }
 }

@@ -6,7 +6,7 @@ import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
-import com.lakeel.altla.vision.nearby.data.entity.InformationEntity;
+import com.lakeel.altla.vision.nearby.domain.entity.InformationEntity;
 import com.lakeel.altla.vision.nearby.data.mapper.InformationEntityMapper;
 import com.lakeel.altla.vision.nearby.domain.repository.FirebaseInformationRepository;
 

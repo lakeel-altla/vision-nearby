@@ -57,8 +57,8 @@ public final class BleSettingsPresenter extends BasePresenter<BleSettingsView> {
     public void onStopAdvertise() {
         analyticsReporter.offAdvertise();
 
-        ServiceManager service = new ServiceManager(context, AdvertiseService.class);
-        service.stop();
+        ServiceManager serviceManager = new ServiceManager(context, AdvertiseService.class);
+        serviceManager.stopService();
     }
 
     public void onStartSubscribe() {

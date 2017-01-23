@@ -15,8 +15,8 @@ import com.google.android.gms.awareness.state.Weather;
 import com.google.android.gms.common.api.GoogleApiClient;
 import com.google.android.gms.location.ActivityRecognitionResult;
 import com.google.android.gms.location.DetectedActivity;
-import com.lakeel.altla.vision.nearby.data.entity.HistoryEntity;
-import com.lakeel.altla.vision.nearby.data.entity.UserEntity;
+import com.lakeel.altla.vision.nearby.domain.entity.HistoryEntity;
+import com.lakeel.altla.vision.nearby.domain.entity.UserEntity;
 import com.lakeel.altla.vision.nearby.domain.usecase.FindBeaconUseCase;
 import com.lakeel.altla.vision.nearby.domain.usecase.FindUserUseCase;
 import com.lakeel.altla.vision.nearby.domain.usecase.SaveHistoryUseCase;
@@ -24,12 +24,14 @@ import com.lakeel.altla.vision.nearby.domain.usecase.SaveUserActivityUseCase;
 import com.lakeel.altla.vision.nearby.domain.usecase.SaveUserLocationUseCase;
 import com.lakeel.altla.vision.nearby.domain.usecase.SaveWeatherUseCase;
 import com.lakeel.altla.vision.nearby.presentation.analytics.AnalyticsReporter;
+import com.lakeel.altla.vision.nearby.presentation.awareness.AwarenessException;
 import com.lakeel.altla.vision.nearby.presentation.di.component.DaggerServiceComponent;
 import com.lakeel.altla.vision.nearby.presentation.di.component.ServiceComponent;
 import com.lakeel.altla.vision.nearby.presentation.di.module.ServiceModule;
-import com.lakeel.altla.vision.nearby.presentation.exception.AwarenessException;
 import com.lakeel.altla.vision.nearby.presentation.firebase.MyUser;
 import com.lakeel.altla.vision.nearby.presentation.intent.IntentKey;
+import com.lakeel.altla.vision.nearby.rx.EmptyAction;
+import com.lakeel.altla.vision.nearby.rx.ErrorAction;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -56,34 +58,28 @@ public class HistoryService extends IntentService {
 
         @Override
         public void onConnected(@Nullable Bundle bundle) {
-            findBeaconUseCase
-                    .execute(beaconId)
-                    .subscribeOn(Schedulers.io())
+            findBeaconUseCase.execute(beaconId)
                     .flatMap(entity -> findUser(entity.userId))
                     .toObservable()
                     // Analytics
                     .doOnNext(entity -> analyticsReporter.addHistory(entity.userId, entity.name))
-                    .flatMap(entity -> saveHistory(MyUser.getUid(), entity.userId))
-                    .subscribeOn(Schedulers.io())
+                    .flatMap(entity -> saveHistory(entity.userId))
                     .subscribe(uniqueId -> {
                         getUserActivity()
                                 .flatMap(userActivity -> saveUserActivity(uniqueId, userActivity))
                                 .subscribeOn(Schedulers.io())
-                                .subscribe(entity -> {
-                                }, e -> LOGGER.error("Failed to save user activity.", e));
+                                .subscribe(new EmptyAction<>(), new ErrorAction<>());
 
                         getUserLocation(context)
                                 .flatMap(location -> saveUserLocation(uniqueId, location))
                                 .subscribeOn(Schedulers.io())
-                                .subscribe(entity -> {
-                                }, e -> LOGGER.error("Failed to save user current location.", e));
+                                .subscribe(new EmptyAction<>(), new ErrorAction<>());
 
                         getWeather(context)
                                 .flatMap(weather -> saveWeather(uniqueId, weather))
                                 .subscribeOn(Schedulers.io())
-                                .subscribe(entity -> {
-                                }, e -> LOGGER.error("Failed to save weather.", e));
-                    }, e -> LOGGER.error("Failed to save to recently.", e));
+                                .subscribe(new EmptyAction<>(), new ErrorAction<>());
+                    }, new ErrorAction<>());
         }
 
         @Override
@@ -116,8 +112,8 @@ public class HistoryService extends IntentService {
 
     private GoogleApiClient googleApiClient;
 
+    // This constructor is need.
     public HistoryService() {
-        // This constructor is need.
         this(HistoryService.class.getSimpleName());
     }
 
@@ -147,8 +143,8 @@ public class HistoryService extends IntentService {
         return findUserUseCase.execute(userId).subscribeOn(Schedulers.io());
     }
 
-    private Observable<String> saveHistory(String myUserId, String otherUserId) {
-        return saveHistoryUseCase.execute(myUserId, otherUserId).subscribeOn(Schedulers.io()).toObservable();
+    private Observable<String> saveHistory(String passingUserId) {
+        return saveHistoryUseCase.execute(passingUserId).subscribeOn(Schedulers.io()).toObservable();
     }
 
     private Single<DetectedActivity> getUserActivity() {
@@ -208,14 +204,14 @@ public class HistoryService extends IntentService {
     }
 
     private Single<HistoryEntity> saveUserActivity(String uniqueId, DetectedActivity userActivity) {
-        return saveUserActivityUseCase.execute(uniqueId, MyUser.getUid(), userActivity).subscribeOn(Schedulers.io());
+        return saveUserActivityUseCase.execute(uniqueId, MyUser.getUserId(), userActivity).subscribeOn(Schedulers.io());
     }
 
     private Single<HistoryEntity> saveUserLocation(String uniqueId, Location location) {
-        return saveUserLocationUseCase.execute(uniqueId, MyUser.getUid(), location).subscribeOn(Schedulers.io());
+        return saveUserLocationUseCase.execute(uniqueId, MyUser.getUserId(), location).subscribeOn(Schedulers.io());
     }
 
     private Single<HistoryEntity> saveWeather(String uniqueId, Weather weather) {
-        return saveWeatherUseCase.execute(uniqueId, MyUser.getUid(), weather).subscribeOn(Schedulers.io());
+        return saveWeatherUseCase.execute(uniqueId, MyUser.getUserId(), weather).subscribeOn(Schedulers.io());
     }
 }

@@ -8,9 +8,9 @@ import butterknife.BindView;
 
 public final class PresenceLayout {
 
-    @BindView(R.id.presenceText)
+    @BindView(R.id.textViewPresence)
     public TextView textViewPresence;
 
-    @BindView(R.id.lastOnlineText)
+    @BindView(R.id.textViewLastOnlineTime)
     public TextView textViewLastOnline;
 }

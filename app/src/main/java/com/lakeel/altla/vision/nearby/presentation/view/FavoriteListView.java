@@ -19,5 +19,5 @@ public interface FavoriteListView {
 
     void showSnackBar(@StringRes int resId);
 
-    void showFavoritesUserActivity(String userId, String userName);
+    void showUserProfileFragment(FavoriteModel model);
 }

@@ -55,19 +55,19 @@ public final class FavoriteAdapter extends SwipeableUltimateViewAdapter<Favorite
 
         private FavoriteListPresenter.FavoritesItemPresenter itemPresenter;
 
-        @BindView(R.id.layout_row)
+        @BindView(R.id.layoutItem)
         LinearLayout itemLayout;
 
-        @BindView(R.id.textView_user_item)
+        @BindView(R.id.textViewUserName)
         TextView userName;
 
-        @BindView(R.id.imageView_user_profile)
+        @BindView(R.id.imageViewUser)
         ImageView imageViewUser;
 
-        @BindView(R.id.button_remove)
+        @BindView(R.id.buttonRemove)
         Button buttonRemove;
 
-        @BindView(R.id.swipe_layout)
+        @BindView(R.id.swipeLayout)
         SwipeLayout swipeLayout;
 
         public FavoritesListViewHolder(View itemView, boolean bind) {
@@ -86,7 +86,7 @@ public final class FavoriteAdapter extends SwipeableUltimateViewAdapter<Favorite
 
         @Override
         public void showItem(FavoriteModel model) {
-            String displayName = model.name;
+            String displayName = model.userName;
             userName.setText(displayName);
 
             if (StringUtils.isEmpty(model.imageUri)) {

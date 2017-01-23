@@ -22,7 +22,7 @@ public final class SaveTokenUseCase {
     }
 
     public Single<String> execute(String token) {
-        String userId = MyUser.getUid();
+        String userId = MyUser.getUserId();
         return preferenceRepository.findBeaconId(userId)
                 .flatMap(beaconId -> saveToken(userId, beaconId, token))
                 .subscribeOn(Schedulers.io());

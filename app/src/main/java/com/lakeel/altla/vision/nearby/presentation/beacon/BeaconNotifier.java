@@ -20,9 +20,10 @@ final class BeaconNotifier implements BootstrapNotifier {
 
     private RegionBootstrap regionBootstrap;
 
-    BeaconNotifier(Context context, Region region) {
+    BeaconNotifier(Context context) {
         this.context = context;
-        this.region = region;
+        // All beacons are subscribed.
+        this.region = new Region("background-region", null, null, null);
         subscriber = new BeaconSubscriber(context);
     }
 
@@ -33,11 +34,6 @@ final class BeaconNotifier implements BootstrapNotifier {
 
     void stop() {
         regionBootstrap.removeRegion(region);
-    }
-
-    @Override
-    public Context getApplicationContext() {
-        return context;
     }
 
     @Override
@@ -56,5 +52,10 @@ final class BeaconNotifier implements BootstrapNotifier {
     @Override
     public void didDetermineStateForRegion(int i, Region region) {
         LOGGER.debug("Region state is changed.");
+    }
+
+    @Override
+    public Context getApplicationContext() {
+        return context;
     }
 }

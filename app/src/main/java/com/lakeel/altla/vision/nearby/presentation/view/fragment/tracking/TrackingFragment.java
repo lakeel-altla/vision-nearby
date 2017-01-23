@@ -22,9 +22,9 @@ import com.google.android.gms.maps.model.CircleOptions;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.MarkerOptions;
 import com.lakeel.altla.vision.nearby.R;
-import com.lakeel.altla.vision.nearby.presentation.constants.AppColor;
-import com.lakeel.altla.vision.nearby.presentation.constants.FragmentBundle;
-import com.lakeel.altla.vision.nearby.presentation.constants.Radius;
+import com.lakeel.altla.vision.nearby.presentation.color.AppColor;
+import com.lakeel.altla.vision.nearby.presentation.bundle.FragmentBundle;
+import com.lakeel.altla.vision.nearby.presentation.map.Radius;
 import com.lakeel.altla.vision.nearby.presentation.intent.GoogleMapDirectionIntent;
 import com.lakeel.altla.vision.nearby.presentation.presenter.tracking.TrackingPresenter;
 import com.lakeel.altla.vision.nearby.presentation.view.date.DateFormatter;
@@ -47,7 +47,7 @@ public final class TrackingFragment extends Fragment implements TrackingView, On
     @BindView(R.id.trackingLayout)
     LinearLayout mainLayout;
 
-    @BindView(R.id.textView_detected_date)
+    @BindView(R.id.textViewDetectedDate)
     TextView foundDate;
 
     private View mapView;
@@ -90,10 +90,10 @@ public final class TrackingFragment extends Fragment implements TrackingView, On
         ((MainActivity) getActivity()).setDrawerIndicatorEnabled(false);
 
         FragmentManager fm = getChildFragmentManager();
-        supportMapFragment = (SupportMapFragment) fm.findFragmentById(R.id.tracking_map_layout);
+        supportMapFragment = (SupportMapFragment) fm.findFragmentById(R.id.trackingMapLayout);
         if (supportMapFragment == null) {
             supportMapFragment = SupportMapFragment.newInstance();
-            fm.beginTransaction().replace(R.id.tracking_map_layout, supportMapFragment).commit();
+            fm.beginTransaction().replace(R.id.trackingMapLayout, supportMapFragment).commit();
         }
         supportMapFragment.getMapAsync(this);
 
@@ -215,7 +215,7 @@ public final class TrackingFragment extends Fragment implements TrackingView, On
 
     @Override
     public void showDistanceEstimationFragment(ArrayList<String> beaconIds, String beaconName) {
-        FragmentController controller = new FragmentController(getActivity().getSupportFragmentManager());
+        FragmentController controller = new FragmentController(this);
         controller.showDistanceEstimationFragment(beaconIds, beaconName);
     }
 }

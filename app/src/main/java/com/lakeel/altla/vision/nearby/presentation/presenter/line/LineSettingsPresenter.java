@@ -2,7 +2,7 @@ package com.lakeel.altla.vision.nearby.presentation.presenter.line;
 
 import com.lakeel.altla.vision.nearby.R;
 import com.lakeel.altla.vision.nearby.domain.usecase.FindLineLinkUseCase;
-import com.lakeel.altla.vision.nearby.domain.usecase.SaveLineUrlUseCase;
+import com.lakeel.altla.vision.nearby.domain.usecase.SaveLINEUrlUseCase;
 import com.lakeel.altla.vision.nearby.presentation.analytics.AnalyticsReporter;
 import com.lakeel.altla.vision.nearby.presentation.firebase.MyUser;
 import com.lakeel.altla.vision.nearby.presentation.presenter.BasePresenter;
@@ -26,7 +26,7 @@ public final class LineSettingsPresenter extends BasePresenter<LineSettingsView>
     AnalyticsReporter analyticsReporter;
 
     @Inject
-    SaveLineUrlUseCase saveLineUrlUseCase;
+    SaveLINEUrlUseCase saveLineUrlUseCase;
 
     @Inject
     FindLineLinkUseCase findLineLinkUseCase;
@@ -39,7 +39,7 @@ public final class LineSettingsPresenter extends BasePresenter<LineSettingsView>
 
     public void onActivityCreated() {
         Subscription subscription = findLineLinkUseCase
-                .execute(MyUser.getUid())
+                .execute(MyUser.getUserId())
                 .toObservable()
                 .filter(entity -> entity != null)
                 .map(entity -> entity.url)
@@ -61,7 +61,7 @@ public final class LineSettingsPresenter extends BasePresenter<LineSettingsView>
         analyticsReporter.inputLineUrl();
 
         Subscription subscription = saveLineUrlUseCase
-                .execute(MyUser.getUid(), url)
+                .execute(MyUser.getUserId(), url)
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribe(s -> {

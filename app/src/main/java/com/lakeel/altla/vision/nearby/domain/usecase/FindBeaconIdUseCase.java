@@ -18,7 +18,7 @@ public final class FindBeaconIdUseCase {
     }
 
     public Single<String> execute() {
-        String userId = MyUser.getUid();
+        String userId = MyUser.getUserId();
         return repository.findBeaconId(userId).subscribeOn(Schedulers.io());
     }
 }

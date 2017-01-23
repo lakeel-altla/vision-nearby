@@ -1,6 +1,6 @@
 package com.lakeel.altla.vision.nearby.domain.repository;
 
-import com.lakeel.altla.vision.nearby.data.entity.BeaconEntity;
+import com.lakeel.altla.vision.nearby.domain.entity.BeaconEntity;
 
 import rx.Completable;
 import rx.Single;
