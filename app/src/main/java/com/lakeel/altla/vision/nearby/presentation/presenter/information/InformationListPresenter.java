@@ -3,7 +3,6 @@ package com.lakeel.altla.vision.nearby.presentation.presenter.information;
 import android.support.annotation.IntRange;
 
 import com.lakeel.altla.vision.nearby.domain.usecase.FindInformationListUseCase;
-import com.lakeel.altla.vision.nearby.presentation.firebase.MyUser;
 import com.lakeel.altla.vision.nearby.presentation.presenter.BaseItemPresenter;
 import com.lakeel.altla.vision.nearby.presentation.presenter.BasePresenter;
 import com.lakeel.altla.vision.nearby.presentation.presenter.mapper.InformationModelMapper;
@@ -11,9 +10,7 @@ import com.lakeel.altla.vision.nearby.presentation.presenter.model.InformationMo
 import com.lakeel.altla.vision.nearby.presentation.view.InformationItemView;
 import com.lakeel.altla.vision.nearby.presentation.view.InformationListView;
 import com.lakeel.altla.vision.nearby.presentation.view.adapter.InformationAdapter;
-
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import com.lakeel.altla.vision.nearby.rx.ErrorAction;
 
 import java.util.ArrayList;
 import java.util.Collections;
@@ -23,15 +20,12 @@ import javax.inject.Inject;
 
 import rx.Subscription;
 import rx.android.schedulers.AndroidSchedulers;
-import rx.schedulers.Schedulers;
 
 public final class InformationListPresenter extends BasePresenter<InformationListView> {
 
     @Inject
     FindInformationListUseCase findInformationListUseCase;
-
-    private static final Logger LOGGER = LoggerFactory.getLogger(InformationListPresenter.class);
-
+    
     private InformationModelMapper modelMapper = new InformationModelMapper();
 
     private List<InformationModel> models = new ArrayList<>();
@@ -41,11 +35,9 @@ public final class InformationListPresenter extends BasePresenter<InformationLis
     }
 
     public void onActivityCreated() {
-        Subscription subscription = findInformationListUseCase
-                .execute(MyUser.getUserId())
+        Subscription subscription = findInformationListUseCase.execute()
                 .map(entity -> modelMapper.map(entity))
                 .toList()
-                .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribe(models -> {
                     Collections.reverse(models);
@@ -54,9 +46,7 @@ public final class InformationListPresenter extends BasePresenter<InformationLis
                     this.models.addAll(models);
 
                     getView().updateItems();
-                }, e -> {
-                    LOGGER.error("Failed to findList information.", e);
-                });
+                }, new ErrorAction<>());
         subscriptions.add(subscription);
     }
 

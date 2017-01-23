@@ -1,26 +1,21 @@
 package com.lakeel.altla.vision.nearby.presentation.presenter.tracking;
 
 import com.firebase.geofire.GeoLocation;
-import com.lakeel.altla.vision.nearby.domain.entity.LocationDataEntity;
-import com.lakeel.altla.vision.nearby.domain.usecase.FindLocationDataUseCase;
-import com.lakeel.altla.vision.nearby.domain.usecase.FindLocationUseCase;
+import com.lakeel.altla.vision.nearby.domain.usecase.FindDeviceLocationUseCase;
 import com.lakeel.altla.vision.nearby.presentation.analytics.AnalyticsReporter;
-import com.lakeel.altla.vision.nearby.presentation.intent.GoogleMapDirectionIntent;
+import com.lakeel.altla.vision.nearby.presentation.intent.GoogleMapIntent;
 import com.lakeel.altla.vision.nearby.presentation.presenter.BasePresenter;
+import com.lakeel.altla.vision.nearby.presentation.presenter.mapper.TrackingModelMapper;
+import com.lakeel.altla.vision.nearby.presentation.presenter.model.TrackingModel;
 import com.lakeel.altla.vision.nearby.presentation.view.TrackingView;
-
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import com.lakeel.altla.vision.nearby.rx.ErrorAction;
 
 import java.util.ArrayList;
 
 import javax.inject.Inject;
 
-import rx.Single;
 import rx.Subscription;
 import rx.android.schedulers.AndroidSchedulers;
-import rx.functions.Func1;
-import rx.schedulers.Schedulers;
 
 public final class TrackingPresenter extends BasePresenter<TrackingView> {
 
@@ -28,18 +23,15 @@ public final class TrackingPresenter extends BasePresenter<TrackingView> {
     AnalyticsReporter analyticsReporter;
 
     @Inject
-    FindLocationDataUseCase findLocationDataUseCase;
+    FindDeviceLocationUseCase findDeviceLocationUseCase;
 
-    @Inject
-    FindLocationUseCase findLocationUseCase;
+    private TrackingModel model = new TrackingModel();
 
-    private static final Logger LOGGER = LoggerFactory.getLogger(TrackingPresenter.class);
+    private TrackingModelMapper modelMapper = new TrackingModelMapper();
 
     private String beaconId;
 
     private String beaconName;
-
-    private GeoLocation geoLocation;
 
     private boolean isMapReadied;
 
@@ -49,45 +41,36 @@ public final class TrackingPresenter extends BasePresenter<TrackingView> {
     TrackingPresenter() {
     }
 
-    public void setBeaconData(String beaconId, String beaconName) {
+    public void setBeaconIdAndBeaconName(String beaconId, String beaconName) {
         this.beaconId = beaconId;
         this.beaconName = beaconName;
     }
 
     public void onResume() {
-        Subscription subscription = findLocationDataUseCase
-                .execute(beaconId)
-                .doOnSuccess(entity -> {
-                    if (entity != null) getView().showFoundDate(entity.passingTime);
-                })
-                .flatMap(new Func1<LocationDataEntity, Single<GeoLocation>>() {
-                    @Override
-                    public Single<GeoLocation> call(LocationDataEntity entity) {
-                        if (entity == null) return Single.just(null);
-                        return findLocation(entity.uniqueId);
-                    }
-                })
-                .subscribeOn(Schedulers.io())
+        Subscription subscription = findDeviceLocationUseCase.execute(beaconId)
+                .map(entity -> modelMapper.map(entity))
                 .observeOn(AndroidSchedulers.mainThread())
-                .subscribe(location -> {
-                    if (location == null) {
+                .subscribe(model -> {
+                    this.model = model;
+
+                    if (model.geoLocation == null) {
                         getView().showEmptyView();
                     } else {
-                        geoLocation = location;
+                        getView().showFoundDate(model.foundTime);
                         if (isMapReadied) {
                             isMenuEnabled = true;
-                            getView().showLocationMap(location);
+                            getView().showLocationMap(model.geoLocation);
                             getView().showOptionMenu();
                         }
                     }
-                }, e -> LOGGER.error("Failed to findList location.", e));
+                }, new ErrorAction<>());
         subscriptions.add(subscription);
     }
 
     public void onMapReady() {
         isMapReadied = true;
-        if (geoLocation != null) {
-            getView().showLocationMap(geoLocation);
+        if (model.geoLocation != null) {
+            getView().showLocationMap(model.geoLocation);
         }
     }
 
@@ -98,7 +81,7 @@ public final class TrackingPresenter extends BasePresenter<TrackingView> {
     public void onDistanceEstimationMenuClick() {
         analyticsReporter.estimateDistance(beaconName);
 
-        ArrayList<String> beaconIds = new ArrayList<>();
+        ArrayList<String> beaconIds = new ArrayList<>(1);
         beaconIds.add(beaconId);
         getView().showDistanceEstimationFragment(beaconIds, beaconName);
     }
@@ -106,11 +89,8 @@ public final class TrackingPresenter extends BasePresenter<TrackingView> {
     public void onDirectionMenuClick() {
         analyticsReporter.launchGoogleMap();
 
-        GoogleMapDirectionIntent intent = new GoogleMapDirectionIntent(String.valueOf(geoLocation.latitude), String.valueOf(geoLocation.longitude));
+        GeoLocation geoLocation = model.geoLocation;
+        GoogleMapIntent intent = new GoogleMapIntent(geoLocation.latitude, geoLocation.longitude);
         getView().launchGoogleMapApp(intent);
-    }
-
-    private Single<GeoLocation> findLocation(String uniqueKey) {
-        return findLocationUseCase.execute(uniqueKey).subscribeOn(Schedulers.io());
     }
 }

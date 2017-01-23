@@ -31,13 +31,7 @@ public final class FindHistoryListUseCase {
                 .flatMap(entity -> {
                     Observable<HistoryEntity> observable = Observable.just(entity);
                     Observable<UserEntity> observable1 = findUser(entity.userId);
-                    // Join table.
-                    return Observable.zip(observable, observable1, (historyEntity, userEntity) -> {
-                        HistoryUserEntity historyUserEntity = new HistoryUserEntity();
-                        historyUserEntity.historyEntity = historyEntity;
-                        historyUserEntity.userEntity = userEntity;
-                        return historyUserEntity;
-                    });
+                    return Observable.zip(observable, observable1, HistoryUserEntity::new);
                 });
     }
 

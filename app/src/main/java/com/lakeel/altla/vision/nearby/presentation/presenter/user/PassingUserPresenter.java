@@ -12,7 +12,7 @@ import com.lakeel.altla.vision.nearby.presentation.analytics.AnalyticsReporter;
 import com.lakeel.altla.vision.nearby.presentation.presenter.BasePresenter;
 import com.lakeel.altla.vision.nearby.presentation.presenter.mapper.UserPassingModelMapper;
 import com.lakeel.altla.vision.nearby.presentation.presenter.model.UserPassingModel;
-import com.lakeel.altla.vision.nearby.presentation.view.UserPassingView;
+import com.lakeel.altla.vision.nearby.presentation.view.PassingUserView;
 import com.lakeel.altla.vision.nearby.rx.ErrorAction;
 
 import javax.inject.Inject;
@@ -22,7 +22,7 @@ import rx.Subscription;
 import rx.android.schedulers.AndroidSchedulers;
 import rx.schedulers.Schedulers;
 
-public final class UserPassingPresenter extends BasePresenter<UserPassingView> {
+public final class PassingUserPresenter extends BasePresenter<PassingUserView> {
 
     @Inject
     AnalyticsReporter analyticsReporter;
@@ -54,10 +54,10 @@ public final class UserPassingPresenter extends BasePresenter<UserPassingView> {
 
     private String historyId;
 
-    private boolean isMapReady;
+    private boolean isMapReadied;
 
     @Inject
-    UserPassingPresenter() {
+    PassingUserPresenter() {
     }
 
     public void setHistoryId(String historyId) {
@@ -78,7 +78,7 @@ public final class UserPassingPresenter extends BasePresenter<UserPassingView> {
                     getView().showProfile(model);
                     getView().showPassingData(model);
 
-                    if (isMapReady) {
+                    if (isMapReadied) {
                         onMapReady();
                     }
 
@@ -91,7 +91,7 @@ public final class UserPassingPresenter extends BasePresenter<UserPassingView> {
     }
 
     public void onMapReady() {
-        isMapReady = true;
+        isMapReadied = true;
         if (model.latitude == null && model.longitude == null) {
             getView().hideLocation();
         } else {

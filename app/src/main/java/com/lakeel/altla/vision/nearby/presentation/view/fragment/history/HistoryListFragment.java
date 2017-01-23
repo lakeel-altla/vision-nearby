@@ -110,8 +110,8 @@ public final class HistoryListFragment extends Fragment implements HistoryListVi
     }
 
     @Override
-    public void showUserPassingFragment(String historyId) {
+    public void showPassingUserFragment(String historyId) {
         FragmentController controller = new FragmentController(this);
-        controller.showUserPassingFragment(historyId);
+        controller.showPassingUserFragment(historyId);
     }
 }

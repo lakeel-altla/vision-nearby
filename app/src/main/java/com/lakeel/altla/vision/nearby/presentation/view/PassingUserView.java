@@ -4,7 +4,7 @@ import android.support.annotation.StringRes;
 
 import com.lakeel.altla.vision.nearby.presentation.presenter.model.UserPassingModel;
 
-public interface UserPassingView {
+public interface PassingUserView {
 
     void showTitle(String title);
 

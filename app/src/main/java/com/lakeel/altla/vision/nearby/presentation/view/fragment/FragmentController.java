@@ -16,11 +16,11 @@ import com.lakeel.altla.vision.nearby.presentation.view.fragment.information.Inf
 import com.lakeel.altla.vision.nearby.presentation.view.fragment.information.InformationListFragment;
 import com.lakeel.altla.vision.nearby.presentation.view.fragment.line.LineSettingsFragment;
 import com.lakeel.altla.vision.nearby.presentation.view.fragment.nearby.NearbyUserListFragment;
+import com.lakeel.altla.vision.nearby.presentation.view.fragment.passing.PassingUserFragment;
 import com.lakeel.altla.vision.nearby.presentation.view.fragment.settings.SettingsFragment;
 import com.lakeel.altla.vision.nearby.presentation.view.fragment.signin.SignInFragment;
 import com.lakeel.altla.vision.nearby.presentation.view.fragment.tracking.TrackingFragment;
 import com.lakeel.altla.vision.nearby.presentation.view.fragment.favorite.FavoriteUserFragment;
-import com.lakeel.altla.vision.nearby.presentation.view.fragment.user.UserPassingFragment;
 
 import java.util.ArrayList;
 
@@ -32,7 +32,7 @@ public final class FragmentController {
 
     private final String HISTORY_FRAGMENT_TAG = HistoryListFragment.class.getSimpleName();
 
-    private final String USER_PASSING_FRAGMENT_TAG = UserPassingFragment.class.getSimpleName();
+    private final String PASSING_USER_FRAGMENT_TAG = PassingUserFragment.class.getSimpleName();
 
     private final String NEARBY_LIST_FRAGMENT = NearbyUserListFragment.class.getSimpleName();
 
@@ -84,9 +84,9 @@ public final class FragmentController {
         replaceFragment(R.id.fragmentPlaceholder, fragment, HISTORY_FRAGMENT_TAG);
     }
 
-    public void showUserPassingFragment(String historyId) {
-        UserPassingFragment fragment = UserPassingFragment.newInstance(historyId);
-        replaceFragment(R.id.fragmentPlaceholder, fragment, USER_PASSING_FRAGMENT_TAG);
+    public void showPassingUserFragment(String historyId) {
+        PassingUserFragment fragment = PassingUserFragment.newInstance(historyId);
+        replaceFragment(R.id.fragmentPlaceholder, fragment, PASSING_USER_FRAGMENT_TAG);
     }
 
     public void showTrackingFragment(String id, String beaconName) {

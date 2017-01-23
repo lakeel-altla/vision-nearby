@@ -25,7 +25,7 @@ import com.lakeel.altla.vision.nearby.R;
 import com.lakeel.altla.vision.nearby.presentation.color.AppColor;
 import com.lakeel.altla.vision.nearby.presentation.bundle.FragmentBundle;
 import com.lakeel.altla.vision.nearby.presentation.map.Radius;
-import com.lakeel.altla.vision.nearby.presentation.intent.GoogleMapDirectionIntent;
+import com.lakeel.altla.vision.nearby.presentation.intent.GoogleMapIntent;
 import com.lakeel.altla.vision.nearby.presentation.presenter.tracking.TrackingPresenter;
 import com.lakeel.altla.vision.nearby.presentation.view.date.DateFormatter;
 import com.lakeel.altla.vision.nearby.presentation.view.TrackingView;
@@ -47,8 +47,8 @@ public final class TrackingFragment extends Fragment implements TrackingView, On
     @BindView(R.id.trackingLayout)
     LinearLayout mainLayout;
 
-    @BindView(R.id.textViewDetectedDate)
-    TextView foundDate;
+    @BindView(R.id.textViewFoundDate)
+    TextView foundDateTextView;
 
     private View mapView;
 
@@ -100,7 +100,7 @@ public final class TrackingFragment extends Fragment implements TrackingView, On
         Bundle bundle = getArguments();
         String beaconId = (String) bundle.get(FragmentBundle.BEACON_ID.name());
         String beaconName = (String) bundle.get(FragmentBundle.TARGET_NAME.name());
-        presenter.setBeaconData(beaconId, beaconName);
+        presenter.setBeaconIdAndBeaconName(beaconId, beaconName);
     }
 
     @Override
@@ -200,11 +200,11 @@ public final class TrackingFragment extends Fragment implements TrackingView, On
         DateFormatter formatter = new DateFormatter(foundTime);
         String formattedDate = formatter.format();
         String time = getContext().getResources().getString(R.string.message_found_date_format, formattedDate);
-        foundDate.setText(time);
+        foundDateTextView.setText(time);
     }
 
     @Override
-    public void launchGoogleMapApp(GoogleMapDirectionIntent intent) {
+    public void launchGoogleMapApp(GoogleMapIntent intent) {
         startActivity(intent);
     }
 

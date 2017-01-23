@@ -15,11 +15,11 @@ import com.lakeel.altla.vision.nearby.presentation.view.fragment.information.Inf
 import com.lakeel.altla.vision.nearby.presentation.view.fragment.information.InformationListFragment;
 import com.lakeel.altla.vision.nearby.presentation.view.fragment.line.LineSettingsFragment;
 import com.lakeel.altla.vision.nearby.presentation.view.fragment.nearby.NearbyUserListFragment;
+import com.lakeel.altla.vision.nearby.presentation.view.fragment.passing.PassingUserFragment;
 import com.lakeel.altla.vision.nearby.presentation.view.fragment.settings.SettingsFragment;
 import com.lakeel.altla.vision.nearby.presentation.view.fragment.signin.SignInFragment;
 import com.lakeel.altla.vision.nearby.presentation.view.fragment.tracking.TrackingFragment;
 import com.lakeel.altla.vision.nearby.presentation.view.fragment.favorite.FavoriteUserFragment;
-import com.lakeel.altla.vision.nearby.presentation.view.fragment.user.UserPassingFragment;
 
 import dagger.Subcomponent;
 
@@ -37,7 +37,7 @@ public interface ViewComponent {
 
     void inject(HistoryListFragment fragment);
 
-    void inject(UserPassingFragment fragment);
+    void inject(PassingUserFragment fragment);
 
     void inject(InformationListFragment fragment);
 

@@ -14,5 +14,5 @@ public interface HistoryListView {
 
     void showSnackBar(@StringRes int resId);
 
-    void showUserPassingFragment(String historyId);
+    void showPassingUserFragment(String historyId);
 }

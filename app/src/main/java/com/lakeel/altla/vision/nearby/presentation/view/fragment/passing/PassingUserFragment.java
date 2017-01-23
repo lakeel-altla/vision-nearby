@@ -1,4 +1,4 @@
-package com.lakeel.altla.vision.nearby.presentation.view.fragment.user;
+package com.lakeel.altla.vision.nearby.presentation.view.fragment.passing;
 
 import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
@@ -28,8 +28,8 @@ import com.lakeel.altla.vision.nearby.presentation.bundle.FragmentBundle;
 import com.lakeel.altla.vision.nearby.presentation.color.AppColor;
 import com.lakeel.altla.vision.nearby.presentation.map.Radius;
 import com.lakeel.altla.vision.nearby.presentation.presenter.model.UserPassingModel;
-import com.lakeel.altla.vision.nearby.presentation.presenter.user.UserPassingPresenter;
-import com.lakeel.altla.vision.nearby.presentation.view.UserPassingView;
+import com.lakeel.altla.vision.nearby.presentation.presenter.user.PassingUserPresenter;
+import com.lakeel.altla.vision.nearby.presentation.view.PassingUserView;
 import com.lakeel.altla.vision.nearby.presentation.view.activity.MainActivity;
 import com.lakeel.altla.vision.nearby.presentation.view.date.DateFormatter;
 import com.lakeel.altla.vision.nearby.presentation.view.layout.PassingLayout;
@@ -46,10 +46,10 @@ import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
 
-public final class UserPassingFragment extends Fragment implements UserPassingView, OnMapReadyCallback {
+public final class PassingUserFragment extends Fragment implements PassingUserView, OnMapReadyCallback {
 
     @Inject
-    UserPassingPresenter presenter;
+    PassingUserPresenter presenter;
 
     @BindView(R.id.mainLayout)
     RelativeLayout mainLayout;
@@ -74,11 +74,11 @@ public final class UserPassingFragment extends Fragment implements UserPassingVi
 
     private View mapView;
 
-    public static UserPassingFragment newInstance(String historyId) {
+    public static PassingUserFragment newInstance(String historyId) {
         Bundle args = new Bundle();
         args.putString(FragmentBundle.HISTORY_ID.name(), historyId);
 
-        UserPassingFragment fragment = new UserPassingFragment();
+        PassingUserFragment fragment = new PassingUserFragment();
         fragment.setArguments(args);
         return fragment;
     }

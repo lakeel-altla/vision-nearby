@@ -35,10 +35,10 @@ public final class InformationFragment extends Fragment implements InformationVi
     InformationPresenter presenter;
 
     @BindView(R.id.textViewInformationTitle)
-    TextView informationTitle;
+    TextView titleTextView;
 
     @BindView(R.id.textViewInformationBody)
-    TextView informationBody;
+    TextView bodyTextView;
 
     @Nullable
     @Override
@@ -70,7 +70,7 @@ public final class InformationFragment extends Fragment implements InformationVi
 
     @Override
     public void showInformation(InformationModel model) {
-        informationTitle.setText(model.title);
-        informationBody.setText(model.body);
+        titleTextView.setText(model.title);
+        bodyTextView.setText(model.body);
     }
 }

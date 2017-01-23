@@ -83,7 +83,7 @@ public final class HistoryListPresenter extends BasePresenter<HistoryListView> {
         }
 
         public void onClick(HistoryModel model) {
-            getView().showUserPassingFragment(model.historyId);
+            getView().showPassingUserFragment(model.historyId);
         }
 
         public void onRemove(HistoryModel model) {

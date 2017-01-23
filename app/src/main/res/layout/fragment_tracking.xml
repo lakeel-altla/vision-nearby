@@ -7,7 +7,7 @@
         android:layout_height="match_parent">
 
     <TextView
-            android:id="@+id/textViewDetectedDate"
+            android:id="@+id/textViewFoundDate"
             android:layout_width="wrap_content"
             android:layout_height="50dp"
             android:paddingStart="16dp"

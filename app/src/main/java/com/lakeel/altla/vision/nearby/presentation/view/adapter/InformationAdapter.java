@@ -10,15 +10,15 @@ import android.widget.TextView;
 import com.lakeel.altla.vision.nearby.R;
 import com.lakeel.altla.vision.nearby.presentation.presenter.information.InformationListPresenter;
 import com.lakeel.altla.vision.nearby.presentation.presenter.model.InformationModel;
-import com.lakeel.altla.vision.nearby.presentation.view.date.DateFormatter;
 import com.lakeel.altla.vision.nearby.presentation.view.InformationItemView;
+import com.lakeel.altla.vision.nearby.presentation.view.date.DateFormatter;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
 
 public final class InformationAdapter extends RecyclerView.Adapter<InformationAdapter.InformationViewHolder> {
 
-    public InformationListPresenter presenter;
+    private final InformationListPresenter presenter;
 
     public InformationAdapter(InformationListPresenter presenter) {
         this.presenter = presenter;
@@ -45,12 +45,12 @@ public final class InformationAdapter extends RecyclerView.Adapter<InformationAd
     public final class InformationViewHolder extends RecyclerView.ViewHolder implements InformationItemView {
 
         @BindView(R.id.textViewTitle)
-        TextView title;
+        TextView titleTextView;
 
         @BindView(R.id.textViewPostTime)
-        TextView postTime;
+        TextView postTimeTextView;
 
-        private View itemView;
+        private final View itemView;
 
         private InformationListPresenter.InformationItemPresenter itemPresenter;
 
@@ -68,11 +68,11 @@ public final class InformationAdapter extends RecyclerView.Adapter<InformationAd
 
         @Override
         public void showItem(InformationModel model) {
-            title.setText(model.title);
+            titleTextView.setText(model.title);
 
             DateFormatter formatter = new DateFormatter(model.postTime);
             String postTimeText = formatter.format();
-            postTime.setText(postTimeText);
+            postTimeTextView.setText(postTimeText);
 
             itemView.setOnClickListener(view -> itemPresenter.onClick(model.informationId));
         }
