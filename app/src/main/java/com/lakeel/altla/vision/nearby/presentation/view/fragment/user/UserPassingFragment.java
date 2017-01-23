@@ -22,20 +22,20 @@ import com.google.android.gms.maps.model.CircleOptions;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.MarkerOptions;
 import com.lakeel.altla.vision.nearby.R;
-import com.lakeel.altla.vision.nearby.presentation.color.AppColor;
-import com.lakeel.altla.vision.nearby.presentation.bundle.FragmentBundle;
-import com.lakeel.altla.vision.nearby.presentation.map.Radius;
 import com.lakeel.altla.vision.nearby.presentation.awareness.UserActivity;
 import com.lakeel.altla.vision.nearby.presentation.awareness.WeatherCondition;
+import com.lakeel.altla.vision.nearby.presentation.bundle.FragmentBundle;
+import com.lakeel.altla.vision.nearby.presentation.color.AppColor;
+import com.lakeel.altla.vision.nearby.presentation.map.Radius;
 import com.lakeel.altla.vision.nearby.presentation.presenter.model.UserPassingModel;
 import com.lakeel.altla.vision.nearby.presentation.presenter.user.UserPassingPresenter;
-import com.lakeel.altla.vision.nearby.presentation.view.date.DateFormatter;
 import com.lakeel.altla.vision.nearby.presentation.view.UserPassingView;
 import com.lakeel.altla.vision.nearby.presentation.view.activity.MainActivity;
+import com.lakeel.altla.vision.nearby.presentation.view.date.DateFormatter;
 import com.lakeel.altla.vision.nearby.presentation.view.layout.PassingLayout;
 import com.lakeel.altla.vision.nearby.presentation.view.layout.PresenceLayout;
 import com.lakeel.altla.vision.nearby.presentation.view.layout.ProfileLayout;
-import com.lakeel.altla.vision.nearby.presentation.view.layout.SnsLayout;
+import com.lakeel.altla.vision.nearby.presentation.view.layout.SNSLayout;
 import com.nostra13.universalimageloader.core.ImageLoader;
 
 import java.math.BigDecimal;
@@ -66,7 +66,7 @@ public final class UserPassingFragment extends Fragment implements UserPassingVi
 
     private ProfileLayout profileLayout = new ProfileLayout();
 
-    private SnsLayout snsLayout = new SnsLayout();
+    private SNSLayout snsLayout = new SNSLayout();
 
     private GoogleMap map;
 
