@@ -7,7 +7,7 @@ import com.lakeel.altla.vision.nearby.presentation.presenter.model.UserModel;
 
 import java.util.ArrayList;
 
-public interface UserProfileView {
+public interface FavoriteUserView {
 
     void showSnackBar(@StringRes int resId);
 

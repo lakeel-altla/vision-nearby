@@ -1,4 +1,4 @@
-package com.lakeel.altla.vision.nearby.presentation.presenter.user;
+package com.lakeel.altla.vision.nearby.presentation.presenter.favorite;
 
 import com.lakeel.altla.vision.nearby.domain.usecase.FindLineLinkUseCase;
 import com.lakeel.altla.vision.nearby.domain.usecase.FindConnectionUseCase;
@@ -8,7 +8,7 @@ import com.lakeel.altla.vision.nearby.presentation.analytics.AnalyticsReporter;
 import com.lakeel.altla.vision.nearby.presentation.presenter.BasePresenter;
 import com.lakeel.altla.vision.nearby.presentation.presenter.mapper.PresencesModelMapper;
 import com.lakeel.altla.vision.nearby.presentation.presenter.mapper.UserModelMapper;
-import com.lakeel.altla.vision.nearby.presentation.view.UserProfileView;
+import com.lakeel.altla.vision.nearby.presentation.view.FavoriteUserView;
 import com.lakeel.altla.vision.nearby.rx.ErrorAction;
 
 import java.util.ArrayList;
@@ -18,7 +18,7 @@ import javax.inject.Inject;
 import rx.Subscription;
 import rx.android.schedulers.AndroidSchedulers;
 
-public final class UserProfilePresenter extends BasePresenter<UserProfileView> {
+public final class FavoriteUserPresenter extends BasePresenter<FavoriteUserView> {
 
     @Inject
     AnalyticsReporter analyticsReporter;
@@ -44,7 +44,7 @@ public final class UserProfilePresenter extends BasePresenter<UserProfileView> {
     private String favoriteUserName;
 
     @Inject
-    UserProfilePresenter() {
+    FavoriteUserPresenter() {
     }
 
     public void setUserIdAndUserName(String favoriteUserId, String favoriteUserName) {

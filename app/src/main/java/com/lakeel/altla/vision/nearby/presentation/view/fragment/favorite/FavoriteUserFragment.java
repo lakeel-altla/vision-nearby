@@ -1,4 +1,4 @@
-package com.lakeel.altla.vision.nearby.presentation.view.fragment.user;
+package com.lakeel.altla.vision.nearby.presentation.view.fragment.favorite;
 
 import android.os.Bundle;
 import android.support.annotation.StringRes;
@@ -18,9 +18,9 @@ import com.lakeel.altla.vision.nearby.R;
 import com.lakeel.altla.vision.nearby.presentation.bundle.FragmentBundle;
 import com.lakeel.altla.vision.nearby.presentation.presenter.model.PresenceModel;
 import com.lakeel.altla.vision.nearby.presentation.presenter.model.UserModel;
-import com.lakeel.altla.vision.nearby.presentation.presenter.user.UserProfilePresenter;
+import com.lakeel.altla.vision.nearby.presentation.presenter.favorite.FavoriteUserPresenter;
+import com.lakeel.altla.vision.nearby.presentation.view.FavoriteUserView;
 import com.lakeel.altla.vision.nearby.presentation.view.date.DateFormatter;
-import com.lakeel.altla.vision.nearby.presentation.view.UserProfileView;
 import com.lakeel.altla.vision.nearby.presentation.view.activity.MainActivity;
 import com.lakeel.altla.vision.nearby.presentation.view.fragment.FragmentController;
 import com.lakeel.altla.vision.nearby.presentation.view.layout.PresenceLayout;
@@ -37,11 +37,10 @@ import butterknife.ButterKnife;
 
 import static com.lakeel.altla.vision.nearby.R.id.estimate;
 
-// TODO: FavoriteUserFragment
-public final class UserProfileFragment extends Fragment implements UserProfileView {
+public final class FavoriteUserFragment extends Fragment implements FavoriteUserView {
 
     @Inject
-    UserProfilePresenter presenter;
+    FavoriteUserPresenter presenter;
 
     @BindView(R.id.mainLayout)
     LinearLayout mainLayout;
@@ -55,12 +54,12 @@ public final class UserProfileFragment extends Fragment implements UserProfileVi
 
     private SnsLayout snsLayout = new SnsLayout();
 
-    public static UserProfileFragment newInstance(String userId, String userName) {
+    public static FavoriteUserFragment newInstance(String userId, String userName) {
         Bundle args = new Bundle();
         args.putString(FragmentBundle.USER_ID.name(), userId);
         args.putString(FragmentBundle.USER_NAME.name(), userName);
 
-        UserProfileFragment fragment = new UserProfileFragment();
+        FavoriteUserFragment fragment = new FavoriteUserFragment();
         fragment.setArguments(args);
         return fragment;
     }

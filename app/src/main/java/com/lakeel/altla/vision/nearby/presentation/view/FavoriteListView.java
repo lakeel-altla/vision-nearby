@@ -19,5 +19,5 @@ public interface FavoriteListView {
 
     void showSnackBar(@StringRes int resId);
 
-    void showUserProfileFragment(FavoriteModel model);
+    void showFavoriteUserFragment(FavoriteModel model);
 }

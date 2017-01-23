@@ -18,8 +18,8 @@ import com.lakeel.altla.vision.nearby.presentation.view.fragment.nearby.NearbyLi
 import com.lakeel.altla.vision.nearby.presentation.view.fragment.settings.SettingsFragment;
 import com.lakeel.altla.vision.nearby.presentation.view.fragment.signin.SignInFragment;
 import com.lakeel.altla.vision.nearby.presentation.view.fragment.tracking.TrackingFragment;
+import com.lakeel.altla.vision.nearby.presentation.view.fragment.favorite.FavoriteUserFragment;
 import com.lakeel.altla.vision.nearby.presentation.view.fragment.user.UserPassingFragment;
-import com.lakeel.altla.vision.nearby.presentation.view.fragment.user.UserProfileFragment;
 
 import dagger.Subcomponent;
 
@@ -55,7 +55,7 @@ public interface ViewComponent {
 
     void inject(DistanceEstimationFragment fragment);
 
-    void inject(UserProfileFragment fragment);
+    void inject(FavoriteUserFragment fragment);
 
     void inject(LINEService service);
 }

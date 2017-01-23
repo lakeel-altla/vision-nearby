@@ -110,8 +110,8 @@ public final class FavoriteListFragment extends Fragment implements FavoriteList
     }
 
     @Override
-    public void showUserProfileFragment(FavoriteModel model) {
+    public void showFavoriteUserFragment(FavoriteModel model) {
         FragmentController controller = new FragmentController(this);
-        controller.showUserProfileFragment(model.userId, model.userName);
+        controller.showFavoriteUserFragment(model.userId, model.userName);
     }
 }

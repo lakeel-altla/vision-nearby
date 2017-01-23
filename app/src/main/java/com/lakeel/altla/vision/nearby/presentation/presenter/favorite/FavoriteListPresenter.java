@@ -75,7 +75,7 @@ public final class FavoriteListPresenter extends BasePresenter<FavoriteListView>
         }
 
         public void onClick(FavoriteModel model) {
-            getView().showUserProfileFragment(model);
+            getView().showFavoriteUserFragment(model);
         }
 
         public void onRemove(FavoriteModel model) {

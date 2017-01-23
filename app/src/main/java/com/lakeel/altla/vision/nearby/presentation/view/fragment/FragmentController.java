@@ -19,8 +19,8 @@ import com.lakeel.altla.vision.nearby.presentation.view.fragment.nearby.NearbyLi
 import com.lakeel.altla.vision.nearby.presentation.view.fragment.settings.SettingsFragment;
 import com.lakeel.altla.vision.nearby.presentation.view.fragment.signin.SignInFragment;
 import com.lakeel.altla.vision.nearby.presentation.view.fragment.tracking.TrackingFragment;
+import com.lakeel.altla.vision.nearby.presentation.view.fragment.favorite.FavoriteUserFragment;
 import com.lakeel.altla.vision.nearby.presentation.view.fragment.user.UserPassingFragment;
-import com.lakeel.altla.vision.nearby.presentation.view.fragment.user.UserProfileFragment;
 
 import java.util.ArrayList;
 
@@ -42,7 +42,7 @@ public final class FragmentController {
 
     private final String DISTANCE_ESTIMATION_FRAGMENT_TAG = DistanceEstimationFragment.class.getSimpleName();
 
-    private final String USER_PROFILE_FRAGMENT_TAG = UserProfileFragment.class.getSimpleName();
+    private final String USER_PROFILE_FRAGMENT_TAG = FavoriteUserFragment.class.getSimpleName();
 
     private final String INFORMATION_LIST_FRAGMENT_TAG = InformationListFragment.class.getSimpleName();
 
@@ -104,8 +104,8 @@ public final class FragmentController {
         replaceFragment(R.id.fragmentPlaceholder, fragment, DISTANCE_ESTIMATION_FRAGMENT_TAG);
     }
 
-    public void showUserProfileFragment(String userId, String userName) {
-        UserProfileFragment fragment = UserProfileFragment.newInstance(userId, userName);
+    public void showFavoriteUserFragment(String userId, String userName) {
+        FavoriteUserFragment fragment = FavoriteUserFragment.newInstance(userId, userName);
         replaceFragment(R.id.fragmentPlaceholder, fragment, USER_PROFILE_FRAGMENT_TAG);
     }
 
