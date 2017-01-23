@@ -15,7 +15,7 @@ import com.lakeel.altla.vision.nearby.presentation.view.fragment.history.History
 import com.lakeel.altla.vision.nearby.presentation.view.fragment.information.InformationFragment;
 import com.lakeel.altla.vision.nearby.presentation.view.fragment.information.InformationListFragment;
 import com.lakeel.altla.vision.nearby.presentation.view.fragment.line.LineSettingsFragment;
-import com.lakeel.altla.vision.nearby.presentation.view.fragment.nearby.NearbyListFragment;
+import com.lakeel.altla.vision.nearby.presentation.view.fragment.nearby.NearbyUserListFragment;
 import com.lakeel.altla.vision.nearby.presentation.view.fragment.settings.SettingsFragment;
 import com.lakeel.altla.vision.nearby.presentation.view.fragment.signin.SignInFragment;
 import com.lakeel.altla.vision.nearby.presentation.view.fragment.tracking.TrackingFragment;
@@ -34,7 +34,7 @@ public final class FragmentController {
 
     private final String USER_PASSING_FRAGMENT_TAG = UserPassingFragment.class.getSimpleName();
 
-    private final String NEARBY_LIST_FRAGMENT = NearbyListFragment.class.getSimpleName();
+    private final String NEARBY_LIST_FRAGMENT = NearbyUserListFragment.class.getSimpleName();
 
     private final String TRACKING_FRAGMENT_TAG = TrackingFragment.class.getSimpleName();
 
@@ -74,8 +74,8 @@ public final class FragmentController {
         replaceFragment(R.id.fragmentPlaceholder, fragment, FAVORITE_LIST_FRAGMENT_TAG);
     }
 
-    public void showNearbyListFragment() {
-        NearbyListFragment fragment = NearbyListFragment.newInstance();
+    public void showNearbyUserListFragment() {
+        NearbyUserListFragment fragment = NearbyUserListFragment.newInstance();
         replaceFragment(R.id.fragmentPlaceholder, fragment, NEARBY_LIST_FRAGMENT);
     }
 

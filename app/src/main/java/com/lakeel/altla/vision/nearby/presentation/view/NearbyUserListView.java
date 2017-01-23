@@ -2,7 +2,7 @@ package com.lakeel.altla.vision.nearby.presentation.view;
 
 import android.content.Intent;
 
-public interface NearbyListView {
+public interface NearbyUserListView {
 
     void showBleEnabledActivity(Intent intent);
 

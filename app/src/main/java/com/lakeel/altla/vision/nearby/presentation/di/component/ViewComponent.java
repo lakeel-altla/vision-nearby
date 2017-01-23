@@ -14,7 +14,7 @@ import com.lakeel.altla.vision.nearby.presentation.view.fragment.history.History
 import com.lakeel.altla.vision.nearby.presentation.view.fragment.information.InformationFragment;
 import com.lakeel.altla.vision.nearby.presentation.view.fragment.information.InformationListFragment;
 import com.lakeel.altla.vision.nearby.presentation.view.fragment.line.LineSettingsFragment;
-import com.lakeel.altla.vision.nearby.presentation.view.fragment.nearby.NearbyListFragment;
+import com.lakeel.altla.vision.nearby.presentation.view.fragment.nearby.NearbyUserListFragment;
 import com.lakeel.altla.vision.nearby.presentation.view.fragment.settings.SettingsFragment;
 import com.lakeel.altla.vision.nearby.presentation.view.fragment.signin.SignInFragment;
 import com.lakeel.altla.vision.nearby.presentation.view.fragment.tracking.TrackingFragment;
@@ -33,7 +33,7 @@ public interface ViewComponent {
 
     void inject(FavoriteListFragment fragment);
 
-    void inject(NearbyListFragment fragment);
+    void inject(NearbyUserListFragment fragment);
 
     void inject(HistoryListFragment fragment);
 

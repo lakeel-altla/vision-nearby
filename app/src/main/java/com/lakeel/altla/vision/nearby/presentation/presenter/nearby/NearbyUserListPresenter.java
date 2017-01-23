@@ -19,7 +19,7 @@ import com.lakeel.altla.vision.nearby.presentation.presenter.BasePresenter;
 import com.lakeel.altla.vision.nearby.presentation.presenter.mapper.NearbyItemsModelMapper;
 import com.lakeel.altla.vision.nearby.presentation.presenter.model.NearbyItemModel;
 import com.lakeel.altla.vision.nearby.presentation.view.NearbyItemView;
-import com.lakeel.altla.vision.nearby.presentation.view.NearbyListView;
+import com.lakeel.altla.vision.nearby.presentation.view.NearbyUserListView;
 import com.neovisionaries.bluetooth.ble.advertising.ADPayloadParser;
 import com.neovisionaries.bluetooth.ble.advertising.ADStructure;
 import com.neovisionaries.bluetooth.ble.advertising.EddystoneUID;
@@ -40,7 +40,7 @@ import rx.Subscription;
 import rx.android.schedulers.AndroidSchedulers;
 import rx.schedulers.Schedulers;
 
-public final class NearbyListPresenter extends BasePresenter<NearbyListView> {
+public final class NearbyUserListPresenter extends BasePresenter<NearbyUserListView> {
 
     @Inject
     FindBeaconUseCase findBeaconUseCase;
@@ -48,7 +48,7 @@ public final class NearbyListPresenter extends BasePresenter<NearbyListView> {
     @Inject
     FindUserUseCase findUserUseCase;
 
-    private static Logger LOGGER = LoggerFactory.getLogger(NearbyListPresenter.class);
+    private static Logger LOGGER = LoggerFactory.getLogger(NearbyUserListPresenter.class);
 
     private final Context context;
 
@@ -107,7 +107,7 @@ public final class NearbyListPresenter extends BasePresenter<NearbyListView> {
     };
 
     @Inject
-    NearbyListPresenter(Context context) {
+    NearbyUserListPresenter(Context context) {
         this.context = context;
         BluetoothManager bluetoothManager = (BluetoothManager) context.getSystemService(Context.BLUETOOTH_SERVICE);
         BluetoothAdapter bluetoothAdapter = bluetoothManager.getAdapter();

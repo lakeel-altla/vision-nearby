@@ -14,7 +14,7 @@ import com.amulyakhare.textdrawable.TextDrawable;
 import com.lakeel.altla.vision.nearby.R;
 import com.lakeel.altla.vision.nearby.core.StringUtils;
 import com.lakeel.altla.vision.nearby.presentation.presenter.model.NearbyItemModel;
-import com.lakeel.altla.vision.nearby.presentation.presenter.nearby.NearbyListPresenter;
+import com.lakeel.altla.vision.nearby.presentation.presenter.nearby.NearbyUserListPresenter;
 import com.lakeel.altla.vision.nearby.presentation.view.NearbyItemView;
 import com.nostra13.universalimageloader.core.ImageLoader;
 
@@ -23,17 +23,17 @@ import butterknife.ButterKnife;
 
 public final class NearbyAdapter extends RecyclerView.Adapter<NearbyAdapter.NearbyViewHolder> {
 
-    private NearbyListPresenter nearbyListPresenter;
+    private NearbyUserListPresenter nearbyUserListPresenter;
 
-    public NearbyAdapter(NearbyListPresenter presenter) {
-        nearbyListPresenter = presenter;
+    public NearbyAdapter(NearbyUserListPresenter presenter) {
+        nearbyUserListPresenter = presenter;
     }
 
     @Override
     public NearbyViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
         View itemView = LayoutInflater.from(parent.getContext()).inflate(R.layout.nearby_item, parent, false);
         NearbyViewHolder nearbyViewHolder = new NearbyViewHolder(itemView);
-        nearbyListPresenter.onCreateItemView(nearbyViewHolder);
+        nearbyUserListPresenter.onCreateItemView(nearbyViewHolder);
         return nearbyViewHolder;
     }
 
@@ -44,12 +44,12 @@ public final class NearbyAdapter extends RecyclerView.Adapter<NearbyAdapter.Near
 
     @Override
     public int getItemCount() {
-        return nearbyListPresenter.getItemCount();
+        return nearbyUserListPresenter.getItemCount();
     }
 
     final class NearbyViewHolder extends RecyclerView.ViewHolder implements NearbyItemView {
 
-        private NearbyListPresenter.NearbyItemPresenter itemPresenter;
+        private NearbyUserListPresenter.NearbyItemPresenter itemPresenter;
 
         @BindView(R.id.itemLayout)
         LinearLayout itemLayout;
@@ -66,7 +66,7 @@ public final class NearbyAdapter extends RecyclerView.Adapter<NearbyAdapter.Near
         }
 
         @Override
-        public void setItemPresenter(NearbyListPresenter.NearbyItemPresenter nearbyItemPresenter) {
+        public void setItemPresenter(NearbyUserListPresenter.NearbyItemPresenter nearbyItemPresenter) {
             itemPresenter = nearbyItemPresenter;
         }
 

@@ -17,8 +17,8 @@ import android.view.ViewGroup;
 
 import com.flipboard.bottomsheet.BottomSheetLayout;
 import com.lakeel.altla.vision.nearby.R;
-import com.lakeel.altla.vision.nearby.presentation.presenter.nearby.NearbyListPresenter;
-import com.lakeel.altla.vision.nearby.presentation.view.NearbyListView;
+import com.lakeel.altla.vision.nearby.presentation.presenter.nearby.NearbyUserListPresenter;
+import com.lakeel.altla.vision.nearby.presentation.view.NearbyUserListView;
 import com.lakeel.altla.vision.nearby.presentation.view.actionBar.ActionBarColor;
 import com.lakeel.altla.vision.nearby.presentation.view.actionBar.BarColor;
 import com.lakeel.altla.vision.nearby.presentation.view.actionBar.ToolBarColor;
@@ -36,10 +36,10 @@ import butterknife.ButterKnife;
 
 import static android.app.Activity.RESULT_OK;
 
-public final class NearbyListFragment extends Fragment implements NearbyListView {
+public final class NearbyUserListFragment extends Fragment implements NearbyUserListView {
 
     @Inject
-    NearbyListPresenter presenter;
+    NearbyUserListPresenter presenter;
 
     @BindView(R.id.shareSheet)
     BottomSheetLayout shareSheet;
@@ -50,12 +50,12 @@ public final class NearbyListFragment extends Fragment implements NearbyListView
     @BindView(R.id.recyclerView)
     RecyclerView recyclerView;
 
-    private static final Logger LOGGER = LoggerFactory.getLogger(NearbyListFragment.class);
+    private static final Logger LOGGER = LoggerFactory.getLogger(NearbyUserListFragment.class);
 
     private static final int REQUEST_CODE_ENABLE_BLE = 1;
 
-    public static NearbyListFragment newInstance() {
-        return new NearbyListFragment();
+    public static NearbyUserListFragment newInstance() {
+        return new NearbyUserListFragment();
     }
 
     @Override

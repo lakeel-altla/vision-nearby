@@ -146,7 +146,7 @@ public class MainActivity extends AppCompatActivity
             }
             case R.id.nav_nearby: {
                 FragmentController controller = new FragmentController(this);
-                controller.showNearbyListFragment();
+                controller.showNearbyUserListFragment();
                 break;
             }
             case R.id.nav_information: {
