@@ -26,7 +26,7 @@ public final class InformationAdapter extends RecyclerView.Adapter<InformationAd
 
     @Override
     public InformationViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
-        View itemView = LayoutInflater.from(parent.getContext()).inflate(R.layout.information_item, parent, false);
+        View itemView = LayoutInflater.from(parent.getContext()).inflate(R.layout.item_information, parent, false);
         InformationAdapter.InformationViewHolder viewHolder = new InformationAdapter.InformationViewHolder(itemView);
         presenter.onCreateItemView(viewHolder);
         return viewHolder;

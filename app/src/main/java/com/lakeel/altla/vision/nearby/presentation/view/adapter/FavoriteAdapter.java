@@ -34,7 +34,7 @@ public final class FavoriteAdapter extends SwipeableUltimateViewAdapter<Favorite
 
     @Override
     protected int getNormalLayoutResId() {
-        return R.layout.favorite_item;
+        return R.layout.item_favorite;
     }
 
     @Override

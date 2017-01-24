@@ -35,7 +35,7 @@ public final class HistoryAdapter extends SwipeableUltimateViewAdapter<HistoryMo
 
     @Override
     protected int getNormalLayoutResId() {
-        return R.layout.history_item;
+        return R.layout.item_history;
     }
 
     @Override
