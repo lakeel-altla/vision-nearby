@@ -2,7 +2,6 @@ package com.lakeel.altla.vision.nearby.domain.usecase;
 
 import android.os.Build;
 
-import com.lakeel.altla.vision.nearby.core.StringUtils;
 import com.lakeel.altla.vision.nearby.data.repository.FirebaseBeaconsRepository;
 import com.lakeel.altla.vision.nearby.data.repository.FirebaseUsersRepository;
 import com.lakeel.altla.vision.nearby.data.repository.PreferenceRepository;
@@ -28,21 +27,12 @@ public final class SaveBeaconUseCase {
     SaveBeaconUseCase() {
     }
 
-    public Single<String> execute() {
+    public Single<String> execute(String beaconId) {
         String userId = MyUser.getUserId();
-        return preferenceRepository.findBeaconId(userId)
-                .flatMap(this::saveBeaconId)
-                .flatMap(beaconId -> saveUserBeacon(userId, beaconId))
-                .flatMap(beaconId -> saveBeacon(beaconId, userId))
+        return preferenceRepository.saveBeaconId(userId, beaconId)
+                .flatMap(id -> saveUserBeacon(userId, beaconId))
+                .flatMap(id -> saveBeacon(beaconId, userId))
                 .subscribeOn(Schedulers.io());
-    }
-
-    private Single<String> saveBeaconId(String beaconId) {
-        if (StringUtils.isEmpty(beaconId)) {
-            return preferenceRepository.saveBeaconId(beaconId);
-        } else {
-            return Single.just(beaconId);
-        }
     }
 
     private Single<String> saveUserBeacon(String userId, String beaconId) {

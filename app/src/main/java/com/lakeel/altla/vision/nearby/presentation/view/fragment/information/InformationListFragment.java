@@ -4,13 +4,13 @@ import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
 import android.support.v7.widget.LinearLayoutManager;
-import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
 import com.lakeel.altla.vision.nearby.R;
 import com.lakeel.altla.vision.nearby.presentation.presenter.information.InformationListPresenter;
+import com.lakeel.altla.vision.nearby.presentation.view.EmptySupportRecyclerView;
 import com.lakeel.altla.vision.nearby.presentation.view.InformationListView;
 import com.lakeel.altla.vision.nearby.presentation.view.activity.MainActivity;
 import com.lakeel.altla.vision.nearby.presentation.view.adapter.InformationAdapter;
@@ -28,7 +28,10 @@ public final class InformationListFragment extends Fragment implements Informati
     InformationListPresenter presenter;
 
     @BindView(R.id.recyclerView)
-    RecyclerView recyclerView;
+    EmptySupportRecyclerView recyclerView;
+
+    @BindView(R.id.textViewEmpty)
+    View emptyView;
 
     public static InformationListFragment newInstance() {
         Bundle args = new Bundle();
@@ -63,6 +66,7 @@ public final class InformationListFragment extends Fragment implements Informati
         recyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
         recyclerView.setHasFixedSize(false);
         recyclerView.addItemDecoration(new DividerItemDecoration(getContext()));
+        recyclerView.setEmptyView(emptyView);
 
         InformationAdapter adapter = new InformationAdapter(presenter);
         recyclerView.setAdapter(adapter);
@@ -79,6 +83,14 @@ public final class InformationListFragment extends Fragment implements Informati
     @Override
     public void updateItems() {
         recyclerView.getAdapter().notifyDataSetChanged();
+    }
+
+    @Override
+    public void showEmptyView() {
+    }
+
+    @Override
+    public void hideEmptyView() {
     }
 
     @Override

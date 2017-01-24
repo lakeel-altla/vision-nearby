@@ -5,17 +5,18 @@ import com.lakeel.altla.vision.nearby.data.repository.PreferenceRepository;
 import javax.inject.Inject;
 
 import rx.Single;
+import rx.schedulers.Schedulers;
 
-public final class SavePreferenceBeaconIdUseCase {
+public final class FindAdvertiseSettingsUseCase {
 
     @Inject
     PreferenceRepository repository;
 
     @Inject
-    SavePreferenceBeaconIdUseCase() {
+    FindAdvertiseSettingsUseCase() {
     }
 
-    public Single<String> execute(String userId) {
-        return repository.saveBeaconId(userId);
+    public Single<Boolean> execute() {
+        return repository.findAdvertiseSettings().subscribeOn(Schedulers.io());
     }
 }

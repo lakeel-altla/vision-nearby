@@ -56,14 +56,14 @@ public final class DeviceAdapter extends RecyclerView.Adapter<DeviceAdapter.Devi
         @BindView(R.id.buttonRemove)
         Button removeButton;
 
-        @BindView(R.id.deviceName)
-        TextView deviceName;
+        @BindView(R.id.textViewDeviceName)
+        TextView deviceNameTextView;
 
-        @BindView(R.id.lastUsedTime)
-        TextView lastUsedTime;
+        @BindView(R.id.textViewLastUsedTime)
+        TextView lastUsedTimeTextView;
 
-        @BindView(R.id.lostImage)
-        ImageView lostImage;
+        @BindView(R.id.imageViewLost)
+        ImageView lostImageView;
 
         private DeviceListPresenter.DeviceItemPresenter itemPresenter;
 
@@ -84,12 +84,12 @@ public final class DeviceAdapter extends RecyclerView.Adapter<DeviceAdapter.Devi
 
         @Override
         public void showItem(DeviceModel model) {
-            deviceName.setText(model.name);
+            deviceNameTextView.setText(model.name);
             itemLayout.setOnClickListener(view -> itemPresenter.onClick(model));
 
             DateFormatter formatter = new DateFormatter(model.lastUsedTime);
             String lastUsedTimeText = formatter.format();
-            lastUsedTime.setText(lastUsedTimeText);
+            lastUsedTimeTextView.setText(lastUsedTimeText);
 
             removeButton.setOnClickListener(view -> itemPresenter.onRemove(model));
 
@@ -97,13 +97,13 @@ public final class DeviceAdapter extends RecyclerView.Adapter<DeviceAdapter.Devi
                 lostButton.setText(R.string.button_found);
                 lostButton.setOnClickListener(view -> itemPresenter.onFound(model));
 
-                lostImage.setVisibility(View.VISIBLE);
-                lostImage.setImageResource(R.drawable.ic_search);
+                lostImageView.setVisibility(View.VISIBLE);
+                lostImageView.setImageResource(R.drawable.ic_search);
             } else {
                 lostButton.setText(R.string.button_lost);
                 lostButton.setOnClickListener(view -> itemPresenter.onLost(model));
 
-                lostImage.setVisibility(View.INVISIBLE);
+                lostImageView.setVisibility(View.INVISIBLE);
             }
         }
     }

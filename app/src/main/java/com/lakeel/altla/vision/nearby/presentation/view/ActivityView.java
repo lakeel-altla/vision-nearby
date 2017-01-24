@@ -2,6 +2,8 @@ package com.lakeel.altla.vision.nearby.presentation.view;
 
 import android.support.annotation.StringRes;
 
+import com.lakeel.altla.vision.nearby.presentation.firebase.MyUser;
+import com.lakeel.altla.vision.nearby.presentation.presenter.model.ActivityModel;
 import com.lakeel.altla.vision.nearby.presentation.presenter.model.UserModel;
 
 public interface ActivityView {
@@ -10,9 +12,9 @@ public interface ActivityView {
 
     void showSignInFragment();
 
-    void showProfile(String displayName, String email, String imageUri);
+    void showDrawerProfile(MyUser.UserProfile userProfile);
 
-    void updateProfile(UserModel model);
+    void updateProfile(ActivityModel model);
 
     void showSnackBar(@StringRes int resId);
 
@@ -20,7 +22,9 @@ public interface ActivityView {
 
     void showBleEnabledActivity();
 
-    void stopMonitorBeacons();
+    void startSubscribeBeaconsInBackground();
+
+    void stopSubscribeBeaconsInBackground();
 
     void startAdvertise(String beaconId);
 }

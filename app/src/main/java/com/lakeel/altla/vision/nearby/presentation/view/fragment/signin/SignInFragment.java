@@ -12,7 +12,6 @@ import android.view.ViewGroup;
 import android.widget.RelativeLayout;
 
 import com.lakeel.altla.vision.nearby.R;
-import com.lakeel.altla.vision.nearby.presentation.application.App;
 import com.lakeel.altla.vision.nearby.presentation.presenter.signin.SignInPresenter;
 import com.lakeel.altla.vision.nearby.presentation.view.SignInView;
 import com.lakeel.altla.vision.nearby.presentation.view.activity.MainActivity;
@@ -88,7 +87,6 @@ public final class SignInFragment extends Fragment implements SignInView {
 
     @Override
     public void signInSuccess() {
-        App.startSubscribeInBackground(this);
         ((MainActivity) getActivity()).postSignIn();
     }
 

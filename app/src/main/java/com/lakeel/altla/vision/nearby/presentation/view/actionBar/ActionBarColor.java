@@ -7,13 +7,13 @@ import android.support.v4.content.ContextCompat;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
 
-public final class ActionBarColor implements BarColor {
+final class ActionBarColor implements BarColor {
 
     private final Activity activity;
 
     private final int colorInt;
 
-    public ActionBarColor(Activity activity, @ColorRes int colorInt) {
+    ActionBarColor(Activity activity, @ColorRes int colorInt) {
         this.activity = activity;
         this.colorInt = colorInt;
     }

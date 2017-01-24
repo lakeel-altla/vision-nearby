@@ -35,12 +35,11 @@
         </LinearLayout>
 
         <RelativeLayout
-            android:id="@+id/swipeLayout"
             android:layout_width="match_parent"
             android:layout_height="match_parent">
 
             <TextView
-                android:id="@+id/deviceName"
+                android:id="@+id/textViewDeviceName"
                 android:layout_width="wrap_content"
                 android:layout_height="match_parent"
                 android:gravity="center_vertical"
@@ -49,7 +48,7 @@
                 android:text="@string/dummy" />
 
             <TextView
-                android:id="@+id/lastUsedTime"
+                android:id="@+id/textViewLastUsedTime"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_alignParentEnd="true"
@@ -59,7 +58,7 @@
                 android:text="@string/dummy" />
 
             <ImageView
-                android:id="@+id/lostImage"
+                android:id="@+id/imageViewLost"
                 android:layout_width="24dp"
                 android:layout_height="24dp"
                 android:layout_alignParentBottom="true"

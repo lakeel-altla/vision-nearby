@@ -23,9 +23,10 @@ import com.lakeel.altla.vision.nearby.R;
 import com.lakeel.altla.vision.nearby.android.ConfirmDialog;
 import com.lakeel.altla.vision.nearby.presentation.application.App;
 import com.lakeel.altla.vision.nearby.presentation.di.component.ViewComponent;
+import com.lakeel.altla.vision.nearby.presentation.firebase.MyUser;
 import com.lakeel.altla.vision.nearby.presentation.intent.IntentKey;
 import com.lakeel.altla.vision.nearby.presentation.presenter.activity.ActivityPresenter;
-import com.lakeel.altla.vision.nearby.presentation.presenter.model.UserModel;
+import com.lakeel.altla.vision.nearby.presentation.presenter.model.ActivityModel;
 import com.lakeel.altla.vision.nearby.presentation.service.AdvertiseService;
 import com.lakeel.altla.vision.nearby.presentation.view.ActivityView;
 import com.lakeel.altla.vision.nearby.presentation.view.fragment.FragmentController;
@@ -86,12 +87,17 @@ public class MainActivity extends AppCompatActivity
         toggle.syncState();
         drawerLayout.addDrawerListener(toggle);
 
-        NavigationView navigationView = (NavigationView) findViewById(R.id.nav_view);
+        NavigationView navigationView = (NavigationView) findViewById(R.id.navigationView);
         navigationView.setNavigationItemSelectedListener(this);
-        View headerView = navigationView.inflateHeaderView(R.layout.nav_header_main);
+        View headerView = navigationView.inflateHeaderView(R.layout.navigation_header);
         ButterKnife.bind(drawerHeaderLayout, headerView);
 
         presenter.onCreateView(this);
+    }
+
+    @Override
+    public void onResume() {
+        super.onResume();
     }
 
     @Override
@@ -134,32 +140,32 @@ public class MainActivity extends AppCompatActivity
         int id = item.getItemId();
 
         switch (id) {
-            case R.id.nav_favorites: {
+            case R.id.favorites: {
                 FragmentController controller = new FragmentController(this);
                 controller.showFavoriteListFragment();
                 break;
             }
-            case R.id.nav_history: {
+            case R.id.history: {
                 FragmentController controller = new FragmentController(this);
                 controller.showHistoryListFragment();
                 break;
             }
-            case R.id.nav_nearby: {
+            case R.id.nearby: {
                 FragmentController controller = new FragmentController(this);
                 controller.showNearbyUserListFragment();
                 break;
             }
-            case R.id.nav_information: {
+            case R.id.information: {
                 FragmentController controller = new FragmentController(this);
                 controller.showInformationListFragment();
                 break;
             }
-            case R.id.nav_settings: {
+            case R.id.settings: {
                 FragmentController controller = new FragmentController(this);
                 controller.showSettingsFragment();
                 break;
             }
-            case R.id.nav_sign_out:
+            case R.id.signOut:
                 presenter.onSignOut(this);
                 break;
             default:
@@ -185,21 +191,21 @@ public class MainActivity extends AppCompatActivity
     }
 
     @Override
-    public void showProfile(String displayName, String email, String imageUri) {
+    public void showDrawerProfile(MyUser.UserProfile userProfile) {
         ImageLoader imageLoader = ImageLoader.getInstance();
-        imageLoader.displayImage(imageUri, drawerHeaderLayout.userImageView);
+        imageLoader.displayImage(userProfile.imageUri, drawerHeaderLayout.userImageView);
 
-        drawerHeaderLayout.textViewUserName.setText(displayName);
-        drawerHeaderLayout.textViewEmail.setText(email);
+        drawerHeaderLayout.userNameTextView.setText(userProfile.userName);
+        drawerHeaderLayout.emailTextView.setText(userProfile.email);
     }
 
     @Override
-    public void updateProfile(UserModel model) {
+    public void updateProfile(ActivityModel model) {
         ImageLoader imageLoader = ImageLoader.getInstance();
         imageLoader.displayImage(model.imageUri, drawerHeaderLayout.userImageView);
 
-        drawerHeaderLayout.textViewUserName.setText(model.userName);
-        drawerHeaderLayout.textViewEmail.setText(model.email);
+        drawerHeaderLayout.userNameTextView.setText(model.userName);
+        drawerHeaderLayout.emailTextView.setText(model.email);
     }
 
     @Override
@@ -220,8 +226,13 @@ public class MainActivity extends AppCompatActivity
     }
 
     @Override
-    public void stopMonitorBeacons() {
-        ((App) getApplication()).stopSubscribeInBackground();
+    public void startSubscribeBeaconsInBackground() {
+        App.startSubscribeInBackground(this);
+    }
+
+    @Override
+    public void stopSubscribeBeaconsInBackground() {
+        App.stopSubscribeInBackground(this);
     }
 
     @Override

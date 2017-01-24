@@ -15,7 +15,7 @@ public final class ToolBarColor implements BarColor {
 
     private final int primaryDarkColorInt;
 
-    public ToolBarColor(Activity activity, @ColorRes int primaryColorInt, @ColorRes int primaryDarkColorInt) {
+    ToolBarColor(Activity activity, @ColorRes int primaryColorInt, @ColorRes int primaryDarkColorInt) {
         this.activity = activity;
         this.primaryColorInt = primaryColorInt;
         this.primaryDarkColorInt = primaryDarkColorInt;
@@ -33,5 +33,4 @@ public final class ToolBarColor implements BarColor {
         activity.getWindow().setStatusBarColor(
                 ContextCompat.getColor(activity.getApplicationContext(), primaryDarkColorInt));
     }
-
 }

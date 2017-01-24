@@ -32,7 +32,7 @@ public final class NearbyUserAdapter extends RecyclerView.Adapter<NearbyUserAdap
 
     @Override
     public NearbyUserViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
-        View itemView = LayoutInflater.from(parent.getContext()).inflate(R.layout.nearby_item, parent, false);
+        View itemView = LayoutInflater.from(parent.getContext()).inflate(R.layout.nearby_user_item, parent, false);
         NearbyUserViewHolder nearbyViewHolder = new NearbyUserViewHolder(itemView);
         nearbyUserListPresenter.onCreateItemView(nearbyViewHolder);
         return nearbyViewHolder;
@@ -52,7 +52,7 @@ public final class NearbyUserAdapter extends RecyclerView.Adapter<NearbyUserAdap
 
         private NearbyUserListPresenter.NearbyUserItemPresenter itemPresenter;
 
-        @BindView(R.id.itemLayout)
+        @BindView(R.id.layoutItem)
         LinearLayout itemLayout;
 
         @BindView(R.id.textViewUserName)

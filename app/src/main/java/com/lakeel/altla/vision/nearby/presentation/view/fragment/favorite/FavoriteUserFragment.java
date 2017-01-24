@@ -16,12 +16,11 @@ import android.widget.LinearLayout;
 
 import com.lakeel.altla.vision.nearby.R;
 import com.lakeel.altla.vision.nearby.presentation.bundle.FragmentBundle;
-import com.lakeel.altla.vision.nearby.presentation.presenter.model.PresenceModel;
-import com.lakeel.altla.vision.nearby.presentation.presenter.model.UserModel;
 import com.lakeel.altla.vision.nearby.presentation.presenter.favorite.FavoriteUserPresenter;
+import com.lakeel.altla.vision.nearby.presentation.presenter.model.FavoriteUserModel;
 import com.lakeel.altla.vision.nearby.presentation.view.FavoriteUserView;
-import com.lakeel.altla.vision.nearby.presentation.view.date.DateFormatter;
 import com.lakeel.altla.vision.nearby.presentation.view.activity.MainActivity;
+import com.lakeel.altla.vision.nearby.presentation.view.date.DateFormatter;
 import com.lakeel.altla.vision.nearby.presentation.view.fragment.FragmentController;
 import com.lakeel.altla.vision.nearby.presentation.view.layout.PresenceLayout;
 import com.lakeel.altla.vision.nearby.presentation.view.layout.ProfileLayout;
@@ -67,7 +66,7 @@ public final class FavoriteUserFragment extends Fragment implements FavoriteUser
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
-        View view = inflater.inflate(R.layout.fragment_user_profile, container, false);
+        View view = inflater.inflate(R.layout.fragment_favorite_user, container, false);
 
         ButterKnife.bind(this, view);
 
@@ -128,34 +127,34 @@ public final class FavoriteUserFragment extends Fragment implements FavoriteUser
     }
 
     @Override
-    public void showPresence(PresenceModel model) {
+    public void showPresence(FavoriteUserModel model) {
         int resId;
         if (model.isConnected) {
             resId = R.string.textView_connected;
         } else {
             resId = R.string.textView_disconnected;
         }
-        presenceLayout.textViewPresence.setText(resId);
+        presenceLayout.presenceTextView.setText(resId);
 
         DateFormatter dateFormatter = new DateFormatter(model.lastOnlineTime);
-        presenceLayout.textViewLastOnline.setText(dateFormatter.format());
+        presenceLayout.lastOnlineTextView.setText(dateFormatter.format());
     }
 
     @Override
-    public void showProfile(UserModel model) {
+    public void showProfile(FavoriteUserModel model) {
         ImageLoader imageLoader = ImageLoader.getInstance();
         imageLoader.displayImage(model.imageUri, userImageView);
 
-        profileLayout.textViewName.setText(model.userName);
+        profileLayout.userNameTextView.setText(model.userName);
 
-        profileLayout.textViewEmail.setAutoLinkMask(Linkify.EMAIL_ADDRESSES);
-        profileLayout.textViewEmail.setText(model.email);
+        profileLayout.emailTextView.setAutoLinkMask(Linkify.EMAIL_ADDRESSES);
+        profileLayout.emailTextView.setText(model.email);
     }
 
     @Override
-    public void showLineUrl(String url) {
-        snsLayout.textViewLineUrl.setAutoLinkMask(Linkify.WEB_URLS);
-        snsLayout.textViewLineUrl.setText(url);
+    public void showLineUrl(FavoriteUserModel model) {
+        snsLayout.lineUrlTextView.setAutoLinkMask(Linkify.WEB_URLS);
+        snsLayout.lineUrlTextView.setText(model.lineUrl);
     }
 
     @Override

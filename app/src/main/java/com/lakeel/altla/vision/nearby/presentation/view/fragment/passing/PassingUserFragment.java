@@ -86,7 +86,7 @@ public final class PassingUserFragment extends Fragment implements PassingUserVi
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
-        View view = inflater.inflate(R.layout.fragment_user_passing, container, false);
+        View view = inflater.inflate(R.layout.fragment_passing_user, container, false);
 
         ButterKnife.bind(this, view);
         ButterKnife.bind(presenceLayout, view.findViewById(R.id.presenceLayout));
@@ -168,24 +168,24 @@ public final class PassingUserFragment extends Fragment implements PassingUserVi
         ImageLoader imageLoader = ImageLoader.getInstance();
         imageLoader.displayImage(model.imageUri, userImageView);
 
-        profileLayout.textViewName.setText(model.userName);
-        profileLayout.textViewEmail.setAutoLinkMask(Linkify.EMAIL_ADDRESSES);
-        profileLayout.textViewEmail.setText(model.email);
+        profileLayout.userNameTextView.setText(model.userName);
+        profileLayout.emailTextView.setAutoLinkMask(Linkify.EMAIL_ADDRESSES);
+        profileLayout.emailTextView.setText(model.email);
     }
 
     @Override
     public void showTimes(long times) {
-        passingLayout.textViewTimes.setText(String.valueOf(times));
+        passingLayout.timesTextView.setText(String.valueOf(times));
     }
 
     @Override
     public void showPassingData(UserPassingModel model) {
         DateFormatter dateFormatter = new DateFormatter(model.passingTime);
-        passingLayout.textViewDate.setText(dateFormatter.format());
+        passingLayout.passingTimeTextView.setText(dateFormatter.format());
 
         if (model.conditions == null || model.conditions.length == 0) {
             int resId = WeatherCondition.UNKNOWN.getResValue();
-            passingLayout.textViewWeather.setText(getContext().getString(resId));
+            passingLayout.weatherTextView.setText(getContext().getString(resId));
         } else {
             BigDecimal temperature = new BigDecimal(model.temperature);
             BigDecimal roundUppedTemperature = temperature.setScale(0, BigDecimal.ROUND_HALF_UP);
@@ -203,11 +203,11 @@ public final class PassingUserFragment extends Fragment implements PassingUserVi
             builder.append("  ");
             builder.append(getString(R.string.message_humidity_format, String.valueOf(humidity)));
 
-            passingLayout.textViewWeather.setText(builder.toString());
+            passingLayout.weatherTextView.setText(builder.toString());
         }
 
         int resId = UserActivity.toUserActivity(model.userActivity).getResValue();
-        passingLayout.textViewUserActivity.setText(getContext().getString(resId));
+        passingLayout.userActivityTextView.setText(getContext().getString(resId));
     }
 
     @Override
@@ -218,10 +218,10 @@ public final class PassingUserFragment extends Fragment implements PassingUserVi
         } else {
             resId = R.string.textView_disconnected;
         }
-        presenceLayout.textViewPresence.setText(resId);
+        presenceLayout.presenceTextView.setText(resId);
 
         DateFormatter dateFormatter = new DateFormatter(model.lastOnlineTime);
-        presenceLayout.textViewLastOnline.setText(dateFormatter.format());
+        presenceLayout.lastOnlineTextView.setText(dateFormatter.format());
     }
 
     @Override
@@ -262,8 +262,8 @@ public final class PassingUserFragment extends Fragment implements PassingUserVi
 
     @Override
     public void showLineUrl(String url) {
-        snsLayout.textViewLineUrl.setAutoLinkMask(Linkify.WEB_URLS);
-        snsLayout.textViewLineUrl.setText(url);
+        snsLayout.lineUrlTextView.setAutoLinkMask(Linkify.WEB_URLS);
+        snsLayout.lineUrlTextView.setText(url);
     }
 
     @Override

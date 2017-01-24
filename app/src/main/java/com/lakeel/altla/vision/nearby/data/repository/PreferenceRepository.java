@@ -5,8 +5,6 @@ import android.content.SharedPreferences;
 import com.lakeel.altla.vision.nearby.core.StringUtils;
 import com.lakeel.altla.vision.nearby.domain.entity.PreferenceEntity;
 
-import java.util.UUID;
-
 import javax.inject.Inject;
 
 import rx.Single;
@@ -42,7 +40,14 @@ public class PreferenceRepository {
         });
     }
 
-    public Single<Boolean> findSubscribeSetting() {
+    public Single<Boolean> findAdvertiseSettings() {
+        return Single.create(subscriber -> {
+            boolean isSubscribeInBackgroundEnabled = preference.getBoolean(KEY_ADVERTISE_IN_BACKGROUND, true);
+            subscriber.onSuccess(isSubscribeInBackgroundEnabled);
+        });
+    }
+
+    public Single<Boolean> findSubscribeSettings() {
         return Single.create(subscriber -> {
             boolean isSubscribeInBackgroundEnabled = preference.getBoolean(KEY_SUBSCRIBE_IN_BACKGROUND, true);
             subscriber.onSuccess(isSubscribeInBackgroundEnabled);
@@ -65,23 +70,13 @@ public class PreferenceRepository {
         });
     }
 
-    public Single<String> saveBeaconId(String userId) {
+    public Single<String> saveBeaconId(String userId, String beaconId) {
         return Single.create(new Single.OnSubscribe<String>() {
             @Override
             public void call(SingleSubscriber<? super String> subscriber) {
                 SharedPreferences.Editor editor = preference.edit();
-
-                String uuid = UUID.randomUUID().toString();
-                String replacedString = uuid.replace("-", "");
-                // Remove 5 - 10 bytes.
-                String namespaceId = replacedString.substring(0, 8) + replacedString.substring(20, 32);
-                String instanceId = "000000000001";
-
-                editor.putString(KEY_BEACON_ID + userId, namespaceId + instanceId);
-                editor.commit();
-
-                String beaconId = namespaceId + instanceId;
-
+                editor.putString(KEY_BEACON_ID + userId, beaconId);
+                editor.apply();
                 subscriber.onSuccess(beaconId);
             }
         });

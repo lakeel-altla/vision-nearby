@@ -21,14 +21,8 @@ public final class SaveTokenUseCase {
     SaveTokenUseCase() {
     }
 
-    public Single<String> execute(String token) {
+    public Single<String> execute(String beaconId, String token) {
         String userId = MyUser.getUserId();
-        return preferenceRepository.findBeaconId(userId)
-                .subscribeOn(Schedulers.io())
-                .flatMap(beaconId -> saveToken(userId, beaconId, token));
-    }
-
-    private Single<String> saveToken(String userId, String beaconId, String token) {
         return tokensRepository.saveToken(userId, beaconId, token).subscribeOn(Schedulers.io());
     }
 }

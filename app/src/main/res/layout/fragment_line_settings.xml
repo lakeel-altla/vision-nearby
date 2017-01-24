@@ -23,6 +23,6 @@
         android:paddingEnd="16dp"
         android:paddingStart="16dp" />
 
-    <include layout="@layout/item_divider" />
+    <include layout="@layout/divider" />
 
 </LinearLayout>

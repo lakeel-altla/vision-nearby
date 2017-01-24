@@ -14,13 +14,11 @@ import android.view.MenuInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
-import com.flipboard.bottomsheet.BottomSheetLayout;
 import com.lakeel.altla.vision.nearby.R;
 import com.lakeel.altla.vision.nearby.presentation.presenter.nearby.NearbyUserListPresenter;
 import com.lakeel.altla.vision.nearby.presentation.view.NearbyUserListView;
-import com.lakeel.altla.vision.nearby.presentation.view.actionBar.BarColor;
-import com.lakeel.altla.vision.nearby.presentation.view.actionBar.DefaultBarColorFactory;
-import com.lakeel.altla.vision.nearby.presentation.view.actionBar.EditableBarColorFactory;
+import com.lakeel.altla.vision.nearby.presentation.view.actionBar.BarColorContext;
+import com.lakeel.altla.vision.nearby.presentation.view.actionBar.BarColorFactory;
 import com.lakeel.altla.vision.nearby.presentation.view.activity.MainActivity;
 import com.lakeel.altla.vision.nearby.presentation.view.adapter.NearbyUserAdapter;
 import com.lakeel.altla.vision.nearby.presentation.view.divider.DividerItemDecoration;
@@ -40,9 +38,6 @@ public final class NearbyUserListFragment extends Fragment implements NearbyUser
     @Inject
     NearbyUserListPresenter presenter;
 
-    @BindView(R.id.shareSheet)
-    BottomSheetLayout shareSheet;
-
     @BindView(R.id.swipeLayout)
     SwipeRefreshLayout swipeRefreshLayout;
 
@@ -60,7 +55,7 @@ public final class NearbyUserListFragment extends Fragment implements NearbyUser
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
-        View view = inflater.inflate(R.layout.fragment_nearby, container, false);
+        View view = inflater.inflate(R.layout.fragment_nearby_user, container, false);
         ButterKnife.bind(this, view);
 
         MainActivity.getUserComponent(this).inject(this);
@@ -147,14 +142,14 @@ public final class NearbyUserListFragment extends Fragment implements NearbyUser
 
     @Override
     public void drawEditableActionBarColor() {
-        BarColor barColor = EditableBarColorFactory.create(this);
-        barColor.draw();
+        BarColorContext context = new BarColorContext(BarColorFactory.createEditableColor(this));
+        context.draw();
     }
 
     @Override
     public void drawDefaultActionBarColor() {
-        BarColor barColor = DefaultBarColorFactory.create(this);
-        barColor.draw();
+        BarColorContext context = new BarColorContext(BarColorFactory.createDefaultColor(this));
+        context.draw();
     }
 
     @Override

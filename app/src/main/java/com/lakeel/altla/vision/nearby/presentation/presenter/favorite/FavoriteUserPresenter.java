@@ -1,13 +1,12 @@
 package com.lakeel.altla.vision.nearby.presentation.presenter.favorite;
 
-import com.lakeel.altla.vision.nearby.domain.usecase.FindLineLinkUseCase;
 import com.lakeel.altla.vision.nearby.domain.usecase.FindConnectionUseCase;
+import com.lakeel.altla.vision.nearby.domain.usecase.FindLineLinkUseCase;
 import com.lakeel.altla.vision.nearby.domain.usecase.FindUserBeaconIdsUseCase;
 import com.lakeel.altla.vision.nearby.domain.usecase.FindUserUseCase;
 import com.lakeel.altla.vision.nearby.presentation.analytics.AnalyticsReporter;
 import com.lakeel.altla.vision.nearby.presentation.presenter.BasePresenter;
-import com.lakeel.altla.vision.nearby.presentation.presenter.mapper.PresencesModelMapper;
-import com.lakeel.altla.vision.nearby.presentation.presenter.mapper.UserModelMapper;
+import com.lakeel.altla.vision.nearby.presentation.presenter.mapper.FavoriteUserModelMapper;
 import com.lakeel.altla.vision.nearby.presentation.view.FavoriteUserView;
 import com.lakeel.altla.vision.nearby.rx.ErrorAction;
 
@@ -35,9 +34,7 @@ public final class FavoriteUserPresenter extends BasePresenter<FavoriteUserView>
     @Inject
     FindUserBeaconIdsUseCase findUserBeaconIdsUseCase;
 
-    private PresencesModelMapper presencesModelMapper = new PresencesModelMapper();
-
-    private UserModelMapper userModelMapper = new UserModelMapper();
+    private final FavoriteUserModelMapper modelMapper = new FavoriteUserModelMapper();
 
     private String favoriteUserId;
 
@@ -57,14 +54,14 @@ public final class FavoriteUserPresenter extends BasePresenter<FavoriteUserView>
 
         // Presence.
         Subscription subscription = findConnectionUseCase.execute(favoriteUserId)
-                .map(entity -> presencesModelMapper.map(entity))
+                .map(modelMapper::map)
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribe(model -> getView().showPresence(model), new ErrorAction<>());
         subscriptions.add(subscription);
 
         // Profile.
         Subscription subscription1 = findUserUseCase.execute(favoriteUserId)
-                .map(entity -> userModelMapper.map(entity))
+                .map(modelMapper::map)
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribe(model -> getView().showProfile(model), new ErrorAction<>());
         subscriptions.add(subscription1);
@@ -73,8 +70,9 @@ public final class FavoriteUserPresenter extends BasePresenter<FavoriteUserView>
         Subscription subscription2 = findLineLinkUseCase.execute(favoriteUserId)
                 .toObservable()
                 .filter(entity -> entity != null)
+                .map(modelMapper::map)
                 .observeOn(AndroidSchedulers.mainThread())
-                .subscribe(entity -> getView().showLineUrl(entity.url), new ErrorAction<>());
+                .subscribe(model -> getView().showLineUrl(model), new ErrorAction<>());
         subscriptions.add(subscription2);
     }
 

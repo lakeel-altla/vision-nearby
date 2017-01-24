@@ -17,6 +17,6 @@ public final class FindSubscribeSettingsUseCase {
     }
 
     public Single<Boolean> execute() {
-        return repository.findSubscribeSetting().subscribeOn(Schedulers.io());
+        return repository.findSubscribeSettings().subscribeOn(Schedulers.io());
     }
 }

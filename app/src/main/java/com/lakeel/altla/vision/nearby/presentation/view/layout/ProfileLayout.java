@@ -9,8 +9,8 @@ import butterknife.BindView;
 public final class ProfileLayout {
 
     @BindView(R.id.textViewUserName)
-    public TextView textViewName;
+    public TextView userNameTextView;
 
     @BindView(R.id.textViewEmail)
-    public TextView textViewEmail;
+    public TextView emailTextView;
 }

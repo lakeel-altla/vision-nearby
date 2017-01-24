@@ -33,14 +33,14 @@
                 android:id="@+id/presenceLayout"
                 layout="@layout/layout_presence" />
 
-            <include layout="@layout/item_divider" />
+            <include layout="@layout/divider" />
 
             <!-- Profile -->
             <include
                 android:id="@+id/profileLayout"
                 layout="@layout/layout_profile" />
 
-            <include layout="@layout/item_divider" />
+            <include layout="@layout/divider" />
 
             <!-- SNS -->
             <include

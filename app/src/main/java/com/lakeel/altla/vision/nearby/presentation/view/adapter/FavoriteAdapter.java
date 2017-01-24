@@ -69,7 +69,7 @@ public final class FavoriteAdapter extends SwipeableUltimateViewAdapter<Favorite
         @BindView(R.id.swipeLayout)
         SwipeLayout swipeLayout;
 
-        public FavoritesListViewHolder(View itemView, boolean bind) {
+        FavoritesListViewHolder(View itemView, boolean bind) {
             super(itemView);
             if (bind) {
                 ButterKnife.bind(this, itemView);

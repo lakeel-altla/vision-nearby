@@ -4,7 +4,6 @@ import android.content.Context;
 
 import org.altbeacon.beacon.BeaconManager;
 import org.altbeacon.beacon.BeaconParser;
-import org.altbeacon.beacon.Region;
 import org.altbeacon.beacon.powersave.BackgroundPowerSaver;
 
 public final class BeaconClient {
@@ -47,7 +46,9 @@ public final class BeaconClient {
     }
 
     public void startSubscribeInBackground() {
-        beaconNotifier.start();
+        if (!beaconNotifier.isAlreadySubscribed()) {
+            beaconNotifier.start();
+        }
     }
 
     public void stopSubscribeInBackground() {

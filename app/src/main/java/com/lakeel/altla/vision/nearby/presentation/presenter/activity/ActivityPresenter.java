@@ -8,6 +8,9 @@ import com.firebase.ui.auth.AuthUI;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.iid.FirebaseInstanceId;
 import com.lakeel.altla.vision.nearby.R;
+import com.lakeel.altla.vision.nearby.beacon.EddystoneUid;
+import com.lakeel.altla.vision.nearby.core.StringUtils;
+import com.lakeel.altla.vision.nearby.domain.usecase.FindAdvertiseSettingsUseCase;
 import com.lakeel.altla.vision.nearby.domain.usecase.FindBeaconIdUseCase;
 import com.lakeel.altla.vision.nearby.domain.usecase.FindPreferencesUseCase;
 import com.lakeel.altla.vision.nearby.domain.usecase.ObserveConnectionUseCase;
@@ -17,12 +20,14 @@ import com.lakeel.altla.vision.nearby.domain.usecase.SaveBeaconUseCase;
 import com.lakeel.altla.vision.nearby.domain.usecase.SaveTokenUseCase;
 import com.lakeel.altla.vision.nearby.presentation.analytics.AnalyticsReporter;
 import com.lakeel.altla.vision.nearby.presentation.ble.BleChecker;
+import com.lakeel.altla.vision.nearby.presentation.ble.BleChecker.State;
 import com.lakeel.altla.vision.nearby.presentation.firebase.MyUser;
 import com.lakeel.altla.vision.nearby.presentation.presenter.BasePresenter;
-import com.lakeel.altla.vision.nearby.presentation.presenter.mapper.UserModelMapper;
+import com.lakeel.altla.vision.nearby.presentation.presenter.mapper.ActivityModelMapper;
 import com.lakeel.altla.vision.nearby.presentation.service.AdvertiseService;
 import com.lakeel.altla.vision.nearby.presentation.service.ServiceManager;
 import com.lakeel.altla.vision.nearby.presentation.view.ActivityView;
+import com.lakeel.altla.vision.nearby.rx.EmptyAction;
 import com.lakeel.altla.vision.nearby.rx.ErrorAction;
 
 import org.slf4j.Logger;
@@ -32,14 +37,15 @@ import javax.inject.Inject;
 
 import rx.Subscription;
 import rx.android.schedulers.AndroidSchedulers;
+import rx.schedulers.Schedulers;
 
 public final class ActivityPresenter extends BasePresenter<ActivityView> {
 
     @Inject
-    ObserveUserProfileUseCase observeUserProfileUseCase;
+    AnalyticsReporter analyticsReporter;
 
     @Inject
-    AnalyticsReporter analyticsReporter;
+    ObserveUserProfileUseCase observeUserProfileUseCase;
 
     @Inject
     ObserveConnectionUseCase observeConnectionUseCase;
@@ -49,6 +55,9 @@ public final class ActivityPresenter extends BasePresenter<ActivityView> {
 
     @Inject
     FindPreferencesUseCase findPreferencesUseCase;
+
+    @Inject
+    FindAdvertiseSettingsUseCase findAdvertiseSettingsUseCase;
 
     @Inject
     SaveTokenUseCase saveTokenUseCase;
@@ -61,9 +70,9 @@ public final class ActivityPresenter extends BasePresenter<ActivityView> {
 
     private static final Logger LOGGER = LoggerFactory.getLogger(ActivityPresenter.class);
 
-    private FirebaseInstanceId instanceId = FirebaseInstanceId.getInstance();
+    private final FirebaseInstanceId instanceId = FirebaseInstanceId.getInstance();
 
-    private UserModelMapper userModelMapper = new UserModelMapper();
+    private final ActivityModelMapper modelMapper = new ActivityModelMapper();
 
     private final Context context;
 
@@ -88,38 +97,48 @@ public final class ActivityPresenter extends BasePresenter<ActivityView> {
     public void postSignIn() {
         getView().showFavoriteListFragment();
 
+        showDrawerProfile();
         checkDeviceBle();
-        showProfile();
 
         // Observe user presence.
         observeConnectionUseCase.execute(MyUser.getUserId());
 
         // Observe user profile
         observeUserProfileUseCase.execute()
-                .map(entity -> userModelMapper.map(entity))
+                .map(modelMapper::map)
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribe(model -> {
                     getView().updateProfile(model);
                 }, new ErrorAction<>());
 
-        Subscription subscription = saveBeaconUseCase.execute().subscribe();
-        subscriptions.add(subscription);
-
-        Subscription subscription1 = saveTokenUseCase.execute(instanceId.getToken()).subscribe();
-        subscriptions.add(subscription1);
-
-        Subscription subscription2 = findPreferencesUseCase.execute().observeOn(AndroidSchedulers.mainThread())
-                .subscribe(entity -> {
-                    if (entity.isAdvertiseInBackgroundEnabled && isAdvertiseAvailableDevice) {
-                        getView().startAdvertise(entity.beaconId);
+        Subscription subscription = findBeaconIdUseCase.execute()
+                .observeOn(Schedulers.io())
+                .subscribe(beaconId -> {
+                    if (StringUtils.isEmpty(beaconId)) {
+                        EddystoneUid eddystoneUid = new EddystoneUid();
+                        // Create EddystoneUID.
+                        beaconId = eddystoneUid.getBeaconId();
+                        saveBeacon(beaconId);
                     }
+                    saveToken(beaconId);
+                    startAdvertiseIfNeeded(beaconId);
                 }, new ErrorAction<>());
-        subscriptions.add(subscription2);
+        subscriptions.add(subscription);
     }
 
     public void onBleEnabled() {
-        Subscription subscription = findBeaconIdUseCase.execute().observeOn(AndroidSchedulers.mainThread())
-                .subscribe(beaconId -> getView().startAdvertise(beaconId), new ErrorAction<>());
+        Subscription subscription = findPreferencesUseCase.execute()
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribe(entity -> {
+                    if (entity.isSubscribeInBackgroundEnabled) {
+                        getView().startSubscribeBeaconsInBackground();
+                    }
+
+                    String beaconId = entity.beaconId;
+                    if (entity.isAdvertiseInBackgroundEnabled && isAdvertiseAvailableDevice) {
+                        getView().startAdvertise(beaconId);
+                    }
+                }, new ErrorAction<>());
         subscriptions.add(subscription);
     }
 
@@ -158,13 +177,16 @@ public final class ActivityPresenter extends BasePresenter<ActivityView> {
 
     private void checkDeviceBle() {
         BleChecker checker = new BleChecker(context);
-        BleChecker.State state = checker.checkState();
+        State state = checker.checkState();
 
-        if (state == BleChecker.State.OFF) {
+        if (state == State.ENABLE) {
+            getView().startSubscribeBeaconsInBackground();
+        } else if (state == State.OFF) {
             isAdvertiseAvailableDevice = false;
             getView().showBleEnabledActivity();
-        } else if (state == BleChecker.State.SUBSCRIBE_ONLY) {
+        } else if (state == State.SUBSCRIBE_ONLY) {
             isAdvertiseAvailableDevice = false;
+            getView().startSubscribeBeaconsInBackground();
             getView().showAdvertiseDisableConfirmDialog();
         }
 
@@ -172,12 +194,34 @@ public final class ActivityPresenter extends BasePresenter<ActivityView> {
         analyticsReporter.setBleProperty(state);
     }
 
-    private void showProfile() {
-        MyUser.UserProfile userProfile = MyUser.getUserData();
-        getView().showProfile(userProfile.userName, userProfile.email, userProfile.imageUri);
+    private void showDrawerProfile() {
+        getView().showDrawerProfile(MyUser.getUserData());
+    }
+
+    private void saveBeacon(String beaconId) {
+        Subscription subscription = saveBeaconUseCase.execute(beaconId)
+                .subscribe(new EmptyAction<>(), new ErrorAction<>());
+        subscriptions.add(subscription);
+    }
+
+    private void saveToken(String beaconId) {
+        Subscription subscription = saveTokenUseCase.execute(beaconId, instanceId.getToken())
+                .subscribe(new EmptyAction<>(), new ErrorAction<>());
+        subscriptions.add(subscription);
+    }
+
+    private void startAdvertiseIfNeeded(String beaconId) {
+        Subscription subscription = findAdvertiseSettingsUseCase.execute()
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribe(isAdvertiseInBackgroundEnabled -> {
+                    if (isAdvertiseInBackgroundEnabled && isAdvertiseAvailableDevice) {
+                        getView().startAdvertise(beaconId);
+                    }
+                }, new ErrorAction<>());
+        subscriptions.add(subscription);
     }
 
     private void stopMonitorBeacons() {
-        getView().stopMonitorBeacons();
+        getView().stopSubscribeBeaconsInBackground();
     }
 }

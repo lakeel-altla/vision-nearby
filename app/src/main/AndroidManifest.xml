@@ -30,6 +30,7 @@
             android:name=".presentation.view.activity.MainActivity"
             android:label="@string/app_name"
             android:launchMode="standard"
+            android:screenOrientation="portrait"
             android:theme="@style/AppTheme.NoActionBar">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
@@ -39,7 +40,7 @@
         </activity>
 
         <service android:name=".presentation.service.LocationService" />
-        <service android:name=".presentation.service.LineService" />
+        <service android:name=".presentation.service.LINEService" />
         <service android:name=".presentation.service.HistoryService" />
         <service android:name=".presentation.service.NotificationService" />
 

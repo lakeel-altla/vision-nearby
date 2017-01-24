@@ -9,5 +9,5 @@ import butterknife.BindView;
 public final class SnsLayout {
 
     @BindView(R.id.textViewLineUrl)
-    public TextView textViewLineUrl;
+    public TextView lineUrlTextView;
 }

@@ -53,15 +53,24 @@ public class App extends Application {
         return ((App) activity.getApplication()).applicationComponent;
     }
 
-    public static void startSubscribeInBackground(Fragment fragment) {
+    public static void startSubscribeInBackground(Activity activity) {
         // When user enable ble, start to monitor beacons.
-        App app = ((App) fragment.getActivity().getApplication());
+        App app = ((App) activity.getApplication());
         app.startSubscribeInBackground();
     }
 
-    public static void stopSubscribeInBackground(Fragment fragment) {
-        App app = ((App) fragment.getActivity().getApplication());
+    public static void stopSubscribeInBackground(Activity activity) {
+        App app = ((App) activity.getApplication());
         app.stopSubscribeInBackground();
+    }
+
+    public static void startSubscribeInBackground(Fragment fragment) {
+        // When user enable ble, start to monitor beacons.
+        App.startSubscribeInBackground(fragment.getActivity());
+    }
+
+    public static void stopSubscribeInBackground(Fragment fragment) {
+        App.stopSubscribeInBackground(fragment.getActivity());
     }
 
     @Override

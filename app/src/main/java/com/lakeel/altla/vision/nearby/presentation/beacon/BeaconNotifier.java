@@ -20,6 +20,8 @@ final class BeaconNotifier implements BootstrapNotifier {
 
     private RegionBootstrap regionBootstrap;
 
+    private boolean isAlreadySubscribed;
+
     BeaconNotifier(Context context) {
         this.context = context;
         // All beacons are subscribed.
@@ -27,7 +29,13 @@ final class BeaconNotifier implements BootstrapNotifier {
         subscriber = new BeaconSubscriber(context);
     }
 
+    boolean isAlreadySubscribed() {
+        return isAlreadySubscribed;
+    }
+
     void start() {
+        isAlreadySubscribed = true;
+
         // Subscribe beacons in the background.
         regionBootstrap = new RegionBootstrap(this, region);
     }
