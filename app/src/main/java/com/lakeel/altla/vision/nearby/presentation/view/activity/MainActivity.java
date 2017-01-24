@@ -113,6 +113,7 @@ public class MainActivity extends AppCompatActivity
                 presenter.onBleEnabled();
             } else {
                 LOGGER.error("Failed to enable BLE.");
+                showSnackBar(R.string.error_not_enable_ble);
             }
         } else {
             super.onActivityResult(requestCode, resultCode, data);
@@ -138,7 +139,6 @@ public class MainActivity extends AppCompatActivity
     @Override
     public boolean onNavigationItemSelected(@NonNull MenuItem item) {
         int id = item.getItemId();
-
         switch (id) {
             case R.id.favorites: {
                 FragmentController controller = new FragmentController(this);
@@ -221,8 +221,8 @@ public class MainActivity extends AppCompatActivity
 
     @Override
     public void showBleEnabledActivity() {
-        Intent enableBtIntent = new Intent(BluetoothAdapter.ACTION_REQUEST_ENABLE);
-        startActivityForResult(enableBtIntent, REQUEST_CODE_ENABLE_BLE);
+        Intent intent = new Intent(BluetoothAdapter.ACTION_REQUEST_ENABLE);
+        startActivityForResult(intent, REQUEST_CODE_ENABLE_BLE);
     }
 
     @Override
@@ -249,7 +249,6 @@ public class MainActivity extends AppCompatActivity
             actionBar.setDisplayHomeAsUpEnabled(true);
         }
 
-        toggle.setDrawerIndicatorEnabled(true);
         drawerLayout.setDrawerLockMode(DrawerLayout.LOCK_MODE_UNLOCKED);
 
         FragmentController fragmentController = new FragmentController(this);
