@@ -8,9 +8,9 @@ import org.altbeacon.beacon.startup.RegionBootstrap;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-final class BeaconNotifier implements BootstrapNotifier {
+final class BeaconDetector implements BootstrapNotifier {
 
-    private static final Logger LOGGER = LoggerFactory.getLogger(BeaconNotifier.class);
+    private static final Logger LOGGER = LoggerFactory.getLogger(BeaconDetector.class);
 
     private final Context context;
 
@@ -22,7 +22,7 @@ final class BeaconNotifier implements BootstrapNotifier {
 
     private boolean isAlreadySubscribed;
 
-    BeaconNotifier(Context context) {
+    BeaconDetector(Context context) {
         this.context = context;
         // All beacons are subscribed.
         this.region = new Region("background-region", null, null, null);

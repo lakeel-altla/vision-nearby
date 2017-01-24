@@ -97,6 +97,8 @@ public class App extends Application {
                 .applicationModule(new ApplicationModule(this))
                 .build();
 
+        beaconClient = new BeaconClient(App.this);
+
         // Even if the application is killed, this onCreate method is called by AltBeacon library.
         // In that case, need to start to monitor beacons here.
         if (MyUser.isAuthenticated()) {
@@ -105,9 +107,6 @@ public class App extends Application {
     }
 
     public void startSubscribeInBackground() {
-        if (beaconClient == null) {
-            beaconClient = new BeaconClient(this);
-        }
         beaconClient.startSubscribeInBackground();
     }
 
@@ -135,7 +134,6 @@ public class App extends Application {
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribe(isEnabled -> {
                     if (isEnabled) {
-                        beaconClient = new BeaconClient(this);
                         beaconClient.startSubscribeInBackground();
                     }
                 }, new ErrorAction<>());

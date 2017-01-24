@@ -158,7 +158,7 @@ public final class ActivityPresenter extends BasePresenter<ActivityView> {
                                     ServiceManager serviceManager = new ServiceManager(context, AdvertiseService.class);
                                     serviceManager.stopService();
 
-                                    stopMonitorBeacons();
+                                    stopSubscribeBeaconsInBackground();
                                     getView().showSignInFragment();
                                 } else {
                                     LOGGER.error("Failed to sign out.", result.getException());
@@ -221,7 +221,7 @@ public final class ActivityPresenter extends BasePresenter<ActivityView> {
         subscriptions.add(subscription);
     }
 
-    private void stopMonitorBeacons() {
+    private void stopSubscribeBeaconsInBackground() {
         getView().stopSubscribeBeaconsInBackground();
     }
 }

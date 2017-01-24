@@ -16,10 +16,10 @@ public final class BeaconClient {
 
     private static final long BACKGROUND_BETWEEN_SCAN_PERIOD = 10000L;
 
-    private final BeaconNotifier beaconNotifier;
+    private final BeaconDetector beaconDetector;
 
     public BeaconClient(Context context) {
-        beaconNotifier = new BeaconNotifier(context);
+        beaconDetector = new BeaconDetector(context);
 
         BeaconManager beaconManager = BeaconManager.getInstanceForApplication(context);
 
@@ -46,12 +46,12 @@ public final class BeaconClient {
     }
 
     public void startSubscribeInBackground() {
-        if (!beaconNotifier.isAlreadySubscribed()) {
-            beaconNotifier.start();
+        if (!beaconDetector.isAlreadySubscribed()) {
+            beaconDetector.start();
         }
     }
 
     public void stopSubscribeInBackground() {
-        beaconNotifier.stop();
+        beaconDetector.stop();
     }
 }
