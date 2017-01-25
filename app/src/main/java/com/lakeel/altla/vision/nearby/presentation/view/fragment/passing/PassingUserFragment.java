@@ -226,6 +226,7 @@ public final class PassingUserFragment extends Fragment implements PassingUserVi
 
     @Override
     public void showLocationMap(String latitude, String longitude) {
+        passingLayout.locationLayout.setVisibility(View.VISIBLE);
         mapView.setVisibility(View.VISIBLE);
 
         LatLng latLng = new LatLng(Double.valueOf(latitude), Double.valueOf(longitude));
