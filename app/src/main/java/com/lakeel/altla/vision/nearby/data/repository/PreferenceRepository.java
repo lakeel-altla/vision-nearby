@@ -8,7 +8,6 @@ import com.lakeel.altla.vision.nearby.domain.entity.PreferenceEntity;
 import javax.inject.Inject;
 
 import rx.Single;
-import rx.SingleSubscriber;
 
 public class PreferenceRepository {
 
@@ -26,59 +25,41 @@ public class PreferenceRepository {
     }
 
     public Single<PreferenceEntity> findPreferences(String userId) {
-        return Single.create(subscriber -> {
-            String beaconId = preference.getString(KEY_BEACON_ID + userId, StringUtils.EMPTY);
-            boolean isAdvertiseInBackground = preference.getBoolean(KEY_ADVERTISE_IN_BACKGROUND, true);
-            boolean isSubscribeInBackground = preference.getBoolean(KEY_SUBSCRIBE_IN_BACKGROUND, true);
+        String beaconId = preference.getString(KEY_BEACON_ID + userId, StringUtils.EMPTY);
+        boolean isAdvertiseInBackground = preference.getBoolean(KEY_ADVERTISE_IN_BACKGROUND, true);
+        boolean isSubscribeInBackground = preference.getBoolean(KEY_SUBSCRIBE_IN_BACKGROUND, true);
 
-            PreferenceEntity entity = new PreferenceEntity();
-            entity.isAdvertiseInBackgroundEnabled = isAdvertiseInBackground;
-            entity.isSubscribeInBackgroundEnabled = isSubscribeInBackground;
-            entity.beaconId = beaconId;
+        PreferenceEntity entity = new PreferenceEntity();
+        entity.isAdvertiseInBackgroundEnabled = isAdvertiseInBackground;
+        entity.isSubscribeInBackgroundEnabled = isSubscribeInBackground;
+        entity.beaconId = beaconId;
 
-            subscriber.onSuccess(entity);
-        });
+        return Single.just(entity);
     }
 
     public Single<Boolean> findAdvertiseSettings() {
-        return Single.create(subscriber -> {
-            boolean isSubscribeInBackgroundEnabled = preference.getBoolean(KEY_ADVERTISE_IN_BACKGROUND, true);
-            subscriber.onSuccess(isSubscribeInBackgroundEnabled);
-        });
+        boolean isSubscribeInBackgroundEnabled = preference.getBoolean(KEY_ADVERTISE_IN_BACKGROUND, true);
+        return Single.just(isSubscribeInBackgroundEnabled);
     }
 
     public Single<Boolean> findSubscribeSettings() {
-        return Single.create(subscriber -> {
-            boolean isSubscribeInBackgroundEnabled = preference.getBoolean(KEY_SUBSCRIBE_IN_BACKGROUND, true);
-            subscriber.onSuccess(isSubscribeInBackgroundEnabled);
-        });
+        boolean isSubscribeInBackgroundEnabled = preference.getBoolean(KEY_SUBSCRIBE_IN_BACKGROUND, true);
+        return Single.just(isSubscribeInBackgroundEnabled);
     }
 
     public Single<String> findBeaconId(String userId) {
-        return Single.create(new Single.OnSubscribe<String>() {
-            @Override
-            public void call(SingleSubscriber<? super String> subscriber) {
-                String beaconId = preference.getString(KEY_BEACON_ID + userId, StringUtils.EMPTY);
-
-                if (StringUtils.isEmpty(beaconId)) {
-                    subscriber.onSuccess(null);
-                    return;
-                }
-
-                subscriber.onSuccess(beaconId);
-            }
-        });
+        String beaconId = preference.getString(KEY_BEACON_ID + userId, StringUtils.EMPTY);
+        if (StringUtils.isEmpty(beaconId)) {
+            return Single.just(null);
+        } else {
+            return Single.just(beaconId);
+        }
     }
 
     public Single<String> saveBeaconId(String userId, String beaconId) {
-        return Single.create(new Single.OnSubscribe<String>() {
-            @Override
-            public void call(SingleSubscriber<? super String> subscriber) {
-                SharedPreferences.Editor editor = preference.edit();
-                editor.putString(KEY_BEACON_ID + userId, beaconId);
-                editor.apply();
-                subscriber.onSuccess(beaconId);
-            }
-        });
+        SharedPreferences.Editor editor = preference.edit();
+        editor.putString(KEY_BEACON_ID + userId, beaconId);
+        editor.apply();
+        return Single.just(beaconId);
     }
 }
