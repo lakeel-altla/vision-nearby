@@ -226,13 +226,13 @@ public class MainActivity extends AppCompatActivity
     }
 
     @Override
-    public void startSubscribeBeaconsInBackground() {
-        App.startSubscribeInBackground(this);
+    public void startDetectBeaconsInBackground() {
+        App.startDetectBeaconsInBackground(this);
     }
 
     @Override
-    public void stopSubscribeBeaconsInBackground() {
-        App.stopSubscribeInBackground(this);
+    public void stopDetectBeaconsInBackground() {
+        App.stopDetectBeaconsInBackground(this);
     }
 
     @Override

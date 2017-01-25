@@ -107,11 +107,11 @@ public final class BleSettingsFragment extends PreferenceFragmentCompat implemen
 
     @Override
     public void startSubscribe() {
-        App.startSubscribeInBackground(this);
+        App.startDetectBeaconsInBackground(this);
     }
 
     @Override
     public void stopSubscribe() {
-        App.stopSubscribeInBackground(this);
+        App.stopDetectBeaconsInBackground(this);
     }
 }

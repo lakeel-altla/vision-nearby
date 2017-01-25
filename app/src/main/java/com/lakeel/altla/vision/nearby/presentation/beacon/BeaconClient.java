@@ -45,13 +45,13 @@ public final class BeaconClient {
         new BackgroundPowerSaver(context);
     }
 
-    public void startSubscribeInBackground() {
+    public void startDetectBeaconsInBackground() {
         if (!beaconDetector.isAlreadySubscribed()) {
             beaconDetector.start();
         }
     }
 
-    public void stopSubscribeInBackground() {
+    public void stopDetectBeaconsInBackground() {
         beaconDetector.stop();
     }
 }

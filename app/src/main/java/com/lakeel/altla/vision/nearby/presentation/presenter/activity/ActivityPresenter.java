@@ -131,7 +131,7 @@ public final class ActivityPresenter extends BasePresenter<ActivityView> {
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribe(entity -> {
                     if (entity.isSubscribeInBackgroundEnabled) {
-                        getView().startSubscribeBeaconsInBackground();
+                        getView().startDetectBeaconsInBackground();
                     }
 
                     String beaconId = entity.beaconId;
@@ -158,7 +158,7 @@ public final class ActivityPresenter extends BasePresenter<ActivityView> {
                                     ServiceManager serviceManager = new ServiceManager(context, AdvertiseService.class);
                                     serviceManager.stopService();
 
-                                    stopSubscribeBeaconsInBackground();
+                                    stopDetectBeaconsInBackground();
                                     getView().showSignInFragment();
                                 } else {
                                     LOGGER.error("Failed to sign out.", result.getException());
@@ -180,13 +180,13 @@ public final class ActivityPresenter extends BasePresenter<ActivityView> {
         State state = checker.checkState();
 
         if (state == State.ENABLE) {
-            getView().startSubscribeBeaconsInBackground();
+            getView().startDetectBeaconsInBackground();
         } else if (state == State.OFF) {
             isAdvertiseAvailableDevice = false;
             getView().showBleEnabledActivity();
         } else if (state == State.SUBSCRIBE_ONLY) {
             isAdvertiseAvailableDevice = false;
-            getView().startSubscribeBeaconsInBackground();
+            getView().startDetectBeaconsInBackground();
             getView().showAdvertiseDisableConfirmDialog();
         }
 
@@ -221,7 +221,7 @@ public final class ActivityPresenter extends BasePresenter<ActivityView> {
         subscriptions.add(subscription);
     }
 
-    private void stopSubscribeBeaconsInBackground() {
-        getView().stopSubscribeBeaconsInBackground();
+    private void stopDetectBeaconsInBackground() {
+        getView().stopDetectBeaconsInBackground();
     }
 }

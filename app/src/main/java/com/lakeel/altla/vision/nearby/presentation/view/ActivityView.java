@@ -22,9 +22,9 @@ public interface ActivityView {
 
     void showBleEnabledActivity();
 
-    void startSubscribeBeaconsInBackground();
+    void startDetectBeaconsInBackground();
 
-    void stopSubscribeBeaconsInBackground();
+    void stopDetectBeaconsInBackground();
 
     void startAdvertise(String beaconId);
 }

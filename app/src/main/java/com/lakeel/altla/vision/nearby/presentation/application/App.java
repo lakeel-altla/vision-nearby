@@ -53,24 +53,24 @@ public class App extends Application {
         return ((App) activity.getApplication()).applicationComponent;
     }
 
-    public static void startSubscribeInBackground(Activity activity) {
+    public static void startDetectBeaconsInBackground(Activity activity) {
         // When user enable ble, start to monitor beacons.
         App app = ((App) activity.getApplication());
-        app.startSubscribeInBackground();
+        app.startDetectBeaconsInBackground();
     }
 
-    public static void stopSubscribeInBackground(Activity activity) {
+    public static void stopDetectBeaconsInBackground(Activity activity) {
         App app = ((App) activity.getApplication());
-        app.stopSubscribeInBackground();
+        app.stopDetectBeaconsInBackground();
     }
 
-    public static void startSubscribeInBackground(Fragment fragment) {
+    public static void startDetectBeaconsInBackground(Fragment fragment) {
         // When user enable ble, start to monitor beacons.
-        App.startSubscribeInBackground(fragment.getActivity());
+        App.startDetectBeaconsInBackground(fragment.getActivity());
     }
 
-    public static void stopSubscribeInBackground(Fragment fragment) {
-        App.stopSubscribeInBackground(fragment.getActivity());
+    public static void stopDetectBeaconsInBackground(Fragment fragment) {
+        App.stopDetectBeaconsInBackground(fragment.getActivity());
     }
 
     @Override
@@ -106,12 +106,12 @@ public class App extends Application {
         }
     }
 
-    public void startSubscribeInBackground() {
-        beaconClient.startSubscribeInBackground();
+    public void startDetectBeaconsInBackground() {
+        beaconClient.startDetectBeaconsInBackground();
     }
 
-    public void stopSubscribeInBackground() {
-        beaconClient.stopSubscribeInBackground();
+    public void stopDetectBeaconsInBackground() {
+        beaconClient.stopDetectBeaconsInBackground();
     }
 
     private void initImageLoader() {
@@ -134,7 +134,7 @@ public class App extends Application {
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribe(isEnabled -> {
                     if (isEnabled) {
-                        beaconClient.startSubscribeInBackground();
+                        beaconClient.startDetectBeaconsInBackground();
                     }
                 }, new ErrorAction<>());
         subscriptions.add(subscription);
