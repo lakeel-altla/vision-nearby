@@ -49,30 +49,6 @@ public class App extends Application {
 
     private BeaconClient beaconClient;
 
-    public static ApplicationComponent getApplicationComponent(@NonNull Activity activity) {
-        return ((App) activity.getApplication()).applicationComponent;
-    }
-
-    public static void startDetectBeaconsInBackground(Activity activity) {
-        // When user enable ble, start to monitor beacons.
-        App app = ((App) activity.getApplication());
-        app.startDetectBeaconsInBackground();
-    }
-
-    public static void stopDetectBeaconsInBackground(Activity activity) {
-        App app = ((App) activity.getApplication());
-        app.stopDetectBeaconsInBackground();
-    }
-
-    public static void startDetectBeaconsInBackground(Fragment fragment) {
-        // When user enable ble, start to monitor beacons.
-        App.startDetectBeaconsInBackground(fragment.getActivity());
-    }
-
-    public static void stopDetectBeaconsInBackground(Fragment fragment) {
-        App.stopDetectBeaconsInBackground(fragment.getActivity());
-    }
-
     @Override
     public void onCreate() {
         super.onCreate();
@@ -104,6 +80,30 @@ public class App extends Application {
         if (MyUser.isAuthenticated()) {
             subscribeInBackgroundIfNeeded();
         }
+    }
+
+    public static ApplicationComponent getApplicationComponent(@NonNull Activity activity) {
+        return ((App) activity.getApplication()).applicationComponent;
+    }
+
+    public static void startDetectBeaconsInBackground(Activity activity) {
+        // When user enable ble, start to monitor beacons.
+        App app = ((App) activity.getApplication());
+        app.startDetectBeaconsInBackground();
+    }
+
+    public static void stopDetectBeaconsInBackground(Activity activity) {
+        App app = ((App) activity.getApplication());
+        app.stopDetectBeaconsInBackground();
+    }
+
+    public static void startDetectBeaconsInBackground(Fragment fragment) {
+        // When user enable ble, start to monitor beacons.
+        App.startDetectBeaconsInBackground(fragment.getActivity());
+    }
+
+    public static void stopDetectBeaconsInBackground(Fragment fragment) {
+        App.stopDetectBeaconsInBackground(fragment.getActivity());
     }
 
     public void startDetectBeaconsInBackground() {
