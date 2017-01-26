@@ -114,7 +114,7 @@ public final class PassingUserFragment extends Fragment implements PassingUserVi
         supportMapFragment = (SupportMapFragment) fragmentManager.findFragmentById(R.id.locationMap);
         if (supportMapFragment == null) {
             supportMapFragment = SupportMapFragment.newInstance();
-            fragmentManager.beginTransaction().replace(R.id.locationLayout, supportMapFragment).commit();
+            fragmentManager.beginTransaction().replace(R.id.layoutLocation, supportMapFragment).commit();
         }
         supportMapFragment.getMapAsync(this);
 
@@ -226,7 +226,10 @@ public final class PassingUserFragment extends Fragment implements PassingUserVi
 
     @Override
     public void showLocationMap(String latitude, String longitude) {
-        passingLayout.locationLayout.setVisibility(View.VISIBLE);
+        // Show unknown text.
+        passingLayout.locationMapLayout.setVisibility(View.VISIBLE);
+        passingLayout.unknownTextView.setVisibility(View.GONE);
+
         mapView.setVisibility(View.VISIBLE);
 
         LatLng latLng = new LatLng(Double.valueOf(latitude), Double.valueOf(longitude));
@@ -243,7 +246,8 @@ public final class PassingUserFragment extends Fragment implements PassingUserVi
 
     @Override
     public void hideLocation() {
-        passingLayout.locationLayout.setVisibility(View.GONE);
+        passingLayout.locationMapLayout.setVisibility(View.GONE);
+        passingLayout.unknownTextView.setVisibility(View.VISIBLE);
     }
 
     @OnClick(R.id.addButton)

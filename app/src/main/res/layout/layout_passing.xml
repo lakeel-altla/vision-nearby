@@ -117,7 +117,7 @@
         android:paddingStart="16dp">
 
         <LinearLayout
-            android:id="@+id/locationLayout"
+            android:id="@+id/layoutLocation"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:orientation="vertical">
@@ -129,12 +129,26 @@
                 android:text="@string/textView_location"
                 android:textAppearance="?android:attr/textAppearanceMedium" />
 
-            <fragment
-                android:id="@+id/locationMap"
-                android:name="com.google.android.gms.maps.SupportMapFragment"
+            <TextView
+                android:id="@+id/textViewUnknown"
                 android:layout_width="match_parent"
-                android:layout_height="200dp"
-                tools:context="com.example.google_maps.MapsActivity" />
+                android:layout_height="wrap_content"
+                android:text="@string/textView_unknown"
+                android:visibility="gone" />
+
+            <LinearLayout
+                android:id="@+id/layoutLocationMap"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content">
+
+                <fragment
+                    android:id="@+id/locationMap"
+                    android:name="com.google.android.gms.maps.SupportMapFragment"
+                    android:layout_width="match_parent"
+                    android:layout_height="200dp"
+                    tools:context="com.example.google_maps.MapsActivity" />
+
+            </LinearLayout>
 
         </LinearLayout>
 

@@ -21,6 +21,9 @@ public final class PassingLayout {
     @BindView(R.id.textViewTimes)
     public TextView timesTextView;
 
-    @BindView(R.id.locationLayout)
-    public LinearLayout locationLayout;
+    @BindView(R.id.layoutLocationMap)
+    public LinearLayout locationMapLayout;
+
+    @BindView(R.id.textViewUnknown)
+    public TextView unknownTextView;
 }
