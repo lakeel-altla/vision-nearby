@@ -2,6 +2,8 @@ package com.lakeel.altla.vision.nearby.presentation.beacon;
 
 import android.content.Context;
 
+import com.lakeel.altla.vision.nearby.presentation.beacon.region.RegionState;
+
 import org.altbeacon.beacon.Region;
 import org.altbeacon.beacon.startup.BootstrapNotifier;
 import org.altbeacon.beacon.startup.RegionBootstrap;
@@ -16,8 +18,6 @@ final class BeaconDetector implements BootstrapNotifier {
 
     private final Region region;
 
-    private final BeaconSubscriber subscriber;
-
     private RegionBootstrap regionBootstrap;
 
     private boolean isAlreadySubscribed;
@@ -26,7 +26,6 @@ final class BeaconDetector implements BootstrapNotifier {
         this.context = context;
         // All beacons are subscribed.
         this.region = new Region("background-region", null, null, null);
-        subscriber = new BeaconSubscriber(context);
     }
 
     boolean isAlreadySubscribed() {
@@ -49,17 +48,21 @@ final class BeaconDetector implements BootstrapNotifier {
         LOGGER.debug("Enter region.");
 
         // If enter the region of the beacons, start to subscribe.
+        BeaconSubscriber subscriber = new BeaconSubscriber(context, RegionState.ENTER);
         subscriber.subscribe(region);
     }
 
     @Override
     public void didExitRegion(Region region) {
         LOGGER.debug("Exit region.");
+
+        BeaconSubscriber subscriber = new BeaconSubscriber(context, RegionState.EXIT);
+        subscriber.subscribe(region);
     }
 
     @Override
     public void didDetermineStateForRegion(int i, Region region) {
-        LOGGER.debug("Region state is changed.");
+        LOGGER.debug("RegionState state is changed.");
     }
 
     @Override

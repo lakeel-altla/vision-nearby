@@ -26,7 +26,7 @@ public final class FirebaseLocationsDataRepository {
     private final LocationDataEntityMapper entityMapper = new LocationDataEntityMapper();
 
     @Inject
-    public FirebaseLocationsDataRepository(@Named("locationDataUrl") String url) {
+    FirebaseLocationsDataRepository(@Named("locationDataUrl") String url) {
         reference = FirebaseDatabase.getInstance().getReferenceFromUrl(url);
     }
 

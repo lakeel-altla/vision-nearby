@@ -12,6 +12,8 @@ public final class HistoryEntity {
 
     public String userId;
 
+    public String regionState;
+
     public Integer userActivity;
 
     public LocationEntity location;

@@ -8,7 +8,7 @@ import com.lakeel.altla.vision.nearby.presentation.ble.BleChecker;
 import com.lakeel.altla.vision.nearby.presentation.ble.BleChecker.State;
 import com.lakeel.altla.vision.nearby.presentation.presenter.BasePresenter;
 import com.lakeel.altla.vision.nearby.presentation.service.AdvertiseService;
-import com.lakeel.altla.vision.nearby.presentation.service.ServiceManager;
+import com.lakeel.altla.vision.nearby.presentation.service.RunningServiceManager;
 import com.lakeel.altla.vision.nearby.presentation.view.BleSettingsView;
 import com.lakeel.altla.vision.nearby.rx.ErrorAction;
 
@@ -52,8 +52,8 @@ public final class BleSettingsPresenter extends BasePresenter<BleSettingsView> {
     public void onStopAdvertise() {
         analyticsReporter.offAdvertise();
 
-        ServiceManager serviceManager = new ServiceManager(context, AdvertiseService.class);
-        serviceManager.stopService();
+        RunningServiceManager runningServiceManager = new RunningServiceManager(context, AdvertiseService.class);
+        runningServiceManager.stopService();
     }
 
     public void onStartSubscribe() {

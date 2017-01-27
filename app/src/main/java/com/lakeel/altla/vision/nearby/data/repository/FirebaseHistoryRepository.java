@@ -83,12 +83,12 @@ public class FirebaseHistoryRepository {
                         }));
     }
 
-    public Single<Long> findTimes(String myUserId, String otherUserId) {
+    public Single<Long> findTimes(String myUserId, String passingUserId) {
         return Single.create(subscriber ->
                 reference
                         .child(myUserId)
                         .orderByChild(ID_KEY)
-                        .equalTo(otherUserId)
+                        .equalTo(passingUserId)
                         .addListenerForSingleValueEvent(new ValueEventListener() {
                             @Override
                             public void onDataChange(DataSnapshot dataSnapshot) {
@@ -102,9 +102,9 @@ public class FirebaseHistoryRepository {
                         }));
     }
 
-    public Single<String> saveHistory(String myUserId, String otherUserId) {
+    public Single<String> saveHistory(String myUserId, String passingUserId, String regionState) {
         return Single.create(subscriber -> {
-            HistoryEntity entity = entityMapper.map(otherUserId);
+            HistoryEntity entity = entityMapper.map(passingUserId, regionState);
 
             DatabaseReference pushedReference = reference.child(myUserId).push();
             String uniqueId = pushedReference.getKey();

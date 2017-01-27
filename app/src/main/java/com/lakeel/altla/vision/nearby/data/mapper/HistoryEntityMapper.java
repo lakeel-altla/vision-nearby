@@ -1,11 +1,10 @@
 package com.lakeel.altla.vision.nearby.data.mapper;
 
+import android.location.Location;
+
 import com.google.android.gms.awareness.state.Weather;
 import com.google.android.gms.location.DetectedActivity;
-
 import com.lakeel.altla.vision.nearby.domain.entity.HistoryEntity;
-
-import android.location.Location;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -15,9 +14,10 @@ import static com.lakeel.altla.vision.nearby.domain.entity.HistoryEntity.Weather
 
 public final class HistoryEntityMapper {
 
-    public HistoryEntity map(String userId) {
+    public HistoryEntity map(String userId, String regionState) {
         HistoryEntity entity = new HistoryEntity();
         entity.userId = userId;
+        entity.regionState = regionState;
         return entity;
     }
 

@@ -25,7 +25,7 @@ import com.lakeel.altla.vision.nearby.presentation.firebase.MyUser;
 import com.lakeel.altla.vision.nearby.presentation.presenter.BasePresenter;
 import com.lakeel.altla.vision.nearby.presentation.presenter.mapper.ActivityModelMapper;
 import com.lakeel.altla.vision.nearby.presentation.service.AdvertiseService;
-import com.lakeel.altla.vision.nearby.presentation.service.ServiceManager;
+import com.lakeel.altla.vision.nearby.presentation.service.RunningServiceManager;
 import com.lakeel.altla.vision.nearby.presentation.view.ActivityView;
 import com.lakeel.altla.vision.nearby.rx.EmptyAction;
 import com.lakeel.altla.vision.nearby.rx.ErrorAction;
@@ -155,8 +155,8 @@ public final class ActivityPresenter extends BasePresenter<ActivityView> {
                                 if (result.isSuccessful()) {
                                     analyticsReporter.logout(userProfile.userId, userProfile.userName);
 
-                                    ServiceManager serviceManager = new ServiceManager(context, AdvertiseService.class);
-                                    serviceManager.stopService();
+                                    RunningServiceManager runningServiceManager = new RunningServiceManager(context, AdvertiseService.class);
+                                    runningServiceManager.stopService();
 
                                     stopDetectBeaconsInBackground();
                                     getView().showSignInFragment();

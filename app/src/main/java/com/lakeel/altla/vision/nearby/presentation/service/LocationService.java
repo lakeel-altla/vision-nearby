@@ -19,6 +19,8 @@ import com.lakeel.altla.vision.nearby.presentation.di.component.DaggerServiceCom
 import com.lakeel.altla.vision.nearby.presentation.di.component.ServiceComponent;
 import com.lakeel.altla.vision.nearby.presentation.di.module.ServiceModule;
 import com.lakeel.altla.vision.nearby.presentation.intent.IntentKey;
+import com.lakeel.altla.vision.nearby.rx.EmptyAction;
+import com.lakeel.altla.vision.nearby.rx.ErrorAction;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -26,7 +28,6 @@ import org.slf4j.LoggerFactory;
 import javax.inject.Inject;
 
 import rx.Single;
-import rx.schedulers.Schedulers;
 
 public final class LocationService extends IntentService {
 
@@ -46,9 +47,7 @@ public final class LocationService extends IntentService {
             getUserCurrentLocation(context)
                     .flatMap(LocationService.this::saveDeviceLocation)
                     .flatMap(uniqueId -> saveLocationData(uniqueId, beaconId))
-                    .subscribeOn(Schedulers.io())
-                    .subscribe(aVoid -> LOGGER.debug("Succeeded to save location data."),
-                            e -> LOGGER.error("Failed to save location data.", e));
+                    .subscribe(new EmptyAction<>(), new ErrorAction<>());
         }
 
         @Override

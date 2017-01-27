@@ -7,6 +7,7 @@ import com.lakeel.altla.vision.nearby.data.repository.FirebaseHistoryRepository;
 import javax.inject.Inject;
 
 import rx.Single;
+import rx.schedulers.Schedulers;
 
 public final class SaveWeatherUseCase {
 
@@ -18,6 +19,6 @@ public final class SaveWeatherUseCase {
     }
 
     public Single<HistoryEntity> execute(String uniqueId, String userId, Weather weather) {
-        return repository.saveWeather(uniqueId, userId, weather);
+        return repository.saveWeather(uniqueId, userId, weather).subscribeOn(Schedulers.io());
     }
 }

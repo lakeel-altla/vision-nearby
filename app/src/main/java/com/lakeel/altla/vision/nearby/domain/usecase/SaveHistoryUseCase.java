@@ -17,8 +17,8 @@ public final class SaveHistoryUseCase {
     SaveHistoryUseCase() {
     }
 
-    public Single<String> execute(String passingUserId) {
+    public Single<String> execute(String passingUserId, String regionState) {
         String myUserId = MyUser.getUserId();
-        return repository.saveHistory(myUserId, passingUserId).subscribeOn(Schedulers.io());
+        return repository.saveHistory(myUserId, passingUserId, regionState).subscribeOn(Schedulers.io());
     }
 }

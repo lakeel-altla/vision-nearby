@@ -41,19 +41,21 @@ import javax.inject.Inject;
 import rx.Observable;
 import rx.Single;
 import rx.SingleSubscriber;
-import rx.schedulers.Schedulers;
 
 public class HistoryService extends IntentService {
 
     private class ConnectionCallback implements GoogleApiClient.ConnectionCallbacks {
 
-        private Context context;
+        private final Context context;
 
-        private String beaconId;
+        private final String beaconId;
 
-        ConnectionCallback(Context context, String beaconId) {
+        private final String regionState;
+
+        ConnectionCallback(Context context, String beaconId, String regionState) {
             this.context = context;
             this.beaconId = beaconId;
+            this.regionState = regionState;
         }
 
         @Override
@@ -63,21 +65,18 @@ public class HistoryService extends IntentService {
                     .toObservable()
                     // Analytics
                     .doOnNext(entity -> analyticsReporter.addHistory(entity.userId, entity.name))
-                    .flatMap(entity -> saveHistory(entity.userId))
+                    .flatMap(entity -> saveHistory(entity.userId, regionState))
                     .subscribe(uniqueId -> {
                         getUserActivity()
                                 .flatMap(userActivity -> saveUserActivity(uniqueId, userActivity))
-                                .subscribeOn(Schedulers.io())
                                 .subscribe(new EmptyAction<>(), new ErrorAction<>());
 
                         getUserLocation(context)
                                 .flatMap(location -> saveUserLocation(uniqueId, location))
-                                .subscribeOn(Schedulers.io())
                                 .subscribe(new EmptyAction<>(), new ErrorAction<>());
 
                         getWeather(context)
                                 .flatMap(weather -> saveWeather(uniqueId, weather))
-                                .subscribeOn(Schedulers.io())
                                 .subscribe(new EmptyAction<>(), new ErrorAction<>());
                     }, new ErrorAction<>());
         }
@@ -130,21 +129,22 @@ public class HistoryService extends IntentService {
 
         Context context = getApplicationContext();
         String beaconId = intent.getStringExtra(IntentKey.BEACON_ID.name());
+        String regionState = intent.getStringExtra(IntentKey.REGION.name());
 
         googleApiClient = new GoogleApiClient.Builder(context)
                 .addApi(Awareness.API)
-                .addConnectionCallbacks(new ConnectionCallback(context, beaconId))
+                .addConnectionCallbacks(new ConnectionCallback(context, beaconId, regionState))
                 .build();
 
         googleApiClient.connect();
     }
 
     private Single<UserEntity> findUser(String userId) {
-        return findUserUseCase.execute(userId).subscribeOn(Schedulers.io());
+        return findUserUseCase.execute(userId);
     }
 
-    private Observable<String> saveHistory(String passingUserId) {
-        return saveHistoryUseCase.execute(passingUserId).subscribeOn(Schedulers.io()).toObservable();
+    private Observable<String> saveHistory(String passingUserId, String regionState) {
+        return saveHistoryUseCase.execute(passingUserId, regionState).toObservable();
     }
 
     private Single<DetectedActivity> getUserActivity() {
@@ -204,14 +204,14 @@ public class HistoryService extends IntentService {
     }
 
     private Single<HistoryEntity> saveUserActivity(String uniqueId, DetectedActivity userActivity) {
-        return saveUserActivityUseCase.execute(uniqueId, MyUser.getUserId(), userActivity).subscribeOn(Schedulers.io());
+        return saveUserActivityUseCase.execute(uniqueId, MyUser.getUserId(), userActivity);
     }
 
     private Single<HistoryEntity> saveUserLocation(String uniqueId, Location location) {
-        return saveUserLocationUseCase.execute(uniqueId, MyUser.getUserId(), location).subscribeOn(Schedulers.io());
+        return saveUserLocationUseCase.execute(uniqueId, MyUser.getUserId(), location);
     }
 
     private Single<HistoryEntity> saveWeather(String uniqueId, Weather weather) {
-        return saveWeatherUseCase.execute(uniqueId, MyUser.getUserId(), weather).subscribeOn(Schedulers.io());
+        return saveWeatherUseCase.execute(uniqueId, MyUser.getUserId(), weather);
     }
 }

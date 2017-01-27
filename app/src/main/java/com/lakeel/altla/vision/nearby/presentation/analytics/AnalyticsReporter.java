@@ -16,6 +16,8 @@ public final class AnalyticsReporter {
 
     public void signIn() {
         UserParam userParam = new UserParam();
+        userParam.putString(FirebaseAnalytics.Param.SIGN_UP_METHOD, "google");
+        userParam.putString(FirebaseAnalytics.Param.VALUE, "value");
         logEvent(FirebaseAnalytics.Event.LOGIN, userParam);
     }
 

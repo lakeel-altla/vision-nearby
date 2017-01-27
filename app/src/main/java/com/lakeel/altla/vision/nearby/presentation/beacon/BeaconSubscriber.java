@@ -6,6 +6,7 @@ import android.os.RemoteException;
 
 import com.lakeel.altla.vision.nearby.beacon.BeaconRangeNotifier;
 import com.lakeel.altla.vision.nearby.domain.usecase.FindBeaconUseCase;
+import com.lakeel.altla.vision.nearby.presentation.beacon.region.RegionState;
 import com.lakeel.altla.vision.nearby.presentation.di.component.DaggerDefaultComponent;
 import com.lakeel.altla.vision.nearby.presentation.di.component.DefaultComponent;
 import com.lakeel.altla.vision.nearby.presentation.di.module.ContextModule;
@@ -34,15 +35,18 @@ public final class BeaconSubscriber {
 
     private final Context context;
 
+    private final RegionState regionState;
+
     private final BeaconManager beaconManager;
 
-    BeaconSubscriber(Context context) {
+    BeaconSubscriber(Context context, RegionState regionState) {
         DefaultComponent component = DaggerDefaultComponent.builder()
                 .contextModule(new ContextModule(context))
                 .build();
         component.inject(this);
 
         this.context = context;
+        this.regionState = regionState;
         beaconManager = BeaconManager.getInstanceForApplication(context);
     }
 
@@ -60,12 +64,13 @@ public final class BeaconSubscriber {
                         .subscribeOn(Schedulers.io())
                         .subscribe(entity -> {
                             if (entity == null) {
-                                LOGGER.info("Not registered beacon:beaconId=" + beaconId);
+                                LOGGER.info("Not registered the beacon:beaconId=" + beaconId);
                                 return;
                             }
 
                             Intent historyIntent = new Intent(context, HistoryService.class);
                             historyIntent.putExtra(IntentKey.BEACON_ID.name(), beaconId);
+                            historyIntent.putExtra(IntentKey.REGION.name(), context.getString(regionState.getValue()));
                             context.startService(historyIntent);
 
                             Intent notificationIntent = new Intent(context, NotificationService.class);

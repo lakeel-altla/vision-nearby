@@ -13,6 +13,7 @@ import com.lakeel.altla.vision.nearby.presentation.di.module.ServiceModule;
 import com.lakeel.altla.vision.nearby.presentation.intent.IntentKey;
 import com.lakeel.altla.vision.nearby.presentation.intent.UriIntent;
 import com.lakeel.altla.vision.nearby.presentation.notification.LocalNotification;
+import com.lakeel.altla.vision.nearby.rx.ErrorAction;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -52,7 +53,7 @@ public class LINEService extends IntentService {
         // Show LINE URL notification.
         findUserUseCase.execute(userId)
                 .subscribeOn(Schedulers.io())
-                .subscribe(userEntity -> showLineNotification(userId, userEntity.name), e -> LOGGER.error("Failed to notify LINE notification.", e));
+                .subscribe(userEntity -> showLineNotification(userId, userEntity.name), new ErrorAction<>());
     }
 
     private void showLineNotification(String userId, String userName) {
