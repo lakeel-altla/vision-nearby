@@ -7,7 +7,7 @@ import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ServerValue;
 import com.google.firebase.database.ValueEventListener;
-import com.lakeel.altla.vision.nearby.domain.entity.PresenceEntity;
+import com.lakeel.altla.vision.nearby.data.entity.PresenceEntity;
 import com.lakeel.altla.vision.nearby.presentation.firebase.MyUser;
 
 import java.util.HashMap;

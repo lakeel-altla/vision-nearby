@@ -12,7 +12,7 @@ import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
 import com.lakeel.altla.vision.nearby.data.execption.DataStoreException;
 import com.lakeel.altla.vision.nearby.data.mapper.HistoryEntityMapper;
-import com.lakeel.altla.vision.nearby.domain.entity.HistoryEntity;
+import com.lakeel.altla.vision.nearby.data.entity.HistoryEntity;
 
 import java.util.Map;
 

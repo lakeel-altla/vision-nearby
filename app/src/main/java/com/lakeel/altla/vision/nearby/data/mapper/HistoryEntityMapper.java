@@ -4,13 +4,13 @@ import android.location.Location;
 
 import com.google.android.gms.awareness.state.Weather;
 import com.google.android.gms.location.DetectedActivity;
-import com.lakeel.altla.vision.nearby.domain.entity.HistoryEntity;
+import com.lakeel.altla.vision.nearby.data.entity.HistoryEntity;
 
 import java.util.ArrayList;
 import java.util.List;
 
-import static com.lakeel.altla.vision.nearby.domain.entity.HistoryEntity.LocationEntity;
-import static com.lakeel.altla.vision.nearby.domain.entity.HistoryEntity.WeatherEntity;
+import static com.lakeel.altla.vision.nearby.data.entity.HistoryEntity.LocationEntity;
+import static com.lakeel.altla.vision.nearby.data.entity.HistoryEntity.WeatherEntity;
 
 public final class HistoryEntityMapper {
 

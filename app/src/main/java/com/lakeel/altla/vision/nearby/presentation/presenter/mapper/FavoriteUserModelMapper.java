@@ -1,8 +1,8 @@
 package com.lakeel.altla.vision.nearby.presentation.presenter.mapper;
 
-import com.lakeel.altla.vision.nearby.domain.entity.LineLinkEntity;
-import com.lakeel.altla.vision.nearby.domain.entity.PresenceEntity;
-import com.lakeel.altla.vision.nearby.domain.entity.UserEntity;
+import com.lakeel.altla.vision.nearby.data.entity.LineLinkEntity;
+import com.lakeel.altla.vision.nearby.data.entity.PresenceEntity;
+import com.lakeel.altla.vision.nearby.data.entity.UserEntity;
 import com.lakeel.altla.vision.nearby.presentation.presenter.model.FavoriteUserModel;
 
 public final class FavoriteUserModelMapper {

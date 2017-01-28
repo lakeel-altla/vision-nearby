@@ -2,7 +2,7 @@ package com.lakeel.altla.vision.nearby.domain.usecase;
 
 import com.lakeel.altla.vision.nearby.data.repository.FirebaseBeaconsRepository;
 import com.lakeel.altla.vision.nearby.data.repository.FirebaseUsersRepository;
-import com.lakeel.altla.vision.nearby.domain.entity.BeaconEntity;
+import com.lakeel.altla.vision.nearby.data.entity.BeaconEntity;
 import com.lakeel.altla.vision.nearby.presentation.firebase.MyUser;
 
 import javax.inject.Inject;

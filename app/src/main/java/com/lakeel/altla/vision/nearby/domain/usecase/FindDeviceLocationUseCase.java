@@ -3,8 +3,8 @@ package com.lakeel.altla.vision.nearby.domain.usecase;
 import com.firebase.geofire.GeoLocation;
 import com.lakeel.altla.vision.nearby.data.repository.FirebaseLocationsDataRepository;
 import com.lakeel.altla.vision.nearby.data.repository.FirebaseLocationsRepository;
-import com.lakeel.altla.vision.nearby.domain.entity.LocationDataEntity;
-import com.lakeel.altla.vision.nearby.domain.entity.LocationEntity;
+import com.lakeel.altla.vision.nearby.data.entity.LocationDataEntity;
+import com.lakeel.altla.vision.nearby.data.entity.LocationEntity;
 
 import javax.inject.Inject;
 

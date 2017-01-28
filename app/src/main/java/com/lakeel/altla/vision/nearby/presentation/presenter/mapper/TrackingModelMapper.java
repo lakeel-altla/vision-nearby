@@ -1,8 +1,8 @@
 package com.lakeel.altla.vision.nearby.presentation.presenter.mapper;
 
 import com.firebase.geofire.GeoLocation;
-import com.lakeel.altla.vision.nearby.domain.entity.LocationDataEntity;
-import com.lakeel.altla.vision.nearby.domain.entity.LocationEntity;
+import com.lakeel.altla.vision.nearby.data.entity.LocationDataEntity;
+import com.lakeel.altla.vision.nearby.data.entity.LocationEntity;
 import com.lakeel.altla.vision.nearby.presentation.presenter.model.TrackingModel;
 
 public final class TrackingModelMapper {

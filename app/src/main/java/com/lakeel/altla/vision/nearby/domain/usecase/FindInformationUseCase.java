@@ -1,6 +1,6 @@
 package com.lakeel.altla.vision.nearby.domain.usecase;
 
-import com.lakeel.altla.vision.nearby.domain.entity.InformationEntity;
+import com.lakeel.altla.vision.nearby.data.entity.InformationEntity;
 import com.lakeel.altla.vision.nearby.data.repository.FirebaseInformationRepository;
 import com.lakeel.altla.vision.nearby.presentation.firebase.MyUser;
 

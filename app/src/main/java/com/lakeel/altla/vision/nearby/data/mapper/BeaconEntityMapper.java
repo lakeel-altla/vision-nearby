@@ -1,6 +1,6 @@
 package com.lakeel.altla.vision.nearby.data.mapper;
 
-import com.lakeel.altla.vision.nearby.domain.entity.BeaconEntity;
+import com.lakeel.altla.vision.nearby.data.entity.BeaconEntity;
 
 public final class BeaconEntityMapper {
 

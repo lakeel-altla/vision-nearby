@@ -7,7 +7,7 @@ import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
 import com.lakeel.altla.vision.nearby.data.execption.DataStoreException;
-import com.lakeel.altla.vision.nearby.domain.entity.FavoriteEntity;
+import com.lakeel.altla.vision.nearby.data.entity.FavoriteEntity;
 
 import javax.inject.Inject;
 import javax.inject.Named;

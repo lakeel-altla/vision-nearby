@@ -1,6 +1,6 @@
 package com.lakeel.altla.vision.nearby.presentation.presenter.mapper;
 
-import com.lakeel.altla.vision.nearby.domain.entity.BeaconEntity;
+import com.lakeel.altla.vision.nearby.data.entity.BeaconEntity;
 import com.lakeel.altla.vision.nearby.presentation.presenter.model.DeviceModel;
 
 public final class DeviceModelMapper {

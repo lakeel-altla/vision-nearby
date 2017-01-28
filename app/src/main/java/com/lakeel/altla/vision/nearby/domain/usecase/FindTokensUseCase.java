@@ -1,6 +1,6 @@
 package com.lakeel.altla.vision.nearby.domain.usecase;
 
-import com.lakeel.altla.vision.nearby.domain.entity.TokenEntity;
+import com.lakeel.altla.vision.nearby.data.entity.TokenEntity;
 import com.lakeel.altla.vision.nearby.data.repository.FirebaseTokensRepository;
 
 import javax.inject.Inject;

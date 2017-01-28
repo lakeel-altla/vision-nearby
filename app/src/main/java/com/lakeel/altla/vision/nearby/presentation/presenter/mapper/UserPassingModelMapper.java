@@ -1,6 +1,6 @@
 package com.lakeel.altla.vision.nearby.presentation.presenter.mapper;
 
-import com.lakeel.altla.vision.nearby.domain.entity.HistoryEntity;
+import com.lakeel.altla.vision.nearby.data.entity.HistoryEntity;
 import com.lakeel.altla.vision.nearby.presentation.presenter.model.UserPassingModel;
 
 import java.util.List;

@@ -1,7 +1,7 @@
 package com.lakeel.altla.vision.nearby.presentation.presenter.mapper;
 
 import com.lakeel.altla.vision.nearby.presentation.presenter.model.NearbyUserModel;
-import com.lakeel.altla.vision.nearby.domain.entity.UserEntity;
+import com.lakeel.altla.vision.nearby.data.entity.UserEntity;
 
 public final class NearbyUsersModelMapper {
 

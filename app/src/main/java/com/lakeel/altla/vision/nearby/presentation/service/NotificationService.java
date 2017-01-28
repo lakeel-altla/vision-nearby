@@ -4,7 +4,7 @@ import android.app.IntentService;
 import android.content.Intent;
 
 import com.lakeel.altla.vision.nearby.R;
-import com.lakeel.altla.vision.nearby.domain.entity.NotificationEntity;
+import com.lakeel.altla.vision.nearby.data.entity.NotificationEntity;
 import com.lakeel.altla.vision.nearby.domain.usecase.FindBeaconUseCase;
 import com.lakeel.altla.vision.nearby.domain.usecase.FindTokensUseCase;
 import com.lakeel.altla.vision.nearby.domain.usecase.FindUserIdByBeaconIdUseCase;

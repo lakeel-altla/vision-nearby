@@ -3,7 +3,7 @@ package com.lakeel.altla.vision.nearby.data.repository;
 import android.content.SharedPreferences;
 
 import com.lakeel.altla.vision.nearby.core.StringUtils;
-import com.lakeel.altla.vision.nearby.domain.entity.PreferenceEntity;
+import com.lakeel.altla.vision.nearby.data.entity.PreferenceEntity;
 
 import javax.inject.Inject;
 

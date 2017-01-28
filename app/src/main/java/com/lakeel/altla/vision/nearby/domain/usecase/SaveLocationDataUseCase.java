@@ -1,6 +1,6 @@
 package com.lakeel.altla.vision.nearby.domain.usecase;
 
-import com.lakeel.altla.vision.nearby.domain.entity.LocationDataEntity;
+import com.lakeel.altla.vision.nearby.data.entity.LocationDataEntity;
 import com.lakeel.altla.vision.nearby.data.repository.FirebaseLocationsDataRepository;
 
 import javax.inject.Inject;

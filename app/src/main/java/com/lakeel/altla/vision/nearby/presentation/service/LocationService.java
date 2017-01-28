@@ -12,7 +12,7 @@ import android.support.v4.content.ContextCompat;
 
 import com.google.android.gms.awareness.Awareness;
 import com.google.android.gms.common.api.GoogleApiClient;
-import com.lakeel.altla.vision.nearby.domain.entity.LocationDataEntity;
+import com.lakeel.altla.vision.nearby.data.entity.LocationDataEntity;
 import com.lakeel.altla.vision.nearby.domain.usecase.SaveDeviceLocationUseCase;
 import com.lakeel.altla.vision.nearby.domain.usecase.SaveLocationDataUseCase;
 import com.lakeel.altla.vision.nearby.presentation.di.component.DaggerServiceComponent;

@@ -8,7 +8,7 @@ import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
 import com.lakeel.altla.vision.nearby.data.execption.DataStoreException;
 import com.lakeel.altla.vision.nearby.data.mapper.LineLinkEntityMapper;
-import com.lakeel.altla.vision.nearby.domain.entity.LineLinkEntity;
+import com.lakeel.altla.vision.nearby.data.entity.LineLinkEntity;
 
 import java.util.Iterator;
 

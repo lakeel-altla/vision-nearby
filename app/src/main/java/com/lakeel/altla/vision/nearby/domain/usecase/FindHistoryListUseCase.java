@@ -2,9 +2,9 @@ package com.lakeel.altla.vision.nearby.domain.usecase;
 
 import com.lakeel.altla.vision.nearby.data.repository.FirebaseHistoryRepository;
 import com.lakeel.altla.vision.nearby.data.repository.FirebaseUsersRepository;
-import com.lakeel.altla.vision.nearby.domain.entity.HistoryEntity;
-import com.lakeel.altla.vision.nearby.domain.entity.HistoryUserEntity;
-import com.lakeel.altla.vision.nearby.domain.entity.UserEntity;
+import com.lakeel.altla.vision.nearby.data.entity.HistoryEntity;
+import com.lakeel.altla.vision.nearby.data.entity.HistoryUserEntity;
+import com.lakeel.altla.vision.nearby.data.entity.UserEntity;
 import com.lakeel.altla.vision.nearby.presentation.firebase.MyUser;
 
 import javax.inject.Inject;

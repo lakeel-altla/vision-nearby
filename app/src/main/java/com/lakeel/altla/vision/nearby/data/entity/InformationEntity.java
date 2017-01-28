@@ -1,4 +1,4 @@
-package com.lakeel.altla.vision.nearby.domain.entity;
+package com.lakeel.altla.vision.nearby.data.entity;
 
 import com.google.firebase.database.ServerValue;
 
