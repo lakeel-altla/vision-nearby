@@ -5,9 +5,7 @@ import com.google.firebase.database.ServerValue;
 import java.util.HashMap;
 import java.util.Map;
 
-public final class LocationDataEntity {
-
-    public String uniqueId;
+public final class LocationMetaDataEntity {
 
     public String beaconId;
 

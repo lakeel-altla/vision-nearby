@@ -8,8 +8,6 @@ import java.util.Map;
 
 public final class HistoryEntity {
 
-    public String uniqueId;
-
     public String userId;
 
     public String regionState;

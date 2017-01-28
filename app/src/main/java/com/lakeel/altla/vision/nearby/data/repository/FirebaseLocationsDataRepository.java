@@ -6,7 +6,7 @@ import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
-import com.lakeel.altla.vision.nearby.data.entity.LocationDataEntity;
+import com.lakeel.altla.vision.nearby.data.entity.LocationMetaDataEntity;
 import com.lakeel.altla.vision.nearby.data.execption.DataStoreException;
 import com.lakeel.altla.vision.nearby.data.mapper.entity.LocationDataEntityMapper;
 import com.lakeel.altla.vision.nearby.data.mapper.model.LocationMetaDataMapper;
@@ -52,7 +52,7 @@ public final class FirebaseLocationsDataRepository {
                                 Iterator<DataSnapshot> iterator = dataSnapshot.getChildren().iterator();
                                 while (iterator.hasNext()) {
                                     DataSnapshot snapshot = iterator.next();
-                                    LocationDataEntity entity = snapshot.getValue(LocationDataEntity.class);
+                                    LocationMetaDataEntity entity = snapshot.getValue(LocationMetaDataEntity.class);
                                     subscriber.onSuccess(metaDataMapper.map(entity, snapshot.getKey()));
                                 }
                             }
@@ -66,7 +66,7 @@ public final class FirebaseLocationsDataRepository {
 
     public Completable saveLocationMetaData(String uniqueId, String beaconId) {
         return Completable.create(subscriber -> {
-            LocationDataEntity entity = entityMapper.map(beaconId);
+            LocationMetaDataEntity entity = entityMapper.map(beaconId);
             Task task = reference
                     .child(uniqueId)
                     .setValue(entity.toMap());

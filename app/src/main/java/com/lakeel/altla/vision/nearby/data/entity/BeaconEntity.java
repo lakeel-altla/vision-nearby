@@ -7,15 +7,9 @@ import java.util.Map;
 
 public final class BeaconEntity {
 
-    public String beaconId;
-
     public String name;
 
     public String userId;
-
-    public boolean isLost;
-
-    public long lastUsedTime;
 
     public Map<String, Object> toMap() {
         Map<String, Object> map = new HashMap<>();

@@ -6,9 +6,7 @@ import java.util.HashMap;
 import java.util.Map;
 
 public final class InformationEntity {
-
-    public String informationId;
-
+    
     public String title;
 
     public String body;

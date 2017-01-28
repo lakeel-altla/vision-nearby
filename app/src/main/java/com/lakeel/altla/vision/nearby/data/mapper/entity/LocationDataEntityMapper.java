@@ -1,11 +1,11 @@
 package com.lakeel.altla.vision.nearby.data.mapper.entity;
 
-import com.lakeel.altla.vision.nearby.data.entity.LocationDataEntity;
+import com.lakeel.altla.vision.nearby.data.entity.LocationMetaDataEntity;
 
 public final class LocationDataEntityMapper {
 
-    public LocationDataEntity map(String id) {
-        LocationDataEntity entity = new LocationDataEntity();
+    public LocationMetaDataEntity map(String id) {
+        LocationMetaDataEntity entity = new LocationMetaDataEntity();
         entity.beaconId = id;
         return entity;
     }
