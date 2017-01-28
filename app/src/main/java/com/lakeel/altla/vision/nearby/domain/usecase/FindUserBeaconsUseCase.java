@@ -7,13 +7,13 @@ import javax.inject.Inject;
 import rx.Observable;
 import rx.schedulers.Schedulers;
 
-public final class FindUserBeaconIdsUseCase {
+public final class FindUserBeaconsUseCase {
 
     @Inject
     FirebaseUsersRepository repository;
 
     @Inject
-    FindUserBeaconIdsUseCase() {
+    FindUserBeaconsUseCase() {
     }
 
     public Observable<String> execute(String userId) {
