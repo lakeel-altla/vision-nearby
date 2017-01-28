@@ -17,7 +17,7 @@ import com.lakeel.altla.vision.nearby.domain.usecase.SaveLocationDataUseCase;
 import com.lakeel.altla.vision.nearby.presentation.di.component.DaggerServiceComponent;
 import com.lakeel.altla.vision.nearby.presentation.di.component.ServiceComponent;
 import com.lakeel.altla.vision.nearby.presentation.di.module.ServiceModule;
-import com.lakeel.altla.vision.nearby.presentation.intent.IntentKey;
+import com.lakeel.altla.vision.nearby.presentation.view.intent.IntentKey;
 import com.lakeel.altla.vision.nearby.rx.ErrorAction;
 
 import org.slf4j.Logger;

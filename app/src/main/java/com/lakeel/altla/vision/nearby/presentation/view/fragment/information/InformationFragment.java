@@ -10,7 +10,7 @@ import android.view.ViewGroup;
 import android.widget.TextView;
 
 import com.lakeel.altla.vision.nearby.R;
-import com.lakeel.altla.vision.nearby.presentation.bundle.FragmentBundle;
+import com.lakeel.altla.vision.nearby.presentation.view.bundle.FragmentBundle;
 import com.lakeel.altla.vision.nearby.presentation.presenter.information.InformationPresenter;
 import com.lakeel.altla.vision.nearby.presentation.presenter.model.InformationModel;
 import com.lakeel.altla.vision.nearby.presentation.view.InformationView;

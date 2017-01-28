@@ -15,7 +15,7 @@ import android.widget.ImageView;
 import android.widget.LinearLayout;
 
 import com.lakeel.altla.vision.nearby.R;
-import com.lakeel.altla.vision.nearby.presentation.bundle.FragmentBundle;
+import com.lakeel.altla.vision.nearby.presentation.view.bundle.FragmentBundle;
 import com.lakeel.altla.vision.nearby.presentation.presenter.favorite.FavoriteUserPresenter;
 import com.lakeel.altla.vision.nearby.presentation.presenter.model.FavoriteUserModel;
 import com.lakeel.altla.vision.nearby.presentation.view.FavoriteUserView;

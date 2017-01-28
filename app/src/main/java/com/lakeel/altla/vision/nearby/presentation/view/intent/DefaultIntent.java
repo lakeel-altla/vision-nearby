@@ -1,4 +1,4 @@
-package com.lakeel.altla.vision.nearby.presentation.intent;
+package com.lakeel.altla.vision.nearby.presentation.view.intent;
 
 import android.content.Intent;
 

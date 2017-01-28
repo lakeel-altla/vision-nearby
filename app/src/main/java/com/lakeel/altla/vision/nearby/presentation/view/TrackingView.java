@@ -1,7 +1,7 @@
 package com.lakeel.altla.vision.nearby.presentation.view;
 
 import com.firebase.geofire.GeoLocation;
-import com.lakeel.altla.vision.nearby.presentation.intent.GoogleMapIntent;
+import com.lakeel.altla.vision.nearby.presentation.view.intent.GoogleMapIntent;
 
 import java.util.ArrayList;
 

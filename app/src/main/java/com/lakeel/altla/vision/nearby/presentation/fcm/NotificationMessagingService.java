@@ -4,7 +4,7 @@ import android.app.PendingIntent;
 
 import com.google.firebase.messaging.FirebaseMessagingService;
 import com.google.firebase.messaging.RemoteMessage;
-import com.lakeel.altla.vision.nearby.presentation.intent.DefaultIntent;
+import com.lakeel.altla.vision.nearby.presentation.view.intent.DefaultIntent;
 import com.lakeel.altla.vision.nearby.presentation.notification.LocalNotification;
 
 import org.slf4j.Logger;

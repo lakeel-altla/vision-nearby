@@ -1,4 +1,4 @@
-package com.lakeel.altla.vision.nearby.presentation.map;
+package com.lakeel.altla.vision.nearby.presentation.view.map;
 
 public enum Radius {
     GOOGLE_MAP(50.0);

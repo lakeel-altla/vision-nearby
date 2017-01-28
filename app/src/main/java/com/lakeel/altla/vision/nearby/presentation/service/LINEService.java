@@ -10,8 +10,8 @@ import com.lakeel.altla.vision.nearby.domain.usecase.FindUserUseCase;
 import com.lakeel.altla.vision.nearby.presentation.di.component.DaggerServiceComponent;
 import com.lakeel.altla.vision.nearby.presentation.di.component.ServiceComponent;
 import com.lakeel.altla.vision.nearby.presentation.di.module.ServiceModule;
-import com.lakeel.altla.vision.nearby.presentation.intent.IntentKey;
-import com.lakeel.altla.vision.nearby.presentation.intent.UriIntent;
+import com.lakeel.altla.vision.nearby.presentation.view.intent.IntentKey;
+import com.lakeel.altla.vision.nearby.presentation.view.intent.UriIntent;
 import com.lakeel.altla.vision.nearby.presentation.notification.LocalNotification;
 import com.lakeel.altla.vision.nearby.rx.ErrorAction;
 

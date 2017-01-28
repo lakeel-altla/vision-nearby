@@ -8,7 +8,7 @@ import android.view.MenuItem;
 
 import com.lakeel.altla.vision.nearby.R;
 import com.lakeel.altla.vision.nearby.presentation.application.App;
-import com.lakeel.altla.vision.nearby.presentation.intent.IntentKey;
+import com.lakeel.altla.vision.nearby.presentation.view.intent.IntentKey;
 import com.lakeel.altla.vision.nearby.presentation.presenter.ble.BleSettingsPresenter;
 import com.lakeel.altla.vision.nearby.presentation.service.AdvertiseService;
 import com.lakeel.altla.vision.nearby.presentation.view.BleSettingsView;

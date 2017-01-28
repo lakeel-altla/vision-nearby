@@ -12,7 +12,7 @@ import android.support.v4.app.NotificationCompat;
 import com.lakeel.altla.vision.nearby.R;
 import com.lakeel.altla.vision.nearby.beacon.EddystoneUid;
 import com.lakeel.altla.vision.nearby.core.StringUtils;
-import com.lakeel.altla.vision.nearby.presentation.intent.IntentKey;
+import com.lakeel.altla.vision.nearby.presentation.view.intent.IntentKey;
 
 import org.altbeacon.beacon.Beacon;
 import org.altbeacon.beacon.BeaconParser;

@@ -3,7 +3,7 @@ package com.lakeel.altla.vision.nearby.presentation.presenter.tracking;
 import com.firebase.geofire.GeoLocation;
 import com.lakeel.altla.vision.nearby.domain.usecase.FindDeviceLocationUseCase;
 import com.lakeel.altla.vision.nearby.presentation.analytics.AnalyticsReporter;
-import com.lakeel.altla.vision.nearby.presentation.intent.GoogleMapIntent;
+import com.lakeel.altla.vision.nearby.presentation.view.intent.GoogleMapIntent;
 import com.lakeel.altla.vision.nearby.presentation.presenter.BasePresenter;
 import com.lakeel.altla.vision.nearby.presentation.presenter.mapper.TrackingModelMapper;
 import com.lakeel.altla.vision.nearby.presentation.presenter.model.TrackingModel;

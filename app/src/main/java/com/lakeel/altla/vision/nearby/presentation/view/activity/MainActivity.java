@@ -24,7 +24,7 @@ import com.lakeel.altla.vision.nearby.android.ConfirmDialog;
 import com.lakeel.altla.vision.nearby.presentation.application.App;
 import com.lakeel.altla.vision.nearby.presentation.di.component.ViewComponent;
 import com.lakeel.altla.vision.nearby.presentation.firebase.MyUser;
-import com.lakeel.altla.vision.nearby.presentation.intent.IntentKey;
+import com.lakeel.altla.vision.nearby.presentation.view.intent.IntentKey;
 import com.lakeel.altla.vision.nearby.presentation.presenter.activity.ActivityPresenter;
 import com.lakeel.altla.vision.nearby.presentation.presenter.model.ActivityModel;
 import com.lakeel.altla.vision.nearby.presentation.service.AdvertiseService;
