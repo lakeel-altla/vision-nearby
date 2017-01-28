@@ -25,10 +25,10 @@ public class FirebaseFavoritesRepository {
         reference = FirebaseDatabase.getInstance().getReferenceFromUrl(url);
     }
 
-    public Observable<FavoriteEntity> findFavoritesByUserId(String myUserId) {
+    public Observable<FavoriteEntity> findFavoritesByUserId(String userId) {
         return Observable.create(subscriber -> {
             reference
-                    .child(myUserId)
+                    .child(userId)
                     .addListenerForSingleValueEvent(new ValueEventListener() {
 
                         @Override
