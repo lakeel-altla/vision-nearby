@@ -1,4 +1,4 @@
-package com.lakeel.altla.vision.nearby.data.mapper;
+package com.lakeel.altla.vision.nearby.data.mapper.entity;
 
 import com.lakeel.altla.vision.nearby.data.entity.InformationEntity;
 

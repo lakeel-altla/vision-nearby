@@ -20,15 +20,15 @@ public final class ObserveConnectionUseCase {
     }
 
     public void execute(String userId) {
-        connectionRepository
-                .observeConnection()
+        connectionRepository.observeConnection()
                 .subscribeOn(Schedulers.io())
-                .subscribe(o -> {
-                    // Called when connected to firebase. Change presence to online.
+                .subscribe(() -> {
+                    // Called when connected to firebase.
+                    // Set presence to online.
                     presencesRepository.saveOnline(userId);
                 });
 
         // Change presence to offline when disconnect to firebase.
-        presencesRepository.savePresenceOfflineOnDisconnect(userId);
+        presencesRepository.saveOfflineOnDisconnect(userId);
     }
 }

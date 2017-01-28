@@ -73,7 +73,7 @@ public final class NearbyUserListPresenter extends BasePresenter<NearbyUserListV
                     String beaconId = eddystoneUID.getBeaconIdAsString().toLowerCase();
 
                     Subscription subscription = findNearbyUsersUseCase.execute(beaconId)
-                            .map(entity -> modelMapper.map(entity))
+                            .map(user -> modelMapper.map(user))
                             .observeOn(AndroidSchedulers.mainThread())
                             .subscribe(scannedModel -> {
                                 for (NearbyUserModel model : nearbyUserModels) {

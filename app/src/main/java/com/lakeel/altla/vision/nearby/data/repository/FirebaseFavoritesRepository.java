@@ -7,7 +7,8 @@ import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
 import com.lakeel.altla.vision.nearby.data.execption.DataStoreException;
-import com.lakeel.altla.vision.nearby.data.entity.FavoriteEntity;
+import com.lakeel.altla.vision.nearby.data.mapper.model.FavoriteMapper;
+import com.lakeel.altla.vision.nearby.domain.model.Favorite;
 
 import javax.inject.Inject;
 import javax.inject.Named;
@@ -18,6 +19,8 @@ import rx.Single;
 
 public class FirebaseFavoritesRepository {
 
+    private FavoriteMapper favoriteMapper = new FavoriteMapper();
+
     private DatabaseReference reference;
 
     @Inject
@@ -25,7 +28,7 @@ public class FirebaseFavoritesRepository {
         reference = FirebaseDatabase.getInstance().getReferenceFromUrl(url);
     }
 
-    public Observable<FavoriteEntity> findFavoritesByUserId(String userId) {
+    public Observable<String> findFavorites(String userId) {
         return Observable.create(subscriber -> {
             reference
                     .child(userId)
@@ -38,9 +41,8 @@ public class FirebaseFavoritesRepository {
                                 if (isFavorite == null || !isFavorite) {
                                     subscriber.onNext(null);
                                 } else {
-                                    FavoriteEntity entity = new FavoriteEntity();
-                                    entity.userId = snapshot.getKey();
-                                    subscriber.onNext(entity);
+                                    String favoriteUserId = snapshot.getKey();
+                                    subscriber.onNext(favoriteUserId);
                                 }
                             }
                             subscriber.onCompleted();
@@ -54,7 +56,7 @@ public class FirebaseFavoritesRepository {
         });
     }
 
-    public Single<FavoriteEntity> findFavorite(String myUserId, String favoriteUserId) {
+    public Single<Favorite> findFavorite(String myUserId, String favoriteUserId) {
         return Single.create(subscriber ->
                 reference
                         .child(myUserId)
@@ -66,9 +68,7 @@ public class FirebaseFavoritesRepository {
                                 if (isFavorite == null || !isFavorite) {
                                     subscriber.onSuccess(null);
                                 } else {
-                                    FavoriteEntity entity = new FavoriteEntity();
-                                    entity.userId = dataSnapshot.getKey();
-                                    subscriber.onSuccess(entity);
+                                    subscriber.onSuccess(favoriteMapper.map(dataSnapshot.getKey()));
                                 }
                             }
 

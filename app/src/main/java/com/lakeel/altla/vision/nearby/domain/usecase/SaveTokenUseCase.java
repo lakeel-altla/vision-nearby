@@ -23,6 +23,6 @@ public final class SaveTokenUseCase {
 
     public Single<String> execute(String beaconId, String token) {
         String userId = MyUser.getUserId();
-        return tokensRepository.saveToken(userId, beaconId, token).subscribeOn(Schedulers.io());
+        return tokensRepository.save(userId, beaconId, token).subscribeOn(Schedulers.io());
     }
 }

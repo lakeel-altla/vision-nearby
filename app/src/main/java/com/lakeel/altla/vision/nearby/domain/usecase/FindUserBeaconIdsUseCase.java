@@ -17,6 +17,6 @@ public final class FindUserBeaconIdsUseCase {
     }
 
     public Observable<String> execute(String userId) {
-        return repository.findBeaconsByUserId(userId).subscribeOn(Schedulers.io());
+        return repository.findUserBeacons(userId).subscribeOn(Schedulers.io());
     }
 }

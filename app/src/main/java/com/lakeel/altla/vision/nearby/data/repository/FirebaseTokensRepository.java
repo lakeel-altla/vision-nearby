@@ -7,16 +7,18 @@ import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
 import com.lakeel.altla.vision.nearby.data.execption.DataStoreException;
-import com.lakeel.altla.vision.nearby.data.entity.TokenEntity;
+import com.lakeel.altla.vision.nearby.data.mapper.model.TokenMapper;
+import com.lakeel.altla.vision.nearby.domain.model.Token;
 
 import javax.inject.Inject;
 import javax.inject.Named;
 
 import rx.Observable;
 import rx.Single;
-import rx.Subscriber;
 
 public final class FirebaseTokensRepository {
+
+    private final TokenMapper tokenMapper = new TokenMapper();
 
     private DatabaseReference reference;
 
@@ -25,7 +27,7 @@ public final class FirebaseTokensRepository {
         reference = FirebaseDatabase.getInstance().getReferenceFromUrl(url);
     }
 
-    public Single<String> saveToken(String userId, String beaconId, String token) {
+    public Single<String> save(String userId, String beaconId, String token) {
         return Single.create(subscriber -> {
             Task task = reference
                     .child(userId)
@@ -41,7 +43,32 @@ public final class FirebaseTokensRepository {
         });
     }
 
-    public Single<String> findTokenByUserId(String userId) {
+    public Observable<Token> findTokens(String userId) {
+        return Observable.create(subscriber -> {
+            reference
+                    .child(userId)
+                    .addListenerForSingleValueEvent(new ValueEventListener() {
+                        @Override
+                        public void onDataChange(DataSnapshot dataSnapshot) {
+                            for (DataSnapshot snapshot : dataSnapshot.getChildren()) {
+                                String to = dataSnapshot.getKey();
+                                String beaconId = snapshot.getKey();
+                                String token = (String) snapshot.getValue();
+                                subscriber.onNext(tokenMapper.map(to, beaconId, token));
+                            }
+                            subscriber.onCompleted();
+                        }
+
+                        @Override
+                        public void onCancelled(DatabaseError databaseError) {
+                            subscriber.onError(databaseError.toException());
+                        }
+                    });
+        });
+    }
+
+
+    public Single<String> findToken(String userId) {
         return Single.create(subscriber ->
                 reference
                         .child(userId)
@@ -57,34 +84,5 @@ public final class FirebaseTokensRepository {
                                 subscriber.onError(databaseError.toException());
                             }
                         }));
-    }
-
-    public Observable<TokenEntity> findTokensByUserId(String userId) {
-        return Observable.create(new Observable.OnSubscribe<TokenEntity>() {
-            @Override
-            public void call(Subscriber<? super TokenEntity> subscriber) {
-                reference
-                        .child(userId)
-                        .addListenerForSingleValueEvent(new ValueEventListener() {
-                            @Override
-                            public void onDataChange(DataSnapshot dataSnapshot) {
-                                for (DataSnapshot snapshot : dataSnapshot.getChildren()) {
-                                    TokenEntity entity = new TokenEntity();
-                                    entity.userId = dataSnapshot.getKey();
-                                    entity.beaconId = snapshot.getKey();
-                                    entity.token = (String) snapshot.getValue();
-
-                                    subscriber.onNext(entity);
-                                }
-                                subscriber.onCompleted();
-                            }
-
-                            @Override
-                            public void onCancelled(DatabaseError databaseError) {
-                                subscriber.onError(databaseError.toException());
-                            }
-                        });
-            }
-        });
     }
 }

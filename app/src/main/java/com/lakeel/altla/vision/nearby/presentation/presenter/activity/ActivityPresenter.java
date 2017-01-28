@@ -10,7 +10,6 @@ import com.google.firebase.iid.FirebaseInstanceId;
 import com.lakeel.altla.vision.nearby.R;
 import com.lakeel.altla.vision.nearby.beacon.EddystoneUid;
 import com.lakeel.altla.vision.nearby.core.StringUtils;
-import com.lakeel.altla.vision.nearby.domain.usecase.FindAdvertiseSettingsUseCase;
 import com.lakeel.altla.vision.nearby.domain.usecase.FindBeaconIdUseCase;
 import com.lakeel.altla.vision.nearby.domain.usecase.FindPreferencesUseCase;
 import com.lakeel.altla.vision.nearby.domain.usecase.ObserveConnectionUseCase;
@@ -55,9 +54,6 @@ public final class ActivityPresenter extends BasePresenter<ActivityView> {
 
     @Inject
     FindPreferencesUseCase findPreferencesUseCase;
-
-    @Inject
-    FindAdvertiseSettingsUseCase findAdvertiseSettingsUseCase;
 
     @Inject
     SaveTokenUseCase saveTokenUseCase;
@@ -129,13 +125,13 @@ public final class ActivityPresenter extends BasePresenter<ActivityView> {
     public void onBleEnabled() {
         Subscription subscription = findPreferencesUseCase.execute()
                 .observeOn(AndroidSchedulers.mainThread())
-                .subscribe(entity -> {
-                    if (entity.isSubscribeInBackgroundEnabled) {
+                .subscribe(preference -> {
+                    if (preference.isSubscribeInBackgroundEnabled) {
                         getView().startDetectBeaconsInBackground();
                     }
 
-                    String beaconId = entity.beaconId;
-                    if (entity.isAdvertiseInBackgroundEnabled && isAdvertiseAvailableDevice) {
+                    String beaconId = preference.beaconId;
+                    if (preference.isAdvertiseInBackgroundEnabled && isAdvertiseAvailableDevice) {
                         getView().startAdvertise(beaconId);
                     }
                 }, new ErrorAction<>());
@@ -211,10 +207,10 @@ public final class ActivityPresenter extends BasePresenter<ActivityView> {
     }
 
     private void startAdvertiseIfNeeded(String beaconId) {
-        Subscription subscription = findAdvertiseSettingsUseCase.execute()
+        Subscription subscription = findPreferencesUseCase.execute()
                 .observeOn(AndroidSchedulers.mainThread())
-                .subscribe(isAdvertiseInBackgroundEnabled -> {
-                    if (isAdvertiseInBackgroundEnabled && isAdvertiseAvailableDevice) {
+                .subscribe(preference -> {
+                    if (preference.isAdvertiseInBackgroundEnabled && isAdvertiseAvailableDevice) {
                         getView().startAdvertise(beaconId);
                     }
                 }, new ErrorAction<>());

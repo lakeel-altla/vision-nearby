@@ -15,6 +15,6 @@ public final class FindTokenUseCase {
     FindTokenUseCase() {
     }
     public Single<String> execute(String userId) {
-        return repository.findTokenByUserId(userId);
+        return repository.findToken(userId);
     }
 }

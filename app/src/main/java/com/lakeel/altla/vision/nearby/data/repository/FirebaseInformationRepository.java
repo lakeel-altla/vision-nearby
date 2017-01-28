@@ -6,8 +6,10 @@ import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
-import com.lakeel.altla.vision.nearby.data.mapper.InformationEntityMapper;
 import com.lakeel.altla.vision.nearby.data.entity.InformationEntity;
+import com.lakeel.altla.vision.nearby.data.mapper.entity.InformationEntityMapper;
+import com.lakeel.altla.vision.nearby.data.mapper.model.InformationMapper;
+import com.lakeel.altla.vision.nearby.domain.model.Information;
 
 import java.util.Map;
 
@@ -23,6 +25,8 @@ public class FirebaseInformationRepository {
     private DatabaseReference reference;
 
     private InformationEntityMapper entityMapper = new InformationEntityMapper();
+
+    private InformationMapper informationMapper = new InformationMapper();
 
     @Inject
     public FirebaseInformationRepository(@Named("informationUrl") String url) {
@@ -48,7 +52,7 @@ public class FirebaseInformationRepository {
         });
     }
 
-    public Observable<InformationEntity> findList(String userId) {
+    public Observable<Information> findInformationList(String userId) {
         return Observable.create(subscriber -> {
             reference
                     .child(userId)
@@ -57,8 +61,7 @@ public class FirebaseInformationRepository {
                         public void onDataChange(DataSnapshot dataSnapshot) {
                             for (DataSnapshot snapshot : dataSnapshot.getChildren()) {
                                 InformationEntity entity = snapshot.getValue(InformationEntity.class);
-                                entity.informationId = snapshot.getKey();
-                                subscriber.onNext(entity);
+                                subscriber.onNext(informationMapper.map(entity, snapshot.getKey()));
                             }
                             subscriber.onCompleted();
                         }
@@ -71,7 +74,7 @@ public class FirebaseInformationRepository {
         });
     }
 
-    public Single<InformationEntity> find(String userId, String informationId) {
+    public Single<Information> findInformation(String userId, String informationId) {
         return Single.create(subscriber ->
                 reference
                         .child(userId)
@@ -80,7 +83,7 @@ public class FirebaseInformationRepository {
                             @Override
                             public void onDataChange(DataSnapshot snapshot) {
                                 InformationEntity entity = snapshot.getValue(InformationEntity.class);
-                                subscriber.onSuccess(entity);
+                                subscriber.onSuccess(informationMapper.map(entity, snapshot.getKey()));
                             }
 
                             @Override

@@ -17,6 +17,6 @@ public final class FindLocationUseCase {
     }
 
     public Single<GeoLocation> execute(String key) {
-        return repository.findLocationByKey(key);
+        return repository.findLocation(key);
     }
 }

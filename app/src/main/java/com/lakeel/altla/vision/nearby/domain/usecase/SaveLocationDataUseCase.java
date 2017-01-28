@@ -1,11 +1,10 @@
 package com.lakeel.altla.vision.nearby.domain.usecase;
 
-import com.lakeel.altla.vision.nearby.data.entity.LocationDataEntity;
 import com.lakeel.altla.vision.nearby.data.repository.FirebaseLocationsDataRepository;
 
 import javax.inject.Inject;
 
-import rx.Single;
+import rx.Completable;
 import rx.schedulers.Schedulers;
 
 public final class SaveLocationDataUseCase {
@@ -17,7 +16,7 @@ public final class SaveLocationDataUseCase {
     SaveLocationDataUseCase() {
     }
 
-    public Single<LocationDataEntity> execute(String uniqueId, String beaconId) {
-        return repository.saveLocationData(uniqueId, beaconId).subscribeOn(Schedulers.io());
+    public Completable execute(String uniqueId, String beaconId) {
+        return repository.saveLocationMetaData(uniqueId, beaconId).subscribeOn(Schedulers.io());
     }
 }

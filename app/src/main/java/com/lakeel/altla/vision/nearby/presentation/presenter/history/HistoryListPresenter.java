@@ -45,7 +45,7 @@ public final class HistoryListPresenter extends BasePresenter<HistoryListView> {
 
     public void onActivityCreated() {
         Subscription subscription = findHistoryListUseCase.execute()
-                .map(entity -> modelMapper.map(entity))
+                .map(historyUser -> modelMapper.map(historyUser))
                 .toList()
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribe(historyItemModels -> {

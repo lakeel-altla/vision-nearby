@@ -1,21 +1,21 @@
 package com.lakeel.altla.vision.nearby.presentation.presenter.mapper;
 
 import com.firebase.geofire.GeoLocation;
-import com.lakeel.altla.vision.nearby.data.entity.LocationDataEntity;
-import com.lakeel.altla.vision.nearby.data.entity.LocationEntity;
+import com.lakeel.altla.vision.nearby.domain.model.Location;
+import com.lakeel.altla.vision.nearby.domain.model.LocationMetaData;
 import com.lakeel.altla.vision.nearby.presentation.presenter.model.TrackingModel;
 
 public final class TrackingModelMapper {
 
-    public TrackingModel map(LocationEntity entity) {
+    public TrackingModel map(Location location) {
         TrackingModel model = new TrackingModel();
 
-        LocationDataEntity locationDataEntity = entity.locationDataEntity;
-        if (locationDataEntity != null) {
-            model.foundTime = locationDataEntity.passingTime;
+        LocationMetaData metaData = location.metaData;
+        if (metaData != null) {
+            model.foundTime = metaData.passingTime;
         }
 
-        GeoLocation geoLocation = entity.geoLocation;
+        GeoLocation geoLocation = location.geoLocation;
         if (geoLocation != null) {
             model.geoLocation = geoLocation;
         }

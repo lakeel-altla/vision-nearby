@@ -1,12 +1,12 @@
 package com.lakeel.altla.vision.nearby.domain.usecase;
 
 import com.google.android.gms.location.DetectedActivity;
-import com.lakeel.altla.vision.nearby.data.entity.HistoryEntity;
 import com.lakeel.altla.vision.nearby.data.repository.FirebaseHistoryRepository;
+import com.lakeel.altla.vision.nearby.presentation.firebase.MyUser;
 
 import javax.inject.Inject;
 
-import rx.Single;
+import rx.Completable;
 import rx.schedulers.Schedulers;
 
 public final class SaveUserActivityUseCase {
@@ -18,7 +18,8 @@ public final class SaveUserActivityUseCase {
     SaveUserActivityUseCase() {
     }
 
-    public Single<HistoryEntity> execute(String uniqueId, String userId, DetectedActivity userActivity) {
+    public Completable execute(String uniqueId, DetectedActivity userActivity) {
+        String userId = MyUser.getUserId();
         return repository.saveUserActivity(uniqueId, userId, userActivity).subscribeOn(Schedulers.io());
     }
 }

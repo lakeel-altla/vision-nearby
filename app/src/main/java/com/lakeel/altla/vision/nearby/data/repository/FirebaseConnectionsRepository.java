@@ -8,6 +8,8 @@ import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ServerValue;
 import com.google.firebase.database.ValueEventListener;
 import com.lakeel.altla.vision.nearby.data.entity.PresenceEntity;
+import com.lakeel.altla.vision.nearby.data.mapper.model.PresenceMapper;
+import com.lakeel.altla.vision.nearby.domain.model.Presence;
 import com.lakeel.altla.vision.nearby.presentation.firebase.MyUser;
 
 import java.util.HashMap;
@@ -25,10 +27,12 @@ public class FirebaseConnectionsRepository {
 
     private static final String LAST_ONLINE_KEY = "lastOnlineTime";
 
+    private PresenceMapper presenceMapper = new PresenceMapper();
+
     private DatabaseReference reference;
 
     @Inject
-    public FirebaseConnectionsRepository(@Named("connectionsUrl") String url) {
+    FirebaseConnectionsRepository(@Named("connectionsUrl") String url) {
         reference = FirebaseDatabase.getInstance().getReferenceFromUrl(url);
     }
 
@@ -38,7 +42,6 @@ public class FirebaseConnectionsRepository {
             Map<String, Object> map = new HashMap<>();
             map.put(IS_CONNECTED_KEY, true);
             map.put(LAST_ONLINE_KEY, ServerValue.TIMESTAMP);
-
             reference
                     .child(userId)
                     .updateChildren(map);
@@ -61,7 +64,7 @@ public class FirebaseConnectionsRepository {
         });
     }
 
-    public void savePresenceOfflineOnDisconnect(String userId) {
+    public void saveOfflineOnDisconnect(String userId) {
         reference
                 .child(userId)
                 .child(IS_CONNECTED_KEY)
@@ -69,19 +72,21 @@ public class FirebaseConnectionsRepository {
                 .setValue(false);
     }
 
-    public Single<PresenceEntity> findPresenceByUserId(String userId) {
+    public Single<Presence> findPresence(String userId) {
         return Single.create(subscriber ->
-                reference.child(userId).addListenerForSingleValueEvent(new ValueEventListener() {
-                    @Override
-                    public void onDataChange(DataSnapshot dataSnapshot) {
-                        PresenceEntity entity = dataSnapshot.getValue(PresenceEntity.class);
-                        subscriber.onSuccess(entity);
-                    }
+                reference
+                        .child(userId)
+                        .addListenerForSingleValueEvent(new ValueEventListener() {
+                            @Override
+                            public void onDataChange(DataSnapshot dataSnapshot) {
+                                PresenceEntity entity = dataSnapshot.getValue(PresenceEntity.class);
+                                subscriber.onSuccess(presenceMapper.map(entity));
+                            }
 
-                    @Override
-                    public void onCancelled(DatabaseError databaseError) {
-                        subscriber.onError(databaseError.toException());
-                    }
-                }));
+                            @Override
+                            public void onCancelled(DatabaseError databaseError) {
+                                subscriber.onError(databaseError.toException());
+                            }
+                        }));
     }
 }

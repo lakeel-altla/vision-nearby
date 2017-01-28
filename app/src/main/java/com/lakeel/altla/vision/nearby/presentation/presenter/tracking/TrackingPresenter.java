@@ -48,7 +48,7 @@ public final class TrackingPresenter extends BasePresenter<TrackingView> {
 
     public void onResume() {
         Subscription subscription = findDeviceLocationUseCase.execute(beaconId)
-                .map(entity -> modelMapper.map(entity))
+                .map(location -> modelMapper.map(location))
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribe(model -> {
                     this.model = model;

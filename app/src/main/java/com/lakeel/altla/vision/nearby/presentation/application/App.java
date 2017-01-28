@@ -8,7 +8,7 @@ import android.support.v4.app.Fragment;
 
 import com.google.firebase.database.FirebaseDatabase;
 import com.lakeel.altla.vision.nearby.R;
-import com.lakeel.altla.vision.nearby.domain.usecase.FindSubscribeSettingsUseCase;
+import com.lakeel.altla.vision.nearby.domain.usecase.FindPreferencesUseCase;
 import com.lakeel.altla.vision.nearby.presentation.beacon.BeaconClient;
 import com.lakeel.altla.vision.nearby.presentation.di.component.ApplicationComponent;
 import com.lakeel.altla.vision.nearby.presentation.di.component.DaggerApplicationComponent;
@@ -38,7 +38,7 @@ import rx.android.schedulers.AndroidSchedulers;
 public class App extends Application {
 
     @Inject
-    FindSubscribeSettingsUseCase findSubscribeSettingsUseCase;
+    FindPreferencesUseCase findPreferencesUseCase;
 
     private static final Logger LOGGER = LoggerFactory.getLogger(App.class);
 
@@ -138,10 +138,10 @@ public class App extends Application {
     }
 
     private void subscribeInBackgroundIfNeeded() {
-        Subscription subscription = findSubscribeSettingsUseCase.execute()
+        Subscription subscription = findPreferencesUseCase.execute()
                 .observeOn(AndroidSchedulers.mainThread())
-                .subscribe(isEnabled -> {
-                    if (isEnabled) {
+                .subscribe(preference -> {
+                    if (preference.isSubscribeInBackgroundEnabled) {
                         beaconClient.startDetectBeaconsInBackground();
                     }
                 }, new ErrorAction<>());

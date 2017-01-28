@@ -6,9 +6,11 @@ import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
-import com.lakeel.altla.vision.nearby.data.execption.DataStoreException;
-import com.lakeel.altla.vision.nearby.data.mapper.UserEntityMapper;
 import com.lakeel.altla.vision.nearby.data.entity.UserEntity;
+import com.lakeel.altla.vision.nearby.data.execption.DataStoreException;
+import com.lakeel.altla.vision.nearby.data.mapper.entity.UserEntityMapper;
+import com.lakeel.altla.vision.nearby.data.mapper.model.UserMapper;
+import com.lakeel.altla.vision.nearby.domain.model.User;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -19,8 +21,6 @@ import javax.inject.Named;
 import rx.Completable;
 import rx.Observable;
 import rx.Single;
-import rx.SingleSubscriber;
-import rx.Subscriber;
 
 public final class FirebaseUsersRepository {
 
@@ -30,9 +30,30 @@ public final class FirebaseUsersRepository {
 
     private UserEntityMapper entityMapper = new UserEntityMapper();
 
+    private UserMapper userMapper = new UserMapper();
+
     @Inject
     public FirebaseUsersRepository(@Named("usersUrl") String url) {
         reference = FirebaseDatabase.getInstance().getReferenceFromUrl(url);
+    }
+
+    public Single<User> findUser(String userId) {
+        return Single.create(subscriber ->
+                reference
+                        .child(userId)
+                        .addListenerForSingleValueEvent(new ValueEventListener() {
+
+                            @Override
+                            public void onDataChange(DataSnapshot dataSnapshot) {
+                                UserEntity entity = dataSnapshot.getValue(UserEntity.class);
+                                subscriber.onSuccess(userMapper.map(entity, dataSnapshot.getKey()));
+                            }
+
+                            @Override
+                            public void onCancelled(final DatabaseError databaseError) {
+                                subscriber.onError(databaseError.toException());
+                            }
+                        }));
     }
 
     public Completable saveUser(String userId) {
@@ -51,51 +72,45 @@ public final class FirebaseUsersRepository {
         });
     }
 
-    public Single<String> saveBeacon(String userId, String beaconId) {
-        return Single.create(new Single.OnSubscribe<String>() {
-            @Override
-            public void call(SingleSubscriber<? super String> subscriber) {
-                Map<String, Object> map = new HashMap<>();
-                map.put(beaconId, true);
+    public Observable<String> findUserBeacons(String userId) {
+        return Observable.create(subscriber -> {
+            reference
+                    .child(userId)
+                    .child(KEY_BEACONS)
+                    .addListenerForSingleValueEvent(new ValueEventListener() {
+                        @Override
+                        public void onDataChange(DataSnapshot dataSnapshot) {
+                            for (DataSnapshot snapshot : dataSnapshot.getChildren()) {
+                                String beaconId = snapshot.getKey();
+                                subscriber.onNext(beaconId);
+                            }
+                            subscriber.onCompleted();
+                        }
 
-                Task task = reference
-                        .child(userId)
-                        .child(KEY_BEACONS)
-                        .updateChildren(map);
-
-                Exception e = task.getException();
-                if (e != null) {
-                    subscriber.onError(e);
-                }
-
-                subscriber.onSuccess(beaconId);
-            }
+                        @Override
+                        public void onCancelled(DatabaseError databaseError) {
+                            subscriber.onError(databaseError.toException());
+                        }
+                    });
         });
     }
 
-    public Observable<String> findBeaconsByUserId(String userId) {
-        return Observable.create(new Observable.OnSubscribe<String>() {
-            @Override
-            public void call(Subscriber<? super String> subscriber) {
-                reference
-                        .child(userId)
-                        .child(KEY_BEACONS)
-                        .addListenerForSingleValueEvent(new ValueEventListener() {
-                            @Override
-                            public void onDataChange(DataSnapshot dataSnapshot) {
-                                for (DataSnapshot snapshot : dataSnapshot.getChildren()) {
-                                    String beaconId = snapshot.getKey();
-                                    subscriber.onNext(beaconId);
-                                }
-                                subscriber.onCompleted();
-                            }
+    public Single<String> saveBeacon(String userId, String beaconId) {
+        return Single.create(subscriber -> {
+            Map<String, Object> map = new HashMap<>();
+            map.put(beaconId, true);
 
-                            @Override
-                            public void onCancelled(DatabaseError databaseError) {
-                                subscriber.onError(databaseError.toException());
-                            }
-                        });
+            Task task = reference
+                    .child(userId)
+                    .child(KEY_BEACONS)
+                    .updateChildren(map);
+
+            Exception e = task.getException();
+            if (e != null) {
+                subscriber.onError(e);
             }
+
+            subscriber.onSuccess(beaconId);
         });
     }
 
@@ -116,7 +131,7 @@ public final class FirebaseUsersRepository {
         });
     }
 
-    public Observable<UserEntity> observeUserProfile(String userId) {
+    public Observable<User> observeUser(String userId) {
         return Observable.create(subscriber ->
                 reference
                         .child(userId)
@@ -124,7 +139,7 @@ public final class FirebaseUsersRepository {
                             @Override
                             public void onDataChange(DataSnapshot dataSnapshot) {
                                 UserEntity entity = dataSnapshot.getValue(UserEntity.class);
-                                subscriber.onNext(entity);
+                                subscriber.onNext(userMapper.map(entity, dataSnapshot.getKey()));
                             }
 
                             @Override
@@ -132,30 +147,5 @@ public final class FirebaseUsersRepository {
                                 subscriber.onError(databaseError.toException());
                             }
                         }));
-    }
-
-    public Single<UserEntity> findUserByUserId(String userId) {
-        return Single.create(new Single.OnSubscribe<UserEntity>() {
-
-            @Override
-            public void call(SingleSubscriber<? super UserEntity> subscriber) {
-                reference
-                        .child(userId)
-                        .addListenerForSingleValueEvent(new ValueEventListener() {
-
-                            @Override
-                            public void onDataChange(DataSnapshot dataSnapshot) {
-                                UserEntity entity = dataSnapshot.getValue(UserEntity.class);
-                                entity.userId = dataSnapshot.getKey();
-                                subscriber.onSuccess(entity);
-                            }
-
-                            @Override
-                            public void onCancelled(final DatabaseError databaseError) {
-                                subscriber.onError(databaseError.toException());
-                            }
-                        });
-            }
-        });
     }
 }

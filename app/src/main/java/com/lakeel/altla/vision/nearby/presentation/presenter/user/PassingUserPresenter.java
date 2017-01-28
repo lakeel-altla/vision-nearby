@@ -66,8 +66,8 @@ public final class PassingUserPresenter extends BasePresenter<PassingUserView> {
 
     public void onActivityCreated() {
         Subscription subscription = findHistoryUseCase.execute(historyId)
-                .map(entity -> {
-                    model = modelMapper.map(entity);
+                .map(history -> {
+                    model = modelMapper.map(history);
                     return model;
                 })
                 .flatMap(model1 -> findUser(model1.userId))
@@ -115,19 +115,19 @@ public final class PassingUserPresenter extends BasePresenter<PassingUserView> {
     private Single<UserPassingModel> findUser(String userId) {
         return findUserUseCase.execute(userId)
                 .subscribeOn(Schedulers.io())
-                .map(entity -> {
-                    model.userName = entity.name;
-                    model.imageUri = entity.imageUri;
-                    model.email = entity.email;
+                .map(user -> {
+                    model.userName = user.name;
+                    model.imageUri = user.imageUri;
+                    model.email = user.email;
                     return model;
                 });
     }
 
     private void showPresence(String userId) {
         Subscription subscription = findConnectionUseCase.execute(userId)
-                .map(entity -> {
-                    model.isConnected = entity.isConnected;
-                    model.lastOnlineTime = entity.lastOnlineTime;
+                .map(presence -> {
+                    model.isConnected = presence.isConnected;
+                    model.lastOnlineTime = presence.lastOnlineTime;
                     return model;
                 })
                 .observeOn(AndroidSchedulers.mainThread())
@@ -155,7 +155,7 @@ public final class PassingUserPresenter extends BasePresenter<PassingUserView> {
     private void showAddFavoriteButtonIfNeeded(String userId) {
         Subscription subscription = findFavoriteUseCase.execute(userId)
                 .toObservable()
-                .filter(entity -> entity == null)
+                .filter(favorite -> favorite == null)
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribe(entity -> getView().showAddButton(), new ErrorAction<>());
         subscriptions.add(subscription);

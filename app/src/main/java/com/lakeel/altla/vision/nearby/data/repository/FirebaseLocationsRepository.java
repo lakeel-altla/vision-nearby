@@ -14,7 +14,6 @@ import javax.inject.Inject;
 import javax.inject.Named;
 
 import rx.Single;
-import rx.SingleSubscriber;
 
 public class FirebaseLocationsRepository {
 
@@ -26,13 +25,11 @@ public class FirebaseLocationsRepository {
         geoFire = new GeoFire(reference);
     }
 
-    public Single<GeoLocation> findLocationByKey(String key) {
-        return Single.create(new Single.OnSubscribe<GeoLocation>() {
-            @Override
-            public void call(SingleSubscriber<? super GeoLocation> subscriber) {
+    public Single<GeoLocation> findLocation(String key) {
+        return Single.create(subscriber ->
                 geoFire.getLocation(key, new LocationCallback() {
                     @Override
-                    public void onLocationResult(String key, GeoLocation location) {
+                    public void onLocationResult(String key1, GeoLocation location) {
                         if (location == null) {
                             subscriber.onSuccess(null);
                         } else {
@@ -44,9 +41,7 @@ public class FirebaseLocationsRepository {
                     public void onCancelled(DatabaseError databaseError) {
                         subscriber.onError(databaseError.toException());
                     }
-                });
-            }
-        });
+                }));
     }
 
     public Single<String> saveLocation(Location location) {

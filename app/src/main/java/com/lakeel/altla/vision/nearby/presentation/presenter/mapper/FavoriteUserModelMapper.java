@@ -1,25 +1,25 @@
 package com.lakeel.altla.vision.nearby.presentation.presenter.mapper;
 
 import com.lakeel.altla.vision.nearby.data.entity.LineLinkEntity;
-import com.lakeel.altla.vision.nearby.data.entity.PresenceEntity;
-import com.lakeel.altla.vision.nearby.data.entity.UserEntity;
+import com.lakeel.altla.vision.nearby.domain.model.Presence;
+import com.lakeel.altla.vision.nearby.domain.model.User;
 import com.lakeel.altla.vision.nearby.presentation.presenter.model.FavoriteUserModel;
 
 public final class FavoriteUserModelMapper {
 
-    public FavoriteUserModel map(UserEntity entity) {
+    public FavoriteUserModel map(User user) {
         FavoriteUserModel model = new FavoriteUserModel();
-        model.userId = entity.userId;
-        model.userName = entity.name;
-        model.email = entity.email;
-        model.imageUri = entity.imageUri;
+        model.userId = user.userId;
+        model.userName = user.name;
+        model.email = user.email;
+        model.imageUri = user.imageUri;
         return model;
     }
 
-    public FavoriteUserModel map(PresenceEntity entity) {
+    public FavoriteUserModel map(Presence presence) {
         FavoriteUserModel model = new FavoriteUserModel();
-        model.isConnected = entity.isConnected;
-        model.lastOnlineTime = entity.lastOnlineTime;
+        model.isConnected = presence.isConnected;
+        model.lastOnlineTime = presence.lastOnlineTime;
         return model;
     }
 

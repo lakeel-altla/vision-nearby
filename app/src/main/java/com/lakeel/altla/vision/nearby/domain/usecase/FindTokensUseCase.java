@@ -1,7 +1,7 @@
 package com.lakeel.altla.vision.nearby.domain.usecase;
 
-import com.lakeel.altla.vision.nearby.data.entity.TokenEntity;
 import com.lakeel.altla.vision.nearby.data.repository.FirebaseTokensRepository;
+import com.lakeel.altla.vision.nearby.domain.model.Token;
 
 import javax.inject.Inject;
 
@@ -17,8 +17,8 @@ public final class FindTokensUseCase {
     FindTokensUseCase() {
     }
 
-    public Observable<TokenEntity> execute(String userId) {
-        return repository.findTokensByUserId(userId).subscribeOn(Schedulers.io());
+    public Observable<Token> execute(String userId) {
+        return repository.findTokens(userId).subscribeOn(Schedulers.io());
     }
 }
 

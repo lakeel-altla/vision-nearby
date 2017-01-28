@@ -62,8 +62,8 @@ public final class BeaconSubscriber {
                 findBeaconUseCase
                         .execute(beaconId)
                         .subscribeOn(Schedulers.io())
-                        .subscribe(entity -> {
-                            if (entity == null) {
+                        .subscribe(beacon -> {
+                            if (beacon == null) {
                                 LOGGER.info("Not registered the beacon:beaconId=" + beaconId);
                                 return;
                             }
@@ -82,7 +82,7 @@ public final class BeaconSubscriber {
                             context.startService(locationIntent);
 
                             Intent lineIntent = new Intent(context, LINEService.class);
-                            lineIntent.putExtra(IntentKey.USER_ID.name(), entity.userId);
+                            lineIntent.putExtra(IntentKey.USER_ID.name(), beacon.userId);
                             context.startService(lineIntent);
                         });
 

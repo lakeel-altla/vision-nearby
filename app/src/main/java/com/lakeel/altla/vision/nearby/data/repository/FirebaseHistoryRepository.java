@@ -10,9 +10,11 @@ import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
-import com.lakeel.altla.vision.nearby.data.execption.DataStoreException;
-import com.lakeel.altla.vision.nearby.data.mapper.HistoryEntityMapper;
 import com.lakeel.altla.vision.nearby.data.entity.HistoryEntity;
+import com.lakeel.altla.vision.nearby.data.execption.DataStoreException;
+import com.lakeel.altla.vision.nearby.data.mapper.entity.HistoryEntityMapper;
+import com.lakeel.altla.vision.nearby.data.mapper.model.HistoryMapper;
+import com.lakeel.altla.vision.nearby.domain.model.History;
 
 import java.util.Map;
 
@@ -22,7 +24,6 @@ import javax.inject.Named;
 import rx.Completable;
 import rx.Observable;
 import rx.Single;
-import rx.Subscriber;
 
 public class FirebaseHistoryRepository {
 
@@ -32,39 +33,36 @@ public class FirebaseHistoryRepository {
 
     private HistoryEntityMapper entityMapper = new HistoryEntityMapper();
 
+    private HistoryMapper historyMapper = new HistoryMapper();
+
     @Inject
     public FirebaseHistoryRepository(@Named("historyUrl") String url) {
         reference = FirebaseDatabase.getInstance().getReferenceFromUrl(url);
     }
 
-    public Observable<HistoryEntity> findHistoryList(String userId) {
-        return Observable.create(new Observable.OnSubscribe<HistoryEntity>() {
-
-            @Override
-            public void call(Subscriber<? super HistoryEntity> subscriber) {
-                reference
-                        .child(userId)
-                        .addListenerForSingleValueEvent(new ValueEventListener() {
-                            @Override
-                            public void onDataChange(DataSnapshot dataSnapshot) {
-                                for (DataSnapshot snapshot : dataSnapshot.getChildren()) {
-                                    HistoryEntity entity = snapshot.getValue(HistoryEntity.class);
-                                    entity.uniqueId = snapshot.getKey();
-                                    subscriber.onNext(entity);
-                                }
-                                subscriber.onCompleted();
+    public Observable<History> findHistoryList(String userId) {
+        return Observable.create(subscriber -> {
+            reference
+                    .child(userId)
+                    .addListenerForSingleValueEvent(new ValueEventListener() {
+                        @Override
+                        public void onDataChange(DataSnapshot dataSnapshot) {
+                            for (DataSnapshot snapshot : dataSnapshot.getChildren()) {
+                                HistoryEntity entity = snapshot.getValue(HistoryEntity.class);
+                                subscriber.onNext(historyMapper.map(entity, snapshot.getKey()));
                             }
+                            subscriber.onCompleted();
+                        }
 
-                            @Override
-                            public void onCancelled(DatabaseError databaseError) {
-                                subscriber.onError(databaseError.toException());
-                            }
-                        });
-            }
+                        @Override
+                        public void onCancelled(DatabaseError databaseError) {
+                            subscriber.onError(databaseError.toException());
+                        }
+                    });
         });
     }
 
-    public Single<HistoryEntity> findHistory(String userId, String historyId) {
+    public Single<History> findHistory(String userId, String historyId) {
         return Single.create(subscriber ->
                 reference
                         .child(userId)
@@ -73,7 +71,7 @@ public class FirebaseHistoryRepository {
                             @Override
                             public void onDataChange(DataSnapshot snapshot) {
                                 HistoryEntity entity = snapshot.getValue(HistoryEntity.class);
-                                subscriber.onSuccess(entity);
+                                subscriber.onSuccess(historyMapper.map(entity, snapshot.getKey()));
                             }
 
                             @Override
@@ -121,8 +119,8 @@ public class FirebaseHistoryRepository {
         });
     }
 
-    public Single<HistoryEntity> saveUserActivity(String uniqueId, String userId, DetectedActivity userActivity) {
-        return Single.create(subscriber -> {
+    public Completable saveUserActivity(String uniqueId, String userId, DetectedActivity userActivity) {
+        return Completable.create(subscriber -> {
             HistoryEntity entity = entityMapper.map(userActivity);
             Map<String, Object> map = entity.toUserActivityMap();
 
@@ -136,12 +134,12 @@ public class FirebaseHistoryRepository {
                 throw new DataStoreException(exception);
             }
 
-            subscriber.onSuccess(entity);
+            subscriber.onCompleted();
         });
     }
 
-    public Single<HistoryEntity> saveCurrentLocation(String uniqueId, String userId, Location location) {
-        return Single.create(subscriber -> {
+    public Completable saveLocation(String uniqueId, String userId, Location location) {
+        return Completable.create(subscriber -> {
             HistoryEntity entity = entityMapper.map(location);
             Map<String, Object> map = entity.toLocationMap();
 
@@ -155,12 +153,12 @@ public class FirebaseHistoryRepository {
                 throw new DataStoreException(exception);
             }
 
-            subscriber.onSuccess(entity);
+            subscriber.onCompleted();
         });
     }
 
-    public Single<HistoryEntity> saveWeather(String uniqueId, String userId, Weather weather) {
-        return Single.create(subscriber -> {
+    public Completable saveWeather(String uniqueId, String userId, Weather weather) {
+        return Completable.create(subscriber -> {
             HistoryEntity entity = entityMapper.map(weather);
             Map<String, Object> map = entity.toWeatherMap();
 
@@ -174,11 +172,11 @@ public class FirebaseHistoryRepository {
                 throw new DataStoreException(exception);
             }
 
-            subscriber.onSuccess(entity);
+            subscriber.onCompleted();
         });
     }
 
-    public Completable removeByUniqueKey(String userId, String uniqueKey) {
+    public Completable remove(String userId, String uniqueKey) {
         return Completable.create(subscriber -> {
             Task task = reference.
                     child(userId)

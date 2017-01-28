@@ -1,7 +1,7 @@
 package com.lakeel.altla.vision.nearby.domain.usecase;
 
 import com.lakeel.altla.vision.nearby.data.repository.FirebaseConnectionsRepository;
-import com.lakeel.altla.vision.nearby.data.entity.PresenceEntity;
+import com.lakeel.altla.vision.nearby.domain.model.Presence;
 
 import javax.inject.Inject;
 
@@ -17,7 +17,7 @@ public class FindConnectionUseCase {
     FindConnectionUseCase() {
     }
 
-    public Single<PresenceEntity> execute(String userId) {
-        return repository.findPresenceByUserId(userId).subscribeOn(Schedulers.io());
+    public Single<Presence> execute(String userId) {
+        return repository.findPresence(userId).subscribeOn(Schedulers.io());
     }
 }

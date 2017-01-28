@@ -6,9 +6,11 @@ import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
-import com.lakeel.altla.vision.nearby.data.execption.DataStoreException;
-import com.lakeel.altla.vision.nearby.data.mapper.BeaconEntityMapper;
 import com.lakeel.altla.vision.nearby.data.entity.BeaconEntity;
+import com.lakeel.altla.vision.nearby.data.execption.DataStoreException;
+import com.lakeel.altla.vision.nearby.data.mapper.entity.BeaconEntityMapper;
+import com.lakeel.altla.vision.nearby.data.mapper.model.BeaconMapper;
+import com.lakeel.altla.vision.nearby.domain.model.Beacon;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -26,6 +28,8 @@ public class FirebaseBeaconsRepository {
     private DatabaseReference reference;
 
     private BeaconEntityMapper entityMapper = new BeaconEntityMapper();
+
+    private BeaconMapper beaconMapper = new BeaconMapper();
 
     @Inject
     public FirebaseBeaconsRepository(@Named("beaconsUrl") String url) {
@@ -50,7 +54,7 @@ public class FirebaseBeaconsRepository {
         });
     }
 
-    public Single<BeaconEntity> findBeacon(String beaconId) {
+    public Single<Beacon> findBeacon(String beaconId) {
         return Single.create(subscriber ->
                 reference
                         .child(beaconId)
@@ -60,10 +64,9 @@ public class FirebaseBeaconsRepository {
                                 BeaconEntity entity = dataSnapshot.getValue(BeaconEntity.class);
                                 if (entity == null) {
                                     subscriber.onSuccess(null);
-                                    return;
+                                } else {
+                                    subscriber.onSuccess(beaconMapper.map(entity, dataSnapshot.getKey()));
                                 }
-                                entity.beaconId = dataSnapshot.getKey();
-                                subscriber.onSuccess(entity);
                             }
 
                             @Override

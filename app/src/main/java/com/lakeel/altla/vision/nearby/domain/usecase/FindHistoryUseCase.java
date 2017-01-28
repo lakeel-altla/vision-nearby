@@ -1,7 +1,7 @@
 package com.lakeel.altla.vision.nearby.domain.usecase;
 
-import com.lakeel.altla.vision.nearby.data.entity.HistoryEntity;
 import com.lakeel.altla.vision.nearby.data.repository.FirebaseHistoryRepository;
+import com.lakeel.altla.vision.nearby.domain.model.History;
 import com.lakeel.altla.vision.nearby.presentation.firebase.MyUser;
 
 import javax.inject.Inject;
@@ -18,7 +18,7 @@ public final class FindHistoryUseCase {
     FindHistoryUseCase() {
     }
 
-    public Single<HistoryEntity> execute(String historyId) {
+    public Single<History> execute(String historyId) {
         String userId = MyUser.getUserId();
         return historyRepository.findHistory(userId, historyId).subscribeOn(Schedulers.io());
     }

@@ -1,7 +1,7 @@
 package com.lakeel.altla.vision.nearby.domain.usecase;
 
-import com.lakeel.altla.vision.nearby.data.entity.InformationEntity;
 import com.lakeel.altla.vision.nearby.data.repository.FirebaseInformationRepository;
+import com.lakeel.altla.vision.nearby.domain.model.Information;
 import com.lakeel.altla.vision.nearby.presentation.firebase.MyUser;
 
 import javax.inject.Inject;
@@ -18,8 +18,8 @@ public final class FindInformationListUseCase {
     FindInformationListUseCase() {
     }
 
-    public Observable<InformationEntity> execute() {
+    public Observable<Information> execute() {
         String userId = MyUser.getUserId();
-        return repository.findList(userId).subscribeOn(Schedulers.io());
+        return repository.findInformationList(userId).subscribeOn(Schedulers.io());
     }
 }

@@ -9,25 +9,25 @@ import com.google.firebase.database.ValueEventListener;
 import javax.inject.Inject;
 import javax.inject.Named;
 
-import rx.Observable;
+import rx.Completable;
 
 public final class FirebaseConnectionRepository {
 
     private DatabaseReference reference;
 
     @Inject
-    public FirebaseConnectionRepository(@Named("connectionUrl") String url) {
+    FirebaseConnectionRepository(@Named("connectionUrl") String url) {
         reference = FirebaseDatabase.getInstance().getReferenceFromUrl(url);
     }
 
-    public Observable<Object> observeConnection() {
-        return Observable.create(subscriber -> {
+    public Completable observeConnection() {
+        return Completable.create(subscriber -> {
             reference.addValueEventListener(new ValueEventListener() {
                 @Override
                 public void onDataChange(DataSnapshot dataSnapshot) {
                     boolean connected = dataSnapshot.getValue(Boolean.class);
                     if (connected) {
-                        subscriber.onNext(Observable.empty());
+                        subscriber.onCompleted();
                     }
                 }
 

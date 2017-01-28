@@ -6,31 +6,36 @@ import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
-import com.lakeel.altla.vision.nearby.data.execption.DataStoreException;
-import com.lakeel.altla.vision.nearby.data.mapper.LocationDataEntityMapper;
 import com.lakeel.altla.vision.nearby.data.entity.LocationDataEntity;
+import com.lakeel.altla.vision.nearby.data.execption.DataStoreException;
+import com.lakeel.altla.vision.nearby.data.mapper.entity.LocationDataEntityMapper;
+import com.lakeel.altla.vision.nearby.data.mapper.model.LocationMetaDataMapper;
+import com.lakeel.altla.vision.nearby.domain.model.LocationMetaData;
 
 import java.util.Iterator;
 
 import javax.inject.Inject;
 import javax.inject.Named;
 
+import rx.Completable;
 import rx.Single;
 
 public final class FirebaseLocationsDataRepository {
 
     private static final String KEY_BEACON_ID = "beaconId";
 
-    private DatabaseReference reference;
-
     private final LocationDataEntityMapper entityMapper = new LocationDataEntityMapper();
+
+    private final LocationMetaDataMapper metaDataMapper = new LocationMetaDataMapper();
+
+    private DatabaseReference reference;
 
     @Inject
     FirebaseLocationsDataRepository(@Named("locationDataUrl") String url) {
         reference = FirebaseDatabase.getInstance().getReferenceFromUrl(url);
     }
 
-    public Single<LocationDataEntity> findLocationsDataByBeaconId(String beaconId) {
+    public Single<LocationMetaData> findLocationMetaData(String beaconId) {
         return Single.create(subscriber ->
                 reference
                         .orderByChild(KEY_BEACON_ID)
@@ -44,13 +49,11 @@ public final class FirebaseLocationsDataRepository {
                                     return;
                                 }
 
-                                Iterable<DataSnapshot> iterable = dataSnapshot.getChildren();
-                                Iterator<DataSnapshot> iterator = iterable.iterator();
+                                Iterator<DataSnapshot> iterator = dataSnapshot.getChildren().iterator();
                                 while (iterator.hasNext()) {
                                     DataSnapshot snapshot = iterator.next();
                                     LocationDataEntity entity = snapshot.getValue(LocationDataEntity.class);
-                                    entity.uniqueId = snapshot.getKey();
-                                    subscriber.onSuccess(entity);
+                                    subscriber.onSuccess(metaDataMapper.map(entity, snapshot.getKey()));
                                 }
                             }
 
@@ -61,8 +64,8 @@ public final class FirebaseLocationsDataRepository {
                         }));
     }
 
-    public Single<LocationDataEntity> saveLocationData(String uniqueId, String beaconId) {
-        return Single.create(subscriber -> {
+    public Completable saveLocationMetaData(String uniqueId, String beaconId) {
+        return Completable.create(subscriber -> {
             LocationDataEntity entity = entityMapper.map(beaconId);
             Task task = reference
                     .child(uniqueId)
@@ -73,7 +76,7 @@ public final class FirebaseLocationsDataRepository {
                 subscriber.onError(new DataStoreException(exception));
             }
 
-            subscriber.onSuccess(entity);
+            subscriber.onCompleted();
         });
     }
 }

@@ -1,35 +1,28 @@
 package com.lakeel.altla.vision.nearby.presentation.presenter.mapper;
 
-import com.lakeel.altla.vision.nearby.data.entity.HistoryEntity;
+import com.lakeel.altla.vision.nearby.domain.model.History;
 import com.lakeel.altla.vision.nearby.presentation.presenter.model.UserPassingModel;
-
-import java.util.List;
 
 public final class UserPassingModelMapper {
 
-    public UserPassingModel map(HistoryEntity entity) {
+    public UserPassingModel map(History history) {
         UserPassingModel model = new UserPassingModel();
 
-        model.userId = entity.userId;
-        model.userActivity = entity.userActivity;
-        model.passingTime = entity.passingTime;
+        model.userId = history.userId;
+        model.userActivity = history.userActivity;
+        model.passingTime = history.passingTime;
 
-        HistoryEntity.LocationEntity locationEntity = entity.location;
-        if (locationEntity != null) {
-            model.latitude = locationEntity.latitude;
-            model.longitude = locationEntity.longitude;
+        History.Location location = history.location;
+        if (location != null) {
+            model.latitude = location.latitude;
+            model.longitude = location.longitude;
         }
 
-        HistoryEntity.WeatherEntity weatherEntity = entity.weather;
-        if (weatherEntity != null) {
-            List<Integer> conditionList = weatherEntity.conditions;
-            int[] conditionArray = new int[conditionList.size()];
-            for (int count = 0; count < conditionList.size(); count++) {
-                conditionArray[count] = conditionList.get(count);
-            }
-            model.conditions = conditionArray;
-            model.humidity = weatherEntity.humidity;
-            model.temperature = weatherEntity.temperature;
+        History.Weather weather = history.weather;
+        if (weather != null) {
+            model.conditions = weather.conditions;
+            model.humidity = weather.humidity;
+            model.temperature = weather.temperature;
         }
 
         return model;

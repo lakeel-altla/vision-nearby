@@ -12,14 +12,12 @@ import android.support.v4.content.ContextCompat;
 
 import com.google.android.gms.awareness.Awareness;
 import com.google.android.gms.common.api.GoogleApiClient;
-import com.lakeel.altla.vision.nearby.data.entity.LocationDataEntity;
 import com.lakeel.altla.vision.nearby.domain.usecase.SaveDeviceLocationUseCase;
 import com.lakeel.altla.vision.nearby.domain.usecase.SaveLocationDataUseCase;
 import com.lakeel.altla.vision.nearby.presentation.di.component.DaggerServiceComponent;
 import com.lakeel.altla.vision.nearby.presentation.di.component.ServiceComponent;
 import com.lakeel.altla.vision.nearby.presentation.di.module.ServiceModule;
 import com.lakeel.altla.vision.nearby.presentation.intent.IntentKey;
-import com.lakeel.altla.vision.nearby.rx.EmptyAction;
 import com.lakeel.altla.vision.nearby.rx.ErrorAction;
 
 import org.slf4j.Logger;
@@ -27,6 +25,7 @@ import org.slf4j.LoggerFactory;
 
 import javax.inject.Inject;
 
+import rx.Completable;
 import rx.Single;
 
 public final class LocationService extends IntentService {
@@ -46,8 +45,7 @@ public final class LocationService extends IntentService {
         public void onConnected(@Nullable Bundle bundle) {
             getUserCurrentLocation(context)
                     .flatMap(LocationService.this::saveDeviceLocation)
-                    .flatMap(uniqueId -> saveLocationData(uniqueId, beaconId))
-                    .subscribe(new EmptyAction<>(), new ErrorAction<>());
+                    .subscribe(uniqueId -> saveLocationMetaData(uniqueId, beaconId), new ErrorAction<>());
         }
 
         @Override
@@ -116,7 +114,7 @@ public final class LocationService extends IntentService {
         return saveDeviceLocationUseCase.execute(location);
     }
 
-    private Single<LocationDataEntity> saveLocationData(String uniqueId, String beaconId) {
+    private Completable saveLocationMetaData(String uniqueId, String beaconId) {
         return saveLocationDataUseCase.execute(uniqueId, beaconId);
     }
 }

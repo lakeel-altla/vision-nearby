@@ -25,7 +25,7 @@ public final class InformationListPresenter extends BasePresenter<InformationLis
 
     @Inject
     FindInformationListUseCase findInformationListUseCase;
-    
+
     private InformationModelMapper modelMapper = new InformationModelMapper();
 
     private List<InformationModel> models = new ArrayList<>();
@@ -36,7 +36,7 @@ public final class InformationListPresenter extends BasePresenter<InformationLis
 
     public void onActivityCreated() {
         Subscription subscription = findInformationListUseCase.execute()
-                .map(entity -> modelMapper.map(entity))
+                .map(information -> modelMapper.map(information))
                 .toList()
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribe(models -> {

@@ -3,15 +3,15 @@ package com.lakeel.altla.vision.nearby.data.repository;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
-import com.lakeel.altla.vision.nearby.data.mapper.NotificationEntityMapper;
 import com.lakeel.altla.vision.nearby.data.entity.NotificationEntity;
+import com.lakeel.altla.vision.nearby.data.mapper.entity.NotificationEntityMapper;
 
 import java.util.Map;
 
 import javax.inject.Inject;
 import javax.inject.Named;
 
-import rx.Single;
+import rx.Completable;
 
 public class FirebaseNotificationsRepository {
 
@@ -20,12 +20,12 @@ public class FirebaseNotificationsRepository {
     private NotificationEntityMapper entityMapper = new NotificationEntityMapper();
 
     @Inject
-    public FirebaseNotificationsRepository(@Named("notificationsUrl") String url) {
+    FirebaseNotificationsRepository(@Named("notificationsUrl") String url) {
         reference = FirebaseDatabase.getInstance().getReferenceFromUrl(url);
     }
 
-    public Single<NotificationEntity> saveNotification(String to, String title, String message) {
-        return Single.create(subscriber -> {
+    public Completable save(String to, String title, String message) {
+        return Completable.create(subscriber -> {
             NotificationEntity entity = entityMapper.map(to, title, message);
             Map<String, Object> map = entity.toMap();
 
@@ -38,7 +38,7 @@ public class FirebaseNotificationsRepository {
                 subscriber.onError(exception);
             }
 
-            subscriber.onSuccess(entity);
+            subscriber.onCompleted();
         });
     }
 }

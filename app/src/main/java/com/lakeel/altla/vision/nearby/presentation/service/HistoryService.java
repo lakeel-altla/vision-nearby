@@ -15,8 +15,7 @@ import com.google.android.gms.awareness.state.Weather;
 import com.google.android.gms.common.api.GoogleApiClient;
 import com.google.android.gms.location.ActivityRecognitionResult;
 import com.google.android.gms.location.DetectedActivity;
-import com.lakeel.altla.vision.nearby.data.entity.HistoryEntity;
-import com.lakeel.altla.vision.nearby.data.entity.UserEntity;
+import com.lakeel.altla.vision.nearby.domain.model.User;
 import com.lakeel.altla.vision.nearby.domain.usecase.FindBeaconUseCase;
 import com.lakeel.altla.vision.nearby.domain.usecase.FindUserUseCase;
 import com.lakeel.altla.vision.nearby.domain.usecase.SaveHistoryUseCase;
@@ -28,9 +27,7 @@ import com.lakeel.altla.vision.nearby.presentation.awareness.AwarenessException;
 import com.lakeel.altla.vision.nearby.presentation.di.component.DaggerServiceComponent;
 import com.lakeel.altla.vision.nearby.presentation.di.component.ServiceComponent;
 import com.lakeel.altla.vision.nearby.presentation.di.module.ServiceModule;
-import com.lakeel.altla.vision.nearby.presentation.firebase.MyUser;
 import com.lakeel.altla.vision.nearby.presentation.intent.IntentKey;
-import com.lakeel.altla.vision.nearby.rx.EmptyAction;
 import com.lakeel.altla.vision.nearby.rx.ErrorAction;
 
 import org.slf4j.Logger;
@@ -38,6 +35,7 @@ import org.slf4j.LoggerFactory;
 
 import javax.inject.Inject;
 
+import rx.Completable;
 import rx.Observable;
 import rx.Single;
 import rx.SingleSubscriber;
@@ -64,20 +62,17 @@ public class HistoryService extends IntentService {
                     .flatMap(entity -> findUser(entity.userId))
                     .toObservable()
                     // Analytics
-                    .doOnNext(entity -> analyticsReporter.addHistory(entity.userId, entity.name))
-                    .flatMap(entity -> saveHistory(entity.userId, regionState))
+                    .doOnNext(user -> analyticsReporter.addHistory(user.userId, user.name))
+                    .flatMap(user -> saveHistory(user.userId, regionState))
                     .subscribe(uniqueId -> {
                         getUserActivity()
-                                .flatMap(userActivity -> saveUserActivity(uniqueId, userActivity))
-                                .subscribe(new EmptyAction<>(), new ErrorAction<>());
+                                .subscribe(userActivity -> saveUserActivity(uniqueId, userActivity), new ErrorAction<>());
 
                         getUserLocation(context)
-                                .flatMap(location -> saveUserLocation(uniqueId, location))
-                                .subscribe(new EmptyAction<>(), new ErrorAction<>());
+                                .subscribe(location -> saveUserLocation(uniqueId, location), new ErrorAction<>());
 
                         getWeather(context)
-                                .flatMap(weather -> saveWeather(uniqueId, weather))
-                                .subscribe(new EmptyAction<>(), new ErrorAction<>());
+                                .subscribe(weather -> saveWeather(uniqueId, weather), new ErrorAction<>());
                     }, new ErrorAction<>());
         }
 
@@ -139,7 +134,7 @@ public class HistoryService extends IntentService {
         googleApiClient.connect();
     }
 
-    private Single<UserEntity> findUser(String userId) {
+    private Single<User> findUser(String userId) {
         return findUserUseCase.execute(userId);
     }
 
@@ -203,15 +198,15 @@ public class HistoryService extends IntentService {
         });
     }
 
-    private Single<HistoryEntity> saveUserActivity(String uniqueId, DetectedActivity userActivity) {
-        return saveUserActivityUseCase.execute(uniqueId, MyUser.getUserId(), userActivity);
+    private Completable saveUserActivity(String uniqueId, DetectedActivity userActivity) {
+        return saveUserActivityUseCase.execute(uniqueId, userActivity);
     }
 
-    private Single<HistoryEntity> saveUserLocation(String uniqueId, Location location) {
-        return saveUserLocationUseCase.execute(uniqueId, MyUser.getUserId(), location);
+    private Completable saveUserLocation(String uniqueId, Location location) {
+        return saveUserLocationUseCase.execute(uniqueId, location);
     }
 
-    private Single<HistoryEntity> saveWeather(String uniqueId, Weather weather) {
-        return saveWeatherUseCase.execute(uniqueId, MyUser.getUserId(), weather);
+    private Completable saveWeather(String uniqueId, Weather weather) {
+        return saveWeatherUseCase.execute(uniqueId, weather);
     }
 }
