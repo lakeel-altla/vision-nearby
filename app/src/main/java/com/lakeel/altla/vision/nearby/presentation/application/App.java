@@ -17,7 +17,7 @@ import com.lakeel.altla.vision.nearby.presentation.di.component.DefaultComponent
 import com.lakeel.altla.vision.nearby.presentation.di.module.ApplicationModule;
 import com.lakeel.altla.vision.nearby.presentation.di.module.ContextModule;
 import com.lakeel.altla.vision.nearby.presentation.firebase.MyUser;
-import com.lakeel.altla.vision.nearby.presentation.view.activity.DefaultActivityLifecycleCallbacks;
+import com.lakeel.altla.vision.nearby.presentation.view.activity.EmptyActivityLifecycleCallbacks;
 import com.lakeel.altla.vision.nearby.rx.ErrorAction;
 import com.lakeel.altla.vision.nearby.rx.ReusableCompositeSubscription;
 import com.nostra13.universalimageloader.cache.memory.impl.UsingFreqLimitedMemoryCache;
@@ -82,7 +82,7 @@ public class App extends Application {
             subscribeInBackgroundIfNeeded();
         }
 
-        registerActivityLifecycleCallbacks(new DefaultActivityLifecycleCallbacks() {
+        registerActivityLifecycleCallbacks(new EmptyActivityLifecycleCallbacks() {
             @Override
             public void onActivityStopped(Activity activity) {
                 subscriptions.unSubscribe();
