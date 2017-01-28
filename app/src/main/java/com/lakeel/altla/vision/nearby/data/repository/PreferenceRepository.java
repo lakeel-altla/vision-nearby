@@ -32,15 +32,6 @@ public class PreferenceRepository {
         return Single.just(preference);
     }
 
-    public Single<String> findBeaconId(String userId) {
-        String beaconId = sharedPreferences.getString(KEY_BEACON_ID + userId, StringUtils.EMPTY);
-        if (StringUtils.isEmpty(beaconId)) {
-            return Single.just(null);
-        } else {
-            return Single.just(beaconId);
-        }
-    }
-
     public Single<String> saveBeaconId(String userId, String beaconId) {
         SharedPreferences.Editor editor = sharedPreferences.edit();
         editor.putString(KEY_BEACON_ID + userId, beaconId);

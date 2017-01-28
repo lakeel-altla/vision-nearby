@@ -2,7 +2,7 @@ package com.lakeel.altla.vision.nearby.presentation.presenter.ble;
 
 import android.content.Context;
 
-import com.lakeel.altla.vision.nearby.domain.usecase.FindBeaconIdUseCase;
+import com.lakeel.altla.vision.nearby.domain.usecase.FindPreferencesUseCase;
 import com.lakeel.altla.vision.nearby.presentation.analytics.AnalyticsReporter;
 import com.lakeel.altla.vision.nearby.presentation.ble.BleChecker;
 import com.lakeel.altla.vision.nearby.presentation.ble.BleChecker.State;
@@ -23,7 +23,7 @@ public final class BleSettingsPresenter extends BasePresenter<BleSettingsView> {
     AnalyticsReporter analyticsReporter;
 
     @Inject
-    FindBeaconIdUseCase findBeaconIdUseCase;
+    FindPreferencesUseCase findPreferencesUseCase;
 
     private final Context context;
 
@@ -43,9 +43,9 @@ public final class BleSettingsPresenter extends BasePresenter<BleSettingsView> {
     public void onStartAdvertise() {
         analyticsReporter.onAdvertise();
 
-        Subscription subscription = findBeaconIdUseCase.execute()
+        Subscription subscription = findPreferencesUseCase.execute()
                 .observeOn(AndroidSchedulers.mainThread())
-                .subscribe(beaconId -> getView().startAdvertise(beaconId), new ErrorAction<>());
+                .subscribe(preference -> getView().startAdvertise(preference.beaconId), new ErrorAction<>());
         subscriptions.add(subscription);
     }
 

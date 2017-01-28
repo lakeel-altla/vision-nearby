@@ -10,7 +10,6 @@ import com.google.firebase.iid.FirebaseInstanceId;
 import com.lakeel.altla.vision.nearby.R;
 import com.lakeel.altla.vision.nearby.beacon.EddystoneUid;
 import com.lakeel.altla.vision.nearby.core.StringUtils;
-import com.lakeel.altla.vision.nearby.domain.usecase.FindBeaconIdUseCase;
 import com.lakeel.altla.vision.nearby.domain.usecase.FindPreferencesUseCase;
 import com.lakeel.altla.vision.nearby.domain.usecase.ObserveConnectionUseCase;
 import com.lakeel.altla.vision.nearby.domain.usecase.ObserveUserProfileUseCase;
@@ -48,9 +47,6 @@ public final class ActivityPresenter extends BasePresenter<ActivityView> {
 
     @Inject
     ObserveConnectionUseCase observeConnectionUseCase;
-
-    @Inject
-    FindBeaconIdUseCase findBeaconIdUseCase;
 
     @Inject
     FindPreferencesUseCase findPreferencesUseCase;
@@ -107,9 +103,10 @@ public final class ActivityPresenter extends BasePresenter<ActivityView> {
                     getView().updateProfile(model);
                 }, new ErrorAction<>());
 
-        Subscription subscription = findBeaconIdUseCase.execute()
+        Subscription subscription = findPreferencesUseCase.execute()
                 .observeOn(Schedulers.io())
-                .subscribe(beaconId -> {
+                .subscribe(preference -> {
+                    String beaconId = preference.beaconId;
                     if (StringUtils.isEmpty(beaconId)) {
                         EddystoneUid eddystoneUid = new EddystoneUid();
                         // Create EddystoneUID.
