@@ -20,7 +20,7 @@ import javax.inject.Named;
 import rx.Completable;
 import rx.Single;
 
-public final class FirebaseLocationsDataRepository {
+public final class FirebaseUserLocationMetaDataRepository {
 
     private static final String KEY_BEACON_ID = "beaconId";
 
@@ -31,7 +31,7 @@ public final class FirebaseLocationsDataRepository {
     private final DatabaseReference reference;
 
     @Inject
-    FirebaseLocationsDataRepository(@Named("locationDataUrl") String url) {
+    FirebaseUserLocationMetaDataRepository(@Named("userLocationMetaDataUrl") String url) {
         reference = FirebaseDatabase.getInstance().getReferenceFromUrl(url);
     }
 

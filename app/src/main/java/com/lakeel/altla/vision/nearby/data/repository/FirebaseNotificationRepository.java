@@ -13,14 +13,14 @@ import javax.inject.Named;
 
 import rx.Completable;
 
-public class FirebaseNotificationsRepository {
+public class FirebaseNotificationRepository {
 
     private final NotificationEntityMapper entityMapper = new NotificationEntityMapper();
 
     private final DatabaseReference reference;
 
     @Inject
-    FirebaseNotificationsRepository(@Named("notificationsUrl") String url) {
+    FirebaseNotificationRepository(@Named("notificationUrl") String url) {
         reference = FirebaseDatabase.getInstance().getReferenceFromUrl(url);
     }
 

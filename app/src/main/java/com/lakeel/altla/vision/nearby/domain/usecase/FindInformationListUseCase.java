@@ -1,6 +1,6 @@
 package com.lakeel.altla.vision.nearby.domain.usecase;
 
-import com.lakeel.altla.vision.nearby.data.repository.FirebaseInformationRepository;
+import com.lakeel.altla.vision.nearby.data.repository.FirebaseUserInformationRepository;
 import com.lakeel.altla.vision.nearby.domain.model.Information;
 import com.lakeel.altla.vision.nearby.presentation.firebase.MyUser;
 
@@ -12,7 +12,7 @@ import rx.schedulers.Schedulers;
 public final class FindInformationListUseCase {
 
     @Inject
-    FirebaseInformationRepository repository;
+    FirebaseUserInformationRepository repository;
 
     @Inject
     FindInformationListUseCase() {

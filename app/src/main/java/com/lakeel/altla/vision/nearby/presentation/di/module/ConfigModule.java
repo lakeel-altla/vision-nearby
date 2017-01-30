@@ -12,9 +12,9 @@ public final class ConfigModule {
 
     @InjectScope
     @Provides
-    @Named("favoritesUrl")
+    @Named("userFavoriteUrl")
     String provideFavoritesUrl() {
-        return "https://profile-notification-95441.firebaseio.com/favorites";
+        return "https://profile-notification-95441.firebaseio.com/userFavorite";
     }
 
     @InjectScope
@@ -26,70 +26,70 @@ public final class ConfigModule {
 
     @InjectScope
     @Provides
-    @Named("usersUrl")
+    @Named("userProfileUrl")
     String provideUsersUrl() {
-        return "https://profile-notification-95441.firebaseio.com/users";
+        return "https://profile-notification-95441.firebaseio.com/userProfile";
     }
 
     @InjectScope
     @Provides
-    @Named("beaconsUrl")
+    @Named("beaconUrl")
     String provideBeaconsUrl() {
-        return "https://profile-notification-95441.firebaseio.com/beacons";
+        return "https://profile-notification-95441.firebaseio.com/beacon";
     }
 
     @InjectScope
     @Provides
-    @Named("connectionsUrl")
+    @Named("userConnectionUrl")
     String providePresencesUrl() {
-        return "https://profile-notification-95441.firebaseio.com/connections";
+        return "https://profile-notification-95441.firebaseio.com/userConnection";
     }
 
     @InjectScope
     @Provides
-    @Named("connectionUrl")
+    @Named("connectedUrl")
     String provideConnectionUrl() {
         return "https://profile-notification-95441.firebaseio.com/.info/connected";
     }
 
     @InjectScope
     @Provides
-    @Named("lineLinksUrl")
+    @Named("lineLinkUrl")
     String provideLineLinksUrl() {
-        return "https://profile-notification-95441.firebaseio.com/links/line";
+        return "https://profile-notification-95441.firebaseio.com/link/line";
     }
 
     @InjectScope
     @Provides
-    @Named("locationsUrl")
+    @Named("locationUrl")
     String provideLocationsUrl() {
-        return "https://profile-notification-95441.firebaseio.com/locations";
+        return "https://profile-notification-95441.firebaseio.com/location";
     }
 
     @InjectScope
     @Provides
-    @Named("locationDataUrl")
+    @Named("userLocationMetaDataUrl")
     String provideLocationDataUrl() {
-        return "https://profile-notification-95441.firebaseio.com/locationData";
+        return "https://profile-notification-95441.firebaseio.com/userLocationMetaData";
     }
 
     @InjectScope
     @Provides
-    @Named("tokensUrl")
+    @Named("userDeviceTokenUrl")
     String provideTokensUrl() {
-        return "https://profile-notification-95441.firebaseio.com/tokens";
+        return "https://profile-notification-95441.firebaseio.com/token";
     }
 
     @InjectScope
     @Provides
-    @Named("notificationsUrl")
+    @Named("notificationUrl")
     String provideNotificationsUrl() {
-        return "https://profile-notification-95441.firebaseio.com/notifications";
+        return "https://profile-notification-95441.firebaseio.com/notification";
     }
 
     @InjectScope
     @Provides
-    @Named("informationUrl")
+    @Named("userInformationUrl")
     String provideInformationUrl() {
         return "https://profile-notification-95441.firebaseio.com/information";
     }

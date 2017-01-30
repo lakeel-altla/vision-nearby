@@ -1,7 +1,7 @@
 package com.lakeel.altla.vision.nearby.domain.usecase;
 
 import com.lakeel.altla.vision.nearby.data.repository.FirebaseHistoryRepository;
-import com.lakeel.altla.vision.nearby.data.repository.FirebaseUsersRepository;
+import com.lakeel.altla.vision.nearby.data.repository.FirebaseUserProfileRepository;
 import com.lakeel.altla.vision.nearby.domain.model.History;
 import com.lakeel.altla.vision.nearby.domain.model.HistoryUser;
 import com.lakeel.altla.vision.nearby.domain.model.User;
@@ -18,7 +18,7 @@ public final class FindHistoryListUseCase {
     FirebaseHistoryRepository historyRepository;
 
     @Inject
-    FirebaseUsersRepository usersRepository;
+    FirebaseUserProfileRepository usersRepository;
 
     @Inject
     FindHistoryListUseCase() {

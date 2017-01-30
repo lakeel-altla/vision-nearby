@@ -1,7 +1,7 @@
 package com.lakeel.altla.vision.nearby.domain.usecase;
 
-import com.lakeel.altla.vision.nearby.data.repository.FirebaseFavoritesRepository;
-import com.lakeel.altla.vision.nearby.data.repository.FirebaseUsersRepository;
+import com.lakeel.altla.vision.nearby.data.repository.FirebaseUserFavoriteRepository;
+import com.lakeel.altla.vision.nearby.data.repository.FirebaseUserProfileRepository;
 import com.lakeel.altla.vision.nearby.domain.model.User;
 import com.lakeel.altla.vision.nearby.presentation.firebase.MyUser;
 
@@ -13,10 +13,10 @@ import rx.schedulers.Schedulers;
 public final class FindFavoritesUseCase {
 
     @Inject
-    FirebaseFavoritesRepository favoritesRepository;
+    FirebaseUserFavoriteRepository favoritesRepository;
 
     @Inject
-    FirebaseUsersRepository usersRepository;
+    FirebaseUserProfileRepository usersRepository;
 
     @Inject
     FindFavoritesUseCase() {

@@ -1,6 +1,6 @@
 package com.lakeel.altla.vision.nearby.domain.usecase;
 
-import com.lakeel.altla.vision.nearby.data.repository.FirebaseLocationsDataRepository;
+import com.lakeel.altla.vision.nearby.data.repository.FirebaseUserLocationMetaDataRepository;
 
 import javax.inject.Inject;
 
@@ -10,7 +10,7 @@ import rx.schedulers.Schedulers;
 public final class SaveLocationDataUseCase {
 
     @Inject
-    FirebaseLocationsDataRepository repository;
+    FirebaseUserLocationMetaDataRepository repository;
 
     @Inject
     SaveLocationDataUseCase() {

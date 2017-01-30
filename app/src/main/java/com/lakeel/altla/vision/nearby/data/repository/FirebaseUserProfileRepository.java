@@ -22,7 +22,7 @@ import rx.Completable;
 import rx.Observable;
 import rx.Single;
 
-public final class FirebaseUsersRepository {
+public final class FirebaseUserProfileRepository {
 
     private static final String KEY_BEACONS = "beacons";
 
@@ -33,7 +33,7 @@ public final class FirebaseUsersRepository {
     private final DatabaseReference reference;
 
     @Inject
-    public FirebaseUsersRepository(@Named("usersUrl") String url) {
+    public FirebaseUserProfileRepository(@Named("userProfileUrl") String url) {
         reference = FirebaseDatabase.getInstance().getReferenceFromUrl(url);
     }
 

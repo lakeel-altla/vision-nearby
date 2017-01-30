@@ -16,14 +16,14 @@ import javax.inject.Named;
 import rx.Observable;
 import rx.Single;
 
-public final class FirebaseTokensRepository {
+public final class FirebaseUserDeviceTokenRepository {
 
     private final TokenMapper tokenMapper = new TokenMapper();
 
     private final DatabaseReference reference;
 
     @Inject
-    public FirebaseTokensRepository(@Named("tokensUrl") String url) {
+    public FirebaseUserDeviceTokenRepository(@Named("userDeviceTokenUrl") String url) {
         reference = FirebaseDatabase.getInstance().getReferenceFromUrl(url);
     }
 

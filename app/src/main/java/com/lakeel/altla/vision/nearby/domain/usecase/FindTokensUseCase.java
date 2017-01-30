@@ -1,6 +1,6 @@
 package com.lakeel.altla.vision.nearby.domain.usecase;
 
-import com.lakeel.altla.vision.nearby.data.repository.FirebaseTokensRepository;
+import com.lakeel.altla.vision.nearby.data.repository.FirebaseUserDeviceTokenRepository;
 import com.lakeel.altla.vision.nearby.domain.model.Token;
 
 import javax.inject.Inject;
@@ -11,7 +11,7 @@ import rx.schedulers.Schedulers;
 public final class FindTokensUseCase {
 
     @Inject
-    FirebaseTokensRepository repository;
+    FirebaseUserDeviceTokenRepository repository;
 
     @Inject
     FindTokensUseCase() {

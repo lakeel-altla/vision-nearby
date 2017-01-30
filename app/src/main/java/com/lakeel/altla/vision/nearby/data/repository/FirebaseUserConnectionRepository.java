@@ -21,7 +21,7 @@ import javax.inject.Named;
 import rx.Completable;
 import rx.Single;
 
-public class FirebaseConnectionsRepository {
+public class FirebaseUserConnectionRepository {
 
     private static final String IS_CONNECTED_KEY = "isConnected";
 
@@ -32,7 +32,7 @@ public class FirebaseConnectionsRepository {
     private final DatabaseReference reference;
 
     @Inject
-    FirebaseConnectionsRepository(@Named("connectionsUrl") String url) {
+    FirebaseUserConnectionRepository(@Named("userConnectionUrl") String url) {
         reference = FirebaseDatabase.getInstance().getReferenceFromUrl(url);
     }
 

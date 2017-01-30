@@ -1,7 +1,7 @@
 package com.lakeel.altla.vision.nearby.domain.usecase;
 
-import com.lakeel.altla.vision.nearby.data.repository.FirebaseBeaconsRepository;
-import com.lakeel.altla.vision.nearby.data.repository.FirebaseUsersRepository;
+import com.lakeel.altla.vision.nearby.data.repository.FirebaseBeaconRepository;
+import com.lakeel.altla.vision.nearby.data.repository.FirebaseUserProfileRepository;
 import com.lakeel.altla.vision.nearby.domain.model.User;
 
 import javax.inject.Inject;
@@ -12,10 +12,10 @@ import rx.schedulers.Schedulers;
 public final class FindNearbyUsersUseCase {
 
     @Inject
-    FirebaseBeaconsRepository beaconsRepository;
+    FirebaseBeaconRepository beaconsRepository;
 
     @Inject
-    FirebaseUsersRepository usersRepository;
+    FirebaseUserProfileRepository usersRepository;
 
     @Inject
     FindNearbyUsersUseCase() {

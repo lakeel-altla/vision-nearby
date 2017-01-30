@@ -1,7 +1,7 @@
 package com.lakeel.altla.vision.nearby.domain.usecase;
 
-import com.lakeel.altla.vision.nearby.data.repository.FirebaseBeaconsRepository;
-import com.lakeel.altla.vision.nearby.data.repository.FirebaseUsersRepository;
+import com.lakeel.altla.vision.nearby.data.repository.FirebaseBeaconRepository;
+import com.lakeel.altla.vision.nearby.data.repository.FirebaseUserProfileRepository;
 import com.lakeel.altla.vision.nearby.domain.model.Beacon;
 import com.lakeel.altla.vision.nearby.presentation.firebase.MyUser;
 
@@ -13,10 +13,10 @@ import rx.schedulers.Schedulers;
 public final class FindDevicesUseCase {
 
     @Inject
-    FirebaseUsersRepository usersRepository;
+    FirebaseUserProfileRepository usersRepository;
 
     @Inject
-    FirebaseBeaconsRepository beaconsRepository;
+    FirebaseBeaconRepository beaconsRepository;
 
     @Inject
     FindDevicesUseCase() {

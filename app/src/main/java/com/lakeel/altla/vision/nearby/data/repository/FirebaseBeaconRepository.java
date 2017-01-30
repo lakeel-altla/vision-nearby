@@ -21,7 +21,7 @@ import javax.inject.Named;
 import rx.Completable;
 import rx.Single;
 
-public class FirebaseBeaconsRepository {
+public class FirebaseBeaconRepository {
 
     private static final String KEY_IS_LOST = "isLost";
 
@@ -32,7 +32,7 @@ public class FirebaseBeaconsRepository {
     private final DatabaseReference reference;
 
     @Inject
-    public FirebaseBeaconsRepository(@Named("beaconsUrl") String url) {
+    public FirebaseBeaconRepository(@Named("beaconUrl") String url) {
         reference = FirebaseDatabase.getInstance().getReferenceFromUrl(url);
     }
 

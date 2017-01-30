@@ -20,7 +20,7 @@ import rx.Completable;
 import rx.Observable;
 import rx.Single;
 
-public class FirebaseInformationRepository {
+public class FirebaseUserInformationRepository {
 
     private final InformationEntityMapper entityMapper = new InformationEntityMapper();
 
@@ -29,7 +29,7 @@ public class FirebaseInformationRepository {
     private final DatabaseReference reference;
 
     @Inject
-    public FirebaseInformationRepository(@Named("informationUrl") String url) {
+    public FirebaseUserInformationRepository(@Named("userInformationUrl") String url) {
         reference = FirebaseDatabase.getInstance().getReferenceFromUrl(url);
     }
 

@@ -11,12 +11,12 @@ import javax.inject.Named;
 
 import rx.Completable;
 
-public final class FirebaseConnectionRepository {
+public final class FirebaseConnectedRepository {
 
     private DatabaseReference reference;
 
     @Inject
-    FirebaseConnectionRepository(@Named("connectionUrl") String url) {
+    FirebaseConnectedRepository(@Named("connectedUrl") String url) {
         reference = FirebaseDatabase.getInstance().getReferenceFromUrl(url);
     }
 

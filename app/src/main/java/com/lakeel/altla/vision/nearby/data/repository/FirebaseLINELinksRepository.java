@@ -28,7 +28,7 @@ public class FirebaseLINELinksRepository {
     private final DatabaseReference reference;
 
     @Inject
-    public FirebaseLINELinksRepository(@Named("lineLinksUrl") String url) {
+    FirebaseLINELinksRepository(@Named("lineLinkUrl") String url) {
         reference = FirebaseDatabase.getInstance().getReferenceFromUrl(url);
     }
 

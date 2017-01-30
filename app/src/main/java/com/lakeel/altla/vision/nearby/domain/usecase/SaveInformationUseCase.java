@@ -1,6 +1,6 @@
 package com.lakeel.altla.vision.nearby.domain.usecase;
 
-import com.lakeel.altla.vision.nearby.data.repository.FirebaseInformationRepository;
+import com.lakeel.altla.vision.nearby.data.repository.FirebaseUserInformationRepository;
 
 import javax.inject.Inject;
 
@@ -10,7 +10,7 @@ import rx.schedulers.Schedulers;
 public final class SaveInformationUseCase {
 
     @Inject
-    FirebaseInformationRepository repository;
+    FirebaseUserInformationRepository repository;
 
     @Inject
     SaveInformationUseCase() {

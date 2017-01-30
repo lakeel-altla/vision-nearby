@@ -2,8 +2,8 @@ package com.lakeel.altla.vision.nearby.domain.usecase;
 
 import android.os.Build;
 
-import com.lakeel.altla.vision.nearby.data.repository.FirebaseBeaconsRepository;
-import com.lakeel.altla.vision.nearby.data.repository.FirebaseUsersRepository;
+import com.lakeel.altla.vision.nearby.data.repository.FirebaseBeaconRepository;
+import com.lakeel.altla.vision.nearby.data.repository.FirebaseUserProfileRepository;
 import com.lakeel.altla.vision.nearby.data.repository.PreferenceRepository;
 import com.lakeel.altla.vision.nearby.presentation.firebase.MyUser;
 
@@ -18,10 +18,10 @@ public final class SaveBeaconUseCase {
     PreferenceRepository preferenceRepository;
 
     @Inject
-    FirebaseBeaconsRepository beaconsRepository;
+    FirebaseBeaconRepository beaconsRepository;
 
     @Inject
-    FirebaseUsersRepository usersRepository;
+    FirebaseUserProfileRepository usersRepository;
 
     @Inject
     SaveBeaconUseCase() {

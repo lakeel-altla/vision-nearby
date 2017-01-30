@@ -15,12 +15,12 @@ import javax.inject.Named;
 
 import rx.Single;
 
-public class FirebaseLocationsRepository {
+public class FirebaseLocationRepository {
 
     private final GeoFire geoFire;
 
     @Inject
-    public FirebaseLocationsRepository(@Named("locationsUrl") String url) {
+    FirebaseLocationRepository(@Named("locationUrl") String url) {
         DatabaseReference reference = FirebaseDatabase.getInstance().getReferenceFromUrl(url);
         geoFire = new GeoFire(reference);
     }

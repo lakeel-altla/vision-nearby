@@ -1,6 +1,6 @@
 package com.lakeel.altla.vision.nearby.domain.usecase;
 
-import com.lakeel.altla.vision.nearby.data.repository.FirebaseBeaconsRepository;
+import com.lakeel.altla.vision.nearby.data.repository.FirebaseBeaconRepository;
 
 import javax.inject.Inject;
 
@@ -10,7 +10,7 @@ import rx.schedulers.Schedulers;
 public final class LostDeviceUseCase {
 
     @Inject
-    FirebaseBeaconsRepository repository;
+    FirebaseBeaconRepository repository;
 
     @Inject
     LostDeviceUseCase() {

@@ -1,6 +1,6 @@
 package com.lakeel.altla.vision.nearby.domain.usecase;
 
-import com.lakeel.altla.vision.nearby.data.repository.FirebaseUsersRepository;
+import com.lakeel.altla.vision.nearby.data.repository.FirebaseUserProfileRepository;
 import com.lakeel.altla.vision.nearby.presentation.firebase.MyUser;
 
 import javax.inject.Inject;
@@ -11,7 +11,7 @@ import rx.schedulers.Schedulers;
 public final class SaveUserUseCase {
 
     @Inject
-    FirebaseUsersRepository repository;
+    FirebaseUserProfileRepository repository;
 
     @Inject
     SaveUserUseCase() {

@@ -2,7 +2,7 @@ package com.lakeel.altla.vision.nearby.domain.usecase;
 
 import android.location.Location;
 
-import com.lakeel.altla.vision.nearby.data.repository.FirebaseLocationsRepository;
+import com.lakeel.altla.vision.nearby.data.repository.FirebaseLocationRepository;
 
 import javax.inject.Inject;
 
@@ -12,7 +12,7 @@ import rx.schedulers.Schedulers;
 public final class SaveDeviceLocationUseCase {
 
     @Inject
-    FirebaseLocationsRepository repository;
+    FirebaseLocationRepository repository;
 
     @Inject
     SaveDeviceLocationUseCase() {

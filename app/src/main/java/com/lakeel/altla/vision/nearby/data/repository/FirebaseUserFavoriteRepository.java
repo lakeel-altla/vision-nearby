@@ -17,14 +17,14 @@ import rx.Completable;
 import rx.Observable;
 import rx.Single;
 
-public class FirebaseFavoritesRepository {
+public class FirebaseUserFavoriteRepository {
 
     private final FavoriteMapper favoriteMapper = new FavoriteMapper();
 
     private final DatabaseReference reference;
 
     @Inject
-    public FirebaseFavoritesRepository(@Named("favoritesUrl") String url) {
+    public FirebaseUserFavoriteRepository(@Named("userFavoriteUrl") String url) {
         reference = FirebaseDatabase.getInstance().getReferenceFromUrl(url);
     }
 

@@ -1,6 +1,6 @@
 package com.lakeel.altla.vision.nearby.domain.usecase;
 
-import com.lakeel.altla.vision.nearby.data.repository.FirebaseTokensRepository;
+import com.lakeel.altla.vision.nearby.data.repository.FirebaseUserDeviceTokenRepository;
 import com.lakeel.altla.vision.nearby.data.repository.PreferenceRepository;
 import com.lakeel.altla.vision.nearby.presentation.firebase.MyUser;
 
@@ -15,7 +15,7 @@ public final class SaveTokenUseCase {
     PreferenceRepository preferenceRepository;
 
     @Inject
-    FirebaseTokensRepository tokensRepository;
+    FirebaseUserDeviceTokenRepository tokensRepository;
 
     @Inject
     SaveTokenUseCase() {
