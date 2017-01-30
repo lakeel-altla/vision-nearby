@@ -8,6 +8,16 @@ import java.util.Map;
 
 public final class HistoryEntity {
 
+    private static final String USER_ID = "userId";
+
+    private static final String PASSING_TIME = "passingTime";
+
+    private static final String USER_ACTIVITY = "userActivity";
+
+    private static final String LOCATION = "location";
+
+    private static final String WEATHER = "weather";
+
     public String userId;
 
     public String regionState;
@@ -40,26 +50,26 @@ public final class HistoryEntity {
 
     public Map<String, Object> toMap() {
         Map<String, Object> map = new HashMap<>();
-        map.put("userId", userId);
-        map.put("passingTime", ServerValue.TIMESTAMP);
+        map.put(USER_ID, userId);
+        map.put(PASSING_TIME, ServerValue.TIMESTAMP);
         return map;
     }
 
     public Map<String, Object> toUserActivityMap() {
         Map<String, Object> map = new HashMap<>();
-        map.put("userActivity", userActivity);
+        map.put(USER_ACTIVITY, userActivity);
         return map;
     }
 
     public Map<String, Object> toLocationMap() {
         Map<String, Object> map = new HashMap<>();
-        map.put("location", location);
+        map.put(LOCATION, location);
         return map;
     }
 
     public Map<String, Object> toWeatherMap() {
         Map<String, Object> map = new HashMap<>();
-        map.put("weather", weather);
+        map.put(WEATHER, weather);
         return map;
     }
 }

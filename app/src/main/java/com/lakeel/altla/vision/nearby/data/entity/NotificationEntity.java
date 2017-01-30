@@ -19,7 +19,6 @@ public final class NotificationEntity {
         map.put("title", title);
         map.put("body", message);
         map.put("registrationTime", ServerValue.TIMESTAMP);
-
         return map;
     }
 }

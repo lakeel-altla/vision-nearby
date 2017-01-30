@@ -7,7 +7,7 @@ public final class BeaconEntityMapper {
     public BeaconEntity map(String userId, String name) {
         BeaconEntity entity = new BeaconEntity();
         entity.userId = userId;
-        entity.name = name;
+        entity.userName = name;
         return entity;
     }
 }

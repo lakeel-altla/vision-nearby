@@ -7,15 +7,21 @@ import java.util.Map;
 
 public final class BeaconEntity {
 
-    public String name;
+    private static final String USER_ID = "userId";
+
+    private static final String USER_NAME = "userName";
+
+    private static final String LAST_USED_TIME = "lastUsedTime";
 
     public String userId;
 
+    public String userName;
+
     public Map<String, Object> toMap() {
         Map<String, Object> map = new HashMap<>();
-        map.put("userName", name);
-        map.put("userId", userId);
-        map.put("lastUsedTime", ServerValue.TIMESTAMP);
+        map.put(USER_ID, userId);
+        map.put(USER_NAME, userName);
+        map.put(LAST_USED_TIME, ServerValue.TIMESTAMP);
         return map;
     }
 
