@@ -25,11 +25,11 @@ public class FirebaseBeaconsRepository {
 
     private static final String KEY_IS_LOST = "isLost";
 
-    private DatabaseReference reference;
+    private final BeaconEntityMapper entityMapper = new BeaconEntityMapper();
 
-    private BeaconEntityMapper entityMapper = new BeaconEntityMapper();
+    private final BeaconMapper beaconMapper = new BeaconMapper();
 
-    private BeaconMapper beaconMapper = new BeaconMapper();
+    private final DatabaseReference reference;
 
     @Inject
     public FirebaseBeaconsRepository(@Named("beaconsUrl") String url) {

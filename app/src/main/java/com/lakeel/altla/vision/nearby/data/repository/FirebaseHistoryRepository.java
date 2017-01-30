@@ -29,11 +29,11 @@ public class FirebaseHistoryRepository {
 
     private static final String ID_KEY = "userId";
 
-    private DatabaseReference reference;
+    private final HistoryEntityMapper entityMapper = new HistoryEntityMapper();
 
-    private HistoryEntityMapper entityMapper = new HistoryEntityMapper();
+    private final HistoryMapper historyMapper = new HistoryMapper();
 
-    private HistoryMapper historyMapper = new HistoryMapper();
+    private final DatabaseReference reference;
 
     @Inject
     public FirebaseHistoryRepository(@Named("historyUrl") String url) {

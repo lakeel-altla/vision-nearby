@@ -17,7 +17,7 @@ import rx.Single;
 
 public class FirebaseLocationsRepository {
 
-    private GeoFire geoFire;
+    private final GeoFire geoFire;
 
     @Inject
     public FirebaseLocationsRepository(@Named("locationsUrl") String url) {

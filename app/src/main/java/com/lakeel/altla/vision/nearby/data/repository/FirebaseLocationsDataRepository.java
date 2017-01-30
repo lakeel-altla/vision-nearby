@@ -28,7 +28,7 @@ public final class FirebaseLocationsDataRepository {
 
     private final LocationMetaDataMapper metaDataMapper = new LocationMetaDataMapper();
 
-    private DatabaseReference reference;
+    private final DatabaseReference reference;
 
     @Inject
     FirebaseLocationsDataRepository(@Named("locationDataUrl") String url) {

@@ -20,7 +20,7 @@ public final class FirebaseTokensRepository {
 
     private final TokenMapper tokenMapper = new TokenMapper();
 
-    private DatabaseReference reference;
+    private final DatabaseReference reference;
 
     @Inject
     public FirebaseTokensRepository(@Named("tokensUrl") String url) {

@@ -15,9 +15,9 @@ import rx.Completable;
 
 public class FirebaseNotificationsRepository {
 
-    private DatabaseReference reference;
+    private final NotificationEntityMapper entityMapper = new NotificationEntityMapper();
 
-    private NotificationEntityMapper entityMapper = new NotificationEntityMapper();
+    private final DatabaseReference reference;
 
     @Inject
     FirebaseNotificationsRepository(@Named("notificationsUrl") String url) {

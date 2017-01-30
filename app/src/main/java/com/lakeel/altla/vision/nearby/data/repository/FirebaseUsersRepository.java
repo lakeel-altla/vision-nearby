@@ -26,11 +26,11 @@ public final class FirebaseUsersRepository {
 
     private static final String KEY_BEACONS = "beacons";
 
-    private DatabaseReference reference;
+    private final UserEntityMapper entityMapper = new UserEntityMapper();
 
-    private UserEntityMapper entityMapper = new UserEntityMapper();
+    private final UserMapper userMapper = new UserMapper();
 
-    private UserMapper userMapper = new UserMapper();
+    private final DatabaseReference reference;
 
     @Inject
     public FirebaseUsersRepository(@Named("usersUrl") String url) {

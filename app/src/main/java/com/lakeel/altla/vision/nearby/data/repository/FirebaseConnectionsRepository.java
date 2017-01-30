@@ -27,9 +27,9 @@ public class FirebaseConnectionsRepository {
 
     private static final String LAST_ONLINE_KEY = "lastOnlineTime";
 
-    private PresenceMapper presenceMapper = new PresenceMapper();
+    private final PresenceMapper presenceMapper = new PresenceMapper();
 
-    private DatabaseReference reference;
+    private final DatabaseReference reference;
 
     @Inject
     FirebaseConnectionsRepository(@Named("connectionsUrl") String url) {

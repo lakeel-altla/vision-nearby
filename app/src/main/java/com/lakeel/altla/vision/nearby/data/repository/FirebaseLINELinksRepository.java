@@ -23,9 +23,9 @@ public class FirebaseLINELinksRepository {
 
     private static final String URL_KEY = "url";
 
-    private LineLinkEntityMapper entityMapper = new LineLinkEntityMapper();
+    private final LineLinkEntityMapper entityMapper = new LineLinkEntityMapper();
 
-    private DatabaseReference reference;
+    private final DatabaseReference reference;
 
     @Inject
     public FirebaseLINELinksRepository(@Named("lineLinksUrl") String url) {

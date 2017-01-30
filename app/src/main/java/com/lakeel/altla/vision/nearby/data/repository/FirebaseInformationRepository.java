@@ -22,11 +22,11 @@ import rx.Single;
 
 public class FirebaseInformationRepository {
 
-    private DatabaseReference reference;
+    private final InformationEntityMapper entityMapper = new InformationEntityMapper();
 
-    private InformationEntityMapper entityMapper = new InformationEntityMapper();
+    private final InformationMapper informationMapper = new InformationMapper();
 
-    private InformationMapper informationMapper = new InformationMapper();
+    private final DatabaseReference reference;
 
     @Inject
     public FirebaseInformationRepository(@Named("informationUrl") String url) {

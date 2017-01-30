@@ -17,7 +17,7 @@ public class PreferenceRepository {
 
     private static final String KEY_SUBSCRIBE_IN_BACKGROUND = "subscribeInBackground";
 
-    private SharedPreferences sharedPreferences;
+    private final SharedPreferences sharedPreferences;
 
     @Inject
     public PreferenceRepository(SharedPreferences sharedPreferences) {

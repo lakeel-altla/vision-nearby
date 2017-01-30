@@ -19,9 +19,9 @@ import rx.Single;
 
 public class FirebaseFavoritesRepository {
 
-    private FavoriteMapper favoriteMapper = new FavoriteMapper();
+    private final FavoriteMapper favoriteMapper = new FavoriteMapper();
 
-    private DatabaseReference reference;
+    private final DatabaseReference reference;
 
     @Inject
     public FirebaseFavoritesRepository(@Named("favoritesUrl") String url) {
