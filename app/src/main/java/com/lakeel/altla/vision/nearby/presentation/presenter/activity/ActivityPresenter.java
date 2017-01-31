@@ -70,9 +70,12 @@ public final class ActivityPresenter extends BasePresenter<ActivityView> {
 
     private final ActivityModelMapper modelMapper = new ActivityModelMapper();
 
+    private boolean isAdvertiseAvailableDevice = true;
+
     private final Context context;
 
-    private boolean isAdvertiseAvailableDevice = true;
+    // TODO: Presenters do not use the base presenter.
+    private Subscription observeSubscription;
 
     @Inject
     ActivityPresenter(Context context) {
@@ -100,7 +103,7 @@ public final class ActivityPresenter extends BasePresenter<ActivityView> {
         observeConnectionUseCase.execute(MyUser.getUserId());
 
         // Observe user profile
-        observeUserProfileUseCase.execute()
+        observeSubscription = observeUserProfileUseCase.execute()
                 .map(modelMapper::map)
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribe(model -> {
@@ -119,6 +122,7 @@ public final class ActivityPresenter extends BasePresenter<ActivityView> {
                     } else {
                         saveLastUsedTime(beaconId);
                     }
+
                     saveToken(beaconId);
                     startAdvertiseIfNeeded(beaconId);
                 }, new ErrorAction<>());
@@ -142,20 +146,25 @@ public final class ActivityPresenter extends BasePresenter<ActivityView> {
     }
 
     public void onSignOut(@NonNull Activity activity) {
-        Subscription subscription = offlineUseCase.execute().observeOn(AndroidSchedulers.mainThread())
+        Subscription subscription = offlineUseCase.execute()
+                .observeOn(AndroidSchedulers.mainThread())
                 .subscribe(e -> new ErrorAction<>(),
                         () -> {
+                            observeSubscription.unsubscribe();
+
+                            // Get user data here because do not get it after signing out.
                             MyUser.UserProfile userProfile = MyUser.getUserProfile();
 
                             // Unless you explicitly sign out, sign-in state continues.
                             // If you want to sign out, it is necessary to both sign out FirebaseAuth and Play Service Auth.
+
                             Task<Void> task = AuthUI.getInstance().signOut(activity);
                             task.addOnCompleteListener(result -> {
                                 if (result.isSuccessful()) {
                                     analyticsReporter.logout(userProfile.userId, userProfile.userName);
 
-                                    RunningServiceManager runningServiceManager = new RunningServiceManager(context, AdvertiseService.class);
-                                    runningServiceManager.stopService();
+                                    RunningServiceManager serviceManager = new RunningServiceManager(context, AdvertiseService.class);
+                                    serviceManager.stopService();
 
                                     stopDetectBeaconsInBackground();
                                     getView().showSignInFragment();

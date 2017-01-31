@@ -16,6 +16,6 @@ public final class SaveUserBeaconUseCase {
     }
 
     public Single<String> execute(String userId, String beaconId) {
-        return repository.saveBeacon(userId, beaconId);
+        return repository.saveUserBeacon(userId, beaconId);
     }
 }

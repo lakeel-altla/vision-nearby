@@ -36,7 +36,7 @@ public final class SaveBeaconUseCase {
     }
 
     private Single<String> saveUserBeacon(String userId, String beaconId) {
-        return usersRepository.saveBeacon(userId, beaconId).subscribeOn(Schedulers.io());
+        return usersRepository.saveUserBeacon(userId, beaconId).subscribeOn(Schedulers.io());
     }
 
     private Single<String> saveBeacon(String beaconId, String userId) {

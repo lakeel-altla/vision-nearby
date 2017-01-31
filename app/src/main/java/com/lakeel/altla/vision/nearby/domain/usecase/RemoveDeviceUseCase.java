@@ -29,6 +29,6 @@ public final class RemoveDeviceUseCase {
     }
 
     private Single<String> removeUserBeacon(String userId, String beaconId) {
-        return usersRepository.removeBeacon(userId, beaconId).subscribeOn(Schedulers.io());
+        return usersRepository.removeUserBeacon(userId, beaconId).subscribeOn(Schedulers.io());
     }
 }

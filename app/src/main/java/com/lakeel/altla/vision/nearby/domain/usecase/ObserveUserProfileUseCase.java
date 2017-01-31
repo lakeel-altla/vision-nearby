@@ -20,6 +20,6 @@ public final class ObserveUserProfileUseCase {
 
     public Observable<User> execute() {
         String userId = MyUser.getUserId();
-        return repository.observeUser(userId).subscribeOn(Schedulers.io());
+        return repository.observeUserProfile(userId).subscribeOn(Schedulers.io());
     }
 }

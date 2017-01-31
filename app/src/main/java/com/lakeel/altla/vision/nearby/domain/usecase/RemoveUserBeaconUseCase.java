@@ -16,6 +16,6 @@ public final class RemoveUserBeaconUseCase {
     }
 
     public Single<String> execute(String userId, String beaconId) {
-        return repository.removeBeacon(userId, beaconId);
+        return repository.removeUserBeacon(userId, beaconId);
     }
 }

@@ -95,7 +95,7 @@ public final class FirebaseUserProfileRepository {
         });
     }
 
-    public Single<String> saveBeacon(String userId, String beaconId) {
+    public Single<String> saveUserBeacon(String userId, String beaconId) {
         return Single.create(subscriber -> {
             Map<String, Object> map = new HashMap<>();
             map.put(beaconId, true);
@@ -114,7 +114,7 @@ public final class FirebaseUserProfileRepository {
         });
     }
 
-    public Single<String> removeBeacon(String userId, String beaconId) {
+    public Single<String> removeUserBeacon(String userId, String beaconId) {
         return Single.create(subscriber -> {
             Task task = reference
                     .child(userId)
@@ -131,7 +131,7 @@ public final class FirebaseUserProfileRepository {
         });
     }
 
-    public Observable<User> observeUser(String userId) {
+    public Observable<User> observeUserProfile(String userId) {
         return Observable.create(subscriber ->
                 reference
                         .child(userId)
