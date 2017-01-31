@@ -125,8 +125,8 @@ public class App extends Application {
     private void initImageLoader() {
         // Init ImageLoader instance.
         DisplayImageOptions displayImageOptions = new DisplayImageOptions.Builder()
-                .showImageForEmptyUri(R.mipmap.ic_user)
-                .showImageOnFail(R.mipmap.ic_user)
+                .showImageForEmptyUri(R.drawable.ic_account)
+                .showImageOnFail(R.drawable.ic_account)
                 .build();
 
         // When size of the cache is exceeded, remove the image that has not been used much.
