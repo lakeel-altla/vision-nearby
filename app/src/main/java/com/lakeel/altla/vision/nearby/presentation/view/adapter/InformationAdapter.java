@@ -16,7 +16,7 @@ import com.lakeel.altla.vision.nearby.presentation.view.date.DateFormatter;
 import butterknife.BindView;
 import butterknife.ButterKnife;
 
-public final class InformationAdapter extends RecyclerView.Adapter<InformationAdapter.InformationViewHolder> {
+public final class InformationAdapter extends RecyclerView.Adapter<InformationAdapter.InformationitemViewHolder> {
 
     private final InformationListPresenter presenter;
 
@@ -25,15 +25,15 @@ public final class InformationAdapter extends RecyclerView.Adapter<InformationAd
     }
 
     @Override
-    public InformationViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
+    public InformationitemViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
         View itemView = LayoutInflater.from(parent.getContext()).inflate(R.layout.item_information, parent, false);
-        InformationAdapter.InformationViewHolder viewHolder = new InformationAdapter.InformationViewHolder(itemView);
+        InformationitemViewHolder viewHolder = new InformationitemViewHolder(itemView);
         presenter.onCreateItemView(viewHolder);
         return viewHolder;
     }
 
     @Override
-    public void onBindViewHolder(InformationViewHolder holder, int position) {
+    public void onBindViewHolder(InformationitemViewHolder holder, int position) {
         holder.onBind(position);
     }
 
@@ -42,7 +42,7 @@ public final class InformationAdapter extends RecyclerView.Adapter<InformationAd
         return presenter.getItemCount();
     }
 
-    public final class InformationViewHolder extends RecyclerView.ViewHolder implements InformationItemView {
+    public final class InformationitemViewHolder extends RecyclerView.ViewHolder implements InformationItemView {
 
         @BindView(R.id.textViewTitle)
         TextView titleTextView;
@@ -54,7 +54,7 @@ public final class InformationAdapter extends RecyclerView.Adapter<InformationAd
 
         private InformationListPresenter.InformationItemPresenter itemPresenter;
 
-        InformationViewHolder(View itemView) {
+        InformationitemViewHolder(View itemView) {
             super(itemView);
             ButterKnife.bind(this, itemView);
 

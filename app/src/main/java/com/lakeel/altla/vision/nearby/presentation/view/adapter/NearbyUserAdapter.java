@@ -22,7 +22,7 @@ import com.nostra13.universalimageloader.core.ImageLoader;
 import butterknife.BindView;
 import butterknife.ButterKnife;
 
-public final class NearbyUserAdapter extends RecyclerView.Adapter<NearbyUserAdapter.NearbyUserViewHolder> {
+public final class NearbyUserAdapter extends RecyclerView.Adapter<NearbyUserAdapter.NearbyUserItemViewHolder> {
 
     private NearbyUserListPresenter nearbyUserListPresenter;
 
@@ -31,15 +31,15 @@ public final class NearbyUserAdapter extends RecyclerView.Adapter<NearbyUserAdap
     }
 
     @Override
-    public NearbyUserViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
+    public NearbyUserItemViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
         View itemView = LayoutInflater.from(parent.getContext()).inflate(R.layout.item_nearby_user, parent, false);
-        NearbyUserViewHolder nearbyViewHolder = new NearbyUserViewHolder(itemView);
+        NearbyUserItemViewHolder nearbyViewHolder = new NearbyUserItemViewHolder(itemView);
         nearbyUserListPresenter.onCreateItemView(nearbyViewHolder);
         return nearbyViewHolder;
     }
 
     @Override
-    public void onBindViewHolder(NearbyUserViewHolder holder, int position) {
+    public void onBindViewHolder(NearbyUserItemViewHolder holder, int position) {
         holder.onBind(position);
     }
 
@@ -48,7 +48,7 @@ public final class NearbyUserAdapter extends RecyclerView.Adapter<NearbyUserAdap
         return nearbyUserListPresenter.getItemCount();
     }
 
-    final class NearbyUserViewHolder extends RecyclerView.ViewHolder implements NearbyUserItemView {
+    final class NearbyUserItemViewHolder extends RecyclerView.ViewHolder implements NearbyUserItemView {
 
         private NearbyUserListPresenter.NearbyUserItemPresenter itemPresenter;
 
@@ -61,7 +61,7 @@ public final class NearbyUserAdapter extends RecyclerView.Adapter<NearbyUserAdap
         @BindView(R.id.imageViewUser)
         ImageView userImageView;
 
-        NearbyUserViewHolder(View itemView) {
+        NearbyUserItemViewHolder(View itemView) {
             super(itemView);
             ButterKnife.bind(this, itemView);
         }

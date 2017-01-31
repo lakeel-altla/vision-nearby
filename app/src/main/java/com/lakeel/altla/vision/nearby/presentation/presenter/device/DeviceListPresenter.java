@@ -59,7 +59,7 @@ public class DeviceListPresenter extends BasePresenter<DeviceListView> {
         return deviceModels.size();
     }
 
-    public void onCreateItemView(DeviceAdapter.DeviceViewHolder viewHolder) {
+    public void onCreateItemView(DeviceAdapter.DeviceItemViewHolder viewHolder) {
         DeviceListPresenter.DeviceItemPresenter itemPresenter = new DeviceListPresenter.DeviceItemPresenter();
         itemPresenter.onCreateItemView(viewHolder);
         viewHolder.setItemPresenter(itemPresenter);

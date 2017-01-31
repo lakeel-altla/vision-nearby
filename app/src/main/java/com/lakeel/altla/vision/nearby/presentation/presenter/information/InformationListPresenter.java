@@ -50,7 +50,7 @@ public final class InformationListPresenter extends BasePresenter<InformationLis
         subscriptions.add(subscription);
     }
 
-    public void onCreateItemView(InformationAdapter.InformationViewHolder viewHolder) {
+    public void onCreateItemView(InformationAdapter.InformationitemViewHolder viewHolder) {
         InformationItemPresenter itemPresenter = new InformationListPresenter.InformationItemPresenter();
         itemPresenter.onCreateItemView(viewHolder);
         viewHolder.setItemPresenter(itemPresenter);

@@ -39,18 +39,18 @@ public final class FavoriteAdapter extends SwipeableUltimateViewAdapter<Favorite
 
     @Override
     protected UltimateRecyclerviewViewHolder newViewHolder(View view) {
-        FavoritesListViewHolder viewHolder = new FavoritesListViewHolder(view, true);
+        FavoriteItemViewHolder viewHolder = new FavoriteItemViewHolder(view, true);
         favoriteListPresenter.onCreateItemView(viewHolder);
         return viewHolder;
     }
 
     @Override
     protected void withBindHolder(UltimateRecyclerviewViewHolder bindHolder, FavoriteModel model, int position) {
-        FavoritesListViewHolder holder = (FavoritesListViewHolder) bindHolder;
+        FavoriteItemViewHolder holder = (FavoriteItemViewHolder) bindHolder;
         holder.onBind(position);
     }
 
-    public final class FavoritesListViewHolder extends UltimateRecyclerviewViewHolder implements FavoriteItemView {
+    final class FavoriteItemViewHolder extends UltimateRecyclerviewViewHolder implements FavoriteItemView {
 
         private FavoriteListPresenter.FavoritesItemPresenter itemPresenter;
 
@@ -69,7 +69,7 @@ public final class FavoriteAdapter extends SwipeableUltimateViewAdapter<Favorite
         @BindView(R.id.swipeLayout)
         SwipeLayout swipeLayout;
 
-        FavoritesListViewHolder(View itemView, boolean bind) {
+        FavoriteItemViewHolder(View itemView, boolean bind) {
             super(itemView);
             if (bind) {
                 ButterKnife.bind(this, itemView);

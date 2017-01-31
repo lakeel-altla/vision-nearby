@@ -15,12 +15,11 @@ import com.lakeel.altla.vision.nearby.presentation.presenter.model.DeviceModel;
 import com.lakeel.altla.vision.nearby.presentation.presenter.device.DeviceListPresenter;
 import com.lakeel.altla.vision.nearby.presentation.view.date.DateFormatter;
 import com.lakeel.altla.vision.nearby.presentation.view.DeviceItemView;
-import com.marshalchen.ultimaterecyclerview.swipe.SwipeLayout;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
 
-public final class DeviceAdapter extends RecyclerView.Adapter<DeviceAdapter.DeviceViewHolder> {
+public final class DeviceAdapter extends RecyclerView.Adapter<DeviceAdapter.DeviceItemViewHolder> {
 
     private DeviceListPresenter deviceListPresenter;
 
@@ -29,15 +28,15 @@ public final class DeviceAdapter extends RecyclerView.Adapter<DeviceAdapter.Devi
     }
 
     @Override
-    public DeviceViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
+    public DeviceItemViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
         View itemView = LayoutInflater.from(parent.getContext()).inflate(R.layout.item_device, parent, false);
-        DeviceAdapter.DeviceViewHolder viewHolder = new DeviceAdapter.DeviceViewHolder(itemView);
+        DeviceItemViewHolder viewHolder = new DeviceItemViewHolder(itemView);
         deviceListPresenter.onCreateItemView(viewHolder);
         return viewHolder;
     }
 
     @Override
-    public void onBindViewHolder(DeviceViewHolder holder, int position) {
+    public void onBindViewHolder(DeviceItemViewHolder holder, int position) {
         holder.onBind(position);
     }
 
@@ -46,7 +45,7 @@ public final class DeviceAdapter extends RecyclerView.Adapter<DeviceAdapter.Devi
         return deviceListPresenter.getItemCount();
     }
 
-    public final class DeviceViewHolder extends RecyclerView.ViewHolder implements DeviceItemView {
+    public final class DeviceItemViewHolder extends RecyclerView.ViewHolder implements DeviceItemView {
 
         @BindView(R.id.layoutItem)
         RelativeLayout itemLayout;
@@ -68,7 +67,7 @@ public final class DeviceAdapter extends RecyclerView.Adapter<DeviceAdapter.Devi
 
         private DeviceListPresenter.DeviceItemPresenter itemPresenter;
 
-        DeviceViewHolder(View itemView) {
+        DeviceItemViewHolder(View itemView) {
             super(itemView);
             ButterKnife.bind(this, itemView);
         }

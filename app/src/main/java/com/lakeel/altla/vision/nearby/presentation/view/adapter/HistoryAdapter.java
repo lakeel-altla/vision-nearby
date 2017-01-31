@@ -40,18 +40,18 @@ public final class HistoryAdapter extends SwipeableUltimateViewAdapter<HistoryMo
 
     @Override
     protected UltimateRecyclerviewViewHolder newViewHolder(View view) {
-        HistoryItemsViewHolder viewHolder = new HistoryItemsViewHolder(view, true);
+        HistoryItemViewHolder viewHolder = new HistoryItemViewHolder(view, true);
         historyListPresenter.onCreateItemView(viewHolder);
         return viewHolder;
     }
 
     @Override
     protected void withBindHolder(UltimateRecyclerviewViewHolder bindHolder, HistoryModel model, int position) {
-        HistoryItemsViewHolder holder = (HistoryItemsViewHolder) bindHolder;
+        HistoryItemViewHolder holder = (HistoryItemViewHolder) bindHolder;
         holder.onBind(position);
     }
 
-    static class HistoryItemsViewHolder extends UltimateRecyclerviewViewHolder implements HistoryItemView {
+    static class HistoryItemViewHolder extends UltimateRecyclerviewViewHolder implements HistoryItemView {
 
         @BindView(R.id.layoutItem)
         LinearLayout itemLayout;
@@ -73,7 +73,7 @@ public final class HistoryAdapter extends SwipeableUltimateViewAdapter<HistoryMo
 
         private HistoryListPresenter.HistoryItemPresenter itemPresenter;
 
-        HistoryItemsViewHolder(View itemView, boolean bind) {
+        HistoryItemViewHolder(View itemView, boolean bind) {
             super(itemView);
             if (bind) {
                 ButterKnife.bind(this, itemView);
