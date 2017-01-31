@@ -64,6 +64,11 @@ public final class BeaconSubscriber {
                                 LOGGER.info("Not registered the beacon:beaconId=" + beaconId);
                                 return;
                             }
+                            String userId = MyUser.getUserId();
+                            if (userId.equals(beacon.userId)) {
+                                LOGGER.info("This beacon is mine:beaconId=" + beaconId);
+                                return;
+                            }
 
                             Intent historyIntent = new Intent(context, HistoryService.class);
                             historyIntent.putExtra(IntentKey.USER_ID.name(), beacon.userId);
