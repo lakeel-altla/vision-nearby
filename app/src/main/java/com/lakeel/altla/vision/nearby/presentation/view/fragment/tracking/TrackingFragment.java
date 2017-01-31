@@ -190,7 +190,7 @@ public final class TrackingFragment extends Fragment implements TrackingView, On
         mainLayout.removeAllViews();
 
         LayoutInflater inflater = getActivity().getLayoutInflater();
-        View emptyView = inflater.inflate(R.layout.not_detected_view, mainLayout, false);
+        View emptyView = inflater.inflate(R.layout.not_found_view, mainLayout, false);
 
         mainLayout.addView(emptyView);
     }
