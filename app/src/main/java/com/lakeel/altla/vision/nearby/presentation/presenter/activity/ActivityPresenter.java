@@ -15,6 +15,7 @@ import com.lakeel.altla.vision.nearby.domain.usecase.ObserveConnectionUseCase;
 import com.lakeel.altla.vision.nearby.domain.usecase.ObserveUserProfileUseCase;
 import com.lakeel.altla.vision.nearby.domain.usecase.OfflineUseCase;
 import com.lakeel.altla.vision.nearby.domain.usecase.SaveBeaconUseCase;
+import com.lakeel.altla.vision.nearby.domain.usecase.SaveLastUsedTimeUseCase;
 import com.lakeel.altla.vision.nearby.domain.usecase.SaveTokenUseCase;
 import com.lakeel.altla.vision.nearby.presentation.analytics.AnalyticsReporter;
 import com.lakeel.altla.vision.nearby.presentation.ble.BleChecker;
@@ -50,6 +51,9 @@ public final class ActivityPresenter extends BasePresenter<ActivityView> {
 
     @Inject
     FindPreferencesUseCase findPreferencesUseCase;
+
+    @Inject
+    SaveLastUsedTimeUseCase saveLastUsedTimeUseCase;
 
     @Inject
     SaveTokenUseCase saveTokenUseCase;
@@ -108,10 +112,12 @@ public final class ActivityPresenter extends BasePresenter<ActivityView> {
                 .subscribe(preference -> {
                     String beaconId = preference.beaconId;
                     if (StringUtils.isEmpty(beaconId)) {
+                        // Create a Eddystone-UID.
                         EddystoneUid eddystoneUid = new EddystoneUid();
-                        // Create EddystoneUID.
                         beaconId = eddystoneUid.getBeaconId();
                         saveBeacon(beaconId);
+                    } else {
+                        saveLastUsedTime(beaconId);
                     }
                     saveToken(beaconId);
                     startAdvertiseIfNeeded(beaconId);
@@ -194,6 +200,12 @@ public final class ActivityPresenter extends BasePresenter<ActivityView> {
     private void saveBeacon(String beaconId) {
         Subscription subscription = saveBeaconUseCase.execute(beaconId)
                 .subscribe(new EmptyAction<>(), new ErrorAction<>());
+        subscriptions.add(subscription);
+    }
+
+    private void saveLastUsedTime(String beaconId) {
+        Subscription subscription = saveLastUsedTimeUseCase.execute(beaconId)
+                .subscribe();
         subscriptions.add(subscription);
     }
 

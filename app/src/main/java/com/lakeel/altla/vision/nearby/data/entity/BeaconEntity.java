@@ -28,4 +28,10 @@ public final class BeaconEntity {
         map.put(LAST_USED_TIME, ServerValue.TIMESTAMP);
         return map;
     }
+
+    public Map<String, Object> toLastUsedTimeMap() {
+        Map<String, Object> map = new HashMap<>();
+        map.put(LAST_USED_TIME, ServerValue.TIMESTAMP);
+        return map;
+    }
 }

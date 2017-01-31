@@ -54,6 +54,23 @@ public class FirebaseBeaconRepository {
         });
     }
 
+    public Completable saveLastUsedTime(String beaconId) {
+        return Completable.create(subscriber -> {
+            Map<String, Object> map = new BeaconEntity().toLastUsedTimeMap();
+
+            Task task = reference
+                    .child(beaconId)
+                    .updateChildren(map);
+
+            Exception e = task.getException();
+            if (e != null) {
+                throw new DataStoreException(e);
+            }
+
+            subscriber.onCompleted();
+        });
+    }
+
     public Single<Beacon> findBeacon(String beaconId) {
         return Single.create(subscriber ->
                 reference
