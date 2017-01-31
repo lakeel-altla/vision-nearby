@@ -6,6 +6,6 @@
         android:id="@+id/estimate"
         android:icon="@drawable/ic_bluetooth_searching"
         android:title="@string/title_find"
-        app:showAsAction="ifRoom|withText" />
+        app:showAsAction="ifRoom" />
 
 </menu>
