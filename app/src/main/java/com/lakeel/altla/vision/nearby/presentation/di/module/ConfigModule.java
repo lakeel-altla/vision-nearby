@@ -77,7 +77,7 @@ public final class ConfigModule {
     @Provides
     @Named("userDeviceTokenUrl")
     String provideTokensUrl() {
-        return "https://profile-notification-95441.firebaseio.com/token";
+        return "https://profile-notification-95441.firebaseio.com/userDeviceToken";
     }
 
     @InjectScope
@@ -91,6 +91,6 @@ public final class ConfigModule {
     @Provides
     @Named("userInformationUrl")
     String provideInformationUrl() {
-        return "https://profile-notification-95441.firebaseio.com/information";
+        return "https://profile-notification-95441.firebaseio.com/userInformation";
     }
 }

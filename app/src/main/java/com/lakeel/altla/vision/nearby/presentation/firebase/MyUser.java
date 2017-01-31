@@ -29,7 +29,7 @@ public final class MyUser {
         return getMyUser().getUid();
     }
 
-    public static UserProfile getUserData() {
+    public static UserProfile getUserProfile() {
         FirebaseUser myUser = getMyUser();
 
         UserProfile userProfile = new UserProfile();

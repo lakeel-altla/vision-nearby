@@ -58,10 +58,10 @@ public final class FirebaseUserProfileRepository {
 
     public Completable saveUser(String userId) {
         return Completable.create(subscriber -> {
-            Map<String, Object> map = entityMapper.map();
+            UserEntity entity = entityMapper.map();
             Task task = reference
                     .child(userId)
-                    .updateChildren(map);
+                    .updateChildren(entity.toMap());
 
             Exception e = task.getException();
             if (e != null) {

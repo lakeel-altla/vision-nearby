@@ -16,7 +16,7 @@ public final class SaveLocationDataUseCase {
     SaveLocationDataUseCase() {
     }
 
-    public Completable execute(String uniqueId, String beaconId) {
-        return repository.saveLocationMetaData(uniqueId, beaconId).subscribeOn(Schedulers.io());
+    public Completable execute(String uniqueId, String userId, String beaconId) {
+        return repository.saveLocationMetaData(uniqueId, userId, beaconId).subscribeOn(Schedulers.io());
     }
 }

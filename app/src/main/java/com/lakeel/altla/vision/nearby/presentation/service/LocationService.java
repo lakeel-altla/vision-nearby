@@ -25,7 +25,6 @@ import org.slf4j.LoggerFactory;
 
 import javax.inject.Inject;
 
-import rx.Completable;
 import rx.Single;
 
 public final class LocationService extends IntentService {
@@ -34,10 +33,13 @@ public final class LocationService extends IntentService {
 
         private final Context context;
 
+        private final String userId;
+
         private final String beaconId;
 
-        ConnectionCallback(Context context, String beaconId) {
+        ConnectionCallback(Context context, String userId, String beaconId) {
             this.context = context;
+            this.userId = userId;
             this.beaconId = beaconId;
         }
 
@@ -45,7 +47,7 @@ public final class LocationService extends IntentService {
         public void onConnected(@Nullable Bundle bundle) {
             getUserCurrentLocation(context)
                     .flatMap(LocationService.this::saveDeviceLocation)
-                    .subscribe(uniqueId -> saveLocationMetaData(uniqueId, beaconId), new ErrorAction<>());
+                    .subscribe(uniqueId -> saveLocationMetaData(uniqueId, userId, beaconId), new ErrorAction<>());
         }
 
         @Override
@@ -80,11 +82,12 @@ public final class LocationService extends IntentService {
         component.inject(this);
 
         String beaconId = intent.getStringExtra(IntentKey.BEACON_ID.name());
+        String userId = intent.getStringExtra(IntentKey.USER_ID.name());
         Context context = getApplicationContext();
 
         googleApiClient = new GoogleApiClient.Builder(context)
                 .addApi(Awareness.API)
-                .addConnectionCallbacks(new ConnectionCallback(context, beaconId))
+                .addConnectionCallbacks(new ConnectionCallback(context, userId, beaconId))
                 .build();
 
         googleApiClient.connect();
@@ -114,7 +117,7 @@ public final class LocationService extends IntentService {
         return saveDeviceLocationUseCase.execute(location);
     }
 
-    private Completable saveLocationMetaData(String uniqueId, String beaconId) {
-        return saveLocationDataUseCase.execute(uniqueId, beaconId);
+    private void saveLocationMetaData(String uniqueId, String userId, String beaconId) {
+        saveLocationDataUseCase.execute(uniqueId, userId, beaconId).subscribe();
     }
 }

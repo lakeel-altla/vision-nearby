@@ -35,9 +35,10 @@ public final class FirebaseUserLocationMetaDataRepository {
         reference = FirebaseDatabase.getInstance().getReferenceFromUrl(url);
     }
 
-    public Single<LocationMetaData> findLocationMetaData(String beaconId) {
+    public Single<LocationMetaData> findLocationMetaData(String userId, String beaconId) {
         return Single.create(subscriber ->
                 reference
+                        .child(userId)
                         .orderByChild(KEY_BEACON_ID)
                         .equalTo(beaconId)
                         .limitToFirst(1)
@@ -64,10 +65,11 @@ public final class FirebaseUserLocationMetaDataRepository {
                         }));
     }
 
-    public Completable saveLocationMetaData(String uniqueId, String beaconId) {
+    public Completable saveLocationMetaData(String uniqueId, String userId, String beaconId) {
         return Completable.create(subscriber -> {
             LocationMetaDataEntity entity = entityMapper.map(beaconId);
             Task task = reference
+                    .child(userId)
                     .child(uniqueId)
                     .setValue(entity.toMap());
 

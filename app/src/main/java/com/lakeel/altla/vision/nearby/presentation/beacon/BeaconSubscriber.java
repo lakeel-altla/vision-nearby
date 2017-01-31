@@ -11,11 +11,11 @@ import com.lakeel.altla.vision.nearby.presentation.di.component.DaggerDefaultCom
 import com.lakeel.altla.vision.nearby.presentation.di.component.DefaultComponent;
 import com.lakeel.altla.vision.nearby.presentation.di.module.ContextModule;
 import com.lakeel.altla.vision.nearby.presentation.firebase.MyUser;
-import com.lakeel.altla.vision.nearby.presentation.view.intent.IntentKey;
 import com.lakeel.altla.vision.nearby.presentation.service.HistoryService;
 import com.lakeel.altla.vision.nearby.presentation.service.LINEService;
 import com.lakeel.altla.vision.nearby.presentation.service.LocationService;
 import com.lakeel.altla.vision.nearby.presentation.service.NotificationService;
+import com.lakeel.altla.vision.nearby.presentation.view.intent.IntentKey;
 
 import org.altbeacon.beacon.BeaconManager;
 import org.altbeacon.beacon.Region;
@@ -23,8 +23,6 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import javax.inject.Inject;
-
-import rx.schedulers.Schedulers;
 
 public final class BeaconSubscriber {
 
@@ -61,7 +59,6 @@ public final class BeaconSubscriber {
 
                 findBeaconUseCase
                         .execute(beaconId)
-                        .subscribeOn(Schedulers.io())
                         .subscribe(beacon -> {
                             if (beacon == null) {
                                 LOGGER.info("Not registered the beacon:beaconId=" + beaconId);
@@ -69,15 +66,17 @@ public final class BeaconSubscriber {
                             }
 
                             Intent historyIntent = new Intent(context, HistoryService.class);
-                            historyIntent.putExtra(IntentKey.BEACON_ID.name(), beaconId);
+                            historyIntent.putExtra(IntentKey.USER_ID.name(), beacon.userId);
                             historyIntent.putExtra(IntentKey.REGION.name(), context.getString(regionState.getValue()));
                             context.startService(historyIntent);
 
                             Intent notificationIntent = new Intent(context, NotificationService.class);
+                            notificationIntent.putExtra(IntentKey.USER_ID.name(), beacon.userId);
                             notificationIntent.putExtra(IntentKey.BEACON_ID.name(), beaconId);
                             context.startService(notificationIntent);
 
                             Intent locationIntent = new Intent(context, LocationService.class);
+                            locationIntent.putExtra(IntentKey.USER_ID.name(), beacon.userId);
                             locationIntent.putExtra(IntentKey.BEACON_ID.name(), beaconId);
                             context.startService(locationIntent);
 

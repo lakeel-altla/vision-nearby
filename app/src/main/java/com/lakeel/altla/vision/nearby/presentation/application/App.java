@@ -54,7 +54,7 @@ public class App extends Application {
     public void onCreate() {
         super.onCreate();
 
-        LOGGER.debug("App launch.");
+        LOGGER.info("Altla Nearby launch.");
 
         DefaultComponent component = DaggerDefaultComponent.builder()
                 .contextModule(new ContextModule(this))

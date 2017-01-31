@@ -15,7 +15,6 @@ import com.google.android.gms.awareness.state.Weather;
 import com.google.android.gms.common.api.GoogleApiClient;
 import com.google.android.gms.location.ActivityRecognitionResult;
 import com.google.android.gms.location.DetectedActivity;
-import com.lakeel.altla.vision.nearby.domain.model.User;
 import com.lakeel.altla.vision.nearby.domain.usecase.FindBeaconUseCase;
 import com.lakeel.altla.vision.nearby.domain.usecase.FindUserUseCase;
 import com.lakeel.altla.vision.nearby.domain.usecase.SaveHistoryUseCase;
@@ -35,7 +34,6 @@ import org.slf4j.LoggerFactory;
 
 import javax.inject.Inject;
 
-import rx.Completable;
 import rx.Observable;
 import rx.Single;
 import rx.SingleSubscriber;
@@ -46,20 +44,19 @@ public class HistoryService extends IntentService {
 
         private final Context context;
 
-        private final String beaconId;
+        private final String userId;
 
         private final String regionState;
 
-        ConnectionCallback(Context context, String beaconId, String regionState) {
+        ConnectionCallback(Context context, String userId, String regionState) {
             this.context = context;
-            this.beaconId = beaconId;
+            this.userId = userId;
             this.regionState = regionState;
         }
 
         @Override
         public void onConnected(@Nullable Bundle bundle) {
-            findBeaconUseCase.execute(beaconId)
-                    .flatMap(entity -> findUser(entity.userId))
+            findUserUseCase.execute(userId)
                     .toObservable()
                     // Analytics
                     .doOnNext(user -> analyticsReporter.addHistory(user.userId, user.name))
@@ -123,19 +120,15 @@ public class HistoryService extends IntentService {
         serviceComponent.inject(this);
 
         Context context = getApplicationContext();
-        String beaconId = intent.getStringExtra(IntentKey.BEACON_ID.name());
+        String userId = intent.getStringExtra(IntentKey.USER_ID.name());
         String regionState = intent.getStringExtra(IntentKey.REGION.name());
 
         googleApiClient = new GoogleApiClient.Builder(context)
                 .addApi(Awareness.API)
-                .addConnectionCallbacks(new ConnectionCallback(context, beaconId, regionState))
+                .addConnectionCallbacks(new ConnectionCallback(context, userId, regionState))
                 .build();
 
         googleApiClient.connect();
-    }
-
-    private Single<User> findUser(String userId) {
-        return findUserUseCase.execute(userId);
     }
 
     private Observable<String> saveHistory(String passingUserId, String regionState) {
@@ -198,15 +191,16 @@ public class HistoryService extends IntentService {
         });
     }
 
-    private Completable saveUserActivity(String uniqueId, DetectedActivity userActivity) {
-        return saveUserActivityUseCase.execute(uniqueId, userActivity);
+    private void saveUserActivity(String uniqueId, DetectedActivity userActivity) {
+        saveUserActivityUseCase.execute(uniqueId, userActivity)
+                .subscribe();
     }
 
-    private Completable saveUserLocation(String uniqueId, Location location) {
-        return saveUserLocationUseCase.execute(uniqueId, location);
+    private void saveUserLocation(String uniqueId, Location location) {
+        saveUserLocationUseCase.execute(uniqueId, location).subscribe();
     }
 
-    private Completable saveWeather(String uniqueId, Weather weather) {
-        return saveWeatherUseCase.execute(uniqueId, weather);
+    private void saveWeather(String uniqueId, Weather weather) {
+        saveWeatherUseCase.execute(uniqueId, weather).subscribe();
     }
 }

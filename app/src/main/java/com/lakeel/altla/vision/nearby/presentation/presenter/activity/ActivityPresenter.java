@@ -139,7 +139,7 @@ public final class ActivityPresenter extends BasePresenter<ActivityView> {
         Subscription subscription = offlineUseCase.execute().observeOn(AndroidSchedulers.mainThread())
                 .subscribe(e -> new ErrorAction<>(),
                         () -> {
-                            MyUser.UserProfile userProfile = MyUser.getUserData();
+                            MyUser.UserProfile userProfile = MyUser.getUserProfile();
 
                             // Unless you explicitly sign out, sign-in state continues.
                             // If you want to sign out, it is necessary to both sign out FirebaseAuth and Play Service Auth.
@@ -188,7 +188,7 @@ public final class ActivityPresenter extends BasePresenter<ActivityView> {
     }
 
     private void showDrawerProfile() {
-        getView().showDrawerProfile(MyUser.getUserData());
+        getView().showDrawerProfile(MyUser.getUserProfile());
     }
 
     private void saveBeacon(String beaconId) {

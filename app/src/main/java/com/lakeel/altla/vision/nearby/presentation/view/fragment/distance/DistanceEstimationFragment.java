@@ -96,7 +96,7 @@ public final class DistanceEstimationFragment extends Fragment implements Distan
         ((MainActivity) getActivity()).setDrawerIndicatorEnabled(false);
 
         ImageLoader imageLoader = ImageLoader.getInstance();
-        imageLoader.displayImage(MyUser.getUserData().imageUri, userImageView);
+        imageLoader.displayImage(MyUser.getUserProfile().imageUri, userImageView);
 
         Bundle bundle = getArguments();
         List<String> beaconIds = bundle.getStringArrayList(FragmentBundle.BEACON_IDS.name());

@@ -9,7 +9,7 @@ final class UserParam {
     private final Bundle bundle = new Bundle();
 
     UserParam() {
-        MyUser.UserProfile userProfile = MyUser.getUserData();
+        MyUser.UserProfile userProfile = MyUser.getUserProfile();
         bundle.putString(AnalyticsParam.USER_ID.getValue(), userProfile.userId);
         bundle.putString(AnalyticsParam.USER_NAME.getValue(), userProfile.userName);
     }

@@ -9,20 +9,21 @@ public final class BeaconEntity {
 
     private static final String USER_ID = "userId";
 
-    private static final String USER_NAME = "userName";
+    private static final String DEVICE_NAME = "deviceName";
 
     private static final String LAST_USED_TIME = "lastUsedTime";
 
     public String userId;
 
-    public String userName;
+    public String deviceName;
+
+    public long lastUsedTime;
 
     public Map<String, Object> toMap() {
         Map<String, Object> map = new HashMap<>();
         map.put(USER_ID, userId);
-        map.put(USER_NAME, userName);
+        map.put(DEVICE_NAME, deviceName);
         map.put(LAST_USED_TIME, ServerValue.TIMESTAMP);
         return map;
     }
-
 }

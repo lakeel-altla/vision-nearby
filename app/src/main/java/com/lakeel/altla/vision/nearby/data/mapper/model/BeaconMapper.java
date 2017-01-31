@@ -7,6 +7,9 @@ public final class BeaconMapper {
 
     public Beacon map(BeaconEntity entity, String key) {
         Beacon beacon = new Beacon();
+        beacon.beaconId = key;
+        beacon.userId = entity.userId;
+        beacon.lastUsedTime = entity.lastUsedTime;
         return beacon;
     }
 }

@@ -4,6 +4,7 @@ import android.content.Context;
 
 import com.lakeel.altla.vision.nearby.presentation.beacon.region.RegionState;
 
+import org.altbeacon.beacon.MonitorNotifier;
 import org.altbeacon.beacon.Region;
 import org.altbeacon.beacon.startup.BootstrapNotifier;
 import org.altbeacon.beacon.startup.RegionBootstrap;
@@ -46,23 +47,27 @@ final class BeaconDetector implements BootstrapNotifier {
     @Override
     public void didEnterRegion(Region region) {
         LOGGER.debug("Enter region.");
-
-        // If enter the region of the beacons, start to subscribe.
-        BeaconSubscriber subscriber = new BeaconSubscriber(context, RegionState.ENTER);
-        subscriber.subscribe(region);
     }
 
     @Override
     public void didExitRegion(Region region) {
         LOGGER.debug("Exit region.");
-
-        BeaconSubscriber subscriber = new BeaconSubscriber(context, RegionState.EXIT);
-        subscriber.subscribe(region);
     }
 
     @Override
     public void didDetermineStateForRegion(int i, Region region) {
-        LOGGER.debug("RegionState state is changed.");
+        LOGGER.debug("RegionState state is changed:state=" + i);
+
+        if (MonitorNotifier.INSIDE == i) {
+            // If enter the region of the beacons, start to subscribe.
+            BeaconSubscriber subscriber = new BeaconSubscriber(context, RegionState.ENTER);
+            subscriber.subscribe(region);
+        } else if (MonitorNotifier.OUTSIDE == i) {
+            BeaconSubscriber subscriber = new BeaconSubscriber(context, RegionState.EXIT);
+            subscriber.subscribe(region);
+        } else {
+            LOGGER.warn("Unknown region state:state=" + i);
+        }
     }
 
     @Override
