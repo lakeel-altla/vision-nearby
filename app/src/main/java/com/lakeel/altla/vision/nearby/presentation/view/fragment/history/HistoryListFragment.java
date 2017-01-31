@@ -63,8 +63,8 @@ public final class HistoryListFragment extends Fragment implements HistoryListVi
 
         ((MainActivity) getActivity()).setDrawerIndicatorEnabled(true);
 
-        RecyclerView.LayoutManager mLayoutManager = new ScrollSmoothLineaerLayoutManager(getContext(), LinearLayoutManager.VERTICAL, false, 500);
-        recyclerView.setLayoutManager(mLayoutManager);
+        RecyclerView.LayoutManager layoutManager = new ScrollSmoothLineaerLayoutManager(getContext(), LinearLayoutManager.VERTICAL, false, 500);
+        recyclerView.setLayoutManager(layoutManager);
 
         HistoryAdapter adapter = new HistoryAdapter(presenter);
         adapter.setMode(SwipeItemManagerInterface.Mode.Single);

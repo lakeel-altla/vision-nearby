@@ -6,6 +6,8 @@ public interface NearbyUserListView {
 
     void showBleEnabledActivity(Intent intent);
 
+    void requestAccessFineLocationPermission();
+
     void updateItems();
 
     void showIndicator();

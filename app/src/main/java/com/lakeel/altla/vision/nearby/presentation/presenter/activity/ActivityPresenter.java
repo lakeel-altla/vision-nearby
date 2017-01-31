@@ -1,8 +1,12 @@
 package com.lakeel.altla.vision.nearby.presentation.presenter.activity;
 
+import android.Manifest;
 import android.app.Activity;
 import android.content.Context;
+import android.content.pm.PackageManager;
+import android.os.Build;
 import android.support.annotation.NonNull;
+import android.support.v4.content.ContextCompat;
 
 import com.firebase.ui.auth.AuthUI;
 import com.google.android.gms.tasks.Task;
@@ -72,6 +76,8 @@ public final class ActivityPresenter extends BasePresenter<ActivityView> {
 
     private boolean isAdvertiseAvailableDevice = true;
 
+    private boolean isAccessFineLocationGranted = false;
+
     private final Context context;
 
     // TODO: Presenters do not use the base presenter.
@@ -95,9 +101,15 @@ public final class ActivityPresenter extends BasePresenter<ActivityView> {
 
     public void postSignIn() {
         getView().showFavoriteListFragment();
-
         showDrawerProfile();
-        checkDeviceBle();
+
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
+            // Need to grant permission for subscribing beacons.
+            checkAccessFineLocationPermission();
+        } else {
+            isAccessFineLocationGranted = true;
+            checkDeviceBle();
+        }
 
         // Observe user presence.
         observeConnectionUseCase.execute(MyUser.getUserId());
@@ -124,25 +136,24 @@ public final class ActivityPresenter extends BasePresenter<ActivityView> {
                     }
 
                     saveToken(beaconId);
-                    startAdvertiseIfNeeded(beaconId);
+                    startAdvertiseInBackgroundIfNeeded();
                 }, new ErrorAction<>());
         subscriptions.add(subscription);
     }
 
     public void onBleEnabled() {
-        Subscription subscription = findPreferencesUseCase.execute()
-                .observeOn(AndroidSchedulers.mainThread())
-                .subscribe(preference -> {
-                    if (preference.isSubscribeInBackgroundEnabled) {
-                        getView().startDetectBeaconsInBackground();
-                    }
+        // Check again whether can advertise.
+        checkDeviceBle();
+    }
 
-                    String beaconId = preference.beaconId;
-                    if (preference.isAdvertiseInBackgroundEnabled && isAdvertiseAvailableDevice) {
-                        getView().startAdvertise(beaconId);
-                    }
-                }, new ErrorAction<>());
-        subscriptions.add(subscription);
+    public void onAccessFineLocationGranted() {
+        isAccessFineLocationGranted = true;
+        checkDeviceBle();
+    }
+
+    public void onAccessFineLocationDenied() {
+        isAccessFineLocationGranted = false;
+        checkDeviceBle();
     }
 
     public void onSignOut(@NonNull Activity activity) {
@@ -188,18 +199,49 @@ public final class ActivityPresenter extends BasePresenter<ActivityView> {
         State state = checker.checkState();
 
         if (state == State.ENABLE) {
-            getView().startDetectBeaconsInBackground();
+            isAdvertiseAvailableDevice = true;
+            startAdvertiseInBackgroundIfNeeded();
+
+            if (isAccessFineLocationGranted) {
+                startDetectBeaconsInBackgroundIfNeeded();
+            }
         } else if (state == State.OFF) {
             isAdvertiseAvailableDevice = false;
             getView().showBleEnabledActivity();
         } else if (state == State.SUBSCRIBE_ONLY) {
             isAdvertiseAvailableDevice = false;
-            getView().startDetectBeaconsInBackground();
             getView().showAdvertiseDisableConfirmDialog();
+
+            if (isAccessFineLocationGranted) {
+                startDetectBeaconsInBackgroundIfNeeded();
+            }
         }
 
         // Set user property.
         analyticsReporter.setBleProperty(state);
+    }
+
+    private void checkAccessFineLocationPermission() {
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
+            int permissionResult = ContextCompat.checkSelfPermission(context, Manifest.permission.ACCESS_FINE_LOCATION);
+            if (permissionResult == PackageManager.PERMISSION_GRANTED) {
+                isAccessFineLocationGranted = true;
+                checkDeviceBle();
+            } else {
+                getView().requestAccessFineLocationPermission();
+            }
+        }
+    }
+
+    private void startDetectBeaconsInBackgroundIfNeeded() {
+        Subscription subscription = findPreferencesUseCase.execute()
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribe(preference -> {
+                    if (preference.isSubscribeInBackgroundEnabled) {
+                        getView().startDetectBeaconsInBackground();
+                    }
+                }, new ErrorAction<>());
+        subscriptions.add(subscription);
     }
 
     private void showDrawerProfile() {
@@ -224,12 +266,15 @@ public final class ActivityPresenter extends BasePresenter<ActivityView> {
         subscriptions.add(subscription);
     }
 
-    private void startAdvertiseIfNeeded(String beaconId) {
+    private void startAdvertiseInBackgroundIfNeeded() {
         Subscription subscription = findPreferencesUseCase.execute()
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribe(preference -> {
+                    if (StringUtils.isEmpty(preference.beaconId)) {
+                        return;
+                    }
                     if (preference.isAdvertiseInBackgroundEnabled && isAdvertiseAvailableDevice) {
-                        getView().startAdvertise(beaconId);
+                        getView().startAdvertise(preference.beaconId);
                     }
                 }, new ErrorAction<>());
         subscriptions.add(subscription);

@@ -1,11 +1,14 @@
 package com.lakeel.altla.vision.nearby.presentation.view.activity;
 
+import android.Manifest;
 import android.annotation.TargetApi;
 import android.bluetooth.BluetoothAdapter;
 import android.content.Intent;
+import android.content.pm.PackageManager;
 import android.os.Build;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
+import android.support.annotation.RequiresApi;
 import android.support.design.widget.NavigationView;
 import android.support.design.widget.Snackbar;
 import android.support.v4.app.Fragment;
@@ -24,12 +27,12 @@ import com.lakeel.altla.vision.nearby.android.ConfirmDialog;
 import com.lakeel.altla.vision.nearby.presentation.application.App;
 import com.lakeel.altla.vision.nearby.presentation.di.component.ViewComponent;
 import com.lakeel.altla.vision.nearby.presentation.firebase.MyUser;
-import com.lakeel.altla.vision.nearby.presentation.view.intent.IntentKey;
 import com.lakeel.altla.vision.nearby.presentation.presenter.activity.ActivityPresenter;
 import com.lakeel.altla.vision.nearby.presentation.presenter.model.ActivityModel;
 import com.lakeel.altla.vision.nearby.presentation.service.AdvertiseService;
 import com.lakeel.altla.vision.nearby.presentation.view.ActivityView;
 import com.lakeel.altla.vision.nearby.presentation.view.fragment.FragmentController;
+import com.lakeel.altla.vision.nearby.presentation.view.intent.IntentKey;
 import com.lakeel.altla.vision.nearby.presentation.view.layout.DrawerHeaderLayout;
 import com.nostra13.universalimageloader.core.ImageLoader;
 
@@ -49,6 +52,8 @@ public class MainActivity extends AppCompatActivity
     private static final Logger LOGGER = LoggerFactory.getLogger(MainActivity.class);
 
     private static final int REQUEST_CODE_ENABLE_BLE = 1;
+
+    private static final int REQUEST_CODE_ACCESS_FINE_LOCATION = 2;
 
     private DrawerHeaderLayout drawerHeaderLayout = new DrawerHeaderLayout();
 
@@ -118,6 +123,19 @@ public class MainActivity extends AppCompatActivity
         } else {
             super.onActivityResult(requestCode, resultCode, data);
         }
+    }
+
+    @Override
+    public void onRequestPermissionsResult(int requestCode, @NonNull String permissions[], @NonNull int[] grantResults) {
+        if (requestCode == REQUEST_CODE_ACCESS_FINE_LOCATION) {
+            if (grantResults[0] == PackageManager.PERMISSION_GRANTED) {
+                presenter.onAccessFineLocationGranted();
+            } else {
+                presenter.onAccessFineLocationDenied();
+                LOGGER.warn("Access fine location permission is denied.");
+            }
+        }
+        super.onRequestPermissionsResult(requestCode, permissions, grantResults);
     }
 
     @Override
@@ -223,6 +241,12 @@ public class MainActivity extends AppCompatActivity
     public void showBleEnabledActivity() {
         Intent intent = new Intent(BluetoothAdapter.ACTION_REQUEST_ENABLE);
         startActivityForResult(intent, REQUEST_CODE_ENABLE_BLE);
+    }
+
+    @RequiresApi(api = Build.VERSION_CODES.M)
+    @Override
+    public void requestAccessFineLocationPermission() {
+        MainActivity.this.requestPermissions(new String[]{Manifest.permission.ACCESS_FINE_LOCATION}, REQUEST_CODE_ACCESS_FINE_LOCATION);
     }
 
     @Override

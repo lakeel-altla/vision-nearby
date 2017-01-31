@@ -1,5 +1,6 @@
 package com.lakeel.altla.vision.nearby.presentation.presenter.nearby;
 
+import android.Manifest;
 import android.bluetooth.BluetoothAdapter;
 import android.bluetooth.BluetoothManager;
 import android.bluetooth.le.BluetoothLeScanner;
@@ -8,7 +9,10 @@ import android.bluetooth.le.ScanRecord;
 import android.bluetooth.le.ScanResult;
 import android.content.Context;
 import android.content.Intent;
+import android.content.pm.PackageManager;
+import android.os.Build;
 import android.support.annotation.IntRange;
+import android.support.v4.content.ContextCompat;
 
 import com.lakeel.altla.vision.nearby.R;
 import com.lakeel.altla.vision.nearby.domain.usecase.FindNearbyUsersUseCase;
@@ -100,14 +104,11 @@ public final class NearbyUserListPresenter extends BasePresenter<NearbyUserListV
         scanner = bluetoothAdapter.getBluetoothLeScanner();
     }
 
-    public void onResume() {
-        BleChecker checker = new BleChecker(context);
-        BleChecker.State state = checker.checkState();
-        if (state == BleChecker.State.OFF) {
-            getView().showBleEnabledActivity(new Intent(BluetoothAdapter.ACTION_REQUEST_ENABLE));
-        } else if (state == BleChecker.State.ENABLE || state == BleChecker.State.SUBSCRIBE_ONLY) {
-            getView().showIndicator();
-            subscribe();
+    public void onActivityCreated() {
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
+            checkAccessFineLocationPermission();
+        } else {
+            checkDeviceBle();
         }
     }
 
@@ -115,10 +116,10 @@ public final class NearbyUserListPresenter extends BasePresenter<NearbyUserListV
     public void onStop() {
         super.onStop();
 
-        scanner.stopScan(scanCallback);
-
         getView().hideIndicator();
         getView().drawDefaultActionBarColor();
+
+        scanner.stopScan(scanCallback);
     }
 
     public void onRefresh() {
@@ -138,7 +139,37 @@ public final class NearbyUserListPresenter extends BasePresenter<NearbyUserListV
         return nearbyUserModels.size();
     }
 
-    public void subscribe() {
+    public void onBleEnabled() {
+        subscribe();
+    }
+
+    public void onAccessFineLocationGranted() {
+        checkDeviceBle();
+    }
+
+    private void checkAccessFineLocationPermission() {
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
+            int permissionResult = ContextCompat.checkSelfPermission(context, Manifest.permission.ACCESS_FINE_LOCATION);
+            if (permissionResult == PackageManager.PERMISSION_GRANTED) {
+                checkDeviceBle();
+            } else {
+                getView().requestAccessFineLocationPermission();
+            }
+        }
+    }
+
+    private void checkDeviceBle() {
+        BleChecker checker = new BleChecker(context);
+        BleChecker.State state = checker.checkState();
+        if (state == BleChecker.State.OFF) {
+            getView().showBleEnabledActivity(new Intent(BluetoothAdapter.ACTION_REQUEST_ENABLE));
+        } else if (state == BleChecker.State.ENABLE || state == BleChecker.State.SUBSCRIBE_ONLY) {
+            getView().showIndicator();
+            subscribe();
+        }
+    }
+
+    private void subscribe() {
         scanner.startScan(scanCallback);
 
         isScanning = true;

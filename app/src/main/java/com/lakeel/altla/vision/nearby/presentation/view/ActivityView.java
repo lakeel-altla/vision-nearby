@@ -22,6 +22,8 @@ public interface ActivityView {
 
     void showBleEnabledActivity();
 
+    void requestAccessFineLocationPermission();
+
     void startDetectBeaconsInBackground();
 
     void stopDetectBeaconsInBackground();

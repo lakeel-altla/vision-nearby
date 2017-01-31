@@ -13,8 +13,8 @@ public final class Distance {
         this.rssi = rssi;
     }
 
-    public String getDistance() {
-        double value = Math.pow(10d, ((double) txPower - rssi) / 20.0) / 100;
+    public String getMeters() {
+        double value = Math.pow(10d, ((double) txPower - rssi) / 20.0) / 1000;
         // Return distance in meters.
         return String.format(Locale.getDefault(), "%.2f", value);
     }

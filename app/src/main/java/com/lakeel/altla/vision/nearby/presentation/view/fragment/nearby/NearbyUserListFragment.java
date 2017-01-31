@@ -1,8 +1,13 @@
 package com.lakeel.altla.vision.nearby.presentation.view.fragment.nearby;
 
+import android.Manifest;
 import android.content.Intent;
+import android.content.pm.PackageManager;
+import android.os.Build;
 import android.os.Bundle;
 import android.os.Handler;
+import android.support.annotation.NonNull;
+import android.support.annotation.RequiresApi;
 import android.support.design.widget.Snackbar;
 import android.support.v4.app.Fragment;
 import android.support.v4.widget.SwipeRefreshLayout;
@@ -46,7 +51,9 @@ public final class NearbyUserListFragment extends Fragment implements NearbyUser
 
     private static final Logger LOGGER = LoggerFactory.getLogger(NearbyUserListFragment.class);
 
-    private static final int REQUEST_CODE_ENABLE_BLE = 1;
+    private static final int REQUEST_CODE_ENABLE_BLE = 11;
+
+    private static final int REQUEST_CODE_ACCESS_FINE_LOCATION = 22;
 
     public static NearbyUserListFragment newInstance() {
         return new NearbyUserListFragment();
@@ -87,17 +94,12 @@ public final class NearbyUserListFragment extends Fragment implements NearbyUser
 
         NearbyUserAdapter adapter = new NearbyUserAdapter(presenter);
         recyclerView.setAdapter(adapter);
+        presenter.onActivityCreated();
     }
 
     @Override
     public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
         inflater.inflate(R.menu.menu_nearby, menu);
-    }
-
-    @Override
-    public void onResume() {
-        super.onResume();
-        presenter.onResume();
     }
 
     @Override
@@ -110,7 +112,7 @@ public final class NearbyUserListFragment extends Fragment implements NearbyUser
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
         if (REQUEST_CODE_ENABLE_BLE == requestCode) {
             if (RESULT_OK == resultCode) {
-                presenter.subscribe();
+                presenter.onBleEnabled();
             } else {
                 LOGGER.error("Failed to enable BLE.");
                 showSnackBar(R.string.error_not_enable_ble);
@@ -121,8 +123,26 @@ public final class NearbyUserListFragment extends Fragment implements NearbyUser
     }
 
     @Override
+    public void onRequestPermissionsResult(int requestCode, @NonNull String permissions[], @NonNull int[] grantResults) {
+        if (requestCode == REQUEST_CODE_ACCESS_FINE_LOCATION) {
+            if (grantResults[0] == PackageManager.PERMISSION_GRANTED) {
+                presenter.onAccessFineLocationGranted();
+            } else {
+                LOGGER.warn("Access fine location permission is denied.");
+                showSnackBar(R.string.error_not_find);
+            }
+        }
+    }
+
+    @Override
     public void showBleEnabledActivity(Intent intent) {
         startActivityForResult(intent, REQUEST_CODE_ENABLE_BLE);
+    }
+
+    @RequiresApi(api = Build.VERSION_CODES.M)
+    @Override
+    public void requestAccessFineLocationPermission() {
+        requestPermissions(new String[]{Manifest.permission.ACCESS_FINE_LOCATION}, REQUEST_CODE_ACCESS_FINE_LOCATION);
     }
 
     @Override

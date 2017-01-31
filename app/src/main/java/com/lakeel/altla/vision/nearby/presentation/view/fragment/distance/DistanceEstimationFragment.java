@@ -1,7 +1,12 @@
 package com.lakeel.altla.vision.nearby.presentation.view.fragment.distance;
 
+import android.Manifest;
 import android.content.Intent;
+import android.content.pm.PackageManager;
+import android.os.Build;
 import android.os.Bundle;
+import android.support.annotation.NonNull;
+import android.support.annotation.RequiresApi;
 import android.support.design.widget.Snackbar;
 import android.support.v4.app.Fragment;
 import android.support.v4.content.res.ResourcesCompat;
@@ -16,11 +21,12 @@ import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import com.lakeel.altla.vision.nearby.R;
-import com.lakeel.altla.vision.nearby.presentation.view.bundle.FragmentBundle;
+import com.lakeel.altla.vision.nearby.core.StringUtils;
 import com.lakeel.altla.vision.nearby.presentation.firebase.MyUser;
 import com.lakeel.altla.vision.nearby.presentation.presenter.estimation.DistanceEstimationPresenter;
 import com.lakeel.altla.vision.nearby.presentation.view.DistanceEstimationView;
 import com.lakeel.altla.vision.nearby.presentation.view.activity.MainActivity;
+import com.lakeel.altla.vision.nearby.presentation.view.bundle.FragmentBundle;
 import com.nostra13.universalimageloader.core.ImageLoader;
 
 import org.slf4j.Logger;
@@ -45,9 +51,6 @@ public final class DistanceEstimationFragment extends Fragment implements Distan
     @BindView(R.id.mainLayout)
     RelativeLayout mainLayout;
 
-    @BindView(R.id.textViewDescription)
-    TextView descriptionTextView;
-
     @BindView(R.id.textViewDistance)
     TextView distanceTextView;
 
@@ -59,7 +62,9 @@ public final class DistanceEstimationFragment extends Fragment implements Distan
 
     private static final Logger LOGGER = LoggerFactory.getLogger(DistanceEstimationFragment.class);
 
-    private static final int REQUEST_CODE_ENABLE_BLE = 1;
+    private static final int REQUEST_CODE_ENABLE_BLE = 111;
+
+    private static final int REQUEST_CODE_ACCESS_FINE_LOCATION = 222;
 
     public static DistanceEstimationFragment newInstance(ArrayList<String> beaconIds, String targetName) {
         Bundle args = new Bundle();
@@ -91,8 +96,6 @@ public final class DistanceEstimationFragment extends Fragment implements Distan
     public void onActivityCreated(Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
 
-        getActivity().setTitle(R.string.title_find_nearby_device);
-
         ((MainActivity) getActivity()).setDrawerIndicatorEnabled(false);
 
         ImageLoader imageLoader = ImageLoader.getInstance();
@@ -103,24 +106,12 @@ public final class DistanceEstimationFragment extends Fragment implements Distan
         String targetName = bundle.getString(FragmentBundle.TARGET_NAME.name());
 
         String message = getResources().getString(R.string.message_finding_for_nearby_device_format, targetName);
-        descriptionTextView.setText(message);
+        getActivity().setTitle(message);
+
+        distanceTextView.setText(getResources().getString(R.string.textView_finding));
 
         presenter.setBeaconIds(beaconIds);
-    }
-
-    @Override
-    public void onResume() {
-        super.onResume();
-
-        presenter.onResume();
-
-        circleImageView.setImageDrawable(ResourcesCompat.getDrawable(getResources(), R.drawable.circle, null));
-
-        ScaleAnimation animation = new ScaleAnimation(1, 3.0f, 1, 3.0f, Animation.RELATIVE_TO_SELF, 0.5f, Animation.RELATIVE_TO_SELF, 0.5f);
-        animation.setDuration(2000);
-        animation.setRepeatCount(INFINITE);
-
-        circleImageView.startAnimation(animation);
+        presenter.onActivityCreated();
     }
 
     @Override
@@ -144,6 +135,18 @@ public final class DistanceEstimationFragment extends Fragment implements Distan
     }
 
     @Override
+    public void onRequestPermissionsResult(int requestCode, @NonNull String permissions[], @NonNull int[] grantResults) {
+        if (requestCode == REQUEST_CODE_ACCESS_FINE_LOCATION) {
+            if (grantResults[0] == PackageManager.PERMISSION_GRANTED) {
+                presenter.onAccessFineLocationGranted();
+            } else {
+                LOGGER.warn("Access fine location permission is denied.");
+                Snackbar.make(mainLayout, R.string.error_not_find, Snackbar.LENGTH_SHORT).show();
+            }
+        }
+    }
+
+    @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         switch (item.getItemId()) {
             case android.R.id.home:
@@ -156,11 +159,26 @@ public final class DistanceEstimationFragment extends Fragment implements Distan
     }
 
     @Override
+    public void startAnimation() {
+        circleImageView.setImageDrawable(ResourcesCompat.getDrawable(getResources(), R.drawable.circle, null));
+
+        ScaleAnimation animation = new ScaleAnimation(1, 4.0f, 1, 4.0f, Animation.RELATIVE_TO_SELF, 0.5f, Animation.RELATIVE_TO_SELF, 0.5f);
+        animation.setDuration(2000);
+        animation.setRepeatCount(INFINITE);
+
+        circleImageView.startAnimation(animation);
+    }
+
+    @Override
     public void showDistance(String meters) {
-        if (isResumed()) {
-            String message = getResources().getString(R.string.message_device_distance_format, meters);
-            distanceTextView.setText(message);
-        }
+        String message = getResources().getString(R.string.message_device_distance_format, meters);
+        distanceTextView.setText(message);
+    }
+
+    @RequiresApi(api = Build.VERSION_CODES.M)
+    @Override
+    public void requestAccessFineLocationPermission() {
+        requestPermissions(new String[]{Manifest.permission.ACCESS_FINE_LOCATION}, REQUEST_CODE_ACCESS_FINE_LOCATION);
     }
 
     @Override

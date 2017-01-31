@@ -24,8 +24,9 @@ public final class FindFavoritesUseCase {
 
     public Observable<User> execute() {
         String userId = MyUser.getUserId();
-        return favoritesRepository.findFavorites(userId).subscribeOn(Schedulers.io())
-                .flatMap(entity -> findUser(userId));
+        return favoritesRepository.findFavorites(userId)
+                .subscribeOn(Schedulers.io())
+                .flatMap(this::findUser);
     }
 
     private Observable<User> findUser(String userId) {
