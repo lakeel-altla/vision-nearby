@@ -2,7 +2,7 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:id="@+id/mainLayout"
     android:layout_width="match_parent"
-    android:layout_height="72dp"
+    android:layout_height="match_parent"
     android:background="@color/white"
     android:gravity="center"
     android:orientation="vertical">
@@ -25,5 +25,10 @@
         android:paddingStart="16dp" />
 
     <include layout="@layout/divider" />
+
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:background="@color/white"/>
 
 </LinearLayout>

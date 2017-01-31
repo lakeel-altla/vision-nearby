@@ -2,7 +2,7 @@ package com.lakeel.altla.vision.nearby.domain.usecase;
 
 import com.lakeel.altla.vision.nearby.data.repository.FirebaseUserFavoriteRepository;
 import com.lakeel.altla.vision.nearby.data.repository.FirebaseUserProfileRepository;
-import com.lakeel.altla.vision.nearby.domain.model.User;
+import com.lakeel.altla.vision.nearby.domain.model.UserProfile;
 import com.lakeel.altla.vision.nearby.presentation.firebase.MyUser;
 
 import javax.inject.Inject;
@@ -22,14 +22,14 @@ public final class FindFavoritesUseCase {
     FindFavoritesUseCase() {
     }
 
-    public Observable<User> execute() {
+    public Observable<UserProfile> execute() {
         String userId = MyUser.getUserId();
         return favoritesRepository.findFavorites(userId)
                 .subscribeOn(Schedulers.io())
                 .flatMap(this::findUser);
     }
 
-    private Observable<User> findUser(String userId) {
-        return usersRepository.findUser(userId).subscribeOn(Schedulers.io()).toObservable();
+    private Observable<UserProfile> findUser(String userId) {
+        return usersRepository.findUserProfile(userId).subscribeOn(Schedulers.io()).toObservable();
     }
 }

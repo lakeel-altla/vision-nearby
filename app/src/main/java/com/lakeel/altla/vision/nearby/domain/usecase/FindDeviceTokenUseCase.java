@@ -6,15 +6,15 @@ import javax.inject.Inject;
 
 import rx.Single;
 
-public final class FindTokenUseCase {
+public final class FindDeviceTokenUseCase {
 
     @Inject
     FirebaseUserDeviceTokenRepository repository;
 
     @Inject
-    FindTokenUseCase() {
+    FindDeviceTokenUseCase() {
     }
     public Single<String> execute(String userId) {
-        return repository.findToken(userId);
+        return repository.findDeviceToken(userId);
     }
 }

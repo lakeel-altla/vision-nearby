@@ -46,6 +46,8 @@ public final class LineSettingsFragment extends Fragment implements LineSettings
         View view = inflater.inflate(R.layout.fragment_line_settings, container, false);
         ButterKnife.bind(this, view);
 
+        setHasOptionsMenu(true);
+
         MainActivity.getUserComponent(this).inject(this);
 
         presenter.onCreateView(this);

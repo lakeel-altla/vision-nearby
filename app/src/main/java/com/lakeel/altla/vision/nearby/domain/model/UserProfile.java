@@ -1,6 +1,6 @@
 package com.lakeel.altla.vision.nearby.domain.model;
 
-public final class User {
+public final class UserProfile {
 
     public String userId;
 

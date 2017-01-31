@@ -56,7 +56,7 @@ final class BeaconDetector implements BootstrapNotifier {
 
     @Override
     public void didDetermineStateForRegion(int i, Region region) {
-        LOGGER.debug("RegionState state is changed:state=" + i);
+        LOGGER.debug("Region state is changed:state=" + RegionState.toRegionState(i));
 
         if (MonitorNotifier.INSIDE == i) {
             // If enter the region of the beacons, start to subscribe.

@@ -1,17 +1,17 @@
-package com.lakeel.altla.vision.nearby.presentation.presenter.user;
+package com.lakeel.altla.vision.nearby.presentation.presenter.passing;
 
 import com.lakeel.altla.vision.nearby.R;
 import com.lakeel.altla.vision.nearby.domain.usecase.FindConnectionUseCase;
 import com.lakeel.altla.vision.nearby.domain.usecase.FindFavoriteUseCase;
-import com.lakeel.altla.vision.nearby.domain.usecase.FindHistoryUseCase;
+import com.lakeel.altla.vision.nearby.domain.usecase.FindNearbyHistoryUseCase;
 import com.lakeel.altla.vision.nearby.domain.usecase.FindLineLinkUseCase;
-import com.lakeel.altla.vision.nearby.domain.usecase.FindTimesUseCase;
+import com.lakeel.altla.vision.nearby.domain.usecase.FindPassingTimesUseCase;
 import com.lakeel.altla.vision.nearby.domain.usecase.FindUserUseCase;
 import com.lakeel.altla.vision.nearby.domain.usecase.SaveFavoriteUseCase;
 import com.lakeel.altla.vision.nearby.presentation.analytics.AnalyticsReporter;
 import com.lakeel.altla.vision.nearby.presentation.presenter.BasePresenter;
 import com.lakeel.altla.vision.nearby.presentation.presenter.mapper.UserPassingModelMapper;
-import com.lakeel.altla.vision.nearby.presentation.presenter.model.UserPassingModel;
+import com.lakeel.altla.vision.nearby.presentation.presenter.model.PassingUserModel;
 import com.lakeel.altla.vision.nearby.presentation.view.PassingUserView;
 import com.lakeel.altla.vision.nearby.rx.ErrorAction;
 
@@ -28,13 +28,13 @@ public final class PassingUserPresenter extends BasePresenter<PassingUserView> {
     AnalyticsReporter analyticsReporter;
 
     @Inject
-    FindHistoryUseCase findHistoryUseCase;
+    FindNearbyHistoryUseCase findNearbyHistoryUseCase;
 
     @Inject
     FindUserUseCase findUserUseCase;
 
     @Inject
-    FindTimesUseCase findTimesUseCase;
+    FindPassingTimesUseCase findPassingTimesUseCase;
 
     @Inject
     SaveFavoriteUseCase saveFavoriteUseCase;
@@ -48,7 +48,7 @@ public final class PassingUserPresenter extends BasePresenter<PassingUserView> {
     @Inject
     FindLineLinkUseCase findLineLinkUseCase;
 
-    private UserPassingModel model = new UserPassingModel();
+    private PassingUserModel model = new PassingUserModel();
 
     private UserPassingModelMapper modelMapper = new UserPassingModelMapper();
 
@@ -65,7 +65,7 @@ public final class PassingUserPresenter extends BasePresenter<PassingUserView> {
     }
 
     public void onActivityCreated() {
-        Subscription subscription = findHistoryUseCase.execute(historyId)
+        Subscription subscription = findNearbyHistoryUseCase.execute(historyId)
                 .map(history -> {
                     model = modelMapper.map(history);
                     return model;
@@ -112,7 +112,7 @@ public final class PassingUserPresenter extends BasePresenter<PassingUserView> {
         subscriptions.add(subscription);
     }
 
-    private Single<UserPassingModel> findUser(String userId) {
+    private Single<PassingUserModel> findUser(String userId) {
         return findUserUseCase.execute(userId)
                 .subscribeOn(Schedulers.io())
                 .map(user -> {
@@ -136,7 +136,7 @@ public final class PassingUserPresenter extends BasePresenter<PassingUserView> {
     }
 
     private void showTimes(String userId) {
-        Subscription timesSubscription = findTimesUseCase.execute(userId)
+        Subscription timesSubscription = findPassingTimesUseCase.execute(userId)
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribe(times -> getView().showTimes(times), new ErrorAction<>());
         subscriptions.add(timesSubscription);

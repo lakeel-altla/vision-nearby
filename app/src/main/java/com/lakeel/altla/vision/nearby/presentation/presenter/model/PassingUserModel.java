@@ -1,6 +1,6 @@
 package com.lakeel.altla.vision.nearby.presentation.presenter.model;
 
-public final class UserPassingModel {
+public final class PassingUserModel {
 
     public String userId;
 

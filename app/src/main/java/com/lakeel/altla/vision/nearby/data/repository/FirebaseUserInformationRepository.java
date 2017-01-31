@@ -33,7 +33,7 @@ public class FirebaseUserInformationRepository {
         reference = FirebaseDatabase.getInstance().getReferenceFromUrl(url);
     }
 
-    public Completable save(String userId, String title, String message) {
+    public Completable saveInformation(String userId, String title, String message) {
         return Completable.create(subscriber -> {
             InformationEntity entity = entityMapper.map(title, message);
             Map<String, Object> map = entity.toMap();

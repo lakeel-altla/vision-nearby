@@ -4,7 +4,6 @@ import android.support.annotation.StringRes;
 
 import com.lakeel.altla.vision.nearby.presentation.firebase.MyUser;
 import com.lakeel.altla.vision.nearby.presentation.presenter.model.ActivityModel;
-import com.lakeel.altla.vision.nearby.presentation.presenter.model.UserModel;
 
 public interface ActivityView {
 

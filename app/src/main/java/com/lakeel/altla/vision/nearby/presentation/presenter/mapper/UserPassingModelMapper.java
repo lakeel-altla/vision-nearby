@@ -1,24 +1,24 @@
 package com.lakeel.altla.vision.nearby.presentation.presenter.mapper;
 
-import com.lakeel.altla.vision.nearby.domain.model.History;
-import com.lakeel.altla.vision.nearby.presentation.presenter.model.UserPassingModel;
+import com.lakeel.altla.vision.nearby.domain.model.NearbyHistory;
+import com.lakeel.altla.vision.nearby.presentation.presenter.model.PassingUserModel;
 
 public final class UserPassingModelMapper {
 
-    public UserPassingModel map(History history) {
-        UserPassingModel model = new UserPassingModel();
+    public PassingUserModel map(NearbyHistory nearbyHistory) {
+        PassingUserModel model = new PassingUserModel();
 
-        model.userId = history.userId;
-        model.userActivity = history.userActivity;
-        model.passingTime = history.passingTime;
+        model.userId = nearbyHistory.userId;
+        model.userActivity = nearbyHistory.userActivity;
+        model.passingTime = nearbyHistory.passingTime;
 
-        History.Location location = history.location;
+        NearbyHistory.Location location = nearbyHistory.location;
         if (location != null) {
             model.latitude = location.latitude;
             model.longitude = location.longitude;
         }
 
-        History.Weather weather = history.weather;
+        NearbyHistory.Weather weather = nearbyHistory.weather;
         if (weather != null) {
             model.conditions = weather.conditions;
             model.humidity = weather.humidity;

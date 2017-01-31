@@ -1,7 +1,7 @@
 package com.lakeel.altla.vision.nearby.domain.usecase;
 
 import com.lakeel.altla.vision.nearby.data.repository.FirebaseUserProfileRepository;
-import com.lakeel.altla.vision.nearby.domain.model.User;
+import com.lakeel.altla.vision.nearby.domain.model.UserProfile;
 
 import javax.inject.Inject;
 
@@ -17,7 +17,7 @@ public final class FindUserUseCase {
     FindUserUseCase() {
     }
 
-    public Single<User> execute(String userId) {
-        return repository.findUser(userId).subscribeOn(Schedulers.io());
+    public Single<UserProfile> execute(String userId) {
+        return repository.findUserProfile(userId).subscribeOn(Schedulers.io());
     }
 }

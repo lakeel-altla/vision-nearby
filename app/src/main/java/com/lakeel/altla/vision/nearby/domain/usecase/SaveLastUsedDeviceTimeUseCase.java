@@ -7,16 +7,16 @@ import javax.inject.Inject;
 import rx.Completable;
 import rx.schedulers.Schedulers;
 
-public final class SaveLastUsedTimeUseCase {
+public final class SaveLastUsedDeviceTimeUseCase {
 
     @Inject
     FirebaseBeaconRepository repository;
 
     @Inject
-    public SaveLastUsedTimeUseCase() {
+    SaveLastUsedDeviceTimeUseCase() {
     }
 
     public Completable execute(String beaconId) {
-        return repository.saveLastUsedTime(beaconId).subscribeOn(Schedulers.io());
+        return repository.saveLastUsedDeviceTime(beaconId).subscribeOn(Schedulers.io());
     }
 }

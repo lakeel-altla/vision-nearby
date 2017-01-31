@@ -49,7 +49,7 @@ public final class MyUser {
     private static FirebaseUser getMyUser() {
         FirebaseUser myUser = FirebaseAuth.getInstance().getCurrentUser();
         if (myUser == null) {
-            throw new UserNotAuthorizedException("Not found signed in user");
+            throw new UserNotAuthorizedException("Not found signed in user.");
         }
 
         return myUser;

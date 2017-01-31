@@ -4,34 +4,34 @@ import android.location.Location;
 
 import com.google.android.gms.awareness.state.Weather;
 import com.google.android.gms.location.DetectedActivity;
-import com.lakeel.altla.vision.nearby.data.entity.HistoryEntity;
+import com.lakeel.altla.vision.nearby.data.entity.NearbyHistoryEntity;
 import com.lakeel.altla.vision.nearby.presentation.beacon.region.RegionState;
 
 import java.util.ArrayList;
 import java.util.List;
 
-import static com.lakeel.altla.vision.nearby.data.entity.HistoryEntity.LocationEntity;
-import static com.lakeel.altla.vision.nearby.data.entity.HistoryEntity.WeatherEntity;
+import static com.lakeel.altla.vision.nearby.data.entity.NearbyHistoryEntity.LocationEntity;
+import static com.lakeel.altla.vision.nearby.data.entity.NearbyHistoryEntity.WeatherEntity;
 
 public final class HistoryEntityMapper {
 
-    public HistoryEntity map(String userId, RegionState regionState) {
-        HistoryEntity entity = new HistoryEntity();
+    public NearbyHistoryEntity map(String userId, RegionState regionState) {
+        NearbyHistoryEntity entity = new NearbyHistoryEntity();
         entity.userId = userId;
         entity.isEntered = RegionState.ENTER == regionState;
         return entity;
     }
 
-    public HistoryEntity map(DetectedActivity userActivity) {
-        HistoryEntity entity = new HistoryEntity();
+    public NearbyHistoryEntity map(DetectedActivity userActivity) {
+        NearbyHistoryEntity entity = new NearbyHistoryEntity();
         if (userActivity != null) {
             entity.userActivity = userActivity.getType();
         }
         return entity;
     }
 
-    public HistoryEntity map(Location location) {
-        HistoryEntity entity = new HistoryEntity();
+    public NearbyHistoryEntity map(Location location) {
+        NearbyHistoryEntity entity = new NearbyHistoryEntity();
         if (location != null) {
             LocationEntity locationEntity = new LocationEntity();
             locationEntity.latitude = String.valueOf(location.getLatitude());
@@ -41,8 +41,8 @@ public final class HistoryEntityMapper {
         return entity;
     }
 
-    public HistoryEntity map(Weather weather) {
-        HistoryEntity entity = new HistoryEntity();
+    public NearbyHistoryEntity map(Weather weather) {
+        NearbyHistoryEntity entity = new NearbyHistoryEntity();
         if (weather != null) {
             entity.weather = new WeatherEntity();
             entity.weather.humidity = weather.getHumidity();

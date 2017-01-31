@@ -129,7 +129,7 @@ public class App extends Application {
                 .showImageOnFail(R.drawable.ic_account)
                 .build();
 
-        // When size of the cache is exceeded, remove the image that has not been used much.
+        // When size of the cache is exceeded, removeNearbyHistory the image that has not been used much.
         ImageLoaderConfiguration config = new ImageLoaderConfiguration.Builder(this)
                 .memoryCache(new UsingFreqLimitedMemoryCache(2 * 1024 * 1024))
                 .defaultDisplayImageOptions(displayImageOptions)

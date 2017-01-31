@@ -6,11 +6,11 @@ import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
-import com.lakeel.altla.vision.nearby.data.entity.UserEntity;
+import com.lakeel.altla.vision.nearby.data.entity.UserProfileEntity;
 import com.lakeel.altla.vision.nearby.data.execption.DataStoreException;
 import com.lakeel.altla.vision.nearby.data.mapper.entity.UserEntityMapper;
 import com.lakeel.altla.vision.nearby.data.mapper.model.UserMapper;
-import com.lakeel.altla.vision.nearby.domain.model.User;
+import com.lakeel.altla.vision.nearby.domain.model.UserProfile;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -37,7 +37,7 @@ public final class FirebaseUserProfileRepository {
         reference = FirebaseDatabase.getInstance().getReferenceFromUrl(url);
     }
 
-    public Single<User> findUser(String userId) {
+    public Single<UserProfile> findUserProfile(String userId) {
         return Single.create(subscriber ->
                 reference
                         .child(userId)
@@ -45,7 +45,7 @@ public final class FirebaseUserProfileRepository {
 
                             @Override
                             public void onDataChange(DataSnapshot dataSnapshot) {
-                                UserEntity entity = dataSnapshot.getValue(UserEntity.class);
+                                UserProfileEntity entity = dataSnapshot.getValue(UserProfileEntity.class);
                                 subscriber.onSuccess(userMapper.map(entity, dataSnapshot.getKey()));
                             }
 
@@ -56,9 +56,9 @@ public final class FirebaseUserProfileRepository {
                         }));
     }
 
-    public Completable saveUser(String userId) {
+    public Completable saveUserProfile(String userId) {
         return Completable.create(subscriber -> {
-            UserEntity entity = entityMapper.map();
+            UserProfileEntity entity = entityMapper.map();
             Task task = reference
                     .child(userId)
                     .updateChildren(entity.toMap());
@@ -131,14 +131,14 @@ public final class FirebaseUserProfileRepository {
         });
     }
 
-    public Observable<User> observeUserProfile(String userId) {
+    public Observable<UserProfile> observeUserProfile(String userId) {
         return Observable.create(subscriber ->
                 reference
                         .child(userId)
                         .addValueEventListener(new ValueEventListener() {
                             @Override
                             public void onDataChange(DataSnapshot dataSnapshot) {
-                                UserEntity entity = dataSnapshot.getValue(UserEntity.class);
+                                UserProfileEntity entity = dataSnapshot.getValue(UserProfileEntity.class);
                                 subscriber.onNext(userMapper.map(entity, dataSnapshot.getKey()));
                             }
 

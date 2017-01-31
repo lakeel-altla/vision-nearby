@@ -32,7 +32,7 @@ public class FirebaseLINELinksRepository {
         reference = FirebaseDatabase.getInstance().getReferenceFromUrl(url);
     }
 
-    public Single<String> saveUrl(String userId, String url) {
+    public Single<String> saveLineUrl(String userId, String url) {
         return Single.create(subscriber -> {
             LineLinkEntity entity = entityMapper.map(url);
 

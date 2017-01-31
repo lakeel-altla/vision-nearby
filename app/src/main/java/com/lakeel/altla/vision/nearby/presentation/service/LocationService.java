@@ -13,7 +13,7 @@ import android.support.v4.content.ContextCompat;
 import com.google.android.gms.awareness.Awareness;
 import com.google.android.gms.common.api.GoogleApiClient;
 import com.lakeel.altla.vision.nearby.domain.usecase.SaveDeviceLocationUseCase;
-import com.lakeel.altla.vision.nearby.domain.usecase.SaveLocationDataUseCase;
+import com.lakeel.altla.vision.nearby.domain.usecase.SaveLocationMetaDataUseCase;
 import com.lakeel.altla.vision.nearby.presentation.di.component.DaggerServiceComponent;
 import com.lakeel.altla.vision.nearby.presentation.di.component.ServiceComponent;
 import com.lakeel.altla.vision.nearby.presentation.di.module.ServiceModule;
@@ -62,7 +62,7 @@ public final class LocationService extends IntentService {
     SaveDeviceLocationUseCase saveDeviceLocationUseCase;
 
     @Inject
-    SaveLocationDataUseCase saveLocationDataUseCase;
+    SaveLocationMetaDataUseCase saveLocationMetaDataUseCase;
 
     private static final Logger LOGGER = LoggerFactory.getLogger(LocationService.class);
 
@@ -122,6 +122,6 @@ public final class LocationService extends IntentService {
     }
 
     private void saveLocationMetaData(String uniqueId, String userId, String beaconId) {
-        saveLocationDataUseCase.execute(uniqueId, userId, beaconId).subscribe();
+        saveLocationMetaDataUseCase.execute(uniqueId, userId, beaconId).subscribe();
     }
 }

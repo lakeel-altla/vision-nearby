@@ -17,6 +17,6 @@ public final class SaveNotificationUseCase {
     }
 
     public Completable execute(String to, String title, String message) {
-        return repository.save(to, title, message).subscribeOn(Schedulers.io());
+        return repository.saveNotification(to, title, message).subscribeOn(Schedulers.io());
     }
 }

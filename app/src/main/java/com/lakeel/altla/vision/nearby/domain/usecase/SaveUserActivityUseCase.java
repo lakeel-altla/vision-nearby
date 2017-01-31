@@ -1,7 +1,7 @@
 package com.lakeel.altla.vision.nearby.domain.usecase;
 
 import com.google.android.gms.location.DetectedActivity;
-import com.lakeel.altla.vision.nearby.data.repository.FirebaseHistoryRepository;
+import com.lakeel.altla.vision.nearby.data.repository.FirebaseUserNearbyHistoryRepository;
 import com.lakeel.altla.vision.nearby.presentation.firebase.MyUser;
 
 import javax.inject.Inject;
@@ -12,7 +12,7 @@ import rx.schedulers.Schedulers;
 public final class SaveUserActivityUseCase {
 
     @Inject
-    FirebaseHistoryRepository repository;
+    FirebaseUserNearbyHistoryRepository repository;
 
     @Inject
     SaveUserActivityUseCase() {

@@ -4,9 +4,5 @@ public interface InformationListView {
 
     void updateItems();
 
-    void showEmptyView();
-
-    void hideEmptyView();
-
     void showInformationFragment(String informationId);
 }

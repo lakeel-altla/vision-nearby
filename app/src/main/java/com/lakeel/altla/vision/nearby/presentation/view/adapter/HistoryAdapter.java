@@ -10,7 +10,7 @@ import android.widget.TextView;
 import com.lakeel.altla.vision.nearby.R;
 import com.lakeel.altla.vision.nearby.core.StringUtils;
 import com.lakeel.altla.vision.nearby.presentation.presenter.history.HistoryListPresenter;
-import com.lakeel.altla.vision.nearby.presentation.presenter.model.HistoryModel;
+import com.lakeel.altla.vision.nearby.presentation.presenter.model.NearbyHistoryModel;
 import com.lakeel.altla.vision.nearby.presentation.view.HistoryItemView;
 import com.lakeel.altla.vision.nearby.presentation.view.date.DateFormatter;
 import com.lakeel.altla.vision.nearby.presentation.view.drawable.UserInitial;
@@ -24,7 +24,7 @@ import java.util.ArrayList;
 import butterknife.BindView;
 import butterknife.ButterKnife;
 
-public final class HistoryAdapter extends SwipeableUltimateViewAdapter<HistoryModel> {
+public final class HistoryAdapter extends SwipeableUltimateViewAdapter<NearbyHistoryModel> {
 
     private HistoryListPresenter historyListPresenter;
 
@@ -46,7 +46,7 @@ public final class HistoryAdapter extends SwipeableUltimateViewAdapter<HistoryMo
     }
 
     @Override
-    protected void withBindHolder(UltimateRecyclerviewViewHolder bindHolder, HistoryModel model, int position) {
+    protected void withBindHolder(UltimateRecyclerviewViewHolder bindHolder, NearbyHistoryModel model, int position) {
         HistoryItemViewHolder holder = (HistoryItemViewHolder) bindHolder;
         holder.onBind(position);
     }
@@ -88,7 +88,7 @@ public final class HistoryAdapter extends SwipeableUltimateViewAdapter<HistoryMo
         }
 
         @Override
-        public void showItem(HistoryModel model) {
+        public void showItem(NearbyHistoryModel model) {
             String userName = model.userName;
             String imageUri = model.imageUri;
 

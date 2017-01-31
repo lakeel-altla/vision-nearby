@@ -10,11 +10,11 @@ import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
-import com.lakeel.altla.vision.nearby.data.entity.HistoryEntity;
+import com.lakeel.altla.vision.nearby.data.entity.NearbyHistoryEntity;
 import com.lakeel.altla.vision.nearby.data.execption.DataStoreException;
 import com.lakeel.altla.vision.nearby.data.mapper.entity.HistoryEntityMapper;
 import com.lakeel.altla.vision.nearby.data.mapper.model.HistoryMapper;
-import com.lakeel.altla.vision.nearby.domain.model.History;
+import com.lakeel.altla.vision.nearby.domain.model.NearbyHistory;
 import com.lakeel.altla.vision.nearby.presentation.beacon.region.RegionState;
 
 import java.util.Map;
@@ -26,7 +26,7 @@ import rx.Completable;
 import rx.Observable;
 import rx.Single;
 
-public class FirebaseHistoryRepository {
+public class FirebaseUserNearbyHistoryRepository {
 
     private static final String ID_KEY = "userId";
 
@@ -39,11 +39,11 @@ public class FirebaseHistoryRepository {
     private final DatabaseReference reference;
 
     @Inject
-    public FirebaseHistoryRepository(@Named("historyUrl") String url) {
+    public FirebaseUserNearbyHistoryRepository(@Named("userNearbyHistoryUrl") String url) {
         reference = FirebaseDatabase.getInstance().getReferenceFromUrl(url);
     }
 
-    public Observable<History> findHistoryList(String userId) {
+    public Observable<NearbyHistory> findNearbyHistoryList(String userId) {
         return Observable.create(subscriber -> {
             reference
                     .child(userId)
@@ -53,7 +53,7 @@ public class FirebaseHistoryRepository {
                         @Override
                         public void onDataChange(DataSnapshot dataSnapshot) {
                             for (DataSnapshot snapshot : dataSnapshot.getChildren()) {
-                                HistoryEntity entity = snapshot.getValue(HistoryEntity.class);
+                                NearbyHistoryEntity entity = snapshot.getValue(NearbyHistoryEntity.class);
                                 subscriber.onNext(historyMapper.map(entity, snapshot.getKey()));
                             }
                             subscriber.onCompleted();
@@ -67,7 +67,7 @@ public class FirebaseHistoryRepository {
         });
     }
 
-    public Single<History> findHistory(String userId, String historyId) {
+    public Single<NearbyHistory> findNearbyHistory(String userId, String historyId) {
         return Single.create(subscriber ->
                 reference
                         .child(userId)
@@ -75,27 +75,8 @@ public class FirebaseHistoryRepository {
                         .addListenerForSingleValueEvent(new ValueEventListener() {
                             @Override
                             public void onDataChange(DataSnapshot snapshot) {
-                                HistoryEntity entity = snapshot.getValue(HistoryEntity.class);
+                                NearbyHistoryEntity entity = snapshot.getValue(NearbyHistoryEntity.class);
                                 subscriber.onSuccess(historyMapper.map(entity, snapshot.getKey()));
-                            }
-
-                            @Override
-                            public void onCancelled(DatabaseError databaseError) {
-                                subscriber.onError(databaseError.toException());
-                            }
-                        }));
-    }
-
-    public Single<Long> findTimes(String myUserId, String passingUserId) {
-        return Single.create(subscriber ->
-                reference
-                        .child(myUserId)
-                        .orderByChild(ID_KEY)
-                        .equalTo(passingUserId)
-                        .addListenerForSingleValueEvent(new ValueEventListener() {
-                            @Override
-                            public void onDataChange(DataSnapshot dataSnapshot) {
-                                subscriber.onSuccess(dataSnapshot.getChildrenCount());
                             }
 
                             @Override
@@ -107,7 +88,7 @@ public class FirebaseHistoryRepository {
 
     public Single<String> saveHistory(String myUserId, String passingUserId, RegionState regionState) {
         return Single.create(subscriber -> {
-            HistoryEntity entity = entityMapper.map(passingUserId, regionState);
+            NearbyHistoryEntity entity = entityMapper.map(passingUserId, regionState);
 
             DatabaseReference pushedReference = reference.child(myUserId).push();
             String uniqueId = pushedReference.getKey();
@@ -126,7 +107,7 @@ public class FirebaseHistoryRepository {
 
     public Completable saveUserActivity(String uniqueId, String userId, DetectedActivity userActivity) {
         return Completable.create(subscriber -> {
-            HistoryEntity entity = entityMapper.map(userActivity);
+            NearbyHistoryEntity entity = entityMapper.map(userActivity);
             Map<String, Object> map = entity.toUserActivityMap();
 
             Task<Void> task = reference
@@ -145,7 +126,7 @@ public class FirebaseHistoryRepository {
 
     public Completable saveLocation(String uniqueId, String userId, Location location) {
         return Completable.create(subscriber -> {
-            HistoryEntity entity = entityMapper.map(location);
+            NearbyHistoryEntity entity = entityMapper.map(location);
             Map<String, Object> map = entity.toLocationMap();
 
             Task<Void> task = reference
@@ -164,7 +145,7 @@ public class FirebaseHistoryRepository {
 
     public Completable saveWeather(String uniqueId, String userId, Weather weather) {
         return Completable.create(subscriber -> {
-            HistoryEntity entity = entityMapper.map(weather);
+            NearbyHistoryEntity entity = entityMapper.map(weather);
             Map<String, Object> map = entity.toWeatherMap();
 
             Task<Void> task = reference
@@ -181,7 +162,26 @@ public class FirebaseHistoryRepository {
         });
     }
 
-    public Completable remove(String userId, String uniqueKey) {
+    public Single<Long> findPassingTimes(String myUserId, String passingUserId) {
+        return Single.create(subscriber ->
+                reference
+                        .child(myUserId)
+                        .orderByChild(ID_KEY)
+                        .equalTo(passingUserId)
+                        .addListenerForSingleValueEvent(new ValueEventListener() {
+                            @Override
+                            public void onDataChange(DataSnapshot dataSnapshot) {
+                                subscriber.onSuccess(dataSnapshot.getChildrenCount());
+                            }
+
+                            @Override
+                            public void onCancelled(DatabaseError databaseError) {
+                                subscriber.onError(databaseError.toException());
+                            }
+                        }));
+    }
+
+    public Completable removeNearbyHistory(String userId, String uniqueKey) {
         return Completable.create(subscriber -> {
             Task task = reference.
                     child(userId)

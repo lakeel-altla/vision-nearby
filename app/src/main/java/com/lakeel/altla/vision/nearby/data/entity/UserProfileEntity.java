@@ -3,7 +3,7 @@ package com.lakeel.altla.vision.nearby.data.entity;
 import java.util.HashMap;
 import java.util.Map;
 
-public final class UserEntity {
+public final class UserProfileEntity {
 
     private static final String NAME = "name";
 

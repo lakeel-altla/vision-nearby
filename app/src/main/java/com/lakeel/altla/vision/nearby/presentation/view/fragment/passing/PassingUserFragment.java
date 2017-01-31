@@ -27,8 +27,8 @@ import com.lakeel.altla.vision.nearby.presentation.awareness.WeatherCondition;
 import com.lakeel.altla.vision.nearby.presentation.view.bundle.FragmentBundle;
 import com.lakeel.altla.vision.nearby.presentation.view.color.AppColor;
 import com.lakeel.altla.vision.nearby.presentation.view.map.Radius;
-import com.lakeel.altla.vision.nearby.presentation.presenter.model.UserPassingModel;
-import com.lakeel.altla.vision.nearby.presentation.presenter.user.PassingUserPresenter;
+import com.lakeel.altla.vision.nearby.presentation.presenter.model.PassingUserModel;
+import com.lakeel.altla.vision.nearby.presentation.presenter.passing.PassingUserPresenter;
 import com.lakeel.altla.vision.nearby.presentation.view.PassingUserView;
 import com.lakeel.altla.vision.nearby.presentation.view.activity.MainActivity;
 import com.lakeel.altla.vision.nearby.presentation.view.date.DateFormatter;
@@ -164,7 +164,7 @@ public final class PassingUserFragment extends Fragment implements PassingUserVi
     }
 
     @Override
-    public void showProfile(UserPassingModel model) {
+    public void showProfile(PassingUserModel model) {
         ImageLoader imageLoader = ImageLoader.getInstance();
         imageLoader.displayImage(model.imageUri, userImageView);
 
@@ -179,7 +179,7 @@ public final class PassingUserFragment extends Fragment implements PassingUserVi
     }
 
     @Override
-    public void showPassingData(UserPassingModel model) {
+    public void showPassingData(PassingUserModel model) {
         DateFormatter dateFormatter = new DateFormatter(model.passingTime);
         passingLayout.passingTimeTextView.setText(dateFormatter.format());
 
@@ -211,7 +211,7 @@ public final class PassingUserFragment extends Fragment implements PassingUserVi
     }
 
     @Override
-    public void showPresence(UserPassingModel model) {
+    public void showPresence(PassingUserModel model) {
         int resId;
         if (model.isConnected) {
             resId = R.string.textView_connected;

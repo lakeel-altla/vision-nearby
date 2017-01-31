@@ -1,6 +1,6 @@
 package com.lakeel.altla.vision.nearby.domain.usecase;
 
-import com.lakeel.altla.vision.nearby.data.repository.FirebaseHistoryRepository;
+import com.lakeel.altla.vision.nearby.data.repository.FirebaseUserNearbyHistoryRepository;
 import com.lakeel.altla.vision.nearby.presentation.firebase.MyUser;
 
 import javax.inject.Inject;
@@ -8,17 +8,17 @@ import javax.inject.Inject;
 import rx.Single;
 import rx.schedulers.Schedulers;
 
-public final class FindTimesUseCase {
+public final class FindPassingTimesUseCase {
 
     @Inject
-    FirebaseHistoryRepository repository;
+    FirebaseUserNearbyHistoryRepository repository;
 
     @Inject
-    FindTimesUseCase() {
+    FindPassingTimesUseCase() {
     }
 
     public Single<Long> execute(String passingUserId) {
         String userId = MyUser.getUserId();
-        return repository.findTimes(userId, passingUserId).subscribeOn(Schedulers.io());
+        return repository.findPassingTimes(userId, passingUserId).subscribeOn(Schedulers.io());
     }
 }

@@ -1,33 +1,33 @@
 package com.lakeel.altla.vision.nearby.presentation.presenter.mapper;
 
-import com.lakeel.altla.vision.nearby.domain.model.History;
-import com.lakeel.altla.vision.nearby.domain.model.HistoryUser;
-import com.lakeel.altla.vision.nearby.domain.model.User;
-import com.lakeel.altla.vision.nearby.presentation.presenter.model.HistoryModel;
+import com.lakeel.altla.vision.nearby.domain.model.NearbyHistory;
+import com.lakeel.altla.vision.nearby.domain.model.NearbyHistoryUserProfile;
+import com.lakeel.altla.vision.nearby.domain.model.UserProfile;
+import com.lakeel.altla.vision.nearby.presentation.presenter.model.NearbyHistoryModel;
 import com.lakeel.altla.vision.nearby.presentation.presenter.model.LocationModel;
 import com.lakeel.altla.vision.nearby.presentation.presenter.model.WeatherModel;
 
-import static com.lakeel.altla.vision.nearby.domain.model.History.Location;
-import static com.lakeel.altla.vision.nearby.domain.model.History.Weather;
+import static com.lakeel.altla.vision.nearby.domain.model.NearbyHistory.Location;
+import static com.lakeel.altla.vision.nearby.domain.model.NearbyHistory.Weather;
 
 public final class HistoryModelMapper {
 
-    public HistoryModel map(HistoryUser historyUser) {
-        History history = historyUser.history;
-        User user = historyUser.user;
+    public NearbyHistoryModel map(NearbyHistoryUserProfile nearbyHistoryUserProfile) {
+        NearbyHistory nearbyHistory = nearbyHistoryUserProfile.nearbyHistory;
+        UserProfile userProfile = nearbyHistoryUserProfile.userProfile;
 
-        HistoryModel model = new HistoryModel();
-        model.historyId = history.historyId;
-        model.userId = history.userId;
-        model.passingTime = history.passingTime;
-        model.userName = user.name;
-        model.imageUri = user.imageUri;
+        NearbyHistoryModel model = new NearbyHistoryModel();
+        model.historyId = nearbyHistory.historyId;
+        model.userId = nearbyHistory.userId;
+        model.passingTime = nearbyHistory.passingTime;
+        model.userName = userProfile.name;
+        model.imageUri = userProfile.imageUri;
 
-        if (history.userActivity != null) {
-            model.userActivity = history.userActivity;
+        if (nearbyHistory.userActivity != null) {
+            model.userActivity = nearbyHistory.userActivity;
         }
 
-        Location location = history.location;
+        Location location = nearbyHistory.location;
         if (location != null) {
             LocationModel locationModel = new LocationModel();
             locationModel.latitude = location.latitude;
@@ -35,7 +35,7 @@ public final class HistoryModelMapper {
             model.locationModel = locationModel;
         }
 
-        Weather weather = history.weather;
+        Weather weather = nearbyHistory.weather;
         if (weather != null) {
             WeatherModel weatherModel = new WeatherModel();
             weatherModel.conditions = weather.conditions;

@@ -5,7 +5,6 @@ import android.support.annotation.StringRes;
 import android.support.design.widget.Snackbar;
 import android.support.v4.app.Fragment;
 import android.support.v7.widget.LinearLayoutManager;
-import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.MenuItem;
 import android.view.View;
@@ -15,7 +14,7 @@ import android.widget.RelativeLayout;
 import com.lakeel.altla.vision.nearby.R;
 import com.lakeel.altla.vision.nearby.presentation.presenter.device.DeviceListPresenter;
 import com.lakeel.altla.vision.nearby.presentation.view.DeviceListView;
-import com.lakeel.altla.vision.nearby.presentation.view.EmptySupportRecyclerView;
+import com.lakeel.altla.vision.nearby.presentation.view.EmptySupportedRecyclerView;
 import com.lakeel.altla.vision.nearby.presentation.view.activity.MainActivity;
 import com.lakeel.altla.vision.nearby.presentation.view.adapter.DeviceAdapter;
 import com.lakeel.altla.vision.nearby.presentation.view.divider.DividerItemDecoration;
@@ -35,7 +34,7 @@ public final class DeviceListFragment extends Fragment implements DeviceListView
     RelativeLayout mainLayout;
 
     @BindView(R.id.recyclerView)
-    EmptySupportRecyclerView recyclerView;
+    EmptySupportedRecyclerView recyclerView;
 
     @BindView(R.id.textViewEmpty)
     View emptyView;

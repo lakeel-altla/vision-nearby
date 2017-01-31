@@ -5,7 +5,7 @@ import android.content.Intent;
 import com.firebase.ui.auth.AuthUI;
 import com.google.firebase.auth.FirebaseAuth;
 import com.lakeel.altla.vision.nearby.R;
-import com.lakeel.altla.vision.nearby.domain.usecase.SaveUserUseCase;
+import com.lakeel.altla.vision.nearby.domain.usecase.SaveUserProfileUseCase;
 import com.lakeel.altla.vision.nearby.presentation.analytics.AnalyticsReporter;
 import com.lakeel.altla.vision.nearby.presentation.presenter.BasePresenter;
 import com.lakeel.altla.vision.nearby.presentation.view.SignInView;
@@ -24,7 +24,7 @@ public final class SignInPresenter extends BasePresenter<SignInView> {
     AnalyticsReporter analyticsReporter;
 
     @Inject
-    SaveUserUseCase saveUserUseCase;
+    SaveUserProfileUseCase saveUserProfileUseCase;
 
     private static final Logger LOGGER = LoggerFactory.getLogger(SignInPresenter.class);
 
@@ -49,7 +49,7 @@ public final class SignInPresenter extends BasePresenter<SignInView> {
     public void onSignedIn() {
         analyticsReporter.signIn();
 
-        Subscription subscription = saveUserUseCase.execute()
+        Subscription subscription = saveUserProfileUseCase.execute()
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribe(e -> {
                     LOGGER.error("Failed to sign in.", e);

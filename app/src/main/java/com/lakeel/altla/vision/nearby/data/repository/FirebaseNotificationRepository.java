@@ -24,7 +24,7 @@ public class FirebaseNotificationRepository {
         reference = FirebaseDatabase.getInstance().getReferenceFromUrl(url);
     }
 
-    public Completable save(String to, String title, String message) {
+    public Completable saveNotification(String to, String title, String message) {
         return Completable.create(subscriber -> {
             NotificationEntity entity = entityMapper.map(to, title, message);
             Map<String, Object> map = entity.toMap();

@@ -3,8 +3,6 @@ package com.lakeel.altla.vision.nearby.presentation.view;
 import android.support.annotation.StringRes;
 
 import com.lakeel.altla.vision.nearby.presentation.presenter.model.FavoriteUserModel;
-import com.lakeel.altla.vision.nearby.presentation.presenter.model.PresenceModel;
-import com.lakeel.altla.vision.nearby.presentation.presenter.model.UserModel;
 
 import java.util.ArrayList;
 

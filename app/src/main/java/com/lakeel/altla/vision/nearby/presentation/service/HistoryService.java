@@ -17,7 +17,7 @@ import com.google.android.gms.location.ActivityRecognitionResult;
 import com.google.android.gms.location.DetectedActivity;
 import com.lakeel.altla.vision.nearby.domain.usecase.FindBeaconUseCase;
 import com.lakeel.altla.vision.nearby.domain.usecase.FindUserUseCase;
-import com.lakeel.altla.vision.nearby.domain.usecase.SaveHistoryUseCase;
+import com.lakeel.altla.vision.nearby.domain.usecase.SaveNearbyHistoryUseCase;
 import com.lakeel.altla.vision.nearby.domain.usecase.SaveUserActivityUseCase;
 import com.lakeel.altla.vision.nearby.domain.usecase.SaveUserLocationUseCase;
 import com.lakeel.altla.vision.nearby.domain.usecase.SaveWeatherUseCase;
@@ -89,7 +89,7 @@ public class HistoryService extends IntentService {
     FindUserUseCase findUserUseCase;
 
     @Inject
-    SaveHistoryUseCase saveHistoryUseCase;
+    SaveNearbyHistoryUseCase saveNearbyHistoryUseCase;
 
     @Inject
     SaveUserLocationUseCase saveUserLocationUseCase;
@@ -133,7 +133,7 @@ public class HistoryService extends IntentService {
     }
 
     private Observable<String> saveHistory(String passingUserId, RegionState regionState) {
-        return saveHistoryUseCase.execute(passingUserId, regionState).toObservable();
+        return saveNearbyHistoryUseCase.execute(passingUserId, regionState).toObservable();
     }
 
     private Single<DetectedActivity> getUserActivity() {
@@ -179,7 +179,7 @@ public class HistoryService extends IntentService {
                 Awareness.SnapshotApi.getWeather(googleApiClient)
                         .setResultCallback(result -> {
                             if (!result.getStatus().isSuccess()) {
-                                subscriber.onError(new AwarenessException("Could not get weather data. User might be turning off the gps."));
+                                subscriber.onError(new AwarenessException("Could not get weather data. UserProfile might be turning off the gps."));
                                 return;
                             }
                             Weather weather = result.getWeather();

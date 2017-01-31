@@ -4,13 +4,13 @@ import android.support.annotation.IntRange;
 
 import com.lakeel.altla.vision.nearby.R;
 import com.lakeel.altla.vision.nearby.core.CollectionUtils;
-import com.lakeel.altla.vision.nearby.domain.usecase.FindHistoryListUseCase;
-import com.lakeel.altla.vision.nearby.domain.usecase.RemoveHistoryUseCase;
+import com.lakeel.altla.vision.nearby.domain.usecase.FindNearbyHistoryListUseCase;
+import com.lakeel.altla.vision.nearby.domain.usecase.RemoveNearbyHistoryUseCase;
 import com.lakeel.altla.vision.nearby.presentation.analytics.AnalyticsReporter;
 import com.lakeel.altla.vision.nearby.presentation.presenter.BaseItemPresenter;
 import com.lakeel.altla.vision.nearby.presentation.presenter.BasePresenter;
 import com.lakeel.altla.vision.nearby.presentation.presenter.mapper.HistoryModelMapper;
-import com.lakeel.altla.vision.nearby.presentation.presenter.model.HistoryModel;
+import com.lakeel.altla.vision.nearby.presentation.presenter.model.NearbyHistoryModel;
 import com.lakeel.altla.vision.nearby.presentation.view.HistoryItemView;
 import com.lakeel.altla.vision.nearby.presentation.view.HistoryListView;
 import com.lakeel.altla.vision.nearby.rx.ErrorAction;
@@ -30,29 +30,29 @@ public final class HistoryListPresenter extends BasePresenter<HistoryListView> {
     AnalyticsReporter analyticsReporter;
 
     @Inject
-    FindHistoryListUseCase findHistoryListUseCase;
+    FindNearbyHistoryListUseCase findNearbyHistoryListUseCase;
 
     @Inject
-    RemoveHistoryUseCase removeHistoryUseCase;
+    RemoveNearbyHistoryUseCase removeNearbyHistoryUseCase;
 
     private HistoryModelMapper modelMapper = new HistoryModelMapper();
 
-    private final List<HistoryModel> historyModels = new ArrayList<>();
+    private final List<NearbyHistoryModel> nearbyHistoryModels = new ArrayList<>();
 
     @Inject
     HistoryListPresenter() {
     }
 
     public void onActivityCreated() {
-        Subscription subscription = findHistoryListUseCase.execute()
+        Subscription subscription = findNearbyHistoryListUseCase.execute()
                 .map(historyUser -> modelMapper.map(historyUser))
                 .toList()
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribe(historyItemModels -> {
                     Collections.reverse(historyItemModels);
 
-                    historyModels.clear();
-                    historyModels.addAll(historyItemModels);
+                    nearbyHistoryModels.clear();
+                    nearbyHistoryModels.addAll(historyItemModels);
 
                     if (CollectionUtils.isEmpty(historyItemModels)) {
                         getView().showEmptyView();
@@ -71,33 +71,33 @@ public final class HistoryListPresenter extends BasePresenter<HistoryListView> {
         historyItemView.setItemPresenter(itemPresenter);
     }
 
-    public List<HistoryModel> getItems() {
-        return historyModels;
+    public List<NearbyHistoryModel> getItems() {
+        return nearbyHistoryModels;
     }
 
     public final class HistoryItemPresenter extends BaseItemPresenter<HistoryItemView> {
 
         @Override
         public void onBind(@IntRange(from = 0) int position) {
-            getItemView().showItem(historyModels.get(position));
+            getItemView().showItem(nearbyHistoryModels.get(position));
         }
 
-        public void onClick(HistoryModel model) {
+        public void onClick(NearbyHistoryModel model) {
             getView().showPassingUserFragment(model.historyId);
         }
 
-        public void onRemove(HistoryModel model) {
+        public void onRemove(NearbyHistoryModel model) {
             analyticsReporter.removeHistory(model.userId, model.userName);
 
-            Subscription subscription = removeHistoryUseCase.execute(model.historyId)
+            Subscription subscription = removeNearbyHistoryUseCase.execute(model.historyId)
                     .observeOn(AndroidSchedulers.mainThread())
                     .subscribe(new ErrorAction<>(),
                             () -> {
-                                int size = historyModels.size();
+                                int size = nearbyHistoryModels.size();
 
-                                historyModels.remove(model);
+                                nearbyHistoryModels.remove(model);
 
-                                if (CollectionUtils.isEmpty(historyModels)) {
+                                if (CollectionUtils.isEmpty(nearbyHistoryModels)) {
                                     getView().removeAll(size);
                                     getView().showEmptyView();
                                 } else {

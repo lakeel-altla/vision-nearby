@@ -19,8 +19,8 @@ import com.lakeel.altla.vision.nearby.domain.usecase.ObserveConnectionUseCase;
 import com.lakeel.altla.vision.nearby.domain.usecase.ObserveUserProfileUseCase;
 import com.lakeel.altla.vision.nearby.domain.usecase.OfflineUseCase;
 import com.lakeel.altla.vision.nearby.domain.usecase.SaveBeaconUseCase;
-import com.lakeel.altla.vision.nearby.domain.usecase.SaveLastUsedTimeUseCase;
-import com.lakeel.altla.vision.nearby.domain.usecase.SaveTokenUseCase;
+import com.lakeel.altla.vision.nearby.domain.usecase.SaveLastUsedDeviceTimeUseCase;
+import com.lakeel.altla.vision.nearby.domain.usecase.SaveDeviceTokenUseCase;
 import com.lakeel.altla.vision.nearby.presentation.analytics.AnalyticsReporter;
 import com.lakeel.altla.vision.nearby.presentation.ble.BleChecker;
 import com.lakeel.altla.vision.nearby.presentation.ble.BleChecker.State;
@@ -57,10 +57,10 @@ public final class ActivityPresenter extends BasePresenter<ActivityView> {
     FindPreferencesUseCase findPreferencesUseCase;
 
     @Inject
-    SaveLastUsedTimeUseCase saveLastUsedTimeUseCase;
+    SaveLastUsedDeviceTimeUseCase saveLastUsedDeviceTimeUseCase;
 
     @Inject
-    SaveTokenUseCase saveTokenUseCase;
+    SaveDeviceTokenUseCase saveDeviceTokenUseCase;
 
     @Inject
     OfflineUseCase offlineUseCase;
@@ -132,11 +132,11 @@ public final class ActivityPresenter extends BasePresenter<ActivityView> {
                         // Create a Eddystone-UID.
                         EddystoneUid eddystoneUid = new EddystoneUid();
                         beaconId = eddystoneUid.getBeaconId();
-                        saveBeacon(beaconId);
                     } else {
-                        saveLastUsedTime(beaconId);
+                        saveLastUsedDeviceTime(beaconId);
                     }
 
+                    saveBeacon(beaconId);
                     saveToken(beaconId);
                     startAdvertiseInBackgroundIfNeeded();
                 }, new ErrorAction<>());
@@ -256,14 +256,14 @@ public final class ActivityPresenter extends BasePresenter<ActivityView> {
         subscriptions.add(subscription);
     }
 
-    private void saveLastUsedTime(String beaconId) {
-        Subscription subscription = saveLastUsedTimeUseCase.execute(beaconId)
+    private void saveLastUsedDeviceTime(String beaconId) {
+        Subscription subscription = saveLastUsedDeviceTimeUseCase.execute(beaconId)
                 .subscribe();
         subscriptions.add(subscription);
     }
 
     private void saveToken(String beaconId) {
-        Subscription subscription = saveTokenUseCase.execute(beaconId, instanceId.getToken())
+        Subscription subscription = saveDeviceTokenUseCase.execute(beaconId, instanceId.getToken())
                 .subscribe(new EmptyAction<>(), new ErrorAction<>());
         subscriptions.add(subscription);
     }

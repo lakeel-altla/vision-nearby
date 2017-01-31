@@ -1,6 +1,6 @@
 package com.lakeel.altla.vision.nearby.presentation.presenter.model;
 
-public final class HistoryModel {
+public final class NearbyHistoryModel {
 
     public String historyId;
 

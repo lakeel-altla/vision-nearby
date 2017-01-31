@@ -9,7 +9,7 @@ import javax.inject.Inject;
 import rx.Single;
 import rx.schedulers.Schedulers;
 
-public final class SaveTokenUseCase {
+public final class SaveDeviceTokenUseCase {
 
     @Inject
     PreferenceRepository preferenceRepository;
@@ -18,11 +18,11 @@ public final class SaveTokenUseCase {
     FirebaseUserDeviceTokenRepository tokensRepository;
 
     @Inject
-    SaveTokenUseCase() {
+    SaveDeviceTokenUseCase() {
     }
 
     public Single<String> execute(String beaconId, String token) {
         String userId = MyUser.getUserId();
-        return tokensRepository.save(userId, beaconId, token).subscribeOn(Schedulers.io());
+        return tokensRepository.saveDeviceToken(userId, beaconId, token).subscribeOn(Schedulers.io());
     }
 }

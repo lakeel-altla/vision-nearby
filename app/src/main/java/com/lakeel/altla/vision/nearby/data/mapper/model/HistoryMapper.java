@@ -1,25 +1,25 @@
 package com.lakeel.altla.vision.nearby.data.mapper.model;
 
-import com.lakeel.altla.vision.nearby.data.entity.HistoryEntity;
-import com.lakeel.altla.vision.nearby.domain.model.History;
+import com.lakeel.altla.vision.nearby.data.entity.NearbyHistoryEntity;
+import com.lakeel.altla.vision.nearby.domain.model.NearbyHistory;
 
 import java.util.List;
 
-import static com.lakeel.altla.vision.nearby.data.entity.HistoryEntity.LocationEntity;
-import static com.lakeel.altla.vision.nearby.data.entity.HistoryEntity.WeatherEntity;
-import static com.lakeel.altla.vision.nearby.domain.model.History.Location;
-import static com.lakeel.altla.vision.nearby.domain.model.History.Weather;
+import static com.lakeel.altla.vision.nearby.data.entity.NearbyHistoryEntity.LocationEntity;
+import static com.lakeel.altla.vision.nearby.data.entity.NearbyHistoryEntity.WeatherEntity;
+import static com.lakeel.altla.vision.nearby.domain.model.NearbyHistory.Location;
+import static com.lakeel.altla.vision.nearby.domain.model.NearbyHistory.Weather;
 
 public final class HistoryMapper {
 
-    public History map(HistoryEntity entity, String key) {
-        History history = new History();
-        history.historyId = key;
-        history.userId = entity.userId;
-        history.passingTime = entity.passingTime;
+    public NearbyHistory map(NearbyHistoryEntity entity, String key) {
+        NearbyHistory nearbyHistory = new NearbyHistory();
+        nearbyHistory.historyId = key;
+        nearbyHistory.userId = entity.userId;
+        nearbyHistory.passingTime = entity.passingTime;
 
         if (entity.userActivity != null) {
-            history.userActivity = entity.userActivity;
+            nearbyHistory.userActivity = entity.userActivity;
         }
 
         LocationEntity locationEntity = entity.location;
@@ -27,7 +27,7 @@ public final class HistoryMapper {
             Location location = new Location();
             location.latitude = locationEntity.latitude;
             location.longitude = locationEntity.longitude;
-            history.location = location;
+            nearbyHistory.location = location;
         }
 
         WeatherEntity weatherEntity = entity.weather;
@@ -41,9 +41,9 @@ public final class HistoryMapper {
             weather.conditions = conditionArray;
             weather.humidity = weatherEntity.humidity;
             weather.temperature = weatherEntity.temperature;
-            history.weather = weather;
+            nearbyHistory.weather = weather;
         }
 
-        return history;
+        return nearbyHistory;
     }
 }

@@ -1,7 +1,7 @@
 package com.lakeel.altla.vision.nearby.domain.usecase;
 
 import com.lakeel.altla.vision.nearby.data.repository.FirebaseUserProfileRepository;
-import com.lakeel.altla.vision.nearby.domain.model.User;
+import com.lakeel.altla.vision.nearby.domain.model.UserProfile;
 import com.lakeel.altla.vision.nearby.presentation.firebase.MyUser;
 
 import javax.inject.Inject;
@@ -18,7 +18,7 @@ public final class ObserveUserProfileUseCase {
     ObserveUserProfileUseCase() {
     }
 
-    public Observable<User> execute() {
+    public Observable<UserProfile> execute() {
         String userId = MyUser.getUserId();
         return repository.observeUserProfile(userId).subscribeOn(Schedulers.io());
     }

@@ -19,6 +19,6 @@ public final class SaveLINEUrlUseCase {
 
     public Single<String> execute(String url) {
         String userId = MyUser.getUserId();
-        return repository.saveUrl(userId, url).subscribeOn(Schedulers.io());
+        return repository.saveLineUrl(userId, url).subscribeOn(Schedulers.io());
     }
 }

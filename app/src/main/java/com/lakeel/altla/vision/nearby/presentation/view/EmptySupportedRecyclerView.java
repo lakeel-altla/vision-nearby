@@ -5,7 +5,9 @@ import android.support.v7.widget.RecyclerView;
 import android.util.AttributeSet;
 import android.view.View;
 
-public final class EmptySupportRecyclerView extends RecyclerView {
+public final class EmptySupportedRecyclerView extends RecyclerView {
+
+    private boolean isFirstCalled = true;
 
     private View emptyView;
 
@@ -13,29 +15,35 @@ public final class EmptySupportRecyclerView extends RecyclerView {
 
         @Override
         public void onChanged() {
+            if (isFirstCalled) {
+                isFirstCalled = false;
+                EmptySupportedRecyclerView.this.setVisibility(View.VISIBLE);
+                return;
+            }
+
             Adapter<?> adapter = getAdapter();
             if (adapter != null && emptyView != null) {
                 if (adapter.getItemCount() == 0) {
                     emptyView.setVisibility(View.VISIBLE);
-                    EmptySupportRecyclerView.this.setVisibility(View.GONE);
+                    EmptySupportedRecyclerView.this.setVisibility(View.GONE);
                 } else {
                     emptyView.setVisibility(View.GONE);
-                    EmptySupportRecyclerView.this.setVisibility(View.VISIBLE);
+                    EmptySupportedRecyclerView.this.setVisibility(View.VISIBLE);
                 }
             }
 
         }
     };
 
-    public EmptySupportRecyclerView(Context context) {
+    public EmptySupportedRecyclerView(Context context) {
         super(context);
     }
 
-    public EmptySupportRecyclerView(Context context, AttributeSet attrs) {
+    public EmptySupportedRecyclerView(Context context, AttributeSet attrs) {
         super(context, attrs);
     }
 
-    public EmptySupportRecyclerView(Context context, AttributeSet attrs, int defStyle) {
+    public EmptySupportedRecyclerView(Context context, AttributeSet attrs, int defStyle) {
         super(context, attrs, defStyle);
     }
 

@@ -8,17 +8,17 @@ import javax.inject.Inject;
 import rx.Completable;
 import rx.schedulers.Schedulers;
 
-public final class SaveUserUseCase {
+public final class SaveUserProfileUseCase {
 
     @Inject
     FirebaseUserProfileRepository repository;
 
     @Inject
-    SaveUserUseCase() {
+    SaveUserProfileUseCase() {
     }
 
     public Completable execute() {
         String userId = MyUser.getUserId();
-        return repository.saveUser(userId).subscribeOn(Schedulers.io());
+        return repository.saveUserProfile(userId).subscribeOn(Schedulers.io());
     }
 }

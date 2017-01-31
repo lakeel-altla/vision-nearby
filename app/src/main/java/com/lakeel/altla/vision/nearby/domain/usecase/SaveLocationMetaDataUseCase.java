@@ -7,13 +7,13 @@ import javax.inject.Inject;
 import rx.Completable;
 import rx.schedulers.Schedulers;
 
-public final class SaveLocationDataUseCase {
+public final class SaveLocationMetaDataUseCase {
 
     @Inject
     FirebaseUserLocationMetaDataRepository repository;
 
     @Inject
-    SaveLocationDataUseCase() {
+    SaveLocationMetaDataUseCase() {
     }
 
     public Completable execute(String uniqueId, String userId, String beaconId) {

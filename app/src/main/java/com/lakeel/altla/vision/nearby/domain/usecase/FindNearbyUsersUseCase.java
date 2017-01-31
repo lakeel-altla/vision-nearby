@@ -2,7 +2,7 @@ package com.lakeel.altla.vision.nearby.domain.usecase;
 
 import com.lakeel.altla.vision.nearby.data.repository.FirebaseBeaconRepository;
 import com.lakeel.altla.vision.nearby.data.repository.FirebaseUserProfileRepository;
-import com.lakeel.altla.vision.nearby.domain.model.User;
+import com.lakeel.altla.vision.nearby.domain.model.UserProfile;
 
 import javax.inject.Inject;
 
@@ -21,7 +21,7 @@ public final class FindNearbyUsersUseCase {
     FindNearbyUsersUseCase() {
     }
 
-    public Observable<User> execute(String beaconId) {
+    public Observable<UserProfile> execute(String beaconId) {
         return beaconsRepository.findBeacon(beaconId)
                 .subscribeOn(Schedulers.io())
                 .toObservable()
@@ -30,7 +30,7 @@ public final class FindNearbyUsersUseCase {
                 .flatMap(beacon -> findUser(beacon.userId));
     }
 
-    private Observable<User> findUser(String userId) {
-        return usersRepository.findUser(userId).subscribeOn(Schedulers.io()).toObservable();
+    private Observable<UserProfile> findUser(String userId) {
+        return usersRepository.findUserProfile(userId).subscribeOn(Schedulers.io()).toObservable();
     }
 }

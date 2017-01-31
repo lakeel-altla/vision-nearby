@@ -8,7 +8,7 @@ import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
 import com.lakeel.altla.vision.nearby.data.execption.DataStoreException;
 import com.lakeel.altla.vision.nearby.data.mapper.model.TokenMapper;
-import com.lakeel.altla.vision.nearby.domain.model.Token;
+import com.lakeel.altla.vision.nearby.domain.model.DeviceToken;
 
 import javax.inject.Inject;
 import javax.inject.Named;
@@ -27,23 +27,7 @@ public final class FirebaseUserDeviceTokenRepository {
         reference = FirebaseDatabase.getInstance().getReferenceFromUrl(url);
     }
 
-    public Single<String> save(String userId, String beaconId, String token) {
-        return Single.create(subscriber -> {
-            Task task = reference
-                    .child(userId)
-                    .child(beaconId)
-                    .setValue(token);
-
-            Exception e = task.getException();
-            if (e != null) {
-                throw new DataStoreException(e);
-            }
-
-            subscriber.onSuccess(token);
-        });
-    }
-
-    public Observable<Token> findTokens(String userId) {
+    public Observable<DeviceToken> findDeviceTokens(String userId) {
         return Observable.create(subscriber -> {
             reference
                     .child(userId)
@@ -67,8 +51,23 @@ public final class FirebaseUserDeviceTokenRepository {
         });
     }
 
+    public Single<String> saveDeviceToken(String userId, String beaconId, String token) {
+        return Single.create(subscriber -> {
+            Task task = reference
+                    .child(userId)
+                    .child(beaconId)
+                    .setValue(token);
 
-    public Single<String> findToken(String userId) {
+            Exception e = task.getException();
+            if (e != null) {
+                throw new DataStoreException(e);
+            }
+
+            subscriber.onSuccess(token);
+        });
+    }
+
+    public Single<String> findDeviceToken(String userId) {
         return Single.create(subscriber ->
                 reference
                         .child(userId)

@@ -2,17 +2,17 @@ package com.lakeel.altla.vision.nearby.presentation.presenter.mapper;
 
 import com.lakeel.altla.vision.nearby.data.entity.LineLinkEntity;
 import com.lakeel.altla.vision.nearby.domain.model.Presence;
-import com.lakeel.altla.vision.nearby.domain.model.User;
+import com.lakeel.altla.vision.nearby.domain.model.UserProfile;
 import com.lakeel.altla.vision.nearby.presentation.presenter.model.FavoriteUserModel;
 
 public final class FavoriteUserModelMapper {
 
-    public FavoriteUserModel map(User user) {
+    public FavoriteUserModel map(UserProfile userProfile) {
         FavoriteUserModel model = new FavoriteUserModel();
-        model.userId = user.userId;
-        model.userName = user.name;
-        model.email = user.email;
-        model.imageUri = user.imageUri;
+        model.userId = userProfile.userId;
+        model.userName = userProfile.name;
+        model.email = userProfile.email;
+        model.imageUri = userProfile.imageUri;
         return model;
     }
 

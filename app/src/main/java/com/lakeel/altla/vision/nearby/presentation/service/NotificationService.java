@@ -5,7 +5,7 @@ import android.content.Intent;
 
 import com.lakeel.altla.vision.nearby.R;
 import com.lakeel.altla.vision.nearby.domain.usecase.FindBeaconUseCase;
-import com.lakeel.altla.vision.nearby.domain.usecase.FindTokensUseCase;
+import com.lakeel.altla.vision.nearby.domain.usecase.FindDeviceTokensUseCase;
 import com.lakeel.altla.vision.nearby.domain.usecase.SaveInformationUseCase;
 import com.lakeel.altla.vision.nearby.domain.usecase.SaveNotificationUseCase;
 import com.lakeel.altla.vision.nearby.presentation.di.component.DaggerServiceComponent;
@@ -27,7 +27,7 @@ public class NotificationService extends IntentService {
     FindBeaconUseCase findBeaconUseCase;
 
     @Inject
-    FindTokensUseCase findTokensUseCase;
+    FindDeviceTokensUseCase findDeviceTokensUseCase;
 
     @Inject
     SaveNotificationUseCase saveNotificationUseCase;
@@ -65,7 +65,7 @@ public class NotificationService extends IntentService {
                         return;
                     }
                     // If the beacon is lost, notify to user.
-                    findTokensUseCase.execute(userId)
+                    findDeviceTokensUseCase.execute(userId)
                             // Select the found beacon.
                             .filter(token -> !beaconId.equals(token.beaconId))
                             // Notify the push notification to the device.

@@ -1,15 +1,15 @@
 package com.lakeel.altla.vision.nearby.presentation.presenter.mapper;
 
-import com.lakeel.altla.vision.nearby.domain.model.User;
+import com.lakeel.altla.vision.nearby.domain.model.UserProfile;
 import com.lakeel.altla.vision.nearby.presentation.presenter.model.NearbyUserModel;
 
 public final class NearbyUsersModelMapper {
 
-    public NearbyUserModel map(User user) {
+    public NearbyUserModel map(UserProfile userProfile) {
         NearbyUserModel model = new NearbyUserModel();
-        model.userId = user.userId;
-        model.userName = user.name;
-        model.imageUri = user.imageUri;
+        model.userId = userProfile.userId;
+        model.userName = userProfile.name;
+        model.imageUri = userProfile.imageUri;
         return model;
     }
 }

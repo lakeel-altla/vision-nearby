@@ -1,14 +1,14 @@
 package com.lakeel.altla.vision.nearby.data.mapper.model;
 
-import com.lakeel.altla.vision.nearby.domain.model.Token;
+import com.lakeel.altla.vision.nearby.domain.model.DeviceToken;
 
 public final class TokenMapper {
 
-    public Token map(String userId, String beaconId, String tokenValue) {
-        Token token = new Token();
-        token.userId = userId;
-        token.beaconId = beaconId;
-        token.token = tokenValue;
-        return token;
+    public DeviceToken map(String userId, String beaconId, String tokenValue) {
+        DeviceToken deviceToken = new DeviceToken();
+        deviceToken.userId = userId;
+        deviceToken.beaconId = beaconId;
+        deviceToken.token = tokenValue;
+        return deviceToken;
     }
 }
