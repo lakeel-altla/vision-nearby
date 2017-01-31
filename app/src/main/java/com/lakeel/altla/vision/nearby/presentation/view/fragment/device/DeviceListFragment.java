@@ -15,6 +15,7 @@ import android.widget.RelativeLayout;
 import com.lakeel.altla.vision.nearby.R;
 import com.lakeel.altla.vision.nearby.presentation.presenter.device.DeviceListPresenter;
 import com.lakeel.altla.vision.nearby.presentation.view.DeviceListView;
+import com.lakeel.altla.vision.nearby.presentation.view.EmptySupportRecyclerView;
 import com.lakeel.altla.vision.nearby.presentation.view.activity.MainActivity;
 import com.lakeel.altla.vision.nearby.presentation.view.adapter.DeviceAdapter;
 import com.lakeel.altla.vision.nearby.presentation.view.divider.DividerItemDecoration;
@@ -34,7 +35,10 @@ public final class DeviceListFragment extends Fragment implements DeviceListView
     RelativeLayout mainLayout;
 
     @BindView(R.id.recyclerView)
-    RecyclerView recyclerView;
+    EmptySupportRecyclerView recyclerView;
+
+    @BindView(R.id.textViewEmpty)
+    View emptyView;
 
     public static DeviceListFragment newInstance() {
         return new DeviceListFragment();
@@ -66,8 +70,9 @@ public final class DeviceListFragment extends Fragment implements DeviceListView
         getActivity().setTitle(R.string.title_devices);
 
         recyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
-        recyclerView.setHasFixedSize(false);
+        recyclerView.setHasFixedSize(true);
         recyclerView.addItemDecoration(new DividerItemDecoration(getContext()));
+        recyclerView.setEmptyView(emptyView);
 
         DeviceAdapter adapter = new DeviceAdapter(presenter);
         recyclerView.setAdapter(adapter);

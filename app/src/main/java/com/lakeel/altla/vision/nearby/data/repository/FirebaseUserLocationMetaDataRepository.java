@@ -35,7 +35,7 @@ public final class FirebaseUserLocationMetaDataRepository {
         reference = FirebaseDatabase.getInstance().getReferenceFromUrl(url);
     }
 
-    public Single<LocationMetaData> findLocationMetaData(String userId, String beaconId) {
+    public Single<LocationMetaData> findLatestLocationMetaData(String userId, String beaconId) {
         return Single.create(subscriber ->
                 reference
                         .child(userId)

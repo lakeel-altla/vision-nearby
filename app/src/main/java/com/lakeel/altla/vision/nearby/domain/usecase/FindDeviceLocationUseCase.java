@@ -26,12 +26,16 @@ public final class FindDeviceLocationUseCase {
 
     public Single<Location> execute(String beaconId) {
         String userId = MyUser.getUserId();
-        return locationsDataRepository.findLocationMetaData(userId, beaconId)
+        return locationsDataRepository.findLatestLocationMetaData(userId, beaconId)
                 .subscribeOn(Schedulers.io())
                 .flatMap(locationMetaData -> {
-                    Single<LocationMetaData> single = Single.just(locationMetaData);
-                    Single<GeoLocation> single1 = findLocation(locationMetaData.locationMetaDataId);
-                    return Single.zip(single, single1, Location::new);
+                    if (locationMetaData == null) {
+                        return Single.just(null);
+                    } else {
+                        Single<LocationMetaData> single = Single.just(locationMetaData);
+                        Single<GeoLocation> single1 = findLocation(locationMetaData.locationMetaDataId);
+                        return Single.zip(single, single1, Location::new);
+                    }
                 });
     }
 

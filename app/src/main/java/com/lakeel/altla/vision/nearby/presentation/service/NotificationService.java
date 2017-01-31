@@ -61,6 +61,8 @@ public class NotificationService extends IntentService {
         String title = getApplicationContext().getString(R.string.notification_title_device_found);
         String message = getApplicationContext().getString(R.string.notification_message_device_found);
 
+
+
         findTokensUseCase.execute(userId)
                 .filter(token -> !beaconId.equals(token.beaconId))
                 .subscribe(entity -> saveNotification(entity.token, title, message), new ErrorAction<>());

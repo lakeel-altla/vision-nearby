@@ -17,6 +17,8 @@ public final class BeaconEntity {
 
     public String deviceName;
 
+    public boolean isLost;
+
     public long lastUsedTime;
 
     public Map<String, Object> toMap() {

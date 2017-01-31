@@ -15,6 +15,7 @@ import com.lakeel.altla.vision.nearby.presentation.presenter.model.DeviceModel;
 import com.lakeel.altla.vision.nearby.presentation.presenter.device.DeviceListPresenter;
 import com.lakeel.altla.vision.nearby.presentation.view.date.DateFormatter;
 import com.lakeel.altla.vision.nearby.presentation.view.DeviceItemView;
+import com.marshalchen.ultimaterecyclerview.swipe.SwipeLayout;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -47,7 +48,7 @@ public final class DeviceAdapter extends RecyclerView.Adapter<DeviceAdapter.Devi
 
     public final class DeviceViewHolder extends RecyclerView.ViewHolder implements DeviceItemView {
 
-        @BindView(R.id.swipeLayout)
+        @BindView(R.id.layoutItem)
         RelativeLayout itemLayout;
 
         @BindView(R.id.buttonLost)
