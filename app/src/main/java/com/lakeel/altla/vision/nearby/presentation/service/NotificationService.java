@@ -20,8 +20,6 @@ import org.slf4j.LoggerFactory;
 
 import javax.inject.Inject;
 
-import rx.Completable;
-
 
 public class NotificationService extends IntentService {
 
@@ -61,18 +59,25 @@ public class NotificationService extends IntentService {
         String title = getApplicationContext().getString(R.string.notification_title_device_found);
         String message = getApplicationContext().getString(R.string.notification_message_device_found);
 
+        findBeaconUseCase.execute(beaconId)
+                .subscribe(beacon -> {
+                    if (!beacon.isLost) {
+                        return;
+                    }
+                    // If the beacon is lost, notify to user.
+                    findTokensUseCase.execute(userId)
+                            // Select the found beacon.
+                            .filter(token -> !beaconId.equals(token.beaconId))
+                            // Notify the push notification to the device.
+                            .subscribe(entity -> saveNotification(entity.token, title, message), new ErrorAction<>());
 
-
-        findTokensUseCase.execute(userId)
-                .filter(token -> !beaconId.equals(token.beaconId))
-                .subscribe(entity -> saveNotification(entity.token, title, message), new ErrorAction<>());
-
-        saveInformationUseCase.execute(userId, title, message)
-                .toObservable()
-                .subscribe(new EmptyAction<>(), new ErrorAction<>());
+                    saveInformationUseCase.execute(userId, title, message)
+                            .toObservable()
+                            .subscribe(new EmptyAction<>(), new ErrorAction<>());
+                }, new ErrorAction<>());
     }
 
-    private Completable saveNotification(String token, String title, String message) {
-        return saveNotificationUseCase.execute(token, title, message);
+    private void saveNotification(String token, String title, String message) {
+        saveNotificationUseCase.execute(token, title, message).subscribe();
     }
 }
