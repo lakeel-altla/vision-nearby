@@ -28,6 +28,7 @@ public final class HistoryMapper {
             Location location = new Location();
             location.latitude = locationEntity.latitude;
             location.longitude = locationEntity.longitude;
+            history.location = location;
         }
 
         WeatherEntity weatherEntity = entity.weather;

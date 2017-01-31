@@ -35,8 +35,6 @@ public final class HistoryEntity {
         public String latitude;
 
         public String longitude;
-
-        public HashMap<String, String> text;
     }
 
     public static class WeatherEntity {
