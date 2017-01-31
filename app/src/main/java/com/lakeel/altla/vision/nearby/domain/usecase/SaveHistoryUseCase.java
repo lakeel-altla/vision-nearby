@@ -1,6 +1,7 @@
 package com.lakeel.altla.vision.nearby.domain.usecase;
 
 import com.lakeel.altla.vision.nearby.data.repository.FirebaseHistoryRepository;
+import com.lakeel.altla.vision.nearby.presentation.beacon.region.RegionState;
 import com.lakeel.altla.vision.nearby.presentation.firebase.MyUser;
 
 import javax.inject.Inject;
@@ -17,7 +18,7 @@ public final class SaveHistoryUseCase {
     SaveHistoryUseCase() {
     }
 
-    public Single<String> execute(String passingUserId, String regionState) {
+    public Single<String> execute(String passingUserId, RegionState regionState) {
         String myUserId = MyUser.getUserId();
         return repository.saveHistory(myUserId, passingUserId, regionState).subscribeOn(Schedulers.io());
     }

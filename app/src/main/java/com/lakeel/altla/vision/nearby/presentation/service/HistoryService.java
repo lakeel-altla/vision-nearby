@@ -23,6 +23,7 @@ import com.lakeel.altla.vision.nearby.domain.usecase.SaveUserLocationUseCase;
 import com.lakeel.altla.vision.nearby.domain.usecase.SaveWeatherUseCase;
 import com.lakeel.altla.vision.nearby.presentation.analytics.AnalyticsReporter;
 import com.lakeel.altla.vision.nearby.presentation.awareness.AwarenessException;
+import com.lakeel.altla.vision.nearby.presentation.beacon.region.RegionState;
 import com.lakeel.altla.vision.nearby.presentation.di.component.DaggerServiceComponent;
 import com.lakeel.altla.vision.nearby.presentation.di.component.ServiceComponent;
 import com.lakeel.altla.vision.nearby.presentation.di.module.ServiceModule;
@@ -46,9 +47,9 @@ public class HistoryService extends IntentService {
 
         private final String userId;
 
-        private final String regionState;
+        private final RegionState regionState;
 
-        ConnectionCallback(Context context, String userId, String regionState) {
+        ConnectionCallback(Context context, String userId, RegionState regionState) {
             this.context = context;
             this.userId = userId;
             this.regionState = regionState;
@@ -121,17 +122,17 @@ public class HistoryService extends IntentService {
 
         Context context = getApplicationContext();
         String userId = intent.getStringExtra(IntentKey.USER_ID.name());
-        String regionState = intent.getStringExtra(IntentKey.REGION.name());
+        int regionState = intent.getIntExtra(IntentKey.REGION.name(), 0);
 
         googleApiClient = new GoogleApiClient.Builder(context)
                 .addApi(Awareness.API)
-                .addConnectionCallbacks(new ConnectionCallback(context, userId, regionState))
+                .addConnectionCallbacks(new ConnectionCallback(context, userId, RegionState.toRegionState(regionState)))
                 .build();
 
         googleApiClient.connect();
     }
 
-    private Observable<String> saveHistory(String passingUserId, String regionState) {
+    private Observable<String> saveHistory(String passingUserId, RegionState regionState) {
         return saveHistoryUseCase.execute(passingUserId, regionState).toObservable();
     }
 

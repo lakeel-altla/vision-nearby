@@ -78,6 +78,8 @@ public final class ActivityPresenter extends BasePresenter<ActivityView> {
 
     private boolean isAccessFineLocationGranted = false;
 
+    private boolean isAlreadyAdvertised;
+
     private final Context context;
 
     // TODO: Presenters do not use the base presenter.
@@ -274,6 +276,10 @@ public final class ActivityPresenter extends BasePresenter<ActivityView> {
                         return;
                     }
                     if (preference.isAdvertiseInBackgroundEnabled && isAdvertiseAvailableDevice) {
+                        if (isAlreadyAdvertised) {
+                            return;
+                        }
+                        isAlreadyAdvertised = true;
                         getView().startAdvertise(preference.beaconId);
                     }
                 }, new ErrorAction<>());

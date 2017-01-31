@@ -16,7 +16,6 @@ public final class HistoryMapper {
         History history = new History();
         history.historyId = key;
         history.userId = entity.userId;
-        history.regionState = entity.regionState;
         history.passingTime = entity.passingTime;
 
         if (entity.userActivity != null) {

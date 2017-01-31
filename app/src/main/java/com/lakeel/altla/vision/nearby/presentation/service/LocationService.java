@@ -25,6 +25,7 @@ import org.slf4j.LoggerFactory;
 
 import javax.inject.Inject;
 
+import rx.Observable;
 import rx.Single;
 
 public final class LocationService extends IntentService {
@@ -46,6 +47,8 @@ public final class LocationService extends IntentService {
         @Override
         public void onConnected(@Nullable Bundle bundle) {
             getUserCurrentLocation(context)
+                    .toObservable()
+                    .filter(location -> location != null)
                     .flatMap(LocationService.this::saveDeviceLocation)
                     .subscribe(uniqueId -> saveLocationMetaData(uniqueId, userId, beaconId), new ErrorAction<>());
         }
@@ -103,6 +106,7 @@ public final class LocationService extends IntentService {
                                 subscriber.onSuccess(null);
                                 return;
                             }
+
                             Location location = result.getLocation();
                             subscriber.onSuccess(location);
                         });
@@ -113,8 +117,8 @@ public final class LocationService extends IntentService {
         });
     }
 
-    private Single<String> saveDeviceLocation(Location location) {
-        return saveDeviceLocationUseCase.execute(location);
+    private Observable<String> saveDeviceLocation(Location location) {
+        return saveDeviceLocationUseCase.execute(location).toObservable();
     }
 
     private void saveLocationMetaData(String uniqueId, String userId, String beaconId) {

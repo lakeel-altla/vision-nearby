@@ -5,6 +5,7 @@ import android.location.Location;
 import com.google.android.gms.awareness.state.Weather;
 import com.google.android.gms.location.DetectedActivity;
 import com.lakeel.altla.vision.nearby.data.entity.HistoryEntity;
+import com.lakeel.altla.vision.nearby.presentation.beacon.region.RegionState;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -14,10 +15,10 @@ import static com.lakeel.altla.vision.nearby.data.entity.HistoryEntity.WeatherEn
 
 public final class HistoryEntityMapper {
 
-    public HistoryEntity map(String userId, String regionState) {
+    public HistoryEntity map(String userId, RegionState regionState) {
         HistoryEntity entity = new HistoryEntity();
         entity.userId = userId;
-        entity.regionState = regionState;
+        entity.isEntered = RegionState.ENTER == regionState;
         return entity;
     }
 

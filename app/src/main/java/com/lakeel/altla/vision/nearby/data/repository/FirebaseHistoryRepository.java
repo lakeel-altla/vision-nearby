@@ -15,6 +15,7 @@ import com.lakeel.altla.vision.nearby.data.execption.DataStoreException;
 import com.lakeel.altla.vision.nearby.data.mapper.entity.HistoryEntityMapper;
 import com.lakeel.altla.vision.nearby.data.mapper.model.HistoryMapper;
 import com.lakeel.altla.vision.nearby.domain.model.History;
+import com.lakeel.altla.vision.nearby.presentation.beacon.region.RegionState;
 
 import java.util.Map;
 
@@ -28,6 +29,8 @@ import rx.Single;
 public class FirebaseHistoryRepository {
 
     private static final String ID_KEY = "userId";
+
+    private static final String IS_ENTERED_KET = "isEntered";
 
     private final HistoryEntityMapper entityMapper = new HistoryEntityMapper();
 
@@ -44,6 +47,8 @@ public class FirebaseHistoryRepository {
         return Observable.create(subscriber -> {
             reference
                     .child(userId)
+                    .orderByChild(IS_ENTERED_KET)
+                    .equalTo(true)
                     .addListenerForSingleValueEvent(new ValueEventListener() {
                         @Override
                         public void onDataChange(DataSnapshot dataSnapshot) {
@@ -100,7 +105,7 @@ public class FirebaseHistoryRepository {
                         }));
     }
 
-    public Single<String> saveHistory(String myUserId, String passingUserId, String regionState) {
+    public Single<String> saveHistory(String myUserId, String passingUserId, RegionState regionState) {
         return Single.create(subscriber -> {
             HistoryEntity entity = entityMapper.map(passingUserId, regionState);
 

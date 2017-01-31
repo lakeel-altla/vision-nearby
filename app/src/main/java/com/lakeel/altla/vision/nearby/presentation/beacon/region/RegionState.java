@@ -1,9 +1,7 @@
 package com.lakeel.altla.vision.nearby.presentation.beacon.region;
 
-import com.lakeel.altla.vision.nearby.R;
-
 public enum RegionState {
-    ENTER(R.string.region_enter), EXIT(R.string.region_exit);
+    EXIT(0), ENTER(1);
 
     private final int value;
 
@@ -13,5 +11,14 @@ public enum RegionState {
 
     public int getValue() {
         return value;
+    }
+
+    public static RegionState toRegionState(int value) {
+        for (RegionState state : RegionState.values()) {
+            if (state.getValue() == value) {
+                return state;
+            }
+        }
+        return RegionState.EXIT;
     }
 }

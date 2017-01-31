@@ -72,7 +72,7 @@ public final class BeaconSubscriber {
 
                             Intent historyIntent = new Intent(context, HistoryService.class);
                             historyIntent.putExtra(IntentKey.USER_ID.name(), beacon.userId);
-                            historyIntent.putExtra(IntentKey.REGION.name(), context.getString(regionState.getValue()));
+                            historyIntent.putExtra(IntentKey.REGION.name(), regionState.getValue());
                             context.startService(historyIntent);
 
                             Intent notificationIntent = new Intent(context, NotificationService.class);

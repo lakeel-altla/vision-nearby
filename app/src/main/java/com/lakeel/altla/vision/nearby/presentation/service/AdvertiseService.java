@@ -59,10 +59,11 @@ public final class AdvertiseService extends Service {
                         @Override
                         public void onStartSuccess(AdvertiseSettings settingsInEffect) {
                             super.onStartSuccess(settingsInEffect);
+                            LOGGER.info("Succeeded to advertise as a beacon.");
 
                             NotificationCompat.Builder builder = new NotificationCompat.Builder(getApplicationContext());
                             builder.setContentTitle(getApplicationContext().getResources().getString(R.string.notification_title_advertise_ble));
-                            builder.setContentText(getApplicationContext().getResources().getString(R.string.notification_message_advertise_ble));
+//                            builder.setContentText(getApplicationContext().getResources().getString(R.string.notification_message_advertise_ble));
                             builder.setSmallIcon(android.R.drawable.ic_lock_idle_alarm);
                             startForeground(UUID.randomUUID().variant(), builder.build());
                         }

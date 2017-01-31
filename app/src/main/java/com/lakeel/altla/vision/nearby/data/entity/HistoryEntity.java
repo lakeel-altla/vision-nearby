@@ -10,6 +10,8 @@ public final class HistoryEntity {
 
     private static final String USER_ID = "userId";
 
+    private static final String IS_ENTERED = "isEntered";
+
     private static final String PASSING_TIME = "passingTime";
 
     private static final String USER_ACTIVITY = "userActivity";
@@ -20,7 +22,7 @@ public final class HistoryEntity {
 
     public String userId;
 
-    public String regionState;
+    public boolean isEntered;
 
     public Integer userActivity;
 
@@ -49,6 +51,7 @@ public final class HistoryEntity {
     public Map<String, Object> toMap() {
         Map<String, Object> map = new HashMap<>();
         map.put(USER_ID, userId);
+        map.put(IS_ENTERED, isEntered);
         map.put(PASSING_TIME, ServerValue.TIMESTAMP);
         return map;
     }
