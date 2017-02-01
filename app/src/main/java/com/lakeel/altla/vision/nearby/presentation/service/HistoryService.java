@@ -9,6 +9,7 @@ import android.location.Location;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.content.ContextCompat;
+import android.util.Log;
 
 import com.google.android.gms.awareness.Awareness;
 import com.google.android.gms.awareness.state.Weather;
@@ -63,6 +64,8 @@ public class HistoryService extends IntentService {
                     .doOnNext(user -> analyticsReporter.addHistory(user.userId, user.name))
                     .flatMap(user -> saveHistory(user.userId, regionState))
                     .subscribe(uniqueId -> {
+                        Log.d("HistoryService", "Save history success.");
+
                         getUserActivity()
                                 .subscribe(userActivity -> saveUserActivity(uniqueId, userActivity), new ErrorAction<>());
 
