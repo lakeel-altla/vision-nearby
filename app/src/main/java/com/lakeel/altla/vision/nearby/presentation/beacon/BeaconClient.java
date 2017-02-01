@@ -12,10 +12,6 @@ public final class BeaconClient {
 
     private static final String EDDYSTONE_EID_LAYOUT = "s:0-1=feaa,m:2-2=30,p:3-3:-41,i:4-11";
 
-    private static final long BACKGROUND_SCAN_PERIOD = 10000L;
-
-    private static final long BACKGROUND_BETWEEN_SCAN_PERIOD = 10000L;
-
     private final BeaconDetector beaconDetector;
 
     public BeaconClient(Context context) {
@@ -35,9 +31,6 @@ public final class BeaconClient {
                 setBeaconLayout(EDDYSTONE_EID_LAYOUT));
         beaconManager.getBeaconParsers().add(new BeaconParser().
                 setBeaconLayout(BeaconParser.ALTBEACON_LAYOUT));
-
-        beaconManager.setBackgroundScanPeriod(BACKGROUND_SCAN_PERIOD);
-        beaconManager.setBackgroundBetweenScanPeriod(BACKGROUND_BETWEEN_SCAN_PERIOD);
 
         // Save device battery.
         // Simply constructing this class and holding a reference to it in your custom Application class

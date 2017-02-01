@@ -1,19 +1,20 @@
 package com.lakeel.altla.vision.nearby.presentation.beacon;
 
 import android.content.Context;
+import android.util.Log;
 
+import com.google.firebase.crash.FirebaseCrash;
 import com.lakeel.altla.vision.nearby.presentation.beacon.region.RegionState;
 
-import org.altbeacon.beacon.MonitorNotifier;
 import org.altbeacon.beacon.Region;
 import org.altbeacon.beacon.startup.BootstrapNotifier;
 import org.altbeacon.beacon.startup.RegionBootstrap;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+
+import java.util.Date;
 
 final class BeaconDetector implements BootstrapNotifier {
 
-    private static final Logger LOGGER = LoggerFactory.getLogger(BeaconDetector.class);
+    private static final String TAG = BeaconDetector.class.getSimpleName();
 
     private final Context context;
 
@@ -46,28 +47,29 @@ final class BeaconDetector implements BootstrapNotifier {
 
     @Override
     public void didEnterRegion(Region region) {
-        LOGGER.debug("Enter region.");
+        Log.i(TAG, "Enter region.");
+
+        FirebaseCrash.log("Enter region:date:" + new Date().toString());
+        FirebaseCrash.report(new RuntimeException("Enter region."));
+
+        BeaconSubscriber subscriber = new BeaconSubscriber(context, RegionState.ENTER);
+        subscriber.subscribe(region);
     }
 
     @Override
     public void didExitRegion(Region region) {
-        LOGGER.debug("Exit region.");
+        Log.i(TAG, "Exit region.");
+
+        FirebaseCrash.log("Exit region:date:" + new Date().toString());
+        FirebaseCrash.report(new RuntimeException("Exit region."));
+
+        BeaconSubscriber subscriber = new BeaconSubscriber(context, RegionState.EXIT);
+        subscriber.subscribe(region);
     }
 
     @Override
     public void didDetermineStateForRegion(int i, Region region) {
-        LOGGER.debug("Region state is changed:state=" + RegionState.toRegionState(i));
-
-        if (MonitorNotifier.INSIDE == i) {
-            // If enter the region of the beacons, start to subscribe.
-            BeaconSubscriber subscriber = new BeaconSubscriber(context, RegionState.ENTER);
-            subscriber.subscribe(region);
-        } else if (MonitorNotifier.OUTSIDE == i) {
-            BeaconSubscriber subscriber = new BeaconSubscriber(context, RegionState.EXIT);
-            subscriber.subscribe(region);
-        } else {
-            LOGGER.warn("Unknown region state:state=" + i);
-        }
+        Log.d(TAG, "Region state is changed:state=" + RegionState.toRegionState(i));
     }
 
     @Override

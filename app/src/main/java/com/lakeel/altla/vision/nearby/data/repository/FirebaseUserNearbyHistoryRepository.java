@@ -30,7 +30,7 @@ public class FirebaseUserNearbyHistoryRepository {
 
     private static final String ID_KEY = "userId";
 
-    private static final String IS_ENTERED_KET = "isEntered";
+    private static final String IS_ENTERED_KEY = "isEntered";
 
     private final HistoryEntityMapper entityMapper = new HistoryEntityMapper();
 
@@ -47,7 +47,7 @@ public class FirebaseUserNearbyHistoryRepository {
         return Observable.create(subscriber -> {
             reference
                     .child(userId)
-                    .orderByChild(IS_ENTERED_KET)
+                    .orderByChild(IS_ENTERED_KEY)
                     .equalTo(true)
                     .addListenerForSingleValueEvent(new ValueEventListener() {
                         @Override
@@ -171,7 +171,14 @@ public class FirebaseUserNearbyHistoryRepository {
                         .addListenerForSingleValueEvent(new ValueEventListener() {
                             @Override
                             public void onDataChange(DataSnapshot dataSnapshot) {
-                                subscriber.onSuccess(dataSnapshot.getChildrenCount());
+                                long time = 0;
+                                for (DataSnapshot snapshot : dataSnapshot.getChildren()) {
+                                    NearbyHistoryEntity entity = snapshot.getValue(NearbyHistoryEntity.class);
+                                    if (entity.isEntered) {
+                                        time++;
+                                    }
+                                }
+                                subscriber.onSuccess(time);
                             }
 
                             @Override

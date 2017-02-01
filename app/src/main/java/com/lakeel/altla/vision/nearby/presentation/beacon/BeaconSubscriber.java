@@ -3,6 +3,7 @@ package com.lakeel.altla.vision.nearby.presentation.beacon;
 import android.content.Context;
 import android.content.Intent;
 import android.os.RemoteException;
+import android.util.Log;
 
 import com.lakeel.altla.vision.nearby.beacon.BeaconRangeNotifier;
 import com.lakeel.altla.vision.nearby.domain.usecase.FindBeaconUseCase;
@@ -19,8 +20,6 @@ import com.lakeel.altla.vision.nearby.presentation.view.intent.IntentKey;
 
 import org.altbeacon.beacon.BeaconManager;
 import org.altbeacon.beacon.Region;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 import javax.inject.Inject;
 
@@ -29,7 +28,7 @@ public final class BeaconSubscriber {
     @Inject
     FindBeaconUseCase findBeaconUseCase;
 
-    private static final Logger LOGGER = LoggerFactory.getLogger(BeaconSubscriber.class);
+    private static final String TAG = BeaconSubscriber.class.getSimpleName();
 
     private final Context context;
 
@@ -61,14 +60,16 @@ public final class BeaconSubscriber {
                         .execute(beaconId)
                         .subscribe(beacon -> {
                             if (beacon == null) {
-                                LOGGER.info("Not registered the beacon:beaconId=" + beaconId);
+                                Log.i(TAG, "Not registered the beacon:beaconId=" + beaconId);
                                 return;
                             }
                             String userId = MyUser.getUserId();
                             if (userId.equals(beacon.userId)) {
-                                LOGGER.info("This beacon is mine:beaconId=" + beaconId);
+                                Log.i(TAG, "This beacon is mine:beaconId=" + beaconId);
                                 return;
                             }
+
+                            Log.i(TAG, "Found beacon:beaconId=" + beaconId);
 
                             Intent historyIntent = new Intent(context, HistoryService.class);
                             historyIntent.putExtra(IntentKey.USER_ID.name(), beacon.userId);
@@ -94,7 +95,7 @@ public final class BeaconSubscriber {
                     // Stop to subscribe.
                     beaconManager.stopRangingBeaconsInRegion(region);
                 } catch (RemoteException e) {
-                    LOGGER.error("Failed to stopService to subscribe beacons.", e);
+                    Log.e(TAG, "Failed to stopService to subscribe beacons.", e);
                 }
             }
         });
@@ -103,7 +104,7 @@ public final class BeaconSubscriber {
             // Start to subscribe.
             beaconManager.startRangingBeaconsInRegion(region);
         } catch (RemoteException e) {
-            LOGGER.error("Failed to start to subscribe beacons.", e);
+            Log.e(TAG, "Failed to start to subscribe beacons.", e);
         }
     }
 }

@@ -16,7 +16,6 @@ import com.lakeel.altla.vision.nearby.presentation.view.HistoryListView;
 import com.lakeel.altla.vision.nearby.rx.ErrorAction;
 
 import java.util.ArrayList;
-import java.util.Collections;
 import java.util.List;
 
 import javax.inject.Inject;
@@ -46,15 +45,13 @@ public final class HistoryListPresenter extends BasePresenter<HistoryListView> {
     public void onActivityCreated() {
         Subscription subscription = findNearbyHistoryListUseCase.execute()
                 .map(historyUser -> modelMapper.map(historyUser))
-                .toList()
+                .toSortedList((model1, model2) -> Long.compare(model2.passingTime, model1.passingTime))
                 .observeOn(AndroidSchedulers.mainThread())
-                .subscribe(historyItemModels -> {
-                    Collections.reverse(historyItemModels);
-
+                .subscribe(nearbyHistoryItemModels -> {
                     nearbyHistoryModels.clear();
-                    nearbyHistoryModels.addAll(historyItemModels);
+                    nearbyHistoryModels.addAll(nearbyHistoryItemModels);
 
-                    if (CollectionUtils.isEmpty(historyItemModels)) {
+                    if (CollectionUtils.isEmpty(nearbyHistoryItemModels)) {
                         getView().showEmptyView();
                     } else {
                         getView().hideEmptyView();

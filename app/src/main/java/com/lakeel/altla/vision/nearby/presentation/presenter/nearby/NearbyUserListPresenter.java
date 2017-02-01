@@ -175,7 +175,7 @@ public final class NearbyUserListPresenter extends BasePresenter<NearbyUserListV
         isScanning = true;
 
         executor.schedule(() -> {
-            // Stop to scan after 10 seconds.
+            // Stop to scan after 2 seconds.
             scanner.stopScan(scanCallback);
 
             isScanning = false;
@@ -187,7 +187,7 @@ public final class NearbyUserListPresenter extends BasePresenter<NearbyUserListV
             }
 
             subscriptions.unSubscribe();
-        }, 10, TimeUnit.SECONDS);
+        }, 2, TimeUnit.SECONDS);
     }
 
     public final class NearbyUserItemPresenter extends BaseItemPresenter<NearbyUserItemView> {
