@@ -10,10 +10,10 @@
                 android:title="@string/title_recently"/>
         <item
                 android:id="@+id/nearby"
-                android:title="@string/title_nearby_user"/>
-        <item
-            android:id="@+id/information"
-            android:title="@string/title_information"/>
+                android:title="@string/title_nearby"/>
+        <!--<item-->
+            <!--android:id="@+id/information"-->
+            <!--android:title="@string/title_information"/>-->
         <item
                 android:id="@+id/settings"
                 android:title="@string/title_settings"/>

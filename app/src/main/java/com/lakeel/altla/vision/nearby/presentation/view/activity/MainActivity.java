@@ -173,11 +173,11 @@ public class MainActivity extends AppCompatActivity
                 controller.showNearbyUserListFragment();
                 break;
             }
-            case R.id.information: {
-                FragmentController controller = new FragmentController(this);
-                controller.showInformationListFragment();
-                break;
-            }
+//            case R.id.information: {
+//                FragmentController controller = new FragmentController(this);
+//                controller.showInformationListFragment();
+//                break;
+//            }
             case R.id.settings: {
                 FragmentController controller = new FragmentController(this);
                 controller.showSettingsFragment();
