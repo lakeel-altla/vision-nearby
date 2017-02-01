@@ -39,41 +39,55 @@ dependencies {
     compile fileTree(include: ['*.jar'], dir: 'libs')
     compile project(':nearby-library')
     testCompile 'junit:junit:4.12'
+
     // Preference
     compile 'com.takisoft.fix:preference-v7:24.2.0.0'
+
     // Multi dex support
     compile 'com.android.support:multidex:1.0.1'
+
     // support library
     compile 'com.android.support:appcompat-v7:25.1.0'
     compile 'com.android.support:design:25.1.0'
     compile 'com.android.support:support-annotations:25.1.0'
+
     // RecyclerView Section
     compile 'net.cattaka:adapter-toolbox:0.3.4@aar'
     compile 'com.afollestad:sectioned-recyclerview:0.2.3'
+
     //  RecyclerView Animation
     compile 'com.marshalchen.ultimaterecyclerview:library:0.7.0'
+
     // altbeacon
     compile 'org.altbeacon:android-beacon-library:2.9.2'
+
     // nv-bluetooth
     compile 'com.neovisionaries:nv-bluetooth:1.8'
+
     // Date
     compile 'net.danlew:android.joda:2.9.4.1'
+
     // material
     compile 'com.afollestad.material-dialogs:core:0.9.0.0'
+
     // Rx
     compile 'io.reactivex:rxandroid:1.2.1'
     compile 'io.reactivex:rxjava:1.1.6'
+
     // DI
     compile 'com.google.dagger:dagger:2.0.2'
     apt 'com.google.dagger:dagger-compiler:2.0.2'
     provided 'org.glassfish:javax.annotation:10.0-b28'
+
     // image
     compile 'com.nostra13.universalimageloader:universal-image-loader:1.9.5'
     compile 'de.hdodenhof:circleimageview:2.1.0'
     compile 'com.amulyakhare:com.amulyakhare.textdrawable:1.0.1'
+
     // butternife
     compile 'com.jakewharton:butterknife:8.1.0'
     apt 'com.jakewharton:butterknife-compiler:8.1.0'
+
     // Must set the same version.
     compile 'com.google.firebase:firebase-auth:10.0.1'
     compile 'com.google.android.gms:play-services-auth:10.0.1'
@@ -85,6 +99,7 @@ dependencies {
     compile 'com.google.firebase:firebase-core:10.0.1'
     compile 'com.google.firebase:firebase-crash:10.0.1'
     compile 'com.firebaseui:firebase-ui-auth:0.6.2'
+
     // geofire
     compile 'com.firebase:geofire-android:2.1.1'
 
@@ -93,6 +108,7 @@ dependencies {
     compile 'com.squareup.retrofit2:retrofit:2.1.0'
     compile 'com.squareup.retrofit2:adapter-rxjava:2.1.0'
     compile 'com.squareup.retrofit2:converter-gson:2.1.0'
+
     // Apache
     compile 'commons-codec:commons-codec:1.8'
     //    debugCompile 'com.squareup.leakcanary:leakcanary-android:1.3'
