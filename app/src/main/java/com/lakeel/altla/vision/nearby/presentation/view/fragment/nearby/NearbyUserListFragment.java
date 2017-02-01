@@ -78,7 +78,7 @@ public final class NearbyUserListFragment extends Fragment implements NearbyUser
     public void onActivityCreated(Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
 
-        getActivity().setTitle(R.string.title_nearby_user);
+        getActivity().setTitle(R.string.title_nearby);
 
         ((MainActivity) getActivity()).setDrawerIndicatorEnabled(true);
 
