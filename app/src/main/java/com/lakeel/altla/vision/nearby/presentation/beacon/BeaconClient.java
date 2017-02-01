@@ -32,6 +32,8 @@ public final class BeaconClient {
         beaconManager.getBeaconParsers().add(new BeaconParser().
                 setBeaconLayout(BeaconParser.ALTBEACON_LAYOUT));
 
+        beaconManager.setBackgroundBetweenScanPeriod(60000L);
+
         // Save device battery.
         // Simply constructing this class and holding a reference to it in your custom Application class
         // enables auto battery saving of about 60%.
