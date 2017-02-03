@@ -2,6 +2,7 @@ package com.lakeel.altla.vision.nearby.presentation.service;
 
 import android.Manifest;
 import android.app.IntentService;
+import android.app.PendingIntent;
 import android.content.Context;
 import android.content.Intent;
 import android.content.pm.PackageManager;
@@ -9,13 +10,14 @@ import android.location.Location;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.content.ContextCompat;
-import android.util.Log;
 
 import com.google.android.gms.awareness.Awareness;
 import com.google.android.gms.awareness.state.Weather;
 import com.google.android.gms.common.api.GoogleApiClient;
 import com.google.android.gms.location.ActivityRecognitionResult;
 import com.google.android.gms.location.DetectedActivity;
+import com.lakeel.altla.vision.nearby.R;
+import com.lakeel.altla.vision.nearby.domain.model.UserProfile;
 import com.lakeel.altla.vision.nearby.domain.usecase.FindBeaconUseCase;
 import com.lakeel.altla.vision.nearby.domain.usecase.FindUserUseCase;
 import com.lakeel.altla.vision.nearby.domain.usecase.SaveNearbyHistoryUseCase;
@@ -28,6 +30,8 @@ import com.lakeel.altla.vision.nearby.presentation.beacon.region.RegionState;
 import com.lakeel.altla.vision.nearby.presentation.di.component.DaggerServiceComponent;
 import com.lakeel.altla.vision.nearby.presentation.di.component.ServiceComponent;
 import com.lakeel.altla.vision.nearby.presentation.di.module.ServiceModule;
+import com.lakeel.altla.vision.nearby.presentation.notification.LocalNotification;
+import com.lakeel.altla.vision.nearby.presentation.view.intent.DefaultIntent;
 import com.lakeel.altla.vision.nearby.presentation.view.intent.IntentKey;
 import com.lakeel.altla.vision.nearby.rx.ErrorAction;
 
@@ -39,6 +43,7 @@ import javax.inject.Inject;
 import rx.Observable;
 import rx.Single;
 import rx.SingleSubscriber;
+import rx.functions.Action1;
 
 public class HistoryService extends IntentService {
 
@@ -62,10 +67,9 @@ public class HistoryService extends IntentService {
                     .toObservable()
                     // Analytics
                     .doOnNext(user -> analyticsReporter.addHistory(user.userId, user.name))
+                    .doOnNext(HistoryService.this::sendLocalNotification)
                     .flatMap(user -> saveHistory(user.userId, regionState))
                     .subscribe(uniqueId -> {
-                        Log.d("HistoryService", "Save history success.");
-
                         getUserActivity()
                                 .subscribe(userActivity -> saveUserActivity(uniqueId, userActivity), new ErrorAction<>());
 
@@ -133,6 +137,16 @@ public class HistoryService extends IntentService {
                 .build();
 
         googleApiClient.connect();
+    }
+
+    private void sendLocalNotification(UserProfile userProfile) {
+        String title = getString(R.string.notification_title_app_user_found);
+        String message = getString(R.string.notification_message_user_using_app, userProfile.name);
+
+        DefaultIntent defaultIntent = new DefaultIntent();
+        PendingIntent pendingIntent = PendingIntent.getActivity(getApplicationContext(), 0, defaultIntent, PendingIntent.FLAG_CANCEL_CURRENT);
+        LocalNotification localNotification = new LocalNotification(getApplicationContext(), title, message, pendingIntent);
+        localNotification.show();
     }
 
     private Observable<String> saveHistory(String passingUserId, RegionState regionState) {
