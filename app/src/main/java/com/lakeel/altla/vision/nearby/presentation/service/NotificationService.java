@@ -64,6 +64,7 @@ public class NotificationService extends IntentService {
                     if (!beacon.isLost) {
                         return;
                     }
+
                     // If the beacon is lost, notify to user.
                     findDeviceTokensUseCase.execute(userId)
                             // Select the found beacon.
