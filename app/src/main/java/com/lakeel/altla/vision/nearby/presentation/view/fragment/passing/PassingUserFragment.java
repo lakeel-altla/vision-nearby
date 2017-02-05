@@ -76,7 +76,7 @@ public final class PassingUserFragment extends Fragment implements PassingUserVi
 
     public static PassingUserFragment newInstance(String historyId) {
         Bundle args = new Bundle();
-        args.putString(FragmentBundle.HISTORY_ID.name(), historyId);
+        args.putString(FragmentBundle.NEARBY_HISTORY_ID.name(), historyId);
 
         PassingUserFragment fragment = new PassingUserFragment();
         fragment.setArguments(args);
@@ -119,7 +119,7 @@ public final class PassingUserFragment extends Fragment implements PassingUserVi
         supportMapFragment.getMapAsync(this);
 
         Bundle bundle = getArguments();
-        String historyId = (String) bundle.get(FragmentBundle.HISTORY_ID.name());
+        String historyId = (String) bundle.get(FragmentBundle.NEARBY_HISTORY_ID.name());
         presenter.setHistoryId(historyId);
 
         presenter.onActivityCreated();
@@ -225,7 +225,7 @@ public final class PassingUserFragment extends Fragment implements PassingUserVi
     }
 
     @Override
-    public void showLocationMap(String latitude, String longitude) {
+    public void showLocation(String latitude, String longitude) {
         // Show unknown text.
         passingLayout.locationMapLayout.setVisibility(View.VISIBLE);
         passingLayout.unknownTextView.setVisibility(View.GONE);

@@ -29,9 +29,11 @@ public class FirebaseUserNearbyHistoryRepository {
 
     private static final String DATABASE_URI = "https://profile-notification-95441.firebaseio.com/userNearbyHistory";
 
-    private static final String ID_KEY = "userId";
+    private static final String USER_ID_KEY = "userId";
 
     private static final String IS_ENTERED_KEY = "isEntered";
+
+    private static final String PASSING_TIME_KEY = "passingTime";
 
     private final HistoryEntityMapper entityMapper = new HistoryEntityMapper();
 
@@ -78,6 +80,26 @@ public class FirebaseUserNearbyHistoryRepository {
                             public void onDataChange(DataSnapshot snapshot) {
                                 NearbyHistoryEntity entity = snapshot.getValue(NearbyHistoryEntity.class);
                                 subscriber.onSuccess(historyMapper.map(entity, snapshot.getKey()));
+                            }
+
+                            @Override
+                            public void onCancelled(DatabaseError databaseError) {
+                                subscriber.onError(databaseError.toException());
+                            }
+                        }));
+    }
+
+    public Single<NearbyHistory> findRecently(String myUserId, String favoriteUserId) {
+        return Single.create(subscriber ->
+                reference.child(myUserId)
+                        .orderByChild(USER_ID_KEY)
+                        .equalTo(favoriteUserId)
+                        .limitToFirst(1)
+                        .addListenerForSingleValueEvent(new ValueEventListener() {
+                            @Override
+                            public void onDataChange(DataSnapshot dataSnapshot) {
+                                NearbyHistoryEntity entity = dataSnapshot.getValue(NearbyHistoryEntity.class);
+                                subscriber.onSuccess(historyMapper.map(entity, dataSnapshot.getKey()));
                             }
 
                             @Override
@@ -167,7 +189,7 @@ public class FirebaseUserNearbyHistoryRepository {
         return Single.create(subscriber ->
                 reference
                         .child(myUserId)
-                        .orderByChild(ID_KEY)
+                        .orderByChild(USER_ID_KEY)
                         .equalTo(passingUserId)
                         .addListenerForSingleValueEvent(new ValueEventListener() {
                             @Override

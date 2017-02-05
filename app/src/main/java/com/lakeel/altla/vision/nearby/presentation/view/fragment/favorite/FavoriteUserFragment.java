@@ -4,6 +4,7 @@ import android.os.Bundle;
 import android.support.annotation.StringRes;
 import android.support.design.widget.Snackbar;
 import android.support.v4.app.Fragment;
+import android.support.v4.app.FragmentManager;
 import android.text.util.Linkify;
 import android.view.LayoutInflater;
 import android.view.Menu;
@@ -14,19 +15,33 @@ import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 
+import com.google.android.gms.maps.CameraUpdate;
+import com.google.android.gms.maps.CameraUpdateFactory;
+import com.google.android.gms.maps.GoogleMap;
+import com.google.android.gms.maps.OnMapReadyCallback;
+import com.google.android.gms.maps.SupportMapFragment;
+import com.google.android.gms.maps.model.CircleOptions;
+import com.google.android.gms.maps.model.LatLng;
+import com.google.android.gms.maps.model.MarkerOptions;
 import com.lakeel.altla.vision.nearby.R;
-import com.lakeel.altla.vision.nearby.presentation.view.bundle.FragmentBundle;
+import com.lakeel.altla.vision.nearby.presentation.awareness.UserActivity;
+import com.lakeel.altla.vision.nearby.presentation.awareness.WeatherCondition;
 import com.lakeel.altla.vision.nearby.presentation.presenter.favorite.FavoriteUserPresenter;
 import com.lakeel.altla.vision.nearby.presentation.presenter.model.FavoriteUserModel;
 import com.lakeel.altla.vision.nearby.presentation.view.FavoriteUserView;
 import com.lakeel.altla.vision.nearby.presentation.view.activity.MainActivity;
+import com.lakeel.altla.vision.nearby.presentation.view.bundle.FragmentBundle;
+import com.lakeel.altla.vision.nearby.presentation.view.color.AppColor;
 import com.lakeel.altla.vision.nearby.presentation.view.date.DateFormatter;
 import com.lakeel.altla.vision.nearby.presentation.view.fragment.FragmentController;
+import com.lakeel.altla.vision.nearby.presentation.view.layout.PassingLayout;
 import com.lakeel.altla.vision.nearby.presentation.view.layout.PresenceLayout;
 import com.lakeel.altla.vision.nearby.presentation.view.layout.ProfileLayout;
 import com.lakeel.altla.vision.nearby.presentation.view.layout.SnsLayout;
+import com.lakeel.altla.vision.nearby.presentation.view.map.Radius;
 import com.nostra13.universalimageloader.core.ImageLoader;
 
+import java.math.BigDecimal;
 import java.util.ArrayList;
 
 import javax.inject.Inject;
@@ -36,7 +51,7 @@ import butterknife.ButterKnife;
 
 import static com.lakeel.altla.vision.nearby.R.id.estimate;
 
-public final class FavoriteUserFragment extends Fragment implements FavoriteUserView {
+public final class FavoriteUserFragment extends Fragment implements OnMapReadyCallback, FavoriteUserView {
 
     @Inject
     FavoriteUserPresenter presenter;
@@ -51,7 +66,15 @@ public final class FavoriteUserFragment extends Fragment implements FavoriteUser
 
     private ProfileLayout profileLayout = new ProfileLayout();
 
+    private PassingLayout passingLayout = new PassingLayout();
+
     private SnsLayout snsLayout = new SnsLayout();
+
+    private GoogleMap map;
+
+    private SupportMapFragment supportMapFragment;
+
+    private View mapView;
 
     public static FavoriteUserFragment newInstance(String userId, String userName) {
         Bundle args = new Bundle();
@@ -72,6 +95,7 @@ public final class FavoriteUserFragment extends Fragment implements FavoriteUser
 
         ButterKnife.bind(presenceLayout, view.findViewById(R.id.presenceLayout));
         ButterKnife.bind(profileLayout, view.findViewById(R.id.profileLayout));
+        ButterKnife.bind(passingLayout, view.findViewById(R.id.passingLayout));
         ButterKnife.bind(snsLayout, view.findViewById(R.id.snsLayout));
 
         setHasOptionsMenu(true);
@@ -90,6 +114,15 @@ public final class FavoriteUserFragment extends Fragment implements FavoriteUser
 
         ((MainActivity) getActivity()).setDrawerIndicatorEnabled(false);
 
+
+        FragmentManager fragmentManager = getChildFragmentManager();
+        supportMapFragment = (SupportMapFragment) fragmentManager.findFragmentById(R.id.locationMap);
+        if (supportMapFragment == null) {
+            supportMapFragment = SupportMapFragment.newInstance();
+            fragmentManager.beginTransaction().replace(R.id.layoutLocation, supportMapFragment).commit();
+        }
+        supportMapFragment.getMapAsync(this);
+
         Bundle bundle = getArguments();
         String userId = bundle.getString(FragmentBundle.USER_ID.name());
         String userName = bundle.getString(FragmentBundle.USER_NAME.name());
@@ -99,6 +132,16 @@ public final class FavoriteUserFragment extends Fragment implements FavoriteUser
         presenter.setUserIdAndUserName(userId, userName);
 
         presenter.onActivityCreated();
+    }
+
+    @Override
+    public void onResume() {
+        super.onResume();
+
+        mapView = supportMapFragment.getView();
+        if (mapView != null) {
+            mapView.setVisibility(View.INVISIBLE);
+        }
     }
 
     @Override
@@ -119,6 +162,17 @@ public final class FavoriteUserFragment extends Fragment implements FavoriteUser
                 break;
         }
         return true;
+    }
+
+    @Override
+    public void onMapReady(GoogleMap googleMap) {
+        map = googleMap;
+        map.setMapType(GoogleMap.MAP_TYPE_NORMAL);
+
+        CameraUpdate cameraUpdate = CameraUpdateFactory.zoomTo(14);
+        map.moveCamera(cameraUpdate);
+
+        presenter.onMapReady();
     }
 
     @Override
@@ -152,9 +206,72 @@ public final class FavoriteUserFragment extends Fragment implements FavoriteUser
     }
 
     @Override
-    public void showLineUrl(FavoriteUserModel model) {
+    public void showTimes(long times) {
+        passingLayout.timesTextView.setText(String.valueOf(times));
+    }
+
+    @Override
+    public void showPassingData(FavoriteUserModel model) {
+        DateFormatter dateFormatter = new DateFormatter(model.passingTime);
+        passingLayout.passingTimeTextView.setText(dateFormatter.format());
+
+        if (model.conditions == null || model.conditions.length == 0) {
+            int resId = WeatherCondition.UNKNOWN.getResValue();
+            passingLayout.weatherTextView.setText(getContext().getString(resId));
+        } else {
+            BigDecimal temperature = new BigDecimal(model.temperature);
+            BigDecimal roundUppedTemperature = temperature.setScale(0, BigDecimal.ROUND_HALF_UP);
+            int humidity = model.humidity;
+            int conditions[] = model.conditions;
+
+            StringBuilder builder = new StringBuilder();
+            for (int value : conditions) {
+                WeatherCondition type = WeatherCondition.toWeatherCondition(value);
+                int resId = type.getResValue();
+                builder.append(getContext().getString(resId));
+                builder.append("  ");
+            }
+            builder.append(getString(R.string.message_temperature_format, String.valueOf(roundUppedTemperature)));
+            builder.append("  ");
+            builder.append(getString(R.string.message_humidity_format, String.valueOf(humidity)));
+
+            passingLayout.weatherTextView.setText(builder.toString());
+        }
+
+        int resId = UserActivity.toUserActivity(model.userActivity).getResValue();
+        passingLayout.userActivityTextView.setText(getContext().getString(resId));
+    }
+
+    @Override
+    public void showLocation(String latitude, String longitude) {
+        // Show unknown text.
+        passingLayout.locationMapLayout.setVisibility(View.VISIBLE);
+        passingLayout.unknownTextView.setVisibility(View.GONE);
+
+        mapView.setVisibility(View.VISIBLE);
+
+        LatLng latLng = new LatLng(Double.valueOf(latitude), Double.valueOf(longitude));
+        CircleOptions circleOptions = new CircleOptions()
+                .center(latLng)
+                .strokeColor(AppColor.PRIMARY.getValue())
+                .radius(Radius.GOOGLE_MAP.getValue());
+
+        map.addMarker(new MarkerOptions()
+                .position(latLng));
+        map.addCircle(circleOptions);
+        map.moveCamera(CameraUpdateFactory.newLatLng(latLng));
+    }
+
+    @Override
+    public void hideLocation() {
+        passingLayout.locationMapLayout.setVisibility(View.GONE);
+        passingLayout.unknownTextView.setVisibility(View.VISIBLE);
+    }
+
+    @Override
+    public void showLineUrl(String url) {
         snsLayout.lineUrlTextView.setAutoLinkMask(Linkify.WEB_URLS);
-        snsLayout.lineUrlTextView.setText(model.lineUrl);
+        snsLayout.lineUrlTextView.setText(url);
     }
 
     @Override

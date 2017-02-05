@@ -3,8 +3,8 @@ package com.lakeel.altla.vision.nearby.presentation.presenter.passing;
 import com.lakeel.altla.vision.nearby.R;
 import com.lakeel.altla.vision.nearby.domain.usecase.FindConnectionUseCase;
 import com.lakeel.altla.vision.nearby.domain.usecase.FindFavoriteUseCase;
-import com.lakeel.altla.vision.nearby.domain.usecase.FindNearbyHistoryUseCase;
 import com.lakeel.altla.vision.nearby.domain.usecase.FindLineLinkUseCase;
+import com.lakeel.altla.vision.nearby.domain.usecase.FindNearbyHistoryUseCase;
 import com.lakeel.altla.vision.nearby.domain.usecase.FindPassingTimesUseCase;
 import com.lakeel.altla.vision.nearby.domain.usecase.FindUserUseCase;
 import com.lakeel.altla.vision.nearby.domain.usecase.SaveFavoriteUseCase;
@@ -20,7 +20,6 @@ import javax.inject.Inject;
 import rx.Single;
 import rx.Subscription;
 import rx.android.schedulers.AndroidSchedulers;
-import rx.schedulers.Schedulers;
 
 public final class PassingUserPresenter extends BasePresenter<PassingUserView> {
 
@@ -95,7 +94,7 @@ public final class PassingUserPresenter extends BasePresenter<PassingUserView> {
         if (model.latitude == null && model.longitude == null) {
             getView().hideLocation();
         } else {
-            getView().showLocationMap(model.latitude, model.longitude);
+            getView().showLocation(model.latitude, model.longitude);
         }
     }
 
@@ -114,7 +113,6 @@ public final class PassingUserPresenter extends BasePresenter<PassingUserView> {
 
     private Single<PassingUserModel> findUser(String userId) {
         return findUserUseCase.execute(userId)
-                .subscribeOn(Schedulers.io())
                 .map(user -> {
                     model.userName = user.name;
                     model.imageUri = user.imageUri;

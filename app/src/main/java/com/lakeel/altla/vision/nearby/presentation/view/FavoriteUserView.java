@@ -14,7 +14,15 @@ public interface FavoriteUserView {
 
     void showProfile(FavoriteUserModel model);
 
-    void showLineUrl(FavoriteUserModel url);
+    void showTimes(long times);
+
+    void showPassingData(FavoriteUserModel model);
+
+    void showLocation(String latitude, String longitude);
+
+    void hideLocation();
+
+    void showLineUrl(String url);
 
     void showDistanceEstimationFragment(ArrayList<String> beaconIds, String targetName);
 }

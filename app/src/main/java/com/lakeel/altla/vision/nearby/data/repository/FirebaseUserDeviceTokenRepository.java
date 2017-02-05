@@ -24,7 +24,7 @@ public final class FirebaseUserDeviceTokenRepository {
     private final DatabaseReference reference;
 
     @Inject
-    public FirebaseUserDeviceTokenRepository() {
+    FirebaseUserDeviceTokenRepository() {
         this.reference = FirebaseDatabase.getInstance().getReference(DATABASE_URI);
     }
 

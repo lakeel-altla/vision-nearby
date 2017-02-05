@@ -17,7 +17,7 @@ public final class FirebaseConnectedRepository {
     private DatabaseReference reference;
 
     @Inject
-    public FirebaseConnectedRepository() {
+    FirebaseConnectedRepository() {
         this.reference = FirebaseDatabase.getInstance().getReference(DATABASE_URI);
     }
 

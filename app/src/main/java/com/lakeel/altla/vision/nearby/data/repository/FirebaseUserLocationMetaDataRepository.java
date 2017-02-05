@@ -32,7 +32,7 @@ public final class FirebaseUserLocationMetaDataRepository {
     private final DatabaseReference reference;
 
     @Inject
-    public FirebaseUserLocationMetaDataRepository() {
+    FirebaseUserLocationMetaDataRepository() {
         this.reference = FirebaseDatabase.getInstance().getReference(DATABASE_URI);
     }
 

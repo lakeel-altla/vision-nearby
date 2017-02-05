@@ -38,6 +38,13 @@
 
         <include layout="@layout/divider" />
 
+        <!-- Passing -->
+        <include
+            android:id="@+id/passingLayout"
+            layout="@layout/layout_passing" />
+
+        <include layout="@layout/divider" />
+
         <!-- SNS -->
         <include
             android:id="@+id/snsLayout"

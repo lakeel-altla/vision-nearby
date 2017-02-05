@@ -21,7 +21,7 @@ public class FirebaseNotificationRepository {
     private final DatabaseReference reference;
 
     @Inject
-    public FirebaseNotificationRepository() {
+    FirebaseNotificationRepository() {
         this.reference = FirebaseDatabase.getInstance().getReference(DATABASE_URI);
     }
 

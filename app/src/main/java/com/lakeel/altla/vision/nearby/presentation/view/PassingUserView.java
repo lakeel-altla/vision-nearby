@@ -16,7 +16,7 @@ public interface PassingUserView {
 
     void showPresence(PassingUserModel model);
 
-    void showLocationMap(String latitude, String longitude);
+    void showLocation(String latitude, String longitude);
 
     void hideLocation();
 

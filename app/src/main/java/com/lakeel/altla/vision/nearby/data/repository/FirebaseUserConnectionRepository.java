@@ -33,7 +33,7 @@ public class FirebaseUserConnectionRepository {
     private final DatabaseReference reference;
 
     @Inject
-    public FirebaseUserConnectionRepository() {
+    FirebaseUserConnectionRepository() {
         this.reference = FirebaseDatabase.getInstance().getReference(DATABASE_URI);
     }
 

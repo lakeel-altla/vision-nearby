@@ -20,7 +20,7 @@ public class FirebaseLocationRepository {
     private final GeoFire geoFire;
 
     @Inject
-    public FirebaseLocationRepository() {
+    FirebaseLocationRepository() {
         geoFire = new GeoFire(FirebaseDatabase.getInstance().getReference(DATABASE_URI));
     }
 

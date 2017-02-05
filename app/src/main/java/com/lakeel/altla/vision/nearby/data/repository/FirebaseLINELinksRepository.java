@@ -29,7 +29,7 @@ public class FirebaseLINELinksRepository {
     private final DatabaseReference reference;
 
     @Inject
-    public FirebaseLINELinksRepository() {
+    FirebaseLINELinksRepository() {
         this.reference = FirebaseDatabase.getInstance().getReference(DATABASE_URI);
     }
 
