@@ -1,6 +1,6 @@
 package com.lakeel.altla.vision.nearby.domain.usecase;
 
-import com.lakeel.altla.vision.nearby.data.repository.FirebaseUserNearbyHistoryRepository;
+import com.lakeel.altla.vision.nearby.data.repository.firebase.UserNearbyHistoryRepository;
 import com.lakeel.altla.vision.nearby.domain.model.NearbyHistory;
 import com.lakeel.altla.vision.nearby.presentation.firebase.MyUser;
 
@@ -9,17 +9,17 @@ import javax.inject.Inject;
 import rx.Single;
 import rx.schedulers.Schedulers;
 
-public final class FindRecentNearbyHistoryUseCase {
+public final class FindLatestNearbyHistoryUseCase {
 
     @Inject
-    FirebaseUserNearbyHistoryRepository repository;
+    UserNearbyHistoryRepository repository;
 
     @Inject
-    FindRecentNearbyHistoryUseCase() {
+    FindLatestNearbyHistoryUseCase() {
     }
 
     public Single<NearbyHistory> execute(String favoriteUserId) {
         String userId = MyUser.getUserId();
-        return repository.findRecently(userId, favoriteUserId).subscribeOn(Schedulers.io());
+        return repository.findLatest(userId, favoriteUserId).subscribeOn(Schedulers.io());
     }
 }

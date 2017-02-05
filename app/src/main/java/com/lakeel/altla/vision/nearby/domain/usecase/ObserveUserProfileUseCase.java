@@ -1,6 +1,6 @@
 package com.lakeel.altla.vision.nearby.domain.usecase;
 
-import com.lakeel.altla.vision.nearby.data.repository.FirebaseUserProfileRepository;
+import com.lakeel.altla.vision.nearby.data.repository.firebase.UserProfileRepository;
 import com.lakeel.altla.vision.nearby.domain.model.UserProfile;
 import com.lakeel.altla.vision.nearby.presentation.firebase.MyUser;
 
@@ -12,7 +12,7 @@ import rx.schedulers.Schedulers;
 public final class ObserveUserProfileUseCase {
 
     @Inject
-    FirebaseUserProfileRepository repository;
+    UserProfileRepository repository;
 
     @Inject
     ObserveUserProfileUseCase() {
@@ -20,6 +20,6 @@ public final class ObserveUserProfileUseCase {
 
     public Observable<UserProfile> execute() {
         String userId = MyUser.getUserId();
-        return repository.observeUserProfile(userId).subscribeOn(Schedulers.io());
+        return repository.observe(userId).subscribeOn(Schedulers.io());
     }
 }

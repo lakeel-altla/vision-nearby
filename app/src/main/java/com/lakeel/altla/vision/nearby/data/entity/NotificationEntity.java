@@ -17,7 +17,7 @@ public final class NotificationEntity {
         Map<String, Object> map = new HashMap<>();
         map.put("to", to);
         map.put("title", title);
-        map.put("body", message);
+        map.put("message", message);
         map.put("registrationTime", ServerValue.TIMESTAMP);
         return map;
     }

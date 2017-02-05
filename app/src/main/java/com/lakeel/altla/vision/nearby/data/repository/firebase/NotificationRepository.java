@@ -1,4 +1,4 @@
-package com.lakeel.altla.vision.nearby.data.repository;
+package com.lakeel.altla.vision.nearby.data.repository.firebase;
 
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.database.DatabaseReference;
@@ -12,7 +12,7 @@ import javax.inject.Inject;
 
 import rx.Completable;
 
-public class FirebaseNotificationRepository {
+public class NotificationRepository {
 
     private static final String DATABASE_URI = "https://profile-notification-95441.firebaseio.com/notifications";
 
@@ -21,11 +21,11 @@ public class FirebaseNotificationRepository {
     private final DatabaseReference reference;
 
     @Inject
-    FirebaseNotificationRepository() {
+    NotificationRepository() {
         this.reference = FirebaseDatabase.getInstance().getReference(DATABASE_URI);
     }
 
-    public Completable saveNotification(String to, String title, String message) {
+    public Completable save(String to, String title, String message) {
         return Completable.create(subscriber -> {
             NotificationEntity entity = entityMapper.map(to, title, message);
             Map<String, Object> map = entity.toMap();

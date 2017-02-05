@@ -51,7 +51,7 @@ public final class NearbyHistoryAdapter extends SwipeableUltimateViewAdapter<Nea
         holder.onBind(position);
     }
 
-    public static class NearbyHistoryItemViewHolder extends UltimateRecyclerviewViewHolder implements NearbyHistoryItemView {
+    static class NearbyHistoryItemViewHolder extends UltimateRecyclerviewViewHolder implements NearbyHistoryItemView {
 
         @BindView(R.id.layoutItem)
         LinearLayout itemLayout;

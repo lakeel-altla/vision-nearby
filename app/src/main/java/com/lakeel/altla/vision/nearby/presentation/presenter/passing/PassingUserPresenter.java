@@ -1,11 +1,11 @@
 package com.lakeel.altla.vision.nearby.presentation.presenter.passing;
 
 import com.lakeel.altla.vision.nearby.R;
+import com.lakeel.altla.vision.nearby.domain.usecase.FindAllPassingTimeUseCase;
 import com.lakeel.altla.vision.nearby.domain.usecase.FindConnectionUseCase;
 import com.lakeel.altla.vision.nearby.domain.usecase.FindFavoriteUseCase;
 import com.lakeel.altla.vision.nearby.domain.usecase.FindLineLinkUseCase;
 import com.lakeel.altla.vision.nearby.domain.usecase.FindNearbyHistoryUseCase;
-import com.lakeel.altla.vision.nearby.domain.usecase.FindPassingTimesUseCase;
 import com.lakeel.altla.vision.nearby.domain.usecase.FindUserUseCase;
 import com.lakeel.altla.vision.nearby.domain.usecase.SaveFavoriteUseCase;
 import com.lakeel.altla.vision.nearby.presentation.analytics.AnalyticsReporter;
@@ -14,6 +14,7 @@ import com.lakeel.altla.vision.nearby.presentation.presenter.mapper.UserPassingM
 import com.lakeel.altla.vision.nearby.presentation.presenter.model.PassingUserModel;
 import com.lakeel.altla.vision.nearby.presentation.view.PassingUserView;
 import com.lakeel.altla.vision.nearby.rx.ErrorAction;
+import com.lakeel.altla.vision.nearby.rx.ReusableCompositeSubscription;
 
 import javax.inject.Inject;
 
@@ -33,7 +34,7 @@ public final class PassingUserPresenter extends BasePresenter<PassingUserView> {
     FindUserUseCase findUserUseCase;
 
     @Inject
-    FindPassingTimesUseCase findPassingTimesUseCase;
+    FindAllPassingTimeUseCase findAllPassingTimeUseCase;
 
     @Inject
     SaveFavoriteUseCase saveFavoriteUseCase;
@@ -46,6 +47,8 @@ public final class PassingUserPresenter extends BasePresenter<PassingUserView> {
 
     @Inject
     FindLineLinkUseCase findLineLinkUseCase;
+
+    private final ReusableCompositeSubscription subscriptions = new ReusableCompositeSubscription();
 
     private PassingUserModel model = new PassingUserModel();
 
@@ -89,6 +92,10 @@ public final class PassingUserPresenter extends BasePresenter<PassingUserView> {
         subscriptions.add(subscription);
     }
 
+    public void onStop() {
+        subscriptions.unSubscribe();
+    }
+
     public void onMapReady() {
         isMapReadied = true;
         if (model.latitude == null && model.longitude == null) {
@@ -123,9 +130,9 @@ public final class PassingUserPresenter extends BasePresenter<PassingUserView> {
 
     private void showPresence(String userId) {
         Subscription subscription = findConnectionUseCase.execute(userId)
-                .map(presence -> {
-                    model.isConnected = presence.isConnected;
-                    model.lastOnlineTime = presence.lastOnlineTime;
+                .map(connection -> {
+                    model.isConnected = connection.isConnected;
+                    model.lastOnlineTime = connection.lastOnlineTime;
                     return model;
                 })
                 .observeOn(AndroidSchedulers.mainThread())
@@ -134,7 +141,7 @@ public final class PassingUserPresenter extends BasePresenter<PassingUserView> {
     }
 
     private void showTimes(String userId) {
-        Subscription timesSubscription = findPassingTimesUseCase.execute(userId)
+        Subscription timesSubscription = findAllPassingTimeUseCase.execute(userId)
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribe(times -> getView().showTimes(times), new ErrorAction<>());
         subscriptions.add(timesSubscription);

@@ -1,7 +1,7 @@
 package com.lakeel.altla.vision.nearby.domain.usecase;
 
-import com.lakeel.altla.vision.nearby.data.repository.FirebaseBeaconRepository;
-import com.lakeel.altla.vision.nearby.data.repository.FirebaseUserProfileRepository;
+import com.lakeel.altla.vision.nearby.data.repository.firebase.BeaconRepository;
+import com.lakeel.altla.vision.nearby.data.repository.firebase.UserProfileRepository;
 import com.lakeel.altla.vision.nearby.presentation.firebase.MyUser;
 
 import javax.inject.Inject;
@@ -12,10 +12,10 @@ import rx.schedulers.Schedulers;
 public final class RemoveDeviceUseCase {
 
     @Inject
-    FirebaseBeaconRepository beaconsRepository;
+    BeaconRepository beaconsRepository;
 
     @Inject
-    FirebaseUserProfileRepository usersRepository;
+    UserProfileRepository usersRepository;
 
     @Inject
     RemoveDeviceUseCase() {
@@ -23,7 +23,7 @@ public final class RemoveDeviceUseCase {
 
     public Single<String> execute(String beaconId) {
         String userId = MyUser.getUserId();
-        return beaconsRepository.removeBeacon(beaconId)
+        return beaconsRepository.remove(beaconId)
                 .subscribeOn(Schedulers.io())
                 .flatMap(beaconId1 -> removeUserBeacon(userId, beaconId));
     }

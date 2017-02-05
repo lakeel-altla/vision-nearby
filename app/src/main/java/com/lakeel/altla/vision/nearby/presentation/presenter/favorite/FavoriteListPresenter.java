@@ -4,7 +4,7 @@ import android.support.annotation.IntRange;
 
 import com.lakeel.altla.vision.nearby.R;
 import com.lakeel.altla.vision.nearby.core.CollectionUtils;
-import com.lakeel.altla.vision.nearby.domain.usecase.FindFavoritesUseCase;
+import com.lakeel.altla.vision.nearby.domain.usecase.FindAllFavoriteUseCase;
 import com.lakeel.altla.vision.nearby.domain.usecase.RemoveFavoriteUseCase;
 import com.lakeel.altla.vision.nearby.presentation.analytics.AnalyticsReporter;
 import com.lakeel.altla.vision.nearby.presentation.presenter.BaseItemPresenter;
@@ -14,6 +14,7 @@ import com.lakeel.altla.vision.nearby.presentation.presenter.model.FavoriteModel
 import com.lakeel.altla.vision.nearby.presentation.view.FavoriteItemView;
 import com.lakeel.altla.vision.nearby.presentation.view.FavoriteListView;
 import com.lakeel.altla.vision.nearby.rx.ErrorAction;
+import com.lakeel.altla.vision.nearby.rx.ReusableCompositeSubscription;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -29,10 +30,12 @@ public final class FavoriteListPresenter extends BasePresenter<FavoriteListView>
     AnalyticsReporter analyticsReporter;
 
     @Inject
-    FindFavoritesUseCase findFavoritesUseCase;
+    FindAllFavoriteUseCase findAllFavoriteUseCase;
 
     @Inject
     RemoveFavoriteUseCase removeFavoriteUseCase;
+
+    private final ReusableCompositeSubscription subscriptions = new ReusableCompositeSubscription();
 
     private FavoriteModelMapper favoriteModelMapper = new FavoriteModelMapper();
 
@@ -43,7 +46,7 @@ public final class FavoriteListPresenter extends BasePresenter<FavoriteListView>
     }
 
     public void onActivityCreated() {
-        Subscription subscription = findFavoritesUseCase.execute()
+        Subscription subscription = findAllFavoriteUseCase.execute()
                 .map(user -> favoriteModelMapper.map(user))
                 .toList()
                 .subscribe(favoritesModels -> {
@@ -59,6 +62,10 @@ public final class FavoriteListPresenter extends BasePresenter<FavoriteListView>
                     getView().updateItems(favoriteModels);
                 }, new ErrorAction<>());
         subscriptions.add(subscription);
+    }
+
+    public void onStop() {
+        subscriptions.unSubscribe();
     }
 
     public void onCreateItemView(FavoriteItemView favoriteItemView) {

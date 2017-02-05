@@ -2,7 +2,7 @@ package com.lakeel.altla.vision.nearby.presentation.presenter.information;
 
 import android.support.annotation.IntRange;
 
-import com.lakeel.altla.vision.nearby.domain.usecase.FindInformationListUseCase;
+import com.lakeel.altla.vision.nearby.domain.usecase.FindAllInformationUseCase;
 import com.lakeel.altla.vision.nearby.presentation.presenter.BaseItemPresenter;
 import com.lakeel.altla.vision.nearby.presentation.presenter.BasePresenter;
 import com.lakeel.altla.vision.nearby.presentation.presenter.mapper.InformationModelMapper;
@@ -11,6 +11,7 @@ import com.lakeel.altla.vision.nearby.presentation.view.InformationItemView;
 import com.lakeel.altla.vision.nearby.presentation.view.InformationListView;
 import com.lakeel.altla.vision.nearby.presentation.view.adapter.InformationAdapter;
 import com.lakeel.altla.vision.nearby.rx.ErrorAction;
+import com.lakeel.altla.vision.nearby.rx.ReusableCompositeSubscription;
 
 import java.util.ArrayList;
 import java.util.Collections;
@@ -24,7 +25,9 @@ import rx.android.schedulers.AndroidSchedulers;
 public final class InformationListPresenter extends BasePresenter<InformationListView> {
 
     @Inject
-    FindInformationListUseCase findInformationListUseCase;
+    FindAllInformationUseCase findAllInformationUseCase;
+
+    private final ReusableCompositeSubscription subscriptions = new ReusableCompositeSubscription();
 
     private InformationModelMapper modelMapper = new InformationModelMapper();
 
@@ -35,7 +38,7 @@ public final class InformationListPresenter extends BasePresenter<InformationLis
     }
 
     public void onActivityCreated() {
-        Subscription subscription = findInformationListUseCase.execute()
+        Subscription subscription = findAllInformationUseCase.execute()
                 .map(information -> modelMapper.map(information))
                 .toList()
                 .observeOn(AndroidSchedulers.mainThread())
@@ -48,6 +51,10 @@ public final class InformationListPresenter extends BasePresenter<InformationLis
                     getView().updateItems();
                 }, new ErrorAction<>());
         subscriptions.add(subscription);
+    }
+
+    public void onStop() {
+        subscriptions.unSubscribe();
     }
 
     public void onCreateItemView(InformationAdapter.InformationItemViewHolder viewHolder) {

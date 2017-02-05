@@ -1,4 +1,4 @@
-package com.lakeel.altla.vision.nearby.data.repository;
+package com.lakeel.altla.vision.nearby.data.repository.firebase;
 
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.database.DataSnapshot;
@@ -16,7 +16,7 @@ import rx.Completable;
 import rx.Observable;
 import rx.Single;
 
-public class FirebaseUserFavoriteRepository {
+public class UserFavoriteRepository {
 
     private static final String DATABASE_URI = "https://profile-notification-95441.firebaseio.com/userFavorites";
 
@@ -25,11 +25,11 @@ public class FirebaseUserFavoriteRepository {
     private final DatabaseReference reference;
 
     @Inject
-    public FirebaseUserFavoriteRepository() {
+    public UserFavoriteRepository() {
         this.reference = FirebaseDatabase.getInstance().getReference(DATABASE_URI);
     }
 
-    public Observable<String> findFavorites(String userId) {
+    public Observable<String> findAll(String userId) {
         return Observable.create(subscriber -> {
             reference
                     .child(userId)
@@ -57,7 +57,7 @@ public class FirebaseUserFavoriteRepository {
         });
     }
 
-    public Single<Favorite> findFavorite(String myUserId, String favoriteUserId) {
+    public Single<Favorite> findAll(String myUserId, String favoriteUserId) {
         return Single.create(subscriber ->
                 reference
                         .child(myUserId)
@@ -69,7 +69,7 @@ public class FirebaseUserFavoriteRepository {
                                 if (isFavorite == null || !isFavorite) {
                                     subscriber.onSuccess(null);
                                 } else {
-                                    subscriber.onSuccess(favoriteMapper.map(dataSnapshot.getKey()));
+                                    subscriber.onSuccess(favoriteMapper.map(dataSnapshot));
                                 }
                             }
 
@@ -80,7 +80,7 @@ public class FirebaseUserFavoriteRepository {
                         }));
     }
 
-    public Completable saveFavorite(String myUserId, String favoriteUserId) {
+    public Completable save(String myUserId, String favoriteUserId) {
         return Completable.create(subscriber -> {
             Task<Void> task = reference
                     .child(myUserId)
@@ -96,7 +96,7 @@ public class FirebaseUserFavoriteRepository {
         });
     }
 
-    public Completable removeFavorite(String myUserId, String favoriteUserId) {
+    public Completable remove(String myUserId, String favoriteUserId) {
         return Completable.create(subscriber -> {
             Task task = reference
                     .child(myUserId)

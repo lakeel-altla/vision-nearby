@@ -1,19 +1,16 @@
 package com.lakeel.altla.vision.nearby.presentation.service;
 
 import android.app.IntentService;
-import android.app.PendingIntent;
 import android.content.Intent;
 
 import com.lakeel.altla.vision.nearby.R;
+import com.lakeel.altla.vision.nearby.domain.usecase.FindAllDeviceTokenUseCase;
 import com.lakeel.altla.vision.nearby.domain.usecase.FindBeaconUseCase;
-import com.lakeel.altla.vision.nearby.domain.usecase.FindDeviceTokensUseCase;
 import com.lakeel.altla.vision.nearby.domain.usecase.SaveInformationUseCase;
 import com.lakeel.altla.vision.nearby.domain.usecase.SaveNotificationUseCase;
 import com.lakeel.altla.vision.nearby.presentation.di.component.DaggerServiceComponent;
 import com.lakeel.altla.vision.nearby.presentation.di.component.ServiceComponent;
 import com.lakeel.altla.vision.nearby.presentation.di.module.ServiceModule;
-import com.lakeel.altla.vision.nearby.presentation.notification.LocalNotification;
-import com.lakeel.altla.vision.nearby.presentation.view.intent.DefaultIntent;
 import com.lakeel.altla.vision.nearby.presentation.view.intent.IntentKey;
 import com.lakeel.altla.vision.nearby.rx.EmptyAction;
 import com.lakeel.altla.vision.nearby.rx.ErrorAction;
@@ -30,7 +27,7 @@ public class NotificationService extends IntentService {
     FindBeaconUseCase findBeaconUseCase;
 
     @Inject
-    FindDeviceTokensUseCase findDeviceTokensUseCase;
+    FindAllDeviceTokenUseCase findAllDeviceTokenUseCase;
 
     @Inject
     SaveNotificationUseCase saveNotificationUseCase;
@@ -69,7 +66,7 @@ public class NotificationService extends IntentService {
                     }
 
                     // If the beacon is lost, notify to user.
-                    findDeviceTokensUseCase.execute(userId)
+                    findAllDeviceTokenUseCase.execute(userId)
                             // Select the found beacon.
                             .filter(token -> !beaconId.equals(token.beaconId))
                             // Notify the push notification to the device.

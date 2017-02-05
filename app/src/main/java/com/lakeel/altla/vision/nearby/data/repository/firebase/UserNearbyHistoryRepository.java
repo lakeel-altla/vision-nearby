@@ -1,4 +1,4 @@
-package com.lakeel.altla.vision.nearby.data.repository;
+package com.lakeel.altla.vision.nearby.data.repository.firebase;
 
 import android.location.Location;
 
@@ -25,15 +25,13 @@ import rx.Completable;
 import rx.Observable;
 import rx.Single;
 
-public class FirebaseUserNearbyHistoryRepository {
+public class UserNearbyHistoryRepository {
 
     private static final String DATABASE_URI = "https://profile-notification-95441.firebaseio.com/userNearbyHistory";
 
     private static final String USER_ID_KEY = "userId";
 
     private static final String IS_ENTERED_KEY = "isEntered";
-
-    private static final String PASSING_TIME_KEY = "passingTime";
 
     private final HistoryEntityMapper entityMapper = new HistoryEntityMapper();
 
@@ -42,7 +40,7 @@ public class FirebaseUserNearbyHistoryRepository {
     private final DatabaseReference reference;
 
     @Inject
-    public FirebaseUserNearbyHistoryRepository() {
+    public UserNearbyHistoryRepository() {
         this.reference = FirebaseDatabase.getInstance().getReference(DATABASE_URI);
     }
 
@@ -89,7 +87,7 @@ public class FirebaseUserNearbyHistoryRepository {
                         }));
     }
 
-    public Single<NearbyHistory> findRecently(String myUserId, String favoriteUserId) {
+    public Single<NearbyHistory> findLatest(String myUserId, String favoriteUserId) {
         return Single.create(subscriber ->
                 reference.child(myUserId)
                         .orderByChild(USER_ID_KEY)

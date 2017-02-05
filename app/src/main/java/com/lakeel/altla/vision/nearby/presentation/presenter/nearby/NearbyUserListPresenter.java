@@ -15,7 +15,7 @@ import android.support.annotation.IntRange;
 import android.support.v4.content.ContextCompat;
 
 import com.lakeel.altla.vision.nearby.R;
-import com.lakeel.altla.vision.nearby.domain.usecase.FindNearbyUsersUseCase;
+import com.lakeel.altla.vision.nearby.domain.usecase.FindAllNearbyUserUseCase;
 import com.lakeel.altla.vision.nearby.presentation.ble.BleChecker;
 import com.lakeel.altla.vision.nearby.presentation.presenter.BaseItemPresenter;
 import com.lakeel.altla.vision.nearby.presentation.presenter.BasePresenter;
@@ -24,6 +24,7 @@ import com.lakeel.altla.vision.nearby.presentation.presenter.model.NearbyUserMod
 import com.lakeel.altla.vision.nearby.presentation.view.NearbyUserItemView;
 import com.lakeel.altla.vision.nearby.presentation.view.NearbyUserListView;
 import com.lakeel.altla.vision.nearby.rx.ErrorAction;
+import com.lakeel.altla.vision.nearby.rx.ReusableCompositeSubscription;
 import com.neovisionaries.bluetooth.ble.advertising.ADPayloadParser;
 import com.neovisionaries.bluetooth.ble.advertising.ADStructure;
 import com.neovisionaries.bluetooth.ble.advertising.EddystoneUID;
@@ -43,11 +44,9 @@ import rx.android.schedulers.AndroidSchedulers;
 public final class NearbyUserListPresenter extends BasePresenter<NearbyUserListView> {
 
     @Inject
-    FindNearbyUsersUseCase findNearbyUsersUseCase;
+    FindAllNearbyUserUseCase findAllNearbyUserUseCase;
 
-    private final Context context;
-
-    private final BluetoothLeScanner scanner;
+    private final ReusableCompositeSubscription subscriptions = new ReusableCompositeSubscription();
 
     private final List<NearbyUserModel> nearbyUserModels = new ArrayList<>();
 
@@ -56,6 +55,10 @@ public final class NearbyUserListPresenter extends BasePresenter<NearbyUserListV
     private NearbyUsersModelMapper modelMapper = new NearbyUsersModelMapper();
 
     private ScheduledThreadPoolExecutor executor = new ScheduledThreadPoolExecutor(1);
+
+    private final Context context;
+
+    private final BluetoothLeScanner scanner;
 
     private boolean isScanning;
 
@@ -76,7 +79,7 @@ public final class NearbyUserListPresenter extends BasePresenter<NearbyUserListV
                     EddystoneUID eddystoneUID = (EddystoneUID) structure;
                     String beaconId = eddystoneUID.getBeaconIdAsString().toLowerCase();
 
-                    Subscription subscription = findNearbyUsersUseCase.execute(beaconId)
+                    Subscription subscription = findAllNearbyUserUseCase.execute(beaconId)
                             .map(user -> modelMapper.map(user))
                             .observeOn(AndroidSchedulers.mainThread())
                             .subscribe(scannedModel -> {
@@ -112,9 +115,8 @@ public final class NearbyUserListPresenter extends BasePresenter<NearbyUserListV
         }
     }
 
-    @Override
     public void onStop() {
-        super.onStop();
+        subscriptions.unSubscribe();
 
         getView().hideIndicator();
         getView().drawDefaultActionBarColor();

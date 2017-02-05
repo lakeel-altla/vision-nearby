@@ -1,7 +1,7 @@
 package com.lakeel.altla.vision.nearby.domain.usecase;
 
-import com.lakeel.altla.vision.nearby.data.repository.FirebaseBeaconRepository;
-import com.lakeel.altla.vision.nearby.data.repository.FirebaseUserProfileRepository;
+import com.lakeel.altla.vision.nearby.data.repository.firebase.BeaconRepository;
+import com.lakeel.altla.vision.nearby.data.repository.firebase.UserProfileRepository;
 import com.lakeel.altla.vision.nearby.domain.model.UserProfile;
 
 import javax.inject.Inject;
@@ -9,20 +9,20 @@ import javax.inject.Inject;
 import rx.Observable;
 import rx.schedulers.Schedulers;
 
-public final class FindNearbyUsersUseCase {
+public final class FindAllNearbyUserUseCase {
 
     @Inject
-    FirebaseBeaconRepository beaconsRepository;
+    BeaconRepository beaconsRepository;
 
     @Inject
-    FirebaseUserProfileRepository usersRepository;
+    UserProfileRepository usersRepository;
 
     @Inject
-    FindNearbyUsersUseCase() {
+    FindAllNearbyUserUseCase() {
     }
 
     public Observable<UserProfile> execute(String beaconId) {
-        return beaconsRepository.findBeacon(beaconId)
+        return beaconsRepository.find(beaconId)
                 .subscribeOn(Schedulers.io())
                 .toObservable()
                 // Exclude public beacon.
@@ -31,6 +31,6 @@ public final class FindNearbyUsersUseCase {
     }
 
     private Observable<UserProfile> findUser(String userId) {
-        return usersRepository.findUserProfile(userId).subscribeOn(Schedulers.io()).toObservable();
+        return usersRepository.find(userId).subscribeOn(Schedulers.io()).toObservable();
     }
 }

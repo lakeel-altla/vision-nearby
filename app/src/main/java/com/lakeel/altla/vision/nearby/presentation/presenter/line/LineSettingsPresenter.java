@@ -9,6 +9,7 @@ import com.lakeel.altla.vision.nearby.presentation.presenter.BasePresenter;
 import com.lakeel.altla.vision.nearby.presentation.uri.UriChecker;
 import com.lakeel.altla.vision.nearby.presentation.view.LineSettingsView;
 import com.lakeel.altla.vision.nearby.rx.ErrorAction;
+import com.lakeel.altla.vision.nearby.rx.ReusableCompositeSubscription;
 
 import javax.inject.Inject;
 
@@ -27,7 +28,9 @@ public final class LineSettingsPresenter extends BasePresenter<LineSettingsView>
 
     @Inject
     FindLineLinkUseCase findLineLinkUseCase;
-    
+
+    private final ReusableCompositeSubscription subscriptions = new ReusableCompositeSubscription();
+
     @Inject
     LineSettingsPresenter() {
     }
@@ -40,6 +43,10 @@ public final class LineSettingsPresenter extends BasePresenter<LineSettingsView>
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribe(url -> getView().showLineUrl(url), new ErrorAction<>());
         subscriptions.add(subscription);
+    }
+
+    public void onStop() {
+        subscriptions.unSubscribe();
     }
 
     public void onSave(String url) {

@@ -9,6 +9,7 @@ import com.lakeel.altla.vision.nearby.domain.usecase.SaveUserProfileUseCase;
 import com.lakeel.altla.vision.nearby.presentation.analytics.AnalyticsReporter;
 import com.lakeel.altla.vision.nearby.presentation.presenter.BasePresenter;
 import com.lakeel.altla.vision.nearby.presentation.view.SignInView;
+import com.lakeel.altla.vision.nearby.rx.ReusableCompositeSubscription;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -28,6 +29,8 @@ public final class SignInPresenter extends BasePresenter<SignInView> {
 
     private static final Logger LOGGER = LoggerFactory.getLogger(SignInPresenter.class);
 
+    private final ReusableCompositeSubscription subscriptions = new ReusableCompositeSubscription();
+
     @Inject
     SignInPresenter() {
     }
@@ -44,6 +47,10 @@ public final class SignInPresenter extends BasePresenter<SignInView> {
                 .build();
 
         getView().showSignInActivity(intent);
+    }
+
+    public void onStop() {
+        subscriptions.unSubscribe();
     }
 
     public void onSignedIn() {

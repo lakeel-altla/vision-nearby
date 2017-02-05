@@ -1,4 +1,4 @@
-package com.lakeel.altla.vision.nearby.data.repository;
+package com.lakeel.altla.vision.nearby.data.repository.firebase;
 
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.database.DataSnapshot;
@@ -18,7 +18,7 @@ import rx.Single;
 import rx.SingleSubscriber;
 
 
-public class FirebaseLINELinksRepository {
+public class LINELinksRepository {
 
     private static final String DATABASE_URI = "https://profile-notification-95441.firebaseio.com/link/line";
 
@@ -29,7 +29,7 @@ public class FirebaseLINELinksRepository {
     private final DatabaseReference reference;
 
     @Inject
-    FirebaseLINELinksRepository() {
+    LINELinksRepository() {
         this.reference = FirebaseDatabase.getInstance().getReference(DATABASE_URI);
     }
 

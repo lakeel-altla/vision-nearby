@@ -1,10 +1,10 @@
 package com.lakeel.altla.vision.nearby.presentation.presenter.favorite;
 
+import com.lakeel.altla.vision.nearby.domain.usecase.FindAllPassingTimeUseCase;
+import com.lakeel.altla.vision.nearby.domain.usecase.FindAllUserBeaconUseCase;
 import com.lakeel.altla.vision.nearby.domain.usecase.FindConnectionUseCase;
+import com.lakeel.altla.vision.nearby.domain.usecase.FindLatestNearbyHistoryUseCase;
 import com.lakeel.altla.vision.nearby.domain.usecase.FindLineLinkUseCase;
-import com.lakeel.altla.vision.nearby.domain.usecase.FindPassingTimesUseCase;
-import com.lakeel.altla.vision.nearby.domain.usecase.FindRecentNearbyHistoryUseCase;
-import com.lakeel.altla.vision.nearby.domain.usecase.FindUserBeaconsUseCase;
 import com.lakeel.altla.vision.nearby.domain.usecase.FindUserUseCase;
 import com.lakeel.altla.vision.nearby.presentation.analytics.AnalyticsReporter;
 import com.lakeel.altla.vision.nearby.presentation.presenter.BasePresenter;
@@ -12,6 +12,7 @@ import com.lakeel.altla.vision.nearby.presentation.presenter.mapper.FavoriteUser
 import com.lakeel.altla.vision.nearby.presentation.presenter.model.FavoriteUserModel;
 import com.lakeel.altla.vision.nearby.presentation.view.FavoriteUserView;
 import com.lakeel.altla.vision.nearby.rx.ErrorAction;
+import com.lakeel.altla.vision.nearby.rx.ReusableCompositeSubscription;
 
 import java.util.ArrayList;
 
@@ -27,7 +28,7 @@ public final class FavoriteUserPresenter extends BasePresenter<FavoriteUserView>
     AnalyticsReporter analyticsReporter;
 
     @Inject
-    FindRecentNearbyHistoryUseCase findRecentNearbyHistoryUseCase;
+    FindLatestNearbyHistoryUseCase findLatestNearbyHistoryUseCase;
 
     @Inject
     FindConnectionUseCase findConnectionUseCase;
@@ -39,10 +40,12 @@ public final class FavoriteUserPresenter extends BasePresenter<FavoriteUserView>
     FindLineLinkUseCase findLineLinkUseCase;
 
     @Inject
-    FindPassingTimesUseCase findPassingTimesUseCase;
+    FindAllPassingTimeUseCase findAllPassingTimeUseCase;
 
     @Inject
-    FindUserBeaconsUseCase findUserBeaconsUseCase;
+    FindAllUserBeaconUseCase findAllUserBeaconUseCase;
+
+    private final ReusableCompositeSubscription subscriptions = new ReusableCompositeSubscription();
 
     private final FavoriteUserModelMapper modelMapper = new FavoriteUserModelMapper();
 
@@ -66,7 +69,7 @@ public final class FavoriteUserPresenter extends BasePresenter<FavoriteUserView>
     public void onActivityCreated() {
         analyticsReporter.viewFavoriteItem(favoriteUserId, favoriteUserName);
 
-        Subscription subscription = findRecentNearbyHistoryUseCase.execute(favoriteUserId)
+        Subscription subscription = findLatestNearbyHistoryUseCase.execute(favoriteUserId)
                 .map(history -> {
                     model = modelMapper.map(history);
                     return model;
@@ -90,6 +93,10 @@ public final class FavoriteUserPresenter extends BasePresenter<FavoriteUserView>
         subscriptions.add(subscription);
     }
 
+    public void onStop() {
+        subscriptions.unSubscribe();
+    }
+
     public void onMapReady() {
         isMapReadied = true;
         if (model.latitude == null && model.longitude == null) {
@@ -100,7 +107,7 @@ public final class FavoriteUserPresenter extends BasePresenter<FavoriteUserView>
     }
 
     public void onEstimateDistanceMenuClick() {
-        Subscription subscription = findUserBeaconsUseCase.execute(favoriteUserId)
+        Subscription subscription = findAllUserBeaconUseCase.execute(favoriteUserId)
                 .toList()
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribe(beacons -> {
@@ -125,9 +132,9 @@ public final class FavoriteUserPresenter extends BasePresenter<FavoriteUserView>
 
     private void showPresence(String userId) {
         Subscription subscription = findConnectionUseCase.execute(userId)
-                .map(presence -> {
-                    model.isConnected = presence.isConnected;
-                    model.lastOnlineTime = presence.lastOnlineTime;
+                .map(connection -> {
+                    model.isConnected = connection.isConnected;
+                    model.lastOnlineTime = connection.lastOnlineTime;
                     return model;
                 })
                 .observeOn(AndroidSchedulers.mainThread())
@@ -136,7 +143,7 @@ public final class FavoriteUserPresenter extends BasePresenter<FavoriteUserView>
     }
 
     private void showTimes(String userId) {
-        Subscription timesSubscription = findPassingTimesUseCase.execute(userId)
+        Subscription timesSubscription = findAllPassingTimeUseCase.execute(userId)
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribe(times -> getView().showTimes(times), new ErrorAction<>());
         subscriptions.add(timesSubscription);

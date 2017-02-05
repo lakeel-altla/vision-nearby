@@ -1,4 +1,4 @@
-package com.lakeel.altla.vision.nearby.data.repository;
+package com.lakeel.altla.vision.nearby.data.repository.firebase;
 
 
 import android.location.Location;
@@ -13,18 +13,18 @@ import javax.inject.Inject;
 
 import rx.Single;
 
-public class FirebaseLocationRepository {
+public class LocationRepository {
 
     private static final String DATABASE_URI = "https://profile-notification-95441.firebaseio.com/locations";
 
     private final GeoFire geoFire;
 
     @Inject
-    FirebaseLocationRepository() {
+    LocationRepository() {
         geoFire = new GeoFire(FirebaseDatabase.getInstance().getReference(DATABASE_URI));
     }
 
-    public Single<GeoLocation> findLocation(String key) {
+    public Single<GeoLocation> find(String key) {
         return Single.create(subscriber ->
                 geoFire.getLocation(key, new LocationCallback() {
                     @Override
@@ -43,7 +43,7 @@ public class FirebaseLocationRepository {
                 }));
     }
 
-    public Single<String> saveLocation(Location location) {
+    public Single<String> save(Location location) {
         String uniqueId = geoFire.getDatabaseReference().push().getKey();
         return Single.create(subscriber ->
                 geoFire.setLocation(uniqueId, new GeoLocation(location.getLatitude(), location.getLongitude()), (key, error) -> {

@@ -4,7 +4,7 @@ import android.support.annotation.IntRange;
 
 import com.lakeel.altla.vision.nearby.R;
 import com.lakeel.altla.vision.nearby.core.CollectionUtils;
-import com.lakeel.altla.vision.nearby.domain.usecase.FindDevicesUseCase;
+import com.lakeel.altla.vision.nearby.domain.usecase.FindAllDeviceUseCase;
 import com.lakeel.altla.vision.nearby.domain.usecase.FoundDeviceUseCase;
 import com.lakeel.altla.vision.nearby.domain.usecase.LostDeviceUseCase;
 import com.lakeel.altla.vision.nearby.domain.usecase.RemoveDeviceUseCase;
@@ -17,6 +17,7 @@ import com.lakeel.altla.vision.nearby.presentation.view.DeviceItemView;
 import com.lakeel.altla.vision.nearby.presentation.view.DeviceListView;
 import com.lakeel.altla.vision.nearby.presentation.view.adapter.DeviceAdapter;
 import com.lakeel.altla.vision.nearby.rx.ErrorAction;
+import com.lakeel.altla.vision.nearby.rx.ReusableCompositeSubscription;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -32,7 +33,7 @@ public class DeviceListPresenter extends BasePresenter<DeviceListView> {
     AnalyticsReporter analyticsReporter;
 
     @Inject
-    FindDevicesUseCase findDevicesUseCase;
+    FindAllDeviceUseCase findAllDeviceUseCase;
 
     @Inject
     RemoveDeviceUseCase removeDeviceUseCase;
@@ -42,6 +43,8 @@ public class DeviceListPresenter extends BasePresenter<DeviceListView> {
 
     @Inject
     FoundDeviceUseCase foundDeviceUseCase;
+
+    private final ReusableCompositeSubscription subscriptions = new ReusableCompositeSubscription();
 
     private final DeviceModelMapper modelMapper = new DeviceModelMapper();
 
@@ -53,6 +56,10 @@ public class DeviceListPresenter extends BasePresenter<DeviceListView> {
 
     public void onActivityCreated() {
         findUserDevices();
+    }
+
+    public void onStop() {
+        subscriptions.unSubscribe();
     }
 
     public int getItemCount() {
@@ -114,7 +121,7 @@ public class DeviceListPresenter extends BasePresenter<DeviceListView> {
     }
 
     private void findUserDevices() {
-        Subscription subscription = findDevicesUseCase.execute()
+        Subscription subscription = findAllDeviceUseCase.execute()
                 .map(modelMapper::map)
                 .toSortedList((t1, t2) -> Long.compare(t2.lastUsedTime, t1.lastUsedTime))
                 .observeOn(AndroidSchedulers.mainThread())

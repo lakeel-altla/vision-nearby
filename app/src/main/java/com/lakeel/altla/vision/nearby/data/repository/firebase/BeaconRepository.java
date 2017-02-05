@@ -1,4 +1,4 @@
-package com.lakeel.altla.vision.nearby.data.repository;
+package com.lakeel.altla.vision.nearby.data.repository.firebase;
 
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.database.DataSnapshot;
@@ -20,7 +20,7 @@ import javax.inject.Inject;
 import rx.Completable;
 import rx.Single;
 
-public class FirebaseBeaconRepository {
+public class BeaconRepository {
 
     private static final String DATABASE_URI = "https://profile-notification-95441.firebaseio.com/beacons";
 
@@ -33,11 +33,11 @@ public class FirebaseBeaconRepository {
     private final DatabaseReference reference;
 
     @Inject
-    public FirebaseBeaconRepository() {
+    public BeaconRepository() {
         reference = FirebaseDatabase.getInstance().getReference(DATABASE_URI);
     }
 
-    public Single<Beacon> findBeacon(String beaconId) {
+    public Single<Beacon> find(String beaconId) {
         return Single.create(subscriber ->
                 reference
                         .child(beaconId)
@@ -48,7 +48,7 @@ public class FirebaseBeaconRepository {
                                 if (entity == null) {
                                     subscriber.onSuccess(null);
                                 } else {
-                                    subscriber.onSuccess(beaconMapper.map(entity, dataSnapshot.getKey()));
+                                    subscriber.onSuccess(beaconMapper.map(dataSnapshot));
                                 }
                             }
 
@@ -59,7 +59,7 @@ public class FirebaseBeaconRepository {
                         }));
     }
 
-    public Single<String> saveBeacon(String beaconId, String userId, String name) {
+    public Single<String> save(String beaconId, String userId, String name) {
         return Single.create(subscriber -> {
             BeaconEntity entity = entityMapper.map(userId, name);
             Map<String, Object> map = entity.toMap();
@@ -77,7 +77,7 @@ public class FirebaseBeaconRepository {
         });
     }
 
-    public Single<String> removeBeacon(String beaconId) {
+    public Single<String> remove(String beaconId) {
         return Single.create(subscriber -> {
             Task task = reference
                     .child(beaconId)
@@ -89,23 +89,6 @@ public class FirebaseBeaconRepository {
             }
 
             subscriber.onSuccess(beaconId);
-        });
-    }
-
-    public Completable saveLastUsedDeviceTime(String beaconId) {
-        return Completable.create(subscriber -> {
-            Map<String, Object> map = new BeaconEntity().toLastUsedTimeMap();
-
-            Task task = reference
-                    .child(beaconId)
-                    .updateChildren(map);
-
-            Exception e = task.getException();
-            if (e != null) {
-                throw new DataStoreException(e);
-            }
-
-            subscriber.onCompleted();
         });
     }
 
@@ -139,6 +122,23 @@ public class FirebaseBeaconRepository {
             Exception e = task.getException();
             if (e != null) {
                 subscriber.onError(e);
+            }
+
+            subscriber.onCompleted();
+        });
+    }
+
+    public Completable saveLastUsedDeviceTime(String beaconId) {
+        return Completable.create(subscriber -> {
+            Map<String, Object> map = new BeaconEntity().toLastUsedTimeMap();
+
+            Task task = reference
+                    .child(beaconId)
+                    .updateChildren(map);
+
+            Exception e = task.getException();
+            if (e != null) {
+                throw new DataStoreException(e);
             }
 
             subscriber.onCompleted();

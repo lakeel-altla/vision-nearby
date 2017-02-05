@@ -10,11 +10,11 @@ import android.view.ViewGroup;
 import android.widget.TextView;
 
 import com.lakeel.altla.vision.nearby.R;
-import com.lakeel.altla.vision.nearby.presentation.view.bundle.FragmentBundle;
 import com.lakeel.altla.vision.nearby.presentation.presenter.information.InformationPresenter;
 import com.lakeel.altla.vision.nearby.presentation.presenter.model.InformationModel;
 import com.lakeel.altla.vision.nearby.presentation.view.InformationView;
 import com.lakeel.altla.vision.nearby.presentation.view.activity.MainActivity;
+import com.lakeel.altla.vision.nearby.presentation.view.bundle.FragmentBundle;
 
 import javax.inject.Inject;
 
@@ -69,6 +69,11 @@ public final class InformationFragment extends Fragment implements InformationVi
         String informationId = (String) bundle.get(FragmentBundle.INFORMATION_ID.name());
 
         presenter.onActivityCreated(informationId);
+    }
+
+    public void onStop() {
+        super.onStop();
+        presenter.onStop();
     }
 
     @Override

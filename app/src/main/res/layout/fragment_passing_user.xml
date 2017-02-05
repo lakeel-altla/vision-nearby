@@ -31,7 +31,7 @@
             android:layout_below="@+id/header"
             android:orientation="vertical">
 
-            <!-- Presence -->
+            <!-- Connection -->
             <include
                 android:id="@+id/presenceLayout"
                 layout="@layout/layout_presence" />

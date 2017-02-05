@@ -5,6 +5,7 @@ import com.lakeel.altla.vision.nearby.presentation.presenter.BasePresenter;
 import com.lakeel.altla.vision.nearby.presentation.presenter.mapper.InformationModelMapper;
 import com.lakeel.altla.vision.nearby.presentation.view.InformationView;
 import com.lakeel.altla.vision.nearby.rx.ErrorAction;
+import com.lakeel.altla.vision.nearby.rx.ReusableCompositeSubscription;
 
 import javax.inject.Inject;
 
@@ -15,6 +16,8 @@ public final class InformationPresenter extends BasePresenter<InformationView> {
 
     @Inject
     FindInformationUseCase findInformationUseCase;
+
+    private final ReusableCompositeSubscription subscriptions = new ReusableCompositeSubscription();
 
     private InformationModelMapper modelMapper = new InformationModelMapper();
 
@@ -28,5 +31,9 @@ public final class InformationPresenter extends BasePresenter<InformationView> {
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribe(model -> getView().showInformation(model), new ErrorAction<>());
         subscriptions.add(subscription);
+    }
+
+    public void onStop() {
+        subscriptions.unSubscribe();
     }
 }

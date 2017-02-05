@@ -2,7 +2,7 @@ package com.lakeel.altla.vision.nearby.presentation.presenter.ble;
 
 import android.content.Context;
 
-import com.lakeel.altla.vision.nearby.domain.usecase.FindPreferencesUseCase;
+import com.lakeel.altla.vision.nearby.domain.usecase.FindPreferenceUseCase;
 import com.lakeel.altla.vision.nearby.presentation.analytics.AnalyticsReporter;
 import com.lakeel.altla.vision.nearby.presentation.ble.BleChecker;
 import com.lakeel.altla.vision.nearby.presentation.ble.BleChecker.State;
@@ -11,6 +11,7 @@ import com.lakeel.altla.vision.nearby.presentation.service.AdvertiseService;
 import com.lakeel.altla.vision.nearby.presentation.service.RunningServiceManager;
 import com.lakeel.altla.vision.nearby.presentation.view.BleSettingsView;
 import com.lakeel.altla.vision.nearby.rx.ErrorAction;
+import com.lakeel.altla.vision.nearby.rx.ReusableCompositeSubscription;
 
 import javax.inject.Inject;
 
@@ -23,7 +24,9 @@ public final class BleSettingsPresenter extends BasePresenter<BleSettingsView> {
     AnalyticsReporter analyticsReporter;
 
     @Inject
-    FindPreferencesUseCase findPreferencesUseCase;
+    FindPreferenceUseCase findPreferenceUseCase;
+
+    private final ReusableCompositeSubscription subscriptions = new ReusableCompositeSubscription();
 
     private final Context context;
 
@@ -40,10 +43,14 @@ public final class BleSettingsPresenter extends BasePresenter<BleSettingsView> {
         }
     }
 
+    public void onStop() {
+        subscriptions.unSubscribe();
+    }
+
     public void onStartAdvertise() {
         analyticsReporter.onAdvertise();
 
-        Subscription subscription = findPreferencesUseCase.execute()
+        Subscription subscription = findPreferenceUseCase.execute()
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribe(preference -> getView().startAdvertise(preference.beaconId), new ErrorAction<>());
         subscriptions.add(subscription);

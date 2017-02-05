@@ -1,7 +1,7 @@
 package com.lakeel.altla.vision.nearby.domain.usecase;
 
-import com.lakeel.altla.vision.nearby.data.repository.FirebaseUserNearbyHistoryRepository;
-import com.lakeel.altla.vision.nearby.data.repository.FirebaseUserProfileRepository;
+import com.lakeel.altla.vision.nearby.data.repository.firebase.UserNearbyHistoryRepository;
+import com.lakeel.altla.vision.nearby.data.repository.firebase.UserProfileRepository;
 import com.lakeel.altla.vision.nearby.domain.model.NearbyHistory;
 import com.lakeel.altla.vision.nearby.domain.model.NearbyHistoryUserProfile;
 import com.lakeel.altla.vision.nearby.domain.model.UserProfile;
@@ -12,16 +12,16 @@ import javax.inject.Inject;
 import rx.Observable;
 import rx.schedulers.Schedulers;
 
-public final class FindNearbyHistoryListUseCase {
+public final class FindAllNearbyHistoryUseCase {
 
     @Inject
-    FirebaseUserNearbyHistoryRepository historyRepository;
+    UserNearbyHistoryRepository historyRepository;
 
     @Inject
-    FirebaseUserProfileRepository usersRepository;
+    UserProfileRepository usersRepository;
 
     @Inject
-    FindNearbyHistoryListUseCase() {
+    FindAllNearbyHistoryUseCase() {
     }
 
     public Observable<NearbyHistoryUserProfile> execute() {
@@ -36,6 +36,6 @@ public final class FindNearbyHistoryListUseCase {
     }
 
     private Observable<UserProfile> findUser(String userId) {
-        return usersRepository.findUserProfile(userId).subscribeOn(Schedulers.io()).toObservable();
+        return usersRepository.find(userId).subscribeOn(Schedulers.io()).toObservable();
     }
 }

@@ -17,6 +17,7 @@ import com.lakeel.altla.vision.nearby.presentation.beacon.distance.Distance;
 import com.lakeel.altla.vision.nearby.presentation.ble.BleChecker;
 import com.lakeel.altla.vision.nearby.presentation.presenter.BasePresenter;
 import com.lakeel.altla.vision.nearby.presentation.view.DistanceEstimationView;
+import com.lakeel.altla.vision.nearby.rx.ReusableCompositeSubscription;
 import com.neovisionaries.bluetooth.ble.advertising.ADPayloadParser;
 import com.neovisionaries.bluetooth.ble.advertising.ADStructure;
 import com.neovisionaries.bluetooth.ble.advertising.EddystoneUID;
@@ -31,6 +32,8 @@ import rx.android.schedulers.AndroidSchedulers;
 import rx.schedulers.Schedulers;
 
 public final class DistanceEstimationPresenter extends BasePresenter<DistanceEstimationView> {
+
+    private final ReusableCompositeSubscription subscriptions = new ReusableCompositeSubscription();
 
     private final Context context;
 
@@ -81,9 +84,8 @@ public final class DistanceEstimationPresenter extends BasePresenter<DistanceEst
         scanner = bluetoothAdapter.getBluetoothLeScanner();
     }
 
-    @Override
     public void onStop() {
-        super.onStop();
+        subscriptions.unSubscribe();
         scanner.stopScan(scanCallback);
     }
 

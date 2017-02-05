@@ -1,4 +1,4 @@
-package com.lakeel.altla.vision.nearby.data.repository;
+package com.lakeel.altla.vision.nearby.data.repository.firebase;
 
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.database.DataSnapshot;
@@ -21,7 +21,7 @@ import rx.Completable;
 import rx.Observable;
 import rx.Single;
 
-public final class FirebaseUserProfileRepository {
+public final class UserProfileRepository {
 
     private static final String DATABASE_URI = "https://profile-notification-95441.firebaseio.com/userProfiles";
 
@@ -34,11 +34,11 @@ public final class FirebaseUserProfileRepository {
     private final DatabaseReference reference;
 
     @Inject
-    public FirebaseUserProfileRepository() {
+    public UserProfileRepository() {
         this.reference = FirebaseDatabase.getInstance().getReference(DATABASE_URI);
     }
 
-    public Single<UserProfile> findUserProfile(String userId) {
+    public Single<UserProfile> find(String userId) {
         return Single.create(subscriber ->
                 reference
                         .child(userId)
@@ -46,8 +46,7 @@ public final class FirebaseUserProfileRepository {
 
                             @Override
                             public void onDataChange(DataSnapshot dataSnapshot) {
-                                UserProfileEntity entity = dataSnapshot.getValue(UserProfileEntity.class);
-                                subscriber.onSuccess(userMapper.map(entity, dataSnapshot.getKey()));
+                                subscriber.onSuccess(userMapper.map(dataSnapshot));
                             }
 
                             @Override
@@ -57,7 +56,7 @@ public final class FirebaseUserProfileRepository {
                         }));
     }
 
-    public Completable saveUserProfile(String userId) {
+    public Completable save(String userId) {
         return Completable.create(subscriber -> {
             UserProfileEntity entity = entityMapper.map();
             Task task = reference
@@ -132,15 +131,14 @@ public final class FirebaseUserProfileRepository {
         });
     }
 
-    public Observable<UserProfile> observeUserProfile(String userId) {
+    public Observable<UserProfile> observe(String userId) {
         return Observable.create(subscriber ->
                 reference
                         .child(userId)
                         .addValueEventListener(new ValueEventListener() {
                             @Override
                             public void onDataChange(DataSnapshot dataSnapshot) {
-                                UserProfileEntity entity = dataSnapshot.getValue(UserProfileEntity.class);
-                                subscriber.onNext(userMapper.map(entity, dataSnapshot.getKey()));
+                                subscriber.onNext(userMapper.map(dataSnapshot));
                             }
 
                             @Override

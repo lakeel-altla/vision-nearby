@@ -4,7 +4,7 @@ import android.support.annotation.IntRange;
 
 import com.lakeel.altla.vision.nearby.R;
 import com.lakeel.altla.vision.nearby.core.CollectionUtils;
-import com.lakeel.altla.vision.nearby.domain.usecase.FindNearbyHistoryListUseCase;
+import com.lakeel.altla.vision.nearby.domain.usecase.FindAllNearbyHistoryUseCase;
 import com.lakeel.altla.vision.nearby.domain.usecase.RemoveNearbyHistoryUseCase;
 import com.lakeel.altla.vision.nearby.presentation.analytics.AnalyticsReporter;
 import com.lakeel.altla.vision.nearby.presentation.presenter.BaseItemPresenter;
@@ -14,6 +14,7 @@ import com.lakeel.altla.vision.nearby.presentation.presenter.model.NearbyHistory
 import com.lakeel.altla.vision.nearby.presentation.view.NearbyHistoryItemView;
 import com.lakeel.altla.vision.nearby.presentation.view.NearbyHistoryListView;
 import com.lakeel.altla.vision.nearby.rx.ErrorAction;
+import com.lakeel.altla.vision.nearby.rx.ReusableCompositeSubscription;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -29,10 +30,12 @@ public final class NearbyHistoryListPresenter extends BasePresenter<NearbyHistor
     AnalyticsReporter analyticsReporter;
 
     @Inject
-    FindNearbyHistoryListUseCase findNearbyHistoryListUseCase;
+    FindAllNearbyHistoryUseCase findAllNearbyHistoryUseCase;
 
     @Inject
     RemoveNearbyHistoryUseCase removeNearbyHistoryUseCase;
+
+    private final ReusableCompositeSubscription subscriptions = new ReusableCompositeSubscription();
 
     private HistoryModelMapper modelMapper = new HistoryModelMapper();
 
@@ -43,7 +46,7 @@ public final class NearbyHistoryListPresenter extends BasePresenter<NearbyHistor
     }
 
     public void onActivityCreated() {
-        Subscription subscription = findNearbyHistoryListUseCase.execute()
+        Subscription subscription = findAllNearbyHistoryUseCase.execute()
                 .map(historyUser -> modelMapper.map(historyUser))
                 .toSortedList((model1, model2) -> Long.compare(model2.passingTime, model1.passingTime))
                 .observeOn(AndroidSchedulers.mainThread())
@@ -60,6 +63,10 @@ public final class NearbyHistoryListPresenter extends BasePresenter<NearbyHistor
                     getView().updateItems();
                 }, new ErrorAction<>());
         subscriptions.add(subscription);
+    }
+
+    public void onStop() {
+        subscriptions.unSubscribe();
     }
 
     public void onCreateItemView(NearbyHistoryItemView nearbyHistoryItemView) {

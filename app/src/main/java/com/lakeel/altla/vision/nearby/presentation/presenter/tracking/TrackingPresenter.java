@@ -9,6 +9,7 @@ import com.lakeel.altla.vision.nearby.presentation.presenter.model.TrackingModel
 import com.lakeel.altla.vision.nearby.presentation.view.TrackingView;
 import com.lakeel.altla.vision.nearby.presentation.view.intent.GoogleMapIntent;
 import com.lakeel.altla.vision.nearby.rx.ErrorAction;
+import com.lakeel.altla.vision.nearby.rx.ReusableCompositeSubscription;
 
 import java.util.ArrayList;
 
@@ -24,6 +25,8 @@ public final class TrackingPresenter extends BasePresenter<TrackingView> {
 
     @Inject
     FindDeviceLocationUseCase findDeviceLocationUseCase;
+
+    private final ReusableCompositeSubscription subscriptions = new ReusableCompositeSubscription();
 
     private TrackingModel model = new TrackingModel();
 
@@ -72,6 +75,10 @@ public final class TrackingPresenter extends BasePresenter<TrackingView> {
                     }
                 }, new ErrorAction<>());
         subscriptions.add(subscription);
+    }
+
+    public void onStop() {
+        subscriptions.unSubscribe();
     }
 
     public void onMapReady() {

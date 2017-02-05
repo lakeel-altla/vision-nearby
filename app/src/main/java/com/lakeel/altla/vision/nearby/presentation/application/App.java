@@ -8,7 +8,7 @@ import android.support.v4.app.Fragment;
 
 import com.google.firebase.database.FirebaseDatabase;
 import com.lakeel.altla.vision.nearby.R;
-import com.lakeel.altla.vision.nearby.domain.usecase.FindPreferencesUseCase;
+import com.lakeel.altla.vision.nearby.domain.usecase.FindPreferenceUseCase;
 import com.lakeel.altla.vision.nearby.presentation.beacon.BeaconClient;
 import com.lakeel.altla.vision.nearby.presentation.di.component.ApplicationComponent;
 import com.lakeel.altla.vision.nearby.presentation.di.component.DaggerApplicationComponent;
@@ -38,7 +38,7 @@ import rx.android.schedulers.AndroidSchedulers;
 public class App extends Application {
 
     @Inject
-    FindPreferencesUseCase findPreferencesUseCase;
+    FindPreferenceUseCase findPreferenceUseCase;
 
     private static final Logger LOGGER = LoggerFactory.getLogger(App.class);
 
@@ -138,7 +138,7 @@ public class App extends Application {
     }
 
     private void subscribeInBackgroundIfNeeded() {
-        Subscription subscription = findPreferencesUseCase.execute()
+        Subscription subscription = findPreferenceUseCase.execute()
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribe(preference -> {
                     if (preference.isSubscribeInBackgroundEnabled) {

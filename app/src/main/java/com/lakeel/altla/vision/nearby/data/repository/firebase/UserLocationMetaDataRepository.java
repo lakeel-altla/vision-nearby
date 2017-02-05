@@ -1,4 +1,4 @@
-package com.lakeel.altla.vision.nearby.data.repository;
+package com.lakeel.altla.vision.nearby.data.repository.firebase;
 
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.database.DataSnapshot;
@@ -19,7 +19,7 @@ import javax.inject.Inject;
 import rx.Completable;
 import rx.Single;
 
-public final class FirebaseUserLocationMetaDataRepository {
+public final class UserLocationMetaDataRepository {
 
     private static final String DATABASE_URI = "https://profile-notification-95441.firebaseio.com/userLocationMetaData";
 
@@ -32,11 +32,11 @@ public final class FirebaseUserLocationMetaDataRepository {
     private final DatabaseReference reference;
 
     @Inject
-    FirebaseUserLocationMetaDataRepository() {
+    UserLocationMetaDataRepository() {
         this.reference = FirebaseDatabase.getInstance().getReference(DATABASE_URI);
     }
 
-    public Single<LocationMetaData> findLatestLocationMetaData(String userId, String beaconId) {
+    public Single<LocationMetaData> findLatest(String userId, String beaconId) {
         return Single.create(subscriber ->
                 reference
                         .child(userId)
@@ -54,8 +54,7 @@ public final class FirebaseUserLocationMetaDataRepository {
                                 Iterator<DataSnapshot> iterator = dataSnapshot.getChildren().iterator();
                                 while (iterator.hasNext()) {
                                     DataSnapshot snapshot = iterator.next();
-                                    LocationMetaDataEntity entity = snapshot.getValue(LocationMetaDataEntity.class);
-                                    subscriber.onSuccess(metaDataMapper.map(entity, snapshot.getKey()));
+                                    subscriber.onSuccess(metaDataMapper.map(snapshot));
                                 }
                             }
 
@@ -66,7 +65,7 @@ public final class FirebaseUserLocationMetaDataRepository {
                         }));
     }
 
-    public Completable saveLocationMetaData(String uniqueId, String userId, String beaconId) {
+    public Completable save(String uniqueId, String userId, String beaconId) {
         return Completable.create(subscriber -> {
             LocationMetaDataEntity entity = entityMapper.map(beaconId);
             Task task = reference

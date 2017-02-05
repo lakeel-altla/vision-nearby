@@ -1,6 +1,6 @@
 package com.lakeel.altla.vision.nearby.domain.usecase;
 
-import com.lakeel.altla.vision.nearby.data.repository.FirebaseUserFavoriteRepository;
+import com.lakeel.altla.vision.nearby.data.repository.firebase.UserFavoriteRepository;
 import com.lakeel.altla.vision.nearby.presentation.firebase.MyUser;
 
 import javax.inject.Inject;
@@ -11,7 +11,7 @@ import rx.schedulers.Schedulers;
 public final class RemoveFavoriteUseCase {
 
     @Inject
-    FirebaseUserFavoriteRepository repository;
+    UserFavoriteRepository repository;
 
     @Inject
     RemoveFavoriteUseCase() {
@@ -19,6 +19,6 @@ public final class RemoveFavoriteUseCase {
 
     public Completable execute(String favoriteUserId) {
         String userId = MyUser.getUserId();
-        return repository.removeFavorite(userId, favoriteUserId).subscribeOn(Schedulers.io());
+        return repository.remove(userId, favoriteUserId).subscribeOn(Schedulers.io());
     }
 }

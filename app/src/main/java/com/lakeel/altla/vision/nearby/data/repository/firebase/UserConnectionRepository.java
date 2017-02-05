@@ -1,4 +1,4 @@
-package com.lakeel.altla.vision.nearby.data.repository;
+package com.lakeel.altla.vision.nearby.data.repository.firebase;
 
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.database.DataSnapshot;
@@ -7,9 +7,8 @@ import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ServerValue;
 import com.google.firebase.database.ValueEventListener;
-import com.lakeel.altla.vision.nearby.data.entity.PresenceEntity;
-import com.lakeel.altla.vision.nearby.data.mapper.model.PresenceMapper;
-import com.lakeel.altla.vision.nearby.domain.model.Presence;
+import com.lakeel.altla.vision.nearby.data.mapper.model.ConnectionMapper;
+import com.lakeel.altla.vision.nearby.domain.model.Connection;
 import com.lakeel.altla.vision.nearby.presentation.firebase.MyUser;
 
 import java.util.HashMap;
@@ -20,7 +19,7 @@ import javax.inject.Inject;
 import rx.Completable;
 import rx.Single;
 
-public class FirebaseUserConnectionRepository {
+public class UserConnectionRepository {
 
     private static final String DATABASE_URI = "https://profile-notification-95441.firebaseio.com/userConnections";
 
@@ -28,21 +27,25 @@ public class FirebaseUserConnectionRepository {
 
     private static final String LAST_ONLINE_KEY = "lastOnlineTime";
 
-    private final PresenceMapper presenceMapper = new PresenceMapper();
+    private final ConnectionMapper connectionMapper = new ConnectionMapper();
 
     private final DatabaseReference reference;
 
     @Inject
-    FirebaseUserConnectionRepository() {
+    UserConnectionRepository() {
         this.reference = FirebaseDatabase.getInstance().getReference(DATABASE_URI);
     }
 
     public void saveOnline(String userId) {
-        // Check user authentication because when user sign out, this method is called and FirebaseUser instance become null.
+
+        // Check user authentication because when user sign out,
+        // this method is called and FirebaseUser instance become null.
+
         if (MyUser.isAuthenticated()) {
             Map<String, Object> map = new HashMap<>();
             map.put(IS_CONNECTED_KEY, true);
             map.put(LAST_ONLINE_KEY, ServerValue.TIMESTAMP);
+
             reference
                     .child(userId)
                     .updateChildren(map);
@@ -73,15 +76,14 @@ public class FirebaseUserConnectionRepository {
                 .setValue(false);
     }
 
-    public Single<Presence> findPresence(String userId) {
+    public Single<Connection> find(String userId) {
         return Single.create(subscriber ->
                 reference
                         .child(userId)
                         .addListenerForSingleValueEvent(new ValueEventListener() {
                             @Override
                             public void onDataChange(DataSnapshot dataSnapshot) {
-                                PresenceEntity entity = dataSnapshot.getValue(PresenceEntity.class);
-                                subscriber.onSuccess(presenceMapper.map(entity));
+                                subscriber.onSuccess(connectionMapper.map(dataSnapshot));
                             }
 
                             @Override

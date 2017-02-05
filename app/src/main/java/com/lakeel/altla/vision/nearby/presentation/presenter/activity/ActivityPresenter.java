@@ -14,7 +14,7 @@ import com.google.firebase.iid.FirebaseInstanceId;
 import com.lakeel.altla.vision.nearby.R;
 import com.lakeel.altla.vision.nearby.beacon.EddystoneUid;
 import com.lakeel.altla.vision.nearby.core.StringUtils;
-import com.lakeel.altla.vision.nearby.domain.usecase.FindPreferencesUseCase;
+import com.lakeel.altla.vision.nearby.domain.usecase.FindPreferenceUseCase;
 import com.lakeel.altla.vision.nearby.domain.usecase.ObserveConnectionUseCase;
 import com.lakeel.altla.vision.nearby.domain.usecase.ObserveUserProfileUseCase;
 import com.lakeel.altla.vision.nearby.domain.usecase.OfflineUseCase;
@@ -32,6 +32,7 @@ import com.lakeel.altla.vision.nearby.presentation.service.RunningServiceManager
 import com.lakeel.altla.vision.nearby.presentation.view.ActivityView;
 import com.lakeel.altla.vision.nearby.rx.EmptyAction;
 import com.lakeel.altla.vision.nearby.rx.ErrorAction;
+import com.lakeel.altla.vision.nearby.rx.ReusableCompositeSubscription;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -54,7 +55,7 @@ public final class ActivityPresenter extends BasePresenter<ActivityView> {
     ObserveConnectionUseCase observeConnectionUseCase;
 
     @Inject
-    FindPreferencesUseCase findPreferencesUseCase;
+    FindPreferenceUseCase findPreferenceUseCase;
 
     @Inject
     SaveLastUsedDeviceTimeUseCase saveLastUsedDeviceTimeUseCase;
@@ -69,6 +70,8 @@ public final class ActivityPresenter extends BasePresenter<ActivityView> {
     SaveBeaconUseCase saveBeaconUseCase;
 
     private static final Logger LOGGER = LoggerFactory.getLogger(ActivityPresenter.class);
+
+    private final ReusableCompositeSubscription subscriptions = new ReusableCompositeSubscription();
 
     private final FirebaseInstanceId instanceId = FirebaseInstanceId.getInstance();
 
@@ -101,6 +104,10 @@ public final class ActivityPresenter extends BasePresenter<ActivityView> {
         }
     }
 
+    public void onStop() {
+        subscriptions.unSubscribe();
+    }
+
     public void postSignIn() {
         getView().showFavoriteListFragment();
         showDrawerProfile();
@@ -124,7 +131,7 @@ public final class ActivityPresenter extends BasePresenter<ActivityView> {
                     getView().updateProfile(model);
                 }, new ErrorAction<>());
 
-        Subscription subscription = findPreferencesUseCase.execute()
+        Subscription subscription = findPreferenceUseCase.execute()
                 .observeOn(Schedulers.io())
                 .subscribe(preference -> {
                     String beaconId = preference.beaconId;
@@ -236,7 +243,7 @@ public final class ActivityPresenter extends BasePresenter<ActivityView> {
     }
 
     private void startDetectBeaconsInBackgroundIfNeeded() {
-        Subscription subscription = findPreferencesUseCase.execute()
+        Subscription subscription = findPreferenceUseCase.execute()
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribe(preference -> {
                     if (preference.isSubscribeInBackgroundEnabled) {
@@ -269,7 +276,7 @@ public final class ActivityPresenter extends BasePresenter<ActivityView> {
     }
 
     private void startAdvertiseInBackgroundIfNeeded() {
-        Subscription subscription = findPreferencesUseCase.execute()
+        Subscription subscription = findPreferenceUseCase.execute()
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribe(preference -> {
                     if (StringUtils.isEmpty(preference.beaconId)) {

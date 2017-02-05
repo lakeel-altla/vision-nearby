@@ -1,6 +1,6 @@
 package com.lakeel.altla.vision.nearby.domain.usecase;
 
-import com.lakeel.altla.vision.nearby.data.repository.FirebaseUserProfileRepository;
+import com.lakeel.altla.vision.nearby.data.repository.firebase.UserProfileRepository;
 
 import javax.inject.Inject;
 
@@ -9,7 +9,7 @@ import rx.Single;
 public final class RemoveUserBeaconUseCase {
 
     @Inject
-    FirebaseUserProfileRepository repository;
+    UserProfileRepository repository;
 
     @Inject
     RemoveUserBeaconUseCase() {

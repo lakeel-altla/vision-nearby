@@ -24,18 +24,18 @@ import com.google.android.gms.maps.model.MarkerOptions;
 import com.lakeel.altla.vision.nearby.R;
 import com.lakeel.altla.vision.nearby.presentation.awareness.UserActivity;
 import com.lakeel.altla.vision.nearby.presentation.awareness.WeatherCondition;
-import com.lakeel.altla.vision.nearby.presentation.view.bundle.FragmentBundle;
-import com.lakeel.altla.vision.nearby.presentation.view.color.AppColor;
-import com.lakeel.altla.vision.nearby.presentation.view.map.Radius;
 import com.lakeel.altla.vision.nearby.presentation.presenter.model.PassingUserModel;
 import com.lakeel.altla.vision.nearby.presentation.presenter.passing.PassingUserPresenter;
 import com.lakeel.altla.vision.nearby.presentation.view.PassingUserView;
 import com.lakeel.altla.vision.nearby.presentation.view.activity.MainActivity;
+import com.lakeel.altla.vision.nearby.presentation.view.bundle.FragmentBundle;
+import com.lakeel.altla.vision.nearby.presentation.view.color.AppColor;
 import com.lakeel.altla.vision.nearby.presentation.view.date.DateFormatter;
 import com.lakeel.altla.vision.nearby.presentation.view.layout.PassingLayout;
 import com.lakeel.altla.vision.nearby.presentation.view.layout.PresenceLayout;
 import com.lakeel.altla.vision.nearby.presentation.view.layout.ProfileLayout;
 import com.lakeel.altla.vision.nearby.presentation.view.layout.SnsLayout;
+import com.lakeel.altla.vision.nearby.presentation.view.map.Radius;
 import com.nostra13.universalimageloader.core.ImageLoader;
 
 import java.math.BigDecimal;
@@ -133,6 +133,12 @@ public final class PassingUserFragment extends Fragment implements PassingUserVi
         if (mapView != null) {
             mapView.setVisibility(View.INVISIBLE);
         }
+    }
+
+    @Override
+    public void onStop() {
+        super.onStop();
+        presenter.onStop();
     }
 
     @Override

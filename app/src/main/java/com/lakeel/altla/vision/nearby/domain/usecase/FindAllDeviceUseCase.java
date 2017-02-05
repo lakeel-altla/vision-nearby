@@ -1,7 +1,7 @@
 package com.lakeel.altla.vision.nearby.domain.usecase;
 
-import com.lakeel.altla.vision.nearby.data.repository.FirebaseBeaconRepository;
-import com.lakeel.altla.vision.nearby.data.repository.FirebaseUserProfileRepository;
+import com.lakeel.altla.vision.nearby.data.repository.firebase.BeaconRepository;
+import com.lakeel.altla.vision.nearby.data.repository.firebase.UserProfileRepository;
 import com.lakeel.altla.vision.nearby.domain.model.Beacon;
 import com.lakeel.altla.vision.nearby.presentation.firebase.MyUser;
 
@@ -10,16 +10,16 @@ import javax.inject.Inject;
 import rx.Observable;
 import rx.schedulers.Schedulers;
 
-public final class FindDevicesUseCase {
+public final class FindAllDeviceUseCase {
 
     @Inject
-    FirebaseUserProfileRepository usersRepository;
+    UserProfileRepository usersRepository;
 
     @Inject
-    FirebaseBeaconRepository beaconsRepository;
+    BeaconRepository beaconsRepository;
 
     @Inject
-    FindDevicesUseCase() {
+    FindAllDeviceUseCase() {
     }
 
     public Observable<Beacon> execute() {
@@ -31,6 +31,6 @@ public final class FindDevicesUseCase {
     }
 
     private Observable<Beacon> findBeacon(String beaconId) {
-        return beaconsRepository.findBeacon(beaconId).subscribeOn(Schedulers.io()).toObservable();
+        return beaconsRepository.find(beaconId).subscribeOn(Schedulers.io()).toObservable();
     }
 }

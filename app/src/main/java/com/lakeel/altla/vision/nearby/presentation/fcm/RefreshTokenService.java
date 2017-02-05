@@ -45,7 +45,7 @@ public final class RefreshTokenService extends FirebaseInstanceIdService {
 
         saveToken(refreshedToken)
                 .subscribeOn(Schedulers.io())
-                .doOnError(e -> LOGGER.error("Failed to saveNotification refreshed token."))
+                .doOnError(e -> LOGGER.error("Failed to save refreshed token."))
                 .subscribe();
     }
 
