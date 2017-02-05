@@ -7,6 +7,14 @@ import java.util.Map;
 
 public final class NotificationEntity {
 
+    private static final String TO = "to";
+
+    private static final String TITLE = "title";
+
+    private static final String MESSAGE = "message";
+
+    private static final String REGISTRATION_TIME = "registrationTime";
+
     public String to;
 
     public String title;
@@ -15,10 +23,10 @@ public final class NotificationEntity {
 
     public Map<String, Object> toMap() {
         Map<String, Object> map = new HashMap<>();
-        map.put("to", to);
-        map.put("title", title);
-        map.put("message", message);
-        map.put("registrationTime", ServerValue.TIMESTAMP);
+        map.put(TO, to);
+        map.put(TITLE, title);
+        map.put(MESSAGE, message);
+        map.put(REGISTRATION_TIME, ServerValue.TIMESTAMP);
         return map;
     }
 }
