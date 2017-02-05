@@ -7,24 +7,25 @@ import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
 import com.lakeel.altla.vision.nearby.data.execption.DataStoreException;
-import com.lakeel.altla.vision.nearby.data.mapper.model.TokenMapper;
+import com.lakeel.altla.vision.nearby.data.mapper.model.DeviceTokenMapper;
 import com.lakeel.altla.vision.nearby.domain.model.DeviceToken;
 
 import javax.inject.Inject;
-import javax.inject.Named;
 
 import rx.Observable;
 import rx.Single;
 
 public final class FirebaseUserDeviceTokenRepository {
 
-    private final TokenMapper tokenMapper = new TokenMapper();
+    private static final String DATABASE_URI = "https://profile-notification-95441.firebaseio.com/userDeviceTokens";
+
+    private final DeviceTokenMapper deviceTokenMapper = new DeviceTokenMapper();
 
     private final DatabaseReference reference;
 
     @Inject
-    public FirebaseUserDeviceTokenRepository(@Named("userDeviceTokenUrl") String url) {
-        reference = FirebaseDatabase.getInstance().getReferenceFromUrl(url);
+    public FirebaseUserDeviceTokenRepository() {
+        this.reference = FirebaseDatabase.getInstance().getReference(DATABASE_URI);
     }
 
     public Observable<DeviceToken> findDeviceTokens(String userId) {
@@ -38,7 +39,7 @@ public final class FirebaseUserDeviceTokenRepository {
                                 String to = dataSnapshot.getKey();
                                 String beaconId = snapshot.getKey();
                                 String token = (String) snapshot.getValue();
-                                subscriber.onNext(tokenMapper.map(to, beaconId, token));
+                                subscriber.onNext(deviceTokenMapper.map(to, beaconId, token));
                             }
                             subscriber.onCompleted();
                         }

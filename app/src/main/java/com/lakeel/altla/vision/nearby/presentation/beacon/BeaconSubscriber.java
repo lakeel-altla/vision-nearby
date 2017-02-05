@@ -12,7 +12,7 @@ import com.lakeel.altla.vision.nearby.presentation.di.component.DaggerDefaultCom
 import com.lakeel.altla.vision.nearby.presentation.di.component.DefaultComponent;
 import com.lakeel.altla.vision.nearby.presentation.di.module.ContextModule;
 import com.lakeel.altla.vision.nearby.presentation.firebase.MyUser;
-import com.lakeel.altla.vision.nearby.presentation.service.HistoryService;
+import com.lakeel.altla.vision.nearby.presentation.service.NearbyHistoryService;
 import com.lakeel.altla.vision.nearby.presentation.service.LINEService;
 import com.lakeel.altla.vision.nearby.presentation.service.LocationService;
 import com.lakeel.altla.vision.nearby.presentation.service.NotificationService;
@@ -71,7 +71,7 @@ public final class BeaconSubscriber {
 
                             Log.i(TAG, "Found beacon:beaconId=" + beaconId);
 
-                            Intent historyIntent = new Intent(context, HistoryService.class);
+                            Intent historyIntent = new Intent(context, NearbyHistoryService.class);
                             historyIntent.putExtra(IntentKey.USER_ID.name(), beacon.userId);
                             historyIntent.putExtra(IntentKey.REGION.name(), regionState.getValue());
                             context.startService(historyIntent);

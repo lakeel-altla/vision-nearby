@@ -7,17 +7,18 @@ import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
 
 import javax.inject.Inject;
-import javax.inject.Named;
 
 import rx.Completable;
 
 public final class FirebaseConnectedRepository {
 
+    private static final String DATABASE_URI = "https://profile-notification-95441.firebaseio.com/.info/connected";
+
     private DatabaseReference reference;
 
     @Inject
-    FirebaseConnectedRepository(@Named("connectedUrl") String url) {
-        reference = FirebaseDatabase.getInstance().getReferenceFromUrl(url);
+    public FirebaseConnectedRepository() {
+        this.reference = FirebaseDatabase.getInstance().getReference(DATABASE_URI);
     }
 
     public Completable observeConnection() {

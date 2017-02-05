@@ -11,8 +11,8 @@ import com.lakeel.altla.vision.nearby.presentation.presenter.BaseItemPresenter;
 import com.lakeel.altla.vision.nearby.presentation.presenter.BasePresenter;
 import com.lakeel.altla.vision.nearby.presentation.presenter.mapper.HistoryModelMapper;
 import com.lakeel.altla.vision.nearby.presentation.presenter.model.NearbyHistoryModel;
-import com.lakeel.altla.vision.nearby.presentation.view.HistoryItemView;
-import com.lakeel.altla.vision.nearby.presentation.view.HistoryListView;
+import com.lakeel.altla.vision.nearby.presentation.view.NearbyHistoryItemView;
+import com.lakeel.altla.vision.nearby.presentation.view.NearbyHistoryListView;
 import com.lakeel.altla.vision.nearby.rx.ErrorAction;
 
 import java.util.ArrayList;
@@ -23,7 +23,7 @@ import javax.inject.Inject;
 import rx.Subscription;
 import rx.android.schedulers.AndroidSchedulers;
 
-public final class HistoryListPresenter extends BasePresenter<HistoryListView> {
+public final class NearbyHistoryListPresenter extends BasePresenter<NearbyHistoryListView> {
 
     @Inject
     AnalyticsReporter analyticsReporter;
@@ -39,7 +39,7 @@ public final class HistoryListPresenter extends BasePresenter<HistoryListView> {
     private final List<NearbyHistoryModel> nearbyHistoryModels = new ArrayList<>();
 
     @Inject
-    HistoryListPresenter() {
+    NearbyHistoryListPresenter() {
     }
 
     public void onActivityCreated() {
@@ -62,17 +62,17 @@ public final class HistoryListPresenter extends BasePresenter<HistoryListView> {
         subscriptions.add(subscription);
     }
 
-    public void onCreateItemView(HistoryItemView historyItemView) {
+    public void onCreateItemView(NearbyHistoryItemView nearbyHistoryItemView) {
         HistoryItemPresenter itemPresenter = new HistoryItemPresenter();
-        itemPresenter.onCreateItemView(historyItemView);
-        historyItemView.setItemPresenter(itemPresenter);
+        itemPresenter.onCreateItemView(nearbyHistoryItemView);
+        nearbyHistoryItemView.setItemPresenter(itemPresenter);
     }
 
     public List<NearbyHistoryModel> getItems() {
         return nearbyHistoryModels;
     }
 
-    public final class HistoryItemPresenter extends BaseItemPresenter<HistoryItemView> {
+    public final class HistoryItemPresenter extends BaseItemPresenter<NearbyHistoryItemView> {
 
         @Override
         public void onBind(@IntRange(from = 0) int position) {

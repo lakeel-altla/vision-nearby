@@ -11,10 +11,10 @@ import android.view.ViewGroup;
 import android.widget.RelativeLayout;
 
 import com.lakeel.altla.vision.nearby.R;
-import com.lakeel.altla.vision.nearby.presentation.presenter.history.HistoryListPresenter;
-import com.lakeel.altla.vision.nearby.presentation.view.HistoryListView;
+import com.lakeel.altla.vision.nearby.presentation.presenter.history.NearbyHistoryListPresenter;
+import com.lakeel.altla.vision.nearby.presentation.view.NearbyHistoryListView;
 import com.lakeel.altla.vision.nearby.presentation.view.activity.MainActivity;
-import com.lakeel.altla.vision.nearby.presentation.view.adapter.HistoryAdapter;
+import com.lakeel.altla.vision.nearby.presentation.view.adapter.NearbyHistoryAdapter;
 import com.lakeel.altla.vision.nearby.presentation.view.divider.DividerItemDecoration;
 import com.lakeel.altla.vision.nearby.presentation.view.fragment.FragmentController;
 import com.marshalchen.ultimaterecyclerview.UltimateRecyclerView;
@@ -26,10 +26,10 @@ import javax.inject.Inject;
 import butterknife.BindView;
 import butterknife.ButterKnife;
 
-public final class HistoryListFragment extends Fragment implements HistoryListView {
+public final class NearbyHistoryListFragment extends Fragment implements NearbyHistoryListView {
 
     @Inject
-    HistoryListPresenter presenter;
+    NearbyHistoryListPresenter presenter;
 
     @BindView(R.id.mainLayout)
     RelativeLayout mainLayout;
@@ -37,8 +37,8 @@ public final class HistoryListFragment extends Fragment implements HistoryListVi
     @BindView(R.id.recyclerView)
     UltimateRecyclerView recyclerView;
 
-    public static HistoryListFragment newInstance() {
-        return new HistoryListFragment();
+    public static NearbyHistoryListFragment newInstance() {
+        return new NearbyHistoryListFragment();
     }
 
     @Override
@@ -66,7 +66,7 @@ public final class HistoryListFragment extends Fragment implements HistoryListVi
         RecyclerView.LayoutManager layoutManager = new ScrollSmoothLineaerLayoutManager(getContext(), LinearLayoutManager.VERTICAL, false, 500);
         recyclerView.setLayoutManager(layoutManager);
 
-        HistoryAdapter adapter = new HistoryAdapter(presenter);
+        NearbyHistoryAdapter adapter = new NearbyHistoryAdapter(presenter);
         adapter.setMode(SwipeItemManagerInterface.Mode.Single);
 
         recyclerView.addItemDecoration(new DividerItemDecoration(getContext()));
@@ -83,7 +83,7 @@ public final class HistoryListFragment extends Fragment implements HistoryListVi
 
     @Override
     public void updateItems() {
-        HistoryAdapter adapter = ((HistoryAdapter) recyclerView.getAdapter());
+        NearbyHistoryAdapter adapter = ((NearbyHistoryAdapter) recyclerView.getAdapter());
         adapter.removeAll();
         adapter.insert(presenter.getItems());
     }

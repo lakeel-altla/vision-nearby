@@ -11,7 +11,6 @@ import com.lakeel.altla.vision.nearby.data.mapper.model.FavoriteMapper;
 import com.lakeel.altla.vision.nearby.domain.model.Favorite;
 
 import javax.inject.Inject;
-import javax.inject.Named;
 
 import rx.Completable;
 import rx.Observable;
@@ -19,13 +18,15 @@ import rx.Single;
 
 public class FirebaseUserFavoriteRepository {
 
+    private static final String DATABASE_URI = "https://profile-notification-95441.firebaseio.com/userFavorites";
+
     private final FavoriteMapper favoriteMapper = new FavoriteMapper();
 
     private final DatabaseReference reference;
 
     @Inject
-    public FirebaseUserFavoriteRepository(@Named("userFavoriteUrl") String url) {
-        reference = FirebaseDatabase.getInstance().getReferenceFromUrl(url);
+    public FirebaseUserFavoriteRepository() {
+        this.reference = FirebaseDatabase.getInstance().getReference(DATABASE_URI);
     }
 
     public Observable<String> findFavorites(String userId) {

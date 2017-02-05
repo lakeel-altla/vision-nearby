@@ -11,7 +11,8 @@ import com.lakeel.altla.vision.nearby.presentation.view.fragment.ble.BleSettings
 import com.lakeel.altla.vision.nearby.presentation.view.fragment.device.DeviceListFragment;
 import com.lakeel.altla.vision.nearby.presentation.view.fragment.distance.DistanceEstimationFragment;
 import com.lakeel.altla.vision.nearby.presentation.view.fragment.favorite.FavoriteListFragment;
-import com.lakeel.altla.vision.nearby.presentation.view.fragment.history.HistoryListFragment;
+import com.lakeel.altla.vision.nearby.presentation.view.fragment.favorite.FavoriteUserFragment;
+import com.lakeel.altla.vision.nearby.presentation.view.fragment.history.NearbyHistoryListFragment;
 import com.lakeel.altla.vision.nearby.presentation.view.fragment.information.InformationFragment;
 import com.lakeel.altla.vision.nearby.presentation.view.fragment.information.InformationListFragment;
 import com.lakeel.altla.vision.nearby.presentation.view.fragment.line.LineSettingsFragment;
@@ -20,7 +21,6 @@ import com.lakeel.altla.vision.nearby.presentation.view.fragment.passing.Passing
 import com.lakeel.altla.vision.nearby.presentation.view.fragment.settings.SettingsFragment;
 import com.lakeel.altla.vision.nearby.presentation.view.fragment.signin.SignInFragment;
 import com.lakeel.altla.vision.nearby.presentation.view.fragment.tracking.TrackingFragment;
-import com.lakeel.altla.vision.nearby.presentation.view.fragment.favorite.FavoriteUserFragment;
 
 import java.util.ArrayList;
 
@@ -30,7 +30,7 @@ public final class FragmentController {
 
     private final String FAVORITE_LIST_FRAGMENT_TAG = FavoriteListFragment.class.getSimpleName();
 
-    private final String HISTORY_FRAGMENT_TAG = HistoryListFragment.class.getSimpleName();
+    private final String HISTORY_FRAGMENT_TAG = NearbyHistoryListFragment.class.getSimpleName();
 
     private final String PASSING_USER_FRAGMENT_TAG = PassingUserFragment.class.getSimpleName();
 
@@ -79,8 +79,8 @@ public final class FragmentController {
         replaceFragment(R.id.fragmentPlaceholder, fragment, NEARBY_LIST_FRAGMENT);
     }
 
-    public void showHistoryListFragment() {
-        HistoryListFragment fragment = HistoryListFragment.newInstance();
+    public void showNearbyHistoryListFragment() {
+        NearbyHistoryListFragment fragment = NearbyHistoryListFragment.newInstance();
         replaceFragment(R.id.fragmentPlaceholder, fragment, HISTORY_FRAGMENT_TAG);
     }
 

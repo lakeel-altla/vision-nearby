@@ -42,7 +42,7 @@
 
         <service android:name=".presentation.service.LocationService" />
         <service android:name=".presentation.service.LINEService" />
-        <service android:name=".presentation.service.HistoryService" />
+        <service android:name=".presentation.service.NearbyHistoryService" />
         <service android:name=".presentation.service.NotificationService" />
 
         <service

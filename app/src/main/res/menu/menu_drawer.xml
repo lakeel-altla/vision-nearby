@@ -3,22 +3,23 @@
 
     <group android:checkableBehavior="single">
         <item
-                android:id="@+id/favorites"
-                android:title="@string/title_favorites"/>
+            android:id="@+id/favorites"
+            android:title="@string/title_favorites" />
         <item
-                android:id="@+id/history"
-                android:title="@string/title_recently"/>
+            android:id="@+id/history"
+            android:title="@string/title_recently" />
         <item
-                android:id="@+id/nearby"
-                android:title="@string/title_nearby"/>
-        <!--<item-->
-            <!--android:id="@+id/information"-->
-            <!--android:title="@string/title_information"/>-->
+            android:id="@+id/nearby"
+            android:title="@string/title_nearby" />
         <item
-                android:id="@+id/settings"
-                android:title="@string/title_settings"/>
+            android:id="@+id/information"
+            android:title="@string/title_information"
+            android:visible="false" />
         <item
-                android:id="@+id/signOut"
-                android:title="@string/title_sign_out"/>
+            android:id="@+id/settings"
+            android:title="@string/title_settings" />
+        <item
+            android:id="@+id/signOut"
+            android:title="@string/title_sign_out" />
     </group>
 </menu>

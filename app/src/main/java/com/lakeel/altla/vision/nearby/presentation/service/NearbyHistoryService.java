@@ -43,9 +43,8 @@ import javax.inject.Inject;
 import rx.Observable;
 import rx.Single;
 import rx.SingleSubscriber;
-import rx.functions.Action1;
 
-public class HistoryService extends IntentService {
+public class NearbyHistoryService extends IntentService {
 
     private class ConnectionCallback implements GoogleApiClient.ConnectionCallbacks {
 
@@ -67,7 +66,7 @@ public class HistoryService extends IntentService {
                     .toObservable()
                     // Analytics
                     .doOnNext(user -> analyticsReporter.addHistory(user.userId, user.name))
-                    .doOnNext(HistoryService.this::sendLocalNotification)
+                    .doOnNext(NearbyHistoryService.this::sendLocalNotification)
                     .flatMap(user -> saveHistory(user.userId, regionState))
                     .subscribe(uniqueId -> {
                         getUserActivity()
@@ -107,16 +106,16 @@ public class HistoryService extends IntentService {
     @Inject
     SaveWeatherUseCase saveWeatherUseCase;
 
-    private static final Logger LOGGER = LoggerFactory.getLogger(HistoryService.class);
+    private static final Logger LOGGER = LoggerFactory.getLogger(NearbyHistoryService.class);
 
     private GoogleApiClient googleApiClient;
 
     // This constructor is need.
-    public HistoryService() {
-        this(HistoryService.class.getSimpleName());
+    public NearbyHistoryService() {
+        this(NearbyHistoryService.class.getSimpleName());
     }
 
-    public HistoryService(String name) {
+    public NearbyHistoryService(String name) {
         super(name);
     }
 
@@ -210,8 +209,7 @@ public class HistoryService extends IntentService {
     }
 
     private void saveUserActivity(String uniqueId, DetectedActivity userActivity) {
-        saveUserActivityUseCase.execute(uniqueId, userActivity)
-                .subscribe();
+        saveUserActivityUseCase.execute(uniqueId, userActivity).subscribe();
     }
 
     private void saveUserLocation(String uniqueId, Location location) {

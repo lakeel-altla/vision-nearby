@@ -8,7 +8,6 @@ import com.lakeel.altla.vision.nearby.presentation.di.InjectScope;
 
 import dagger.Module;
 import dagger.Provides;
-import okhttp3.OkHttpClient;
 
 @Module
 public class RepositoryModule {
@@ -17,13 +16,5 @@ public class RepositoryModule {
     @Provides
     PreferenceRepository providePreferenceRepository(Context context) {
         return new PreferenceRepository(PreferenceManager.getDefaultSharedPreferences(context));
-    }
-
-    @InjectScope
-    @Provides
-    OkHttpClient provideOkHttpClient() {
-        return new OkHttpClient()
-                .newBuilder()
-                .build();
     }
 }

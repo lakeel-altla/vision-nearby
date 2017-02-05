@@ -9,9 +9,9 @@ import android.widget.TextView;
 
 import com.lakeel.altla.vision.nearby.R;
 import com.lakeel.altla.vision.nearby.core.StringUtils;
-import com.lakeel.altla.vision.nearby.presentation.presenter.history.HistoryListPresenter;
+import com.lakeel.altla.vision.nearby.presentation.presenter.history.NearbyHistoryListPresenter;
 import com.lakeel.altla.vision.nearby.presentation.presenter.model.NearbyHistoryModel;
-import com.lakeel.altla.vision.nearby.presentation.view.HistoryItemView;
+import com.lakeel.altla.vision.nearby.presentation.view.NearbyHistoryItemView;
 import com.lakeel.altla.vision.nearby.presentation.view.date.DateFormatter;
 import com.lakeel.altla.vision.nearby.presentation.view.drawable.UserInitial;
 import com.marshalchen.ultimaterecyclerview.SwipeableUltimateViewAdapter;
@@ -24,13 +24,13 @@ import java.util.ArrayList;
 import butterknife.BindView;
 import butterknife.ButterKnife;
 
-public final class HistoryAdapter extends SwipeableUltimateViewAdapter<NearbyHistoryModel> {
+public final class NearbyHistoryAdapter extends SwipeableUltimateViewAdapter<NearbyHistoryModel> {
 
-    private HistoryListPresenter historyListPresenter;
+    private NearbyHistoryListPresenter nearbyHistoryListPresenter;
 
-    public HistoryAdapter(HistoryListPresenter historyListPresenter) {
+    public NearbyHistoryAdapter(NearbyHistoryListPresenter nearbyHistoryListPresenter) {
         super(new ArrayList<>());
-        this.historyListPresenter = historyListPresenter;
+        this.nearbyHistoryListPresenter = nearbyHistoryListPresenter;
     }
 
     @Override
@@ -40,18 +40,18 @@ public final class HistoryAdapter extends SwipeableUltimateViewAdapter<NearbyHis
 
     @Override
     protected UltimateRecyclerviewViewHolder newViewHolder(View view) {
-        HistoryItemViewHolder viewHolder = new HistoryItemViewHolder(view, true);
-        historyListPresenter.onCreateItemView(viewHolder);
+        NearbyHistoryItemViewHolder viewHolder = new NearbyHistoryItemViewHolder(view, true);
+        nearbyHistoryListPresenter.onCreateItemView(viewHolder);
         return viewHolder;
     }
 
     @Override
     protected void withBindHolder(UltimateRecyclerviewViewHolder bindHolder, NearbyHistoryModel model, int position) {
-        HistoryItemViewHolder holder = (HistoryItemViewHolder) bindHolder;
+        NearbyHistoryItemViewHolder holder = (NearbyHistoryItemViewHolder) bindHolder;
         holder.onBind(position);
     }
 
-    static class HistoryItemViewHolder extends UltimateRecyclerviewViewHolder implements HistoryItemView {
+    public static class NearbyHistoryItemViewHolder extends UltimateRecyclerviewViewHolder implements NearbyHistoryItemView {
 
         @BindView(R.id.layoutItem)
         LinearLayout itemLayout;
@@ -71,9 +71,9 @@ public final class HistoryAdapter extends SwipeableUltimateViewAdapter<NearbyHis
         @BindView(R.id.swipeLayout)
         SwipeLayout swipeLayout;
 
-        private HistoryListPresenter.HistoryItemPresenter itemPresenter;
+        private NearbyHistoryListPresenter.HistoryItemPresenter itemPresenter;
 
-        HistoryItemViewHolder(View itemView, boolean bind) {
+        NearbyHistoryItemViewHolder(View itemView, boolean bind) {
             super(itemView);
             if (bind) {
                 ButterKnife.bind(this, itemView);
@@ -83,7 +83,7 @@ public final class HistoryAdapter extends SwipeableUltimateViewAdapter<NearbyHis
         }
 
         @Override
-        public void setItemPresenter(HistoryListPresenter.HistoryItemPresenter itemPresenter) {
+        public void setItemPresenter(NearbyHistoryListPresenter.HistoryItemPresenter itemPresenter) {
             this.itemPresenter = itemPresenter;
         }
 

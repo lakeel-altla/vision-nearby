@@ -7,22 +7,21 @@ import com.firebase.geofire.GeoFire;
 import com.firebase.geofire.GeoLocation;
 import com.firebase.geofire.LocationCallback;
 import com.google.firebase.database.DatabaseError;
-import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 
 import javax.inject.Inject;
-import javax.inject.Named;
 
 import rx.Single;
 
 public class FirebaseLocationRepository {
 
+    private static final String DATABASE_URI = "https://profile-notification-95441.firebaseio.com/locations";
+
     private final GeoFire geoFire;
 
     @Inject
-    FirebaseLocationRepository(@Named("locationUrl") String url) {
-        DatabaseReference reference = FirebaseDatabase.getInstance().getReferenceFromUrl(url);
-        geoFire = new GeoFire(reference);
+    public FirebaseLocationRepository() {
+        geoFire = new GeoFire(FirebaseDatabase.getInstance().getReference(DATABASE_URI));
     }
 
     public Single<GeoLocation> findLocation(String key) {

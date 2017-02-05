@@ -16,12 +16,13 @@ import java.util.HashMap;
 import java.util.Map;
 
 import javax.inject.Inject;
-import javax.inject.Named;
 
 import rx.Completable;
 import rx.Single;
 
 public class FirebaseUserConnectionRepository {
+
+    private static final String DATABASE_URI = "https://profile-notification-95441.firebaseio.com/userConnections";
 
     private static final String IS_CONNECTED_KEY = "isConnected";
 
@@ -32,8 +33,8 @@ public class FirebaseUserConnectionRepository {
     private final DatabaseReference reference;
 
     @Inject
-    FirebaseUserConnectionRepository(@Named("userConnectionUrl") String url) {
-        reference = FirebaseDatabase.getInstance().getReferenceFromUrl(url);
+    public FirebaseUserConnectionRepository() {
+        this.reference = FirebaseDatabase.getInstance().getReference(DATABASE_URI);
     }
 
     public void saveOnline(String userId) {

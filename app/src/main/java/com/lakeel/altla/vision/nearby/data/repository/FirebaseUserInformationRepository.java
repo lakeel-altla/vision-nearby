@@ -14,13 +14,14 @@ import com.lakeel.altla.vision.nearby.domain.model.Information;
 import java.util.Map;
 
 import javax.inject.Inject;
-import javax.inject.Named;
 
 import rx.Completable;
 import rx.Observable;
 import rx.Single;
 
 public class FirebaseUserInformationRepository {
+
+    private static final String DATABASE_URI = "https://profile-notification-95441.firebaseio.com/userInformation";
 
     private final InformationEntityMapper entityMapper = new InformationEntityMapper();
 
@@ -29,8 +30,8 @@ public class FirebaseUserInformationRepository {
     private final DatabaseReference reference;
 
     @Inject
-    public FirebaseUserInformationRepository(@Named("userInformationUrl") String url) {
-        reference = FirebaseDatabase.getInstance().getReferenceFromUrl(url);
+    public FirebaseUserInformationRepository() {
+        this.reference = FirebaseDatabase.getInstance().getReference(DATABASE_URI);
     }
 
     public Completable saveInformation(String userId, String title, String message) {

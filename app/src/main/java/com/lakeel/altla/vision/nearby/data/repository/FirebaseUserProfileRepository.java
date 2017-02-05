@@ -16,13 +16,14 @@ import java.util.HashMap;
 import java.util.Map;
 
 import javax.inject.Inject;
-import javax.inject.Named;
 
 import rx.Completable;
 import rx.Observable;
 import rx.Single;
 
 public final class FirebaseUserProfileRepository {
+
+    private static final String DATABASE_URI = "https://profile-notification-95441.firebaseio.com/userProfiles";
 
     private static final String KEY_BEACONS = "beacons";
 
@@ -33,8 +34,8 @@ public final class FirebaseUserProfileRepository {
     private final DatabaseReference reference;
 
     @Inject
-    public FirebaseUserProfileRepository(@Named("userProfileUrl") String url) {
-        reference = FirebaseDatabase.getInstance().getReferenceFromUrl(url);
+    public FirebaseUserProfileRepository() {
+        this.reference = FirebaseDatabase.getInstance().getReference(DATABASE_URI);
     }
 
     public Single<UserProfile> findUserProfile(String userId) {

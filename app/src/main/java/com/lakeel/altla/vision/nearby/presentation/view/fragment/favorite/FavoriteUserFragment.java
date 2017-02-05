@@ -103,7 +103,7 @@ public final class FavoriteUserFragment extends Fragment implements FavoriteUser
 
     @Override
     public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
-        inflater.inflate(R.menu.menu_profile, menu);
+        inflater.inflate(R.menu.menu_favorite_user, menu);
     }
 
     @Override

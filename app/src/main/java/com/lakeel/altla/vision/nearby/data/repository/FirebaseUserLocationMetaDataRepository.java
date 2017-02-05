@@ -15,12 +15,13 @@ import com.lakeel.altla.vision.nearby.domain.model.LocationMetaData;
 import java.util.Iterator;
 
 import javax.inject.Inject;
-import javax.inject.Named;
 
 import rx.Completable;
 import rx.Single;
 
 public final class FirebaseUserLocationMetaDataRepository {
+
+    private static final String DATABASE_URI = "https://profile-notification-95441.firebaseio.com/userLocationMetaData";
 
     private static final String KEY_BEACON_ID = "beaconId";
 
@@ -31,8 +32,8 @@ public final class FirebaseUserLocationMetaDataRepository {
     private final DatabaseReference reference;
 
     @Inject
-    FirebaseUserLocationMetaDataRepository(@Named("userLocationMetaDataUrl") String url) {
-        reference = FirebaseDatabase.getInstance().getReferenceFromUrl(url);
+    public FirebaseUserLocationMetaDataRepository() {
+        this.reference = FirebaseDatabase.getInstance().getReference(DATABASE_URI);
     }
 
     public Single<LocationMetaData> findLatestLocationMetaData(String userId, String beaconId) {

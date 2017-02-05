@@ -1,7 +1,6 @@
 package com.lakeel.altla.vision.nearby.presentation.di.component;
 
 import com.lakeel.altla.vision.nearby.presentation.di.InjectScope;
-import com.lakeel.altla.vision.nearby.presentation.di.module.ConfigModule;
 import com.lakeel.altla.vision.nearby.presentation.di.module.PresenterModule;
 import com.lakeel.altla.vision.nearby.presentation.di.module.RepositoryModule;
 import com.lakeel.altla.vision.nearby.presentation.service.LINEService;
@@ -10,7 +9,8 @@ import com.lakeel.altla.vision.nearby.presentation.view.fragment.ble.BleSettings
 import com.lakeel.altla.vision.nearby.presentation.view.fragment.device.DeviceListFragment;
 import com.lakeel.altla.vision.nearby.presentation.view.fragment.distance.DistanceEstimationFragment;
 import com.lakeel.altla.vision.nearby.presentation.view.fragment.favorite.FavoriteListFragment;
-import com.lakeel.altla.vision.nearby.presentation.view.fragment.history.HistoryListFragment;
+import com.lakeel.altla.vision.nearby.presentation.view.fragment.favorite.FavoriteUserFragment;
+import com.lakeel.altla.vision.nearby.presentation.view.fragment.history.NearbyHistoryListFragment;
 import com.lakeel.altla.vision.nearby.presentation.view.fragment.information.InformationFragment;
 import com.lakeel.altla.vision.nearby.presentation.view.fragment.information.InformationListFragment;
 import com.lakeel.altla.vision.nearby.presentation.view.fragment.line.LineSettingsFragment;
@@ -19,12 +19,11 @@ import com.lakeel.altla.vision.nearby.presentation.view.fragment.passing.Passing
 import com.lakeel.altla.vision.nearby.presentation.view.fragment.settings.SettingsFragment;
 import com.lakeel.altla.vision.nearby.presentation.view.fragment.signin.SignInFragment;
 import com.lakeel.altla.vision.nearby.presentation.view.fragment.tracking.TrackingFragment;
-import com.lakeel.altla.vision.nearby.presentation.view.fragment.favorite.FavoriteUserFragment;
 
 import dagger.Subcomponent;
 
 @InjectScope
-@Subcomponent(modules = {PresenterModule.class, RepositoryModule.class, ConfigModule.class})
+@Subcomponent(modules = {PresenterModule.class, RepositoryModule.class})
 public interface ViewComponent {
 
     void inject(MainActivity activity);
@@ -35,7 +34,7 @@ public interface ViewComponent {
 
     void inject(NearbyUserListFragment fragment);
 
-    void inject(HistoryListFragment fragment);
+    void inject(NearbyHistoryListFragment fragment);
 
     void inject(PassingUserFragment fragment);
 

@@ -6,20 +6,21 @@ import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
+import com.lakeel.altla.vision.nearby.data.entity.LineLinkEntity;
 import com.lakeel.altla.vision.nearby.data.execption.DataStoreException;
 import com.lakeel.altla.vision.nearby.data.mapper.entity.LineLinkEntityMapper;
-import com.lakeel.altla.vision.nearby.data.entity.LineLinkEntity;
 
 import java.util.Iterator;
 
 import javax.inject.Inject;
-import javax.inject.Named;
 
 import rx.Single;
 import rx.SingleSubscriber;
 
 
 public class FirebaseLINELinksRepository {
+
+    private static final String DATABASE_URI = "https://profile-notification-95441.firebaseio.com/link/line";
 
     private static final String URL_KEY = "url";
 
@@ -28,8 +29,8 @@ public class FirebaseLINELinksRepository {
     private final DatabaseReference reference;
 
     @Inject
-    FirebaseLINELinksRepository(@Named("lineLinkUrl") String url) {
-        reference = FirebaseDatabase.getInstance().getReferenceFromUrl(url);
+    public FirebaseLINELinksRepository() {
+        this.reference = FirebaseDatabase.getInstance().getReference(DATABASE_URI);
     }
 
     public Single<String> saveLineUrl(String userId, String url) {
