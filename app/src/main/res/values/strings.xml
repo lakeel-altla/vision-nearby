@@ -26,7 +26,7 @@
     <string name="textView_line_url">LINE URL</string>
     <string name="textView_connected">Connected</string>
     <string name="textView_disconnected">Disconnected</string>
-    <string name="textView_finding">Finding...</string>
+    <string name="textView_finding">Finding…</string>
     <string name="textView_unknown">Unknown</string>
 
     <string name="title_sign_in">Sign In</string>
@@ -34,7 +34,6 @@
     <string name="title_nearby">Nearby</string>
     <string name="title_ble_settings">BLE Settings</string>
     <string name="title_line_settings">LINE Settings</string>
-    <string name="title_cm_settings">COMPANY Messenger Settings</string>
     <string name="title_cloud_tracking">Tracking</string>
     <string name="title_devices">Devices</string>
     <string name="title_information">Information</string>
@@ -49,10 +48,6 @@
     <string name="title_link">LINK</string>
     <string name="title_line">LINE</string>
     <string name="title_line_url">LINE URL</string>
-    <string name="title_cm">COMPANY Messenger</string>
-    <string name="title_cm_api_key">API Key</string>
-    <string name="title_cm_secret_key">Secret Key</string>
-    <string name="title_cm_jid">Jid</string>
     <string name="title_advertise_in_background">Advertise in background</string>
     <string name="title_subscribe_in_background">Subscribe in background</string>
     <string name="title_confirm">Confirm</string>
@@ -60,9 +55,6 @@
     <string name="title_find">Find</string>
     <string name="title_directions">Directions</string>
     <string name="title_refresh">Refresh</string>
-    <string name="title_add_favorites">Add to Favorites</string>
-    <string name="title_send_message">Send Message</string>
-    <string name="title_add_friends">Add to Friends</string>
 
     <string name="preference_summary_advertise_in_background">Allow advertise data when the app becomes
         inactive.
@@ -81,14 +73,14 @@
     <string name="weather_condition_unknown">Unknown</string>
     <string name="weather_condition_windy">Windy</string>
 
-    <string name="detected_activity_vehicle">Vehicle</string>
-    <string name="detected_activity_bicycle">Bicycle</string>
-    <string name="detected_activity_foot">Foot</string>
-    <string name="detected_activity_running">Running</string>
-    <string name="detected_activity_still">Still</string>
-    <string name="detected_activity_tilting">Tilting</string>
-    <string name="detected_activity_unknown">Unknown</string>
-    <string name="detected_activity_walking">Walking</string>
+    <string name="user_activity_vehicle">Vehicle</string>
+    <string name="user_activity_bicycle">Bicycle</string>
+    <string name="user_activity_foot">Foot</string>
+    <string name="user_activity_running">Running</string>
+    <string name="user_activity_still">Still</string>
+    <string name="user_activity_tilting">Tilting</string>
+    <string name="user_activity_unknown">Unknown</string>
+    <string name="user_activity_walking">Walking</string>
 
     <string name="message_added">Added.</string>
     <string name="message_saved">Saved.</string>
@@ -121,11 +113,6 @@
     <string name="button_lost">Lost</string>
     <string name="button_found">Found</string>
 
-    <string name="unknown_error">Unknown error</string>
-
-    <string name="region_enter">Enter</string>
-    <string name="region_exit">Exit</string>
-
     <string name="error_process">Could not process.</string>
     <string name="error_not_signed_in">Could not sign in.</string>
     <string name="error_not_signed_out">Could not sign out.</string>
@@ -138,6 +125,8 @@
     <string name="error_required">Required.</string>
     <string name="error_input_empty">Required.</string>
     <string name="error_uri_syntax">URI syntax is mistake.</string>
+
+    <string name="unknown_error">Unknown error</string>
 
     <string name="dummy">Dummy</string>
 </resources>
