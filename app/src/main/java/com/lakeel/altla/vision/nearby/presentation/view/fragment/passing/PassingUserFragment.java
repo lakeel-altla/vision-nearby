@@ -28,9 +28,9 @@ import com.lakeel.altla.vision.nearby.presentation.presenter.model.PassingUserMo
 import com.lakeel.altla.vision.nearby.presentation.presenter.passing.PassingUserPresenter;
 import com.lakeel.altla.vision.nearby.presentation.view.PassingUserView;
 import com.lakeel.altla.vision.nearby.presentation.view.activity.MainActivity;
-import com.lakeel.altla.vision.nearby.presentation.view.fragment.bundle.BundleKey;
 import com.lakeel.altla.vision.nearby.presentation.view.color.AppColor;
 import com.lakeel.altla.vision.nearby.presentation.view.date.DateFormatter;
+import com.lakeel.altla.vision.nearby.presentation.view.fragment.bundle.BundleKey;
 import com.lakeel.altla.vision.nearby.presentation.view.layout.PassingLayout;
 import com.lakeel.altla.vision.nearby.presentation.view.layout.PresenceLayout;
 import com.lakeel.altla.vision.nearby.presentation.view.layout.ProfileLayout;
@@ -121,8 +121,6 @@ public final class PassingUserFragment extends Fragment implements PassingUserVi
         Bundle bundle = getArguments();
         String historyId = (String) bundle.get(BundleKey.NEARBY_HISTORY_ID.name());
         presenter.setHistoryId(historyId);
-
-        presenter.onActivityCreated();
     }
 
     @Override
@@ -133,6 +131,8 @@ public final class PassingUserFragment extends Fragment implements PassingUserVi
         if (mapView != null) {
             mapView.setVisibility(View.INVISIBLE);
         }
+
+        presenter.onResume();
     }
 
     @Override

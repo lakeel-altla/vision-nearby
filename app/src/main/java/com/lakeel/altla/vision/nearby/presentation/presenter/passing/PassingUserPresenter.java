@@ -66,7 +66,7 @@ public final class PassingUserPresenter extends BasePresenter<PassingUserView> {
         this.historyId = historyId;
     }
 
-    public void onActivityCreated() {
+    public void onResume() {
         Subscription subscription = findNearbyHistoryUseCase.execute(historyId)
                 .map(history -> {
                     viewModel = modelMapper.map(history);
