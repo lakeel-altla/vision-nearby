@@ -132,8 +132,6 @@ public final class FavoriteUserFragment extends Fragment implements OnMapReadyCa
         getActivity().setTitle(favoriteUser.name);
 
         presenter.setFavoriteUser(favoriteUser);
-
-        presenter.onActivityCreated();
     }
 
     @Override
@@ -144,6 +142,8 @@ public final class FavoriteUserFragment extends Fragment implements OnMapReadyCa
         if (mapView != null) {
             mapView.setVisibility(View.INVISIBLE);
         }
+
+        presenter.onResume();
     }
 
     @Override

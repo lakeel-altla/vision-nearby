@@ -79,6 +79,7 @@ public final class DistanceEstimationPresenter extends BasePresenter<DistanceEst
     @Inject
     DistanceEstimationPresenter(Context context) {
         this.context = context;
+
         BluetoothManager bluetoothManager = (BluetoothManager) context.getSystemService(Context.BLUETOOTH_SERVICE);
         BluetoothAdapter bluetoothAdapter = bluetoothManager.getAdapter();
         scanner = bluetoothAdapter.getBluetoothLeScanner();

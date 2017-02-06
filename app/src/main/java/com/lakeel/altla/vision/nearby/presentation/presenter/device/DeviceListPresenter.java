@@ -48,7 +48,7 @@ public class DeviceListPresenter extends BasePresenter<DeviceListView> {
 
     private final DeviceModelMapper modelMapper = new DeviceModelMapper();
 
-    private final List<DeviceModel> deviceModels = new ArrayList<>();
+    private final List<DeviceModel> viewModels = new ArrayList<>();
 
     @Inject
     DeviceListPresenter() {
@@ -63,7 +63,7 @@ public class DeviceListPresenter extends BasePresenter<DeviceListView> {
     }
 
     public int getItemCount() {
-        return deviceModels.size();
+        return viewModels.size();
     }
 
     public void onCreateItemView(DeviceAdapter.DeviceItemViewHolder viewHolder) {
@@ -76,7 +76,7 @@ public class DeviceListPresenter extends BasePresenter<DeviceListView> {
 
         @Override
         public void onBind(@IntRange(from = 0) int position) {
-            getItemView().showItem(deviceModels.get(position));
+            getItemView().showItem(viewModels.get(position));
         }
 
         public void onClick(DeviceModel model) {
@@ -107,9 +107,9 @@ public class DeviceListPresenter extends BasePresenter<DeviceListView> {
             Subscription subscription = removeDeviceUseCase.execute(model.beaconId)
                     .observeOn(AndroidSchedulers.mainThread())
                     .subscribe(s -> {
-                        int size = deviceModels.size();
-                        deviceModels.remove(model);
-                        if (CollectionUtils.isEmpty(deviceModels)) {
+                        int size = viewModels.size();
+                        viewModels.remove(model);
+                        if (CollectionUtils.isEmpty(viewModels)) {
                             getView().removeAll(size);
                         } else {
                             getView().updateItems();
@@ -126,8 +126,8 @@ public class DeviceListPresenter extends BasePresenter<DeviceListView> {
                 .toSortedList((t1, t2) -> Long.compare(t2.lastUsedTime, t1.lastUsedTime))
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribe(models -> {
-                    deviceModels.clear();
-                    deviceModels.addAll(models);
+                    viewModels.clear();
+                    viewModels.addAll(models);
                     getView().updateItems();
                 }, new ErrorAction<>());
         subscriptions.add(subscription);

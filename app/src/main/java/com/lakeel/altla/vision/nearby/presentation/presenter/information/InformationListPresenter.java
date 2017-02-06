@@ -31,7 +31,7 @@ public final class InformationListPresenter extends BasePresenter<InformationLis
 
     private InformationModelMapper modelMapper = new InformationModelMapper();
 
-    private List<InformationModel> models = new ArrayList<>();
+    private List<InformationModel> viewModels = new ArrayList<>();
 
     @Inject
     InformationListPresenter() {
@@ -45,8 +45,8 @@ public final class InformationListPresenter extends BasePresenter<InformationLis
                 .subscribe(models -> {
                     Collections.reverse(models);
 
-                    this.models.clear();
-                    this.models.addAll(models);
+                    this.viewModels.clear();
+                    this.viewModels.addAll(models);
 
                     getView().updateItems();
                 }, new ErrorAction<>());
@@ -64,14 +64,14 @@ public final class InformationListPresenter extends BasePresenter<InformationLis
     }
 
     public int getItemCount() {
-        return models.size();
+        return viewModels.size();
     }
 
     public final class InformationItemPresenter extends BaseItemPresenter<InformationItemView> {
 
         @Override
         public void onBind(@IntRange(from = 0) int position) {
-            getItemView().showItem(models.get(position));
+            getItemView().showItem(viewModels.get(position));
         }
 
         public void onClick(String informationId) {

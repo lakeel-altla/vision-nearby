@@ -50,9 +50,9 @@ public final class PassingUserPresenter extends BasePresenter<PassingUserView> {
 
     private final ReusableCompositeSubscription subscriptions = new ReusableCompositeSubscription();
 
-    private PassingUserModel model;
-
     private UserPassingModelMapper modelMapper = new UserPassingModelMapper();
+
+    private PassingUserModel viewModel;
 
     private String historyId;
 
@@ -69,8 +69,8 @@ public final class PassingUserPresenter extends BasePresenter<PassingUserView> {
     public void onActivityCreated() {
         Subscription subscription = findNearbyHistoryUseCase.execute(historyId)
                 .map(history -> {
-                    model = modelMapper.map(history);
-                    return model;
+                    viewModel = modelMapper.map(history);
+                    return viewModel;
                 })
                 .flatMap(model1 -> findUser(model1.userId))
                 .observeOn(AndroidSchedulers.mainThread())
@@ -98,17 +98,17 @@ public final class PassingUserPresenter extends BasePresenter<PassingUserView> {
 
     public void onMapReady() {
         isMapReadied = true;
-        if (model == null || model.latitude == null || model.longitude == null) {
+        if (viewModel == null || viewModel.latitude == null || viewModel.longitude == null) {
             getView().hideLocation();
         } else {
-            getView().showLocation(model.latitude, model.longitude);
+            getView().showLocation(viewModel.latitude, viewModel.longitude);
         }
     }
 
     public void onAdd() {
-        analyticsReporter.addFavorite(model.userId, model.userName);
+        analyticsReporter.addFavorite(viewModel.userId, viewModel.userName);
 
-        Subscription subscription = saveFavoriteUseCase.execute(model.userId)
+        Subscription subscription = saveFavoriteUseCase.execute(viewModel.userId)
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribe(new ErrorAction<>(),
                         () -> {
@@ -121,19 +121,19 @@ public final class PassingUserPresenter extends BasePresenter<PassingUserView> {
     private Single<PassingUserModel> findUser(String userId) {
         return findUserUseCase.execute(userId)
                 .map(user -> {
-                    model.userName = user.name;
-                    model.imageUri = user.imageUri;
-                    model.email = user.email;
-                    return model;
+                    viewModel.userName = user.name;
+                    viewModel.imageUri = user.imageUri;
+                    viewModel.email = user.email;
+                    return viewModel;
                 });
     }
 
     private void showPresence(String userId) {
         Subscription subscription = findConnectionUseCase.execute(userId)
                 .map(connection -> {
-                    model.isConnected = connection.isConnected;
-                    model.lastOnlineTime = connection.lastOnlineTime;
-                    return model;
+                    viewModel.isConnected = connection.isConnected;
+                    viewModel.lastOnlineTime = connection.lastOnlineTime;
+                    return viewModel;
                 })
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribe(model -> getView().showPresence(model), new ErrorAction<>());

@@ -16,7 +16,6 @@ import com.lakeel.altla.vision.nearby.core.StringUtils;
 import com.lakeel.altla.vision.nearby.presentation.presenter.model.NearbyUserModel;
 import com.lakeel.altla.vision.nearby.presentation.presenter.nearby.NearbyUserListPresenter;
 import com.lakeel.altla.vision.nearby.presentation.view.NearbyUserItemView;
-import com.lakeel.altla.vision.nearby.presentation.view.drawable.UserInitial;
 import com.nostra13.universalimageloader.core.ImageLoader;
 
 import butterknife.BindView;
@@ -90,28 +89,6 @@ public final class NearbyUserAdapter extends RecyclerView.Adapter<NearbyUserAdap
                 ImageLoader imageLoader = ImageLoader.getInstance();
                 imageLoader.displayImage(model.imageUri, userImageView);
             }
-
-            itemLayout.setOnLongClickListener(view -> {
-                boolean isAlreadyChecked = model.isChecked;
-
-                if (isAlreadyChecked) {
-                    if (StringUtils.isEmpty(model.imageUri)) {
-                        userImageView.post(() -> {
-                            UserInitial initial = new UserInitial(userName);
-                            userImageView.setImageDrawable(initial.getDrawable());
-                        });
-                    } else {
-                        ImageLoader imageLoader = ImageLoader.getInstance();
-                        imageLoader.displayImage(model.imageUri, userImageView);
-                    }
-                } else {
-                    userImageView.setImageResource(R.drawable.ic_check);
-                }
-
-                itemPresenter.onCheck(model);
-
-                return false;
-            });
         }
     }
 }

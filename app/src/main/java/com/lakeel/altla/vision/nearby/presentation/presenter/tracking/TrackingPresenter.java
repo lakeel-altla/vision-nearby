@@ -29,7 +29,7 @@ public final class TrackingPresenter extends BasePresenter<TrackingView> {
 
     private final ReusableCompositeSubscription subscriptions = new ReusableCompositeSubscription();
 
-    private TrackingModel model = new TrackingModel();
+    private TrackingModel viewModel = new TrackingModel();
 
     private TrackingModelMapper modelMapper = new TrackingModelMapper();
 
@@ -59,7 +59,7 @@ public final class TrackingPresenter extends BasePresenter<TrackingView> {
                 .map(location -> modelMapper.map(location))
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribe(model -> {
-                    this.model = model;
+                    this.viewModel = model;
 
                     if (model.geoLocation == null) {
                         getView().showEmptyView();
@@ -81,8 +81,8 @@ public final class TrackingPresenter extends BasePresenter<TrackingView> {
 
     public void onMapReady() {
         isMapReadied = true;
-        if (model.geoLocation != null) {
-            getView().showLocationMap(model.geoLocation);
+        if (viewModel.geoLocation != null) {
+            getView().showLocationMap(viewModel.geoLocation);
         }
     }
 
@@ -101,7 +101,7 @@ public final class TrackingPresenter extends BasePresenter<TrackingView> {
     public void onDirectionMenuClick() {
         analyticsReporter.launchGoogleMap();
 
-        GeoLocation geoLocation = model.geoLocation;
+        GeoLocation geoLocation = viewModel.geoLocation;
         GoogleMapIntent intent = new GoogleMapIntent(geoLocation.latitude, geoLocation.longitude);
         getView().launchGoogleMapApp(intent);
     }

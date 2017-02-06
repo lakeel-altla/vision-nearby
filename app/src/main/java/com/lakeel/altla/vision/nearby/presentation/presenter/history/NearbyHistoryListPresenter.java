@@ -39,7 +39,7 @@ public final class NearbyHistoryListPresenter extends BasePresenter<NearbyHistor
 
     private HistoryModelMapper modelMapper = new HistoryModelMapper();
 
-    private final List<NearbyHistoryModel> models = new ArrayList<>();
+    private final List<NearbyHistoryModel> viewModels = new ArrayList<>();
 
     @Inject
     NearbyHistoryListPresenter() {
@@ -51,8 +51,8 @@ public final class NearbyHistoryListPresenter extends BasePresenter<NearbyHistor
                 .toSortedList((model1, model2) -> Long.compare(model2.passingTime, model1.passingTime))
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribe(model -> {
-                    models.clear();
-                    models.addAll(model);
+                    viewModels.clear();
+                    viewModels.addAll(model);
 
                     if (CollectionUtils.isEmpty(model)) {
                         getView().showEmptyView();
@@ -76,14 +76,14 @@ public final class NearbyHistoryListPresenter extends BasePresenter<NearbyHistor
     }
 
     public List<NearbyHistoryModel> getItems() {
-        return models;
+        return viewModels;
     }
 
     public final class HistoryItemPresenter extends BaseItemPresenter<NearbyHistoryItemView> {
 
         @Override
         public void onBind(@IntRange(from = 0) int position) {
-            getItemView().showItem(models.get(position));
+            getItemView().showItem(viewModels.get(position));
         }
 
         public void onClick(NearbyHistoryModel model) {
@@ -97,11 +97,11 @@ public final class NearbyHistoryListPresenter extends BasePresenter<NearbyHistor
                     .observeOn(AndroidSchedulers.mainThread())
                     .subscribe(new ErrorAction<>(),
                             () -> {
-                                int size = models.size();
+                                int size = viewModels.size();
 
-                                models.remove(model);
+                                viewModels.remove(model);
 
-                                if (CollectionUtils.isEmpty(models)) {
+                                if (CollectionUtils.isEmpty(viewModels)) {
                                     getView().removeAll(size);
                                     getView().showEmptyView();
                                 } else {

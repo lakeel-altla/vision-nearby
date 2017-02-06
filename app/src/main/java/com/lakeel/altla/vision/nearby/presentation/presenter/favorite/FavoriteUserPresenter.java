@@ -50,7 +50,7 @@ public final class FavoriteUserPresenter extends BasePresenter<FavoriteUserView>
 
     private final FavoriteUserModelMapper modelMapper = new FavoriteUserModelMapper();
 
-    private FavoriteUserModel model;
+    private FavoriteUserModel viewModel;
 
     private FavoriteUser favoriteUser;
 
@@ -64,15 +64,15 @@ public final class FavoriteUserPresenter extends BasePresenter<FavoriteUserView>
         this.favoriteUser = favoriteUser;
     }
 
-    public void onActivityCreated() {
+    public void onResume() {
         analyticsReporter.viewFavoriteItem(favoriteUser.userId, favoriteUser.name);
 
         Subscription subscription = findLatestNearbyHistoryUseCase.execute(favoriteUser.userId)
                 .map(history -> {
-                    model = modelMapper.map(history);
-                    return model;
+                    viewModel = modelMapper.map(history);
+                    return viewModel;
                 })
-                .flatMap(model1 -> findUser(model1.userId))
+                .flatMap(model -> findUser(favoriteUser.userId))
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribe(model -> {
                     analyticsReporter.viewFavoriteItem(model.userId, model.userName);
@@ -97,10 +97,10 @@ public final class FavoriteUserPresenter extends BasePresenter<FavoriteUserView>
 
     public void onMapReady() {
         isMapReadied = true;
-        if (model == null || model.latitude == null || model.longitude == null) {
+        if (viewModel == null || viewModel.latitude == null || viewModel.longitude == null) {
             getView().hideLocation();
         } else {
-            getView().showLocation(model.latitude, model.longitude);
+            getView().showLocation(viewModel.latitude, viewModel.longitude);
         }
     }
 
@@ -121,19 +121,19 @@ public final class FavoriteUserPresenter extends BasePresenter<FavoriteUserView>
     private Single<FavoriteUserModel> findUser(String userId) {
         return findUserUseCase.execute(userId)
                 .map(user -> {
-                    model.userName = user.name;
-                    model.imageUri = user.imageUri;
-                    model.email = user.email;
-                    return model;
+                    viewModel.userName = user.name;
+                    viewModel.imageUri = user.imageUri;
+                    viewModel.email = user.email;
+                    return viewModel;
                 });
     }
 
     private void showPresence(String userId) {
         Subscription subscription = findConnectionUseCase.execute(userId)
                 .map(connection -> {
-                    model.isConnected = connection.isConnected;
-                    model.lastOnlineTime = connection.lastOnlineTime;
-                    return model;
+                    viewModel.isConnected = connection.isConnected;
+                    viewModel.lastOnlineTime = connection.lastOnlineTime;
+                    return viewModel;
                 })
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribe(model -> getView().showPresence(model), new ErrorAction<>());

@@ -30,8 +30,6 @@ import com.neovisionaries.bluetooth.ble.advertising.ADStructure;
 import com.neovisionaries.bluetooth.ble.advertising.EddystoneUID;
 
 import java.util.ArrayList;
-import java.util.Iterator;
-import java.util.LinkedList;
 import java.util.List;
 import java.util.concurrent.ScheduledThreadPoolExecutor;
 import java.util.concurrent.TimeUnit;
@@ -48,9 +46,7 @@ public final class NearbyUserListPresenter extends BasePresenter<NearbyUserListV
 
     private final ReusableCompositeSubscription subscriptions = new ReusableCompositeSubscription();
 
-    private final List<NearbyUserModel> nearbyUserModels = new ArrayList<>();
-
-    private final List<NearbyUserModel> checkedModels = new LinkedList<>();
+    private final List<NearbyUserModel> viewModels = new ArrayList<>();
 
     private NearbyUsersModelMapper modelMapper = new NearbyUsersModelMapper();
 
@@ -83,14 +79,14 @@ public final class NearbyUserListPresenter extends BasePresenter<NearbyUserListV
                             .map(user -> modelMapper.map(user))
                             .observeOn(AndroidSchedulers.mainThread())
                             .subscribe(scannedModel -> {
-                                for (NearbyUserModel model : nearbyUserModels) {
+                                for (NearbyUserModel model : viewModels) {
                                     // Check already scanned.
                                     if (model.userId.equals(scannedModel.userId)) {
                                         return;
                                     }
                                 }
 
-                                nearbyUserModels.add(scannedModel);
+                                viewModels.add(scannedModel);
                                 getView().updateItems();
                             }, new ErrorAction<>());
                     subscriptions.add(subscription);
@@ -138,7 +134,7 @@ public final class NearbyUserListPresenter extends BasePresenter<NearbyUserListV
     }
 
     public int getItemCount() {
-        return nearbyUserModels.size();
+        return viewModels.size();
     }
 
     public void onBleEnabled() {
@@ -184,42 +180,19 @@ public final class NearbyUserListPresenter extends BasePresenter<NearbyUserListV
 
             getView().hideIndicator();
 
-            if (nearbyUserModels.size() == 0) {
+            if (viewModels.size() == 0) {
                 getView().showSnackBar(R.string.snackBar_message_not_found);
             }
 
             subscriptions.unSubscribe();
-        }, 2, TimeUnit.SECONDS);
+        }, 1, TimeUnit.SECONDS);
     }
 
     public final class NearbyUserItemPresenter extends BaseItemPresenter<NearbyUserItemView> {
 
         @Override
         public void onBind(@IntRange(from = 0) int position) {
-            getItemView().showItem(nearbyUserModels.get(position));
-        }
-
-        public void onCheck(NearbyUserModel model) {
-            if (model.isChecked) {
-                Iterator<NearbyUserModel> iterator = checkedModels.iterator();
-                while (iterator.hasNext()) {
-                    NearbyUserModel nearbyUserModel = iterator.next();
-                    if (nearbyUserModel.userId.equals(model.userId)) {
-                        iterator.remove();
-                    }
-                }
-            } else {
-                checkedModels.add(model);
-            }
-
-            model.isChecked = !model.isChecked;
-
-            if (0 < checkedModels.size()) {
-                getView().drawEditableActionBarColor();
-            } else {
-                getView().hideOptionMenu();
-                getView().drawDefaultActionBarColor();
-            }
+            getItemView().showItem(viewModels.get(position));
         }
     }
 }

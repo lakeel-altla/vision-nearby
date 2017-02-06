@@ -39,7 +39,7 @@ public final class FavoriteListPresenter extends BasePresenter<FavoriteListView>
 
     private FavoriteModelMapper favoriteModelMapper = new FavoriteModelMapper();
 
-    private final List<FavoriteModel> favoriteModels = new ArrayList<>();
+    private final List<FavoriteModel> viewModels = new ArrayList<>();
 
     @Inject
     FavoriteListPresenter() {
@@ -50,8 +50,8 @@ public final class FavoriteListPresenter extends BasePresenter<FavoriteListView>
                 .map(user -> favoriteModelMapper.map(user))
                 .toList()
                 .subscribe(favoritesModels -> {
-                    favoriteModels.clear();
-                    favoriteModels.addAll(favoritesModels);
+                    viewModels.clear();
+                    viewModels.addAll(favoritesModels);
 
                     if (CollectionUtils.isEmpty(favoritesModels)) {
                         getView().showEmptyView();
@@ -59,7 +59,7 @@ public final class FavoriteListPresenter extends BasePresenter<FavoriteListView>
                         getView().hideEmptyView();
                     }
 
-                    getView().updateItems(favoriteModels);
+                    getView().updateItems(viewModels);
                 }, new ErrorAction<>());
         subscriptions.add(subscription);
     }
@@ -78,7 +78,7 @@ public final class FavoriteListPresenter extends BasePresenter<FavoriteListView>
 
         @Override
         public void onBind(@IntRange(from = 0) int position) {
-            getItemView().showItem(favoriteModels.get(position));
+            getItemView().showItem(viewModels.get(position));
         }
 
         public void onClick(FavoriteModel model) {
@@ -92,15 +92,15 @@ public final class FavoriteListPresenter extends BasePresenter<FavoriteListView>
                     .observeOn(AndroidSchedulers.mainThread())
                     .subscribe(new ErrorAction<>(),
                             () -> {
-                                int size = favoriteModels.size();
-                                favoriteModels.remove(model);
+                                int size = viewModels.size();
+                                viewModels.remove(model);
 
-                                if (CollectionUtils.isEmpty(favoriteModels)) {
+                                if (CollectionUtils.isEmpty(viewModels)) {
                                     getView().removeAll(size);
                                     getView().showEmptyView();
                                 } else {
                                     getView().hideEmptyView();
-                                    getView().updateItems(favoriteModels);
+                                    getView().updateItems(viewModels);
                                 }
 
                                 getView().showSnackBar(R.string.snackBar_message_removed);
