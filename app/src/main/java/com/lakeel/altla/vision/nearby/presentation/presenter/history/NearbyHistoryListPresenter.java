@@ -39,7 +39,7 @@ public final class NearbyHistoryListPresenter extends BasePresenter<NearbyHistor
 
     private HistoryModelMapper modelMapper = new HistoryModelMapper();
 
-    private final List<NearbyHistoryModel> nearbyHistoryModels = new ArrayList<>();
+    private final List<NearbyHistoryModel> models = new ArrayList<>();
 
     @Inject
     NearbyHistoryListPresenter() {
@@ -47,14 +47,14 @@ public final class NearbyHistoryListPresenter extends BasePresenter<NearbyHistor
 
     public void onActivityCreated() {
         Subscription subscription = findAllNearbyHistoryUseCase.execute()
-                .map(historyUser -> modelMapper.map(historyUser))
+                .map(nearbyHistoryUserProfile -> modelMapper.map(nearbyHistoryUserProfile))
                 .toSortedList((model1, model2) -> Long.compare(model2.passingTime, model1.passingTime))
                 .observeOn(AndroidSchedulers.mainThread())
-                .subscribe(nearbyHistoryItemModels -> {
-                    nearbyHistoryModels.clear();
-                    nearbyHistoryModels.addAll(nearbyHistoryItemModels);
+                .subscribe(model -> {
+                    models.clear();
+                    models.addAll(model);
 
-                    if (CollectionUtils.isEmpty(nearbyHistoryItemModels)) {
+                    if (CollectionUtils.isEmpty(model)) {
                         getView().showEmptyView();
                     } else {
                         getView().hideEmptyView();
@@ -76,14 +76,14 @@ public final class NearbyHistoryListPresenter extends BasePresenter<NearbyHistor
     }
 
     public List<NearbyHistoryModel> getItems() {
-        return nearbyHistoryModels;
+        return models;
     }
 
     public final class HistoryItemPresenter extends BaseItemPresenter<NearbyHistoryItemView> {
 
         @Override
         public void onBind(@IntRange(from = 0) int position) {
-            getItemView().showItem(nearbyHistoryModels.get(position));
+            getItemView().showItem(models.get(position));
         }
 
         public void onClick(NearbyHistoryModel model) {
@@ -97,11 +97,11 @@ public final class NearbyHistoryListPresenter extends BasePresenter<NearbyHistor
                     .observeOn(AndroidSchedulers.mainThread())
                     .subscribe(new ErrorAction<>(),
                             () -> {
-                                int size = nearbyHistoryModels.size();
+                                int size = models.size();
 
-                                nearbyHistoryModels.remove(model);
+                                models.remove(model);
 
-                                if (CollectionUtils.isEmpty(nearbyHistoryModels)) {
+                                if (CollectionUtils.isEmpty(models)) {
                                     getView().removeAll(size);
                                     getView().showEmptyView();
                                 } else {
