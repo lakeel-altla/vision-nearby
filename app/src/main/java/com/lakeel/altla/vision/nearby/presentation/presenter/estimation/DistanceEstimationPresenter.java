@@ -84,11 +84,6 @@ public final class DistanceEstimationPresenter extends BasePresenter<DistanceEst
         scanner = bluetoothAdapter.getBluetoothLeScanner();
     }
 
-    public void onStop() {
-        subscriptions.unSubscribe();
-        scanner.stopScan(scanCallback);
-    }
-
     public void setBeaconIds(List<String> beaconIds) {
         this.beaconIds = beaconIds;
     }
@@ -99,6 +94,11 @@ public final class DistanceEstimationPresenter extends BasePresenter<DistanceEst
         } else {
             checkDeviceBle();
         }
+    }
+
+    public void onStop() {
+        subscriptions.unSubscribe();
+        scanner.stopScan(scanCallback);
     }
 
     public void onAccessFineLocationGranted() {

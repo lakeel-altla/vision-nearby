@@ -18,6 +18,7 @@ import com.lakeel.altla.vision.nearby.presentation.view.activity.MainActivity;
 import com.lakeel.altla.vision.nearby.presentation.view.adapter.FavoriteAdapter;
 import com.lakeel.altla.vision.nearby.presentation.view.divider.DividerItemDecoration;
 import com.lakeel.altla.vision.nearby.presentation.view.fragment.FragmentController;
+import com.lakeel.altla.vision.nearby.presentation.view.fragment.bundle.FavoriteUser;
 import com.marshalchen.ultimaterecyclerview.UltimateRecyclerView;
 import com.marshalchen.ultimaterecyclerview.layoutmanagers.ScrollSmoothLineaerLayoutManager;
 
@@ -112,6 +113,6 @@ public final class FavoriteListFragment extends Fragment implements FavoriteList
     @Override
     public void showFavoriteUserFragment(FavoriteModel model) {
         FragmentController controller = new FragmentController(this);
-        controller.showFavoriteUserFragment(model.userId, model.userName);
+        controller.showFavoriteUserFragment(new FavoriteUser(model.userId, model.userName));
     }
 }

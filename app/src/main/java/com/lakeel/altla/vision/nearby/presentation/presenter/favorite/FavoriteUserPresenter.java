@@ -11,6 +11,7 @@ import com.lakeel.altla.vision.nearby.presentation.presenter.BasePresenter;
 import com.lakeel.altla.vision.nearby.presentation.presenter.mapper.FavoriteUserModelMapper;
 import com.lakeel.altla.vision.nearby.presentation.presenter.model.FavoriteUserModel;
 import com.lakeel.altla.vision.nearby.presentation.view.FavoriteUserView;
+import com.lakeel.altla.vision.nearby.presentation.view.fragment.bundle.FavoriteUser;
 import com.lakeel.altla.vision.nearby.rx.ErrorAction;
 import com.lakeel.altla.vision.nearby.rx.ReusableCompositeSubscription;
 
@@ -51,9 +52,7 @@ public final class FavoriteUserPresenter extends BasePresenter<FavoriteUserView>
 
     private FavoriteUserModel model;
 
-    private String favoriteUserId;
-
-    private String favoriteUserName;
+    private FavoriteUser favoriteUser;
 
     private boolean isMapReadied;
 
@@ -61,15 +60,14 @@ public final class FavoriteUserPresenter extends BasePresenter<FavoriteUserView>
     FavoriteUserPresenter() {
     }
 
-    public void setUserIdAndUserName(String favoriteUserId, String favoriteUserName) {
-        this.favoriteUserId = favoriteUserId;
-        this.favoriteUserName = favoriteUserName;
+    public void setFavoriteUser(FavoriteUser favoriteUser) {
+        this.favoriteUser = favoriteUser;
     }
 
     public void onActivityCreated() {
-        analyticsReporter.viewFavoriteItem(favoriteUserId, favoriteUserName);
+        analyticsReporter.viewFavoriteItem(favoriteUser.userId, favoriteUser.name);
 
-        Subscription subscription = findLatestNearbyHistoryUseCase.execute(favoriteUserId)
+        Subscription subscription = findLatestNearbyHistoryUseCase.execute(favoriteUser.userId)
                 .map(history -> {
                     model = modelMapper.map(history);
                     return model;
@@ -107,15 +105,15 @@ public final class FavoriteUserPresenter extends BasePresenter<FavoriteUserView>
     }
 
     public void onEstimateDistanceMenuClick() {
-        Subscription subscription = findAllUserBeaconUseCase.execute(favoriteUserId)
+        Subscription subscription = findAllUserBeaconUseCase.execute(favoriteUser.userId)
                 .toList()
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribe(beacons -> {
-                    analyticsReporter.estimateDistance(favoriteUserName);
+                    analyticsReporter.estimateDistance(favoriteUser.name);
 
                     ArrayList<String> beaconIds = new ArrayList<>(beacons.size());
                     beaconIds.addAll(beacons);
-                    getView().showDistanceEstimationFragment(beaconIds, favoriteUserName);
+                    getView().showDistanceEstimationFragment(beaconIds, favoriteUser.name);
                 }, new ErrorAction<>());
         subscriptions.add(subscription);
     }

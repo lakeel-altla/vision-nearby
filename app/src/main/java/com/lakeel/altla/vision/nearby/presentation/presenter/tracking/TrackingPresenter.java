@@ -7,6 +7,7 @@ import com.lakeel.altla.vision.nearby.presentation.presenter.BasePresenter;
 import com.lakeel.altla.vision.nearby.presentation.presenter.mapper.TrackingModelMapper;
 import com.lakeel.altla.vision.nearby.presentation.presenter.model.TrackingModel;
 import com.lakeel.altla.vision.nearby.presentation.view.TrackingView;
+import com.lakeel.altla.vision.nearby.presentation.view.fragment.bundle.TrackingBeacon;
 import com.lakeel.altla.vision.nearby.presentation.view.intent.GoogleMapIntent;
 import com.lakeel.altla.vision.nearby.rx.ErrorAction;
 import com.lakeel.altla.vision.nearby.rx.ReusableCompositeSubscription;
@@ -32,9 +33,7 @@ public final class TrackingPresenter extends BasePresenter<TrackingView> {
 
     private TrackingModelMapper modelMapper = new TrackingModelMapper();
 
-    private String beaconId;
-
-    private String beaconName;
+    private TrackingBeacon trackingBeacon;
 
     private boolean isMapReadied;
 
@@ -44,13 +43,12 @@ public final class TrackingPresenter extends BasePresenter<TrackingView> {
     TrackingPresenter() {
     }
 
-    public void setBeaconIdAndBeaconName(String beaconId, String beaconName) {
-        this.beaconId = beaconId;
-        this.beaconName = beaconName;
+    public void setTrackingBeacon(TrackingBeacon trackingBeacon) {
+        this.trackingBeacon = trackingBeacon;
     }
 
     public void onResume() {
-        Subscription subscription = findDeviceLocationUseCase.execute(beaconId)
+        Subscription subscription = findDeviceLocationUseCase.execute(trackingBeacon.beaconId)
                 .toObservable()
                 .doOnNext(location -> {
                     if (location == null) {
@@ -93,11 +91,11 @@ public final class TrackingPresenter extends BasePresenter<TrackingView> {
     }
 
     public void onDistanceEstimationMenuClick() {
-        analyticsReporter.estimateDistance(beaconName);
+        analyticsReporter.estimateDistance(trackingBeacon.name);
 
         ArrayList<String> beaconIds = new ArrayList<>(1);
-        beaconIds.add(beaconId);
-        getView().showDistanceEstimationFragment(beaconIds, beaconName);
+        beaconIds.add(trackingBeacon.beaconId);
+        getView().showDistanceEstimationFragment(beaconIds, trackingBeacon.name);
     }
 
     public void onDirectionMenuClick() {

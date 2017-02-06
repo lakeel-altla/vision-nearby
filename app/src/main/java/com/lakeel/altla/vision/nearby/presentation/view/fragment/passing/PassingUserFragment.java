@@ -28,7 +28,7 @@ import com.lakeel.altla.vision.nearby.presentation.presenter.model.PassingUserMo
 import com.lakeel.altla.vision.nearby.presentation.presenter.passing.PassingUserPresenter;
 import com.lakeel.altla.vision.nearby.presentation.view.PassingUserView;
 import com.lakeel.altla.vision.nearby.presentation.view.activity.MainActivity;
-import com.lakeel.altla.vision.nearby.presentation.view.bundle.FragmentBundle;
+import com.lakeel.altla.vision.nearby.presentation.view.fragment.bundle.BundleKey;
 import com.lakeel.altla.vision.nearby.presentation.view.color.AppColor;
 import com.lakeel.altla.vision.nearby.presentation.view.date.DateFormatter;
 import com.lakeel.altla.vision.nearby.presentation.view.layout.PassingLayout;
@@ -76,7 +76,7 @@ public final class PassingUserFragment extends Fragment implements PassingUserVi
 
     public static PassingUserFragment newInstance(String historyId) {
         Bundle args = new Bundle();
-        args.putString(FragmentBundle.NEARBY_HISTORY_ID.name(), historyId);
+        args.putString(BundleKey.NEARBY_HISTORY_ID.name(), historyId);
 
         PassingUserFragment fragment = new PassingUserFragment();
         fragment.setArguments(args);
@@ -119,7 +119,7 @@ public final class PassingUserFragment extends Fragment implements PassingUserVi
         supportMapFragment.getMapAsync(this);
 
         Bundle bundle = getArguments();
-        String historyId = (String) bundle.get(FragmentBundle.NEARBY_HISTORY_ID.name());
+        String historyId = (String) bundle.get(BundleKey.NEARBY_HISTORY_ID.name());
         presenter.setHistoryId(historyId);
 
         presenter.onActivityCreated();

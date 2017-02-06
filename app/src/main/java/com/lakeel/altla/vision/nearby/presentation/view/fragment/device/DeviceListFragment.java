@@ -19,6 +19,7 @@ import com.lakeel.altla.vision.nearby.presentation.view.activity.MainActivity;
 import com.lakeel.altla.vision.nearby.presentation.view.adapter.DeviceAdapter;
 import com.lakeel.altla.vision.nearby.presentation.view.divider.DividerItemDecoration;
 import com.lakeel.altla.vision.nearby.presentation.view.fragment.FragmentController;
+import com.lakeel.altla.vision.nearby.presentation.view.fragment.bundle.TrackingBeacon;
 
 import javax.inject.Inject;
 
@@ -105,7 +106,7 @@ public final class DeviceListFragment extends Fragment implements DeviceListView
     @Override
     public void showTrackingFragment(String beaconId, String beaconName) {
         FragmentController controller = new FragmentController(this);
-        controller.showTrackingFragment(beaconId, beaconName);
+        controller.showTrackingFragment(new TrackingBeacon(beaconId, beaconName));
     }
 
     @Override

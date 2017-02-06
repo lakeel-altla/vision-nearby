@@ -22,15 +22,16 @@ import com.google.android.gms.maps.model.CircleOptions;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.MarkerOptions;
 import com.lakeel.altla.vision.nearby.R;
-import com.lakeel.altla.vision.nearby.presentation.view.color.AppColor;
-import com.lakeel.altla.vision.nearby.presentation.view.bundle.FragmentBundle;
-import com.lakeel.altla.vision.nearby.presentation.view.map.Radius;
-import com.lakeel.altla.vision.nearby.presentation.view.intent.GoogleMapIntent;
 import com.lakeel.altla.vision.nearby.presentation.presenter.tracking.TrackingPresenter;
-import com.lakeel.altla.vision.nearby.presentation.view.date.DateFormatter;
 import com.lakeel.altla.vision.nearby.presentation.view.TrackingView;
 import com.lakeel.altla.vision.nearby.presentation.view.activity.MainActivity;
+import com.lakeel.altla.vision.nearby.presentation.view.color.AppColor;
+import com.lakeel.altla.vision.nearby.presentation.view.date.DateFormatter;
 import com.lakeel.altla.vision.nearby.presentation.view.fragment.FragmentController;
+import com.lakeel.altla.vision.nearby.presentation.view.fragment.bundle.BundleKey;
+import com.lakeel.altla.vision.nearby.presentation.view.fragment.bundle.TrackingBeacon;
+import com.lakeel.altla.vision.nearby.presentation.view.intent.GoogleMapIntent;
+import com.lakeel.altla.vision.nearby.presentation.view.map.Radius;
 
 import java.util.ArrayList;
 
@@ -56,10 +57,9 @@ public final class TrackingFragment extends Fragment implements TrackingView, On
 
     private SupportMapFragment supportMapFragment;
 
-    public static TrackingFragment newInstance(String id, String name) {
+    public static TrackingFragment newInstance(TrackingBeacon trackingBeacon) {
         Bundle bundle = new Bundle();
-        bundle.putSerializable(FragmentBundle.BEACON_ID.name(), id);
-        bundle.putSerializable(FragmentBundle.TARGET_NAME.name(), name);
+        bundle.putSerializable(BundleKey.TRACKING_BEACON.name(), trackingBeacon);
 
         TrackingFragment fragment = new TrackingFragment();
         fragment.setArguments(bundle);
@@ -87,7 +87,8 @@ public final class TrackingFragment extends Fragment implements TrackingView, On
 
         getActivity().setTitle(R.string.toolbar_title_tracking);
 
-        ((MainActivity) getActivity()).setDrawerIndicatorEnabled(false);
+        MainActivity activity = ((MainActivity) getActivity());
+        activity.setDrawerIndicatorEnabled(false);
 
         FragmentManager fm = getChildFragmentManager();
         supportMapFragment = (SupportMapFragment) fm.findFragmentById(R.id.trackingMapLayout);
@@ -98,9 +99,8 @@ public final class TrackingFragment extends Fragment implements TrackingView, On
         supportMapFragment.getMapAsync(this);
 
         Bundle bundle = getArguments();
-        String beaconId = (String) bundle.get(FragmentBundle.BEACON_ID.name());
-        String beaconName = (String) bundle.get(FragmentBundle.TARGET_NAME.name());
-        presenter.setBeaconIdAndBeaconName(beaconId, beaconName);
+        TrackingBeacon trackingBeacon = (TrackingBeacon) bundle.getSerializable(BundleKey.TRACKING_BEACON.name());
+        presenter.setTrackingBeacon(trackingBeacon);
     }
 
     @Override

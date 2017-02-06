@@ -25,7 +25,7 @@ import com.lakeel.altla.vision.nearby.presentation.firebase.MyUser;
 import com.lakeel.altla.vision.nearby.presentation.presenter.estimation.DistanceEstimationPresenter;
 import com.lakeel.altla.vision.nearby.presentation.view.DistanceEstimationView;
 import com.lakeel.altla.vision.nearby.presentation.view.activity.MainActivity;
-import com.lakeel.altla.vision.nearby.presentation.view.bundle.FragmentBundle;
+import com.lakeel.altla.vision.nearby.presentation.view.fragment.bundle.BundleKey;
 import com.nostra13.universalimageloader.core.ImageLoader;
 
 import org.slf4j.Logger;
@@ -67,8 +67,8 @@ public final class DistanceEstimationFragment extends Fragment implements Distan
 
     public static DistanceEstimationFragment newInstance(ArrayList<String> beaconIds, String targetName) {
         Bundle args = new Bundle();
-        args.putStringArrayList(FragmentBundle.BEACON_IDS.name(), beaconIds);
-        args.putSerializable(FragmentBundle.TARGET_NAME.name(), targetName);
+        args.putStringArrayList(BundleKey.BEACON_IDS.name(), beaconIds);
+        args.putSerializable(BundleKey.TARGET_NAME.name(), targetName);
 
         DistanceEstimationFragment fragment = new DistanceEstimationFragment();
         fragment.setArguments(args);
@@ -101,8 +101,8 @@ public final class DistanceEstimationFragment extends Fragment implements Distan
         imageLoader.displayImage(MyUser.getUserProfile().imageUri, userImageView);
 
         Bundle bundle = getArguments();
-        List<String> beaconIds = bundle.getStringArrayList(FragmentBundle.BEACON_IDS.name());
-        String targetName = bundle.getString(FragmentBundle.TARGET_NAME.name());
+        List<String> beaconIds = bundle.getStringArrayList(BundleKey.BEACON_IDS.name());
+        String targetName = bundle.getString(BundleKey.TARGET_NAME.name());
 
         String message = getResources().getString(R.string.toolbar_title_finding_for_format, targetName);
         getActivity().setTitle(message);

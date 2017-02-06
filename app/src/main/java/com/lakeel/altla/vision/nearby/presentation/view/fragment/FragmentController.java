@@ -8,6 +8,8 @@ import android.support.v4.app.FragmentTransaction;
 
 import com.lakeel.altla.vision.nearby.R;
 import com.lakeel.altla.vision.nearby.presentation.view.fragment.ble.BleSettingsFragment;
+import com.lakeel.altla.vision.nearby.presentation.view.fragment.bundle.FavoriteUser;
+import com.lakeel.altla.vision.nearby.presentation.view.fragment.bundle.TrackingBeacon;
 import com.lakeel.altla.vision.nearby.presentation.view.fragment.device.DeviceListFragment;
 import com.lakeel.altla.vision.nearby.presentation.view.fragment.distance.DistanceEstimationFragment;
 import com.lakeel.altla.vision.nearby.presentation.view.fragment.favorite.FavoriteListFragment;
@@ -89,8 +91,8 @@ public final class FragmentController {
         replaceFragment(R.id.fragmentPlaceholder, fragment, PASSING_USER_FRAGMENT_TAG);
     }
 
-    public void showTrackingFragment(String id, String beaconName) {
-        TrackingFragment fragment = TrackingFragment.newInstance(id, beaconName);
+    public void showTrackingFragment(TrackingBeacon trackingBeacon) {
+        TrackingFragment fragment = TrackingFragment.newInstance(trackingBeacon);
         replaceFragment(R.id.fragmentPlaceholder, fragment, TRACKING_FRAGMENT_TAG);
     }
 
@@ -104,8 +106,8 @@ public final class FragmentController {
         replaceFragment(R.id.fragmentPlaceholder, fragment, DISTANCE_ESTIMATION_FRAGMENT_TAG);
     }
 
-    public void showFavoriteUserFragment(String userId, String userName) {
-        FavoriteUserFragment fragment = FavoriteUserFragment.newInstance(userId, userName);
+    public void showFavoriteUserFragment(FavoriteUser favoriteUser) {
+        FavoriteUserFragment fragment = FavoriteUserFragment.newInstance(favoriteUser);
         replaceFragment(R.id.fragmentPlaceholder, fragment, USER_PROFILE_FRAGMENT_TAG);
     }
 

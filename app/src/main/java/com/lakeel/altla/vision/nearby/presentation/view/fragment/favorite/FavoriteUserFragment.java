@@ -30,10 +30,11 @@ import com.lakeel.altla.vision.nearby.presentation.presenter.favorite.FavoriteUs
 import com.lakeel.altla.vision.nearby.presentation.presenter.model.FavoriteUserModel;
 import com.lakeel.altla.vision.nearby.presentation.view.FavoriteUserView;
 import com.lakeel.altla.vision.nearby.presentation.view.activity.MainActivity;
-import com.lakeel.altla.vision.nearby.presentation.view.bundle.FragmentBundle;
 import com.lakeel.altla.vision.nearby.presentation.view.color.AppColor;
 import com.lakeel.altla.vision.nearby.presentation.view.date.DateFormatter;
 import com.lakeel.altla.vision.nearby.presentation.view.fragment.FragmentController;
+import com.lakeel.altla.vision.nearby.presentation.view.fragment.bundle.BundleKey;
+import com.lakeel.altla.vision.nearby.presentation.view.fragment.bundle.FavoriteUser;
 import com.lakeel.altla.vision.nearby.presentation.view.layout.PassingLayout;
 import com.lakeel.altla.vision.nearby.presentation.view.layout.PresenceLayout;
 import com.lakeel.altla.vision.nearby.presentation.view.layout.ProfileLayout;
@@ -76,10 +77,9 @@ public final class FavoriteUserFragment extends Fragment implements OnMapReadyCa
 
     private View mapView;
 
-    public static FavoriteUserFragment newInstance(String userId, String userName) {
+    public static FavoriteUserFragment newInstance(FavoriteUser favoriteUser) {
         Bundle args = new Bundle();
-        args.putString(FragmentBundle.USER_ID.name(), userId);
-        args.putString(FragmentBundle.USER_NAME.name(), userName);
+        args.putSerializable(BundleKey.FAVORITE_USER.name(), favoriteUser);
 
         FavoriteUserFragment fragment = new FavoriteUserFragment();
         fragment.setArguments(args);
@@ -124,12 +124,14 @@ public final class FavoriteUserFragment extends Fragment implements OnMapReadyCa
         supportMapFragment.getMapAsync(this);
 
         Bundle bundle = getArguments();
-        String userId = bundle.getString(FragmentBundle.USER_ID.name());
-        String userName = bundle.getString(FragmentBundle.USER_NAME.name());
+        FavoriteUser favoriteUser = (FavoriteUser) bundle.getSerializable(BundleKey.FAVORITE_USER.name());
+        if (favoriteUser == null) {
+            throw new NullPointerException("favoriteUser is null.");
+        }
 
-        getActivity().setTitle(userName);
+        getActivity().setTitle(favoriteUser.name);
 
-        presenter.setUserIdAndUserName(userId, userName);
+        presenter.setFavoriteUser(favoriteUser);
 
         presenter.onActivityCreated();
     }

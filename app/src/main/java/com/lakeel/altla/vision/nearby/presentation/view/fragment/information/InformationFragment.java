@@ -14,7 +14,7 @@ import com.lakeel.altla.vision.nearby.presentation.presenter.information.Informa
 import com.lakeel.altla.vision.nearby.presentation.presenter.model.InformationModel;
 import com.lakeel.altla.vision.nearby.presentation.view.InformationView;
 import com.lakeel.altla.vision.nearby.presentation.view.activity.MainActivity;
-import com.lakeel.altla.vision.nearby.presentation.view.bundle.FragmentBundle;
+import com.lakeel.altla.vision.nearby.presentation.view.fragment.bundle.BundleKey;
 
 import javax.inject.Inject;
 
@@ -25,7 +25,7 @@ public final class InformationFragment extends Fragment implements InformationVi
 
     public static InformationFragment newInstance(String informationId) {
         Bundle bundle = new Bundle();
-        bundle.putString(FragmentBundle.INFORMATION_ID.name(), informationId);
+        bundle.putString(BundleKey.INFORMATION_ID.name(), informationId);
 
         InformationFragment fragment = new InformationFragment();
         fragment.setArguments(bundle);
@@ -66,7 +66,7 @@ public final class InformationFragment extends Fragment implements InformationVi
         ((MainActivity) getActivity()).setDrawerIndicatorEnabled(false);
 
         Bundle bundle = getArguments();
-        String informationId = (String) bundle.get(FragmentBundle.INFORMATION_ID.name());
+        String informationId = (String) bundle.get(BundleKey.INFORMATION_ID.name());
 
         presenter.onActivityCreated(informationId);
     }
