@@ -124,6 +124,10 @@ public final class NearbyUserListPresenter extends BasePresenter<NearbyUserListV
         if (isScanning) {
             return;
         }
+
+        viewModels.clear();
+        getView().updateItems();
+
         subscribe();
     }
 
