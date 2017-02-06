@@ -8,11 +8,11 @@ import android.view.MenuItem;
 
 import com.lakeel.altla.vision.nearby.R;
 import com.lakeel.altla.vision.nearby.presentation.application.App;
-import com.lakeel.altla.vision.nearby.presentation.view.intent.IntentKey;
 import com.lakeel.altla.vision.nearby.presentation.presenter.ble.BleSettingsPresenter;
 import com.lakeel.altla.vision.nearby.presentation.service.AdvertiseService;
 import com.lakeel.altla.vision.nearby.presentation.view.BleSettingsView;
 import com.lakeel.altla.vision.nearby.presentation.view.activity.MainActivity;
+import com.lakeel.altla.vision.nearby.presentation.view.intent.IntentKey;
 
 import javax.inject.Inject;
 
@@ -94,24 +94,24 @@ public final class BleSettingsFragment extends PreferenceFragmentCompat implemen
     }
 
     @Override
-    public void startAdvertise(String beaconId) {
+    public void disableAdvertiseSettings() {
+        advertisePreference.setEnabled(false);
+    }
+
+    @Override
+    public void startAdvertiseInBackground(String beaconId) {
         Intent intent = new Intent(getContext(), AdvertiseService.class);
         intent.putExtra(IntentKey.BEACON_ID.name(), beaconId);
         getContext().startService(intent);
     }
 
     @Override
-    public void disableAdvertiseSettings() {
-        advertisePreference.setEnabled(false);
-    }
-
-    @Override
-    public void startSubscribe() {
+    public void startSubscribeInBackground() {
         App.startDetectBeaconsInBackground(this);
     }
 
     @Override
-    public void stopSubscribe() {
+    public void stopSubscribeInBackground() {
         App.stopDetectBeaconsInBackground(this);
     }
 }

@@ -28,66 +28,69 @@ public final class AdvertiseService extends Service {
 
     @Override
     public int onStartCommand(Intent intent, int flags, int startId) {
-        if (intent != null) {
-            Bundle bundle = intent.getExtras();
-            String beaconId = (String) bundle.get(IntentKey.BEACON_ID.name());
-
-            EddystoneUid eddystoneUID = new EddystoneUid(beaconId);
-            String namespaceId = eddystoneUID.getNamespaceId();
-            String instanceId = eddystoneUID.getInstanceId();
-
-            LOGGER.debug("Namespace ID=" + namespaceId + " Instance ID=" + instanceId);
-
-            if (StringUtils.isEmpty(namespaceId) || StringUtils.isEmpty(instanceId)) {
-                LOGGER.error("Stop AdvertiseService because Namespace ID or Instance ID was empty.");
-                stopSelf();
-            } else {
-                BeaconParser beaconParser = new BeaconParser()
-                        .setBeaconLayout(BeaconParser.EDDYSTONE_UID_LAYOUT);
-
-                BeaconTransmitter beaconTransmitter = new BeaconTransmitter(getApplicationContext(), beaconParser);
-                if (beaconTransmitter.isStarted()) {
-                    LOGGER.warn("Already started.");
-                } else {
-                    // Transmit as a Eddystone-UID.
-                    Beacon beacon = new Beacon.Builder()
-                            .setId1(namespaceId)
-                            .setId2(instanceId)
-                            .build();
-
-                    beaconTransmitter.startAdvertising(beacon, new AdvertiseCallback() {
-                        @Override
-                        public void onStartSuccess(AdvertiseSettings settingsInEffect) {
-                            super.onStartSuccess(settingsInEffect);
-                            LOGGER.info("Succeeded to advertise as a beacon.");
-
-                            NotificationCompat.Builder builder = new NotificationCompat.Builder(getApplicationContext());
-                            builder.setContentTitle(getApplicationContext().getResources().getString(R.string.notification_title_advertise_ble));
-//                            builder.setContentText(getApplicationContext().getResources().getString(R.string.notification_message_advertise_ble));
-                            builder.setSmallIcon(android.R.drawable.ic_lock_idle_alarm);
-                            startForeground(UUID.randomUUID().variant(), builder.build());
-                        }
-
-                        @Override
-                        public void onStartFailure(int errorCode) {
-                            super.onStartFailure(errorCode);
-                            LOGGER.error("Failed to start to advertise:Error code=" + errorCode);
-                        }
-                    });
-                }
-            }
+        if (intent == null) {
+            throw new RuntimeException("Intent is empty.");
         }
+
+        Bundle bundle = intent.getExtras();
+        String beaconId = (String) bundle.get(IntentKey.BEACON_ID.name());
+
+        EddystoneUid eddystoneUID = new EddystoneUid(beaconId);
+        String namespaceId = eddystoneUID.getNamespaceId();
+        String instanceId = eddystoneUID.getInstanceId();
+
+        LOGGER.debug("namespaceId=" + namespaceId + " instanceId=" + instanceId);
+
+        if (StringUtils.isEmpty(namespaceId) || StringUtils.isEmpty(instanceId)) {
+            LOGGER.error("Kill the service to advertise because namespaceId or instanceId was empty.");
+            stopSelf();
+            return START_STICKY;
+        }
+
+        BeaconParser beaconParser = new BeaconParser()
+                .setBeaconLayout(BeaconParser.EDDYSTONE_UID_LAYOUT);
+        BeaconTransmitter beaconTransmitter = new BeaconTransmitter(getApplicationContext(), beaconParser);
+
+        if (beaconTransmitter.isStarted()) {
+            LOGGER.warn("Already started.");
+        } else {
+            // Transmit as a Eddystone-UID.
+            Beacon beacon = new Beacon.Builder()
+                    .setId1(namespaceId)
+                    .setId2(instanceId)
+                    .build();
+
+            beaconTransmitter.startAdvertising(beacon, new AdvertiseCallback() {
+                @Override
+                public void onStartSuccess(AdvertiseSettings settingsInEffect) {
+                    super.onStartSuccess(settingsInEffect);
+                    LOGGER.info("Succeeded to advertise as a beacon.");
+
+                    NotificationCompat.Builder builder = new NotificationCompat.Builder(getApplicationContext());
+                    builder.setContentTitle(getApplicationContext().getResources().getString(R.string.notification_title_advertise_ble));
+                    builder.setSmallIcon(android.R.drawable.ic_lock_idle_alarm);
+                    startForeground(UUID.randomUUID().variant(), builder.build());
+                }
+
+                @Override
+                public void onStartFailure(int errorCode) {
+                    super.onStartFailure(errorCode);
+                    LOGGER.error("Failed to start to advertise:errorCode=" + errorCode);
+                }
+            });
+        }
+
         return START_STICKY;
     }
 
     @Override
     public void onTaskRemoved(Intent rootIntent) {
-        LOGGER.info("App task is removed by user action.");
+        LOGGER.info("AdvertiseService is killed because app task is removed by user action.");
     }
 
     @Override
     public void onDestroy() {
-        LOGGER.info("AdvertiseService is destroy.");
+        LOGGER.info("AdvertiseService is destroyed.");
     }
 
     @Nullable

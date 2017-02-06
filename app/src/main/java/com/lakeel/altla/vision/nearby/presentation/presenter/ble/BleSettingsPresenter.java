@@ -52,7 +52,7 @@ public final class BleSettingsPresenter extends BasePresenter<BleSettingsView> {
 
         Subscription subscription = findPreferenceUseCase.execute()
                 .observeOn(AndroidSchedulers.mainThread())
-                .subscribe(preference -> getView().startAdvertise(preference.beaconId), new ErrorAction<>());
+                .subscribe(preference -> getView().startAdvertiseInBackground(preference.beaconId), new ErrorAction<>());
         subscriptions.add(subscription);
     }
 
@@ -65,11 +65,11 @@ public final class BleSettingsPresenter extends BasePresenter<BleSettingsView> {
 
     public void onStartSubscribe() {
         analyticsReporter.onSubscribe();
-        getView().startSubscribe();
+        getView().startSubscribeInBackground();
     }
 
     public void onStopSubscribe() {
         analyticsReporter.offSubscribe();
-        getView().stopSubscribe();
+        getView().stopSubscribeInBackground();
     }
 }

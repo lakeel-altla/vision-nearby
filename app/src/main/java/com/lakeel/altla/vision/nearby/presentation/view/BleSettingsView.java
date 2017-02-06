@@ -2,11 +2,11 @@ package com.lakeel.altla.vision.nearby.presentation.view;
 
 public interface BleSettingsView {
 
-    void startAdvertise(String beaconId);
-
     void disableAdvertiseSettings();
 
-    void startSubscribe();
+    void startAdvertiseInBackground(String beaconId);
 
-    void stopSubscribe();
+    void startSubscribeInBackground();
+
+    void stopSubscribeInBackground();
 }
