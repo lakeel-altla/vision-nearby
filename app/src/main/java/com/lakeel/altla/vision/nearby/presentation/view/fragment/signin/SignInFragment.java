@@ -58,7 +58,7 @@ public final class SignInFragment extends Fragment implements SignInView {
     public void onActivityCreated(@Nullable Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
 
-        getActivity().setTitle(R.string.title_sign_in);
+        getActivity().setTitle(R.string.toolbar_title_sign_in);
 
         presenter.onActivityCreated();
     }
@@ -75,7 +75,7 @@ public final class SignInFragment extends Fragment implements SignInView {
             if (Activity.RESULT_OK == resultCode) {
                 presenter.onSignedIn();
             } else {
-                Snackbar.make(mainLayout, R.string.error_not_signed_in, Snackbar.LENGTH_SHORT).show();
+                Snackbar.make(mainLayout, R.string.snackBar_error_not_signed_in, Snackbar.LENGTH_SHORT).show();
             }
         }
     }
@@ -92,6 +92,6 @@ public final class SignInFragment extends Fragment implements SignInView {
 
     @Override
     public void showSnackBar(int resId) {
-        Snackbar.make(mainLayout, R.string.error_not_signed_in, Snackbar.LENGTH_SHORT).show();
+        Snackbar.make(mainLayout, R.string.snackBar_error_not_signed_in, Snackbar.LENGTH_SHORT).show();
     }
 }

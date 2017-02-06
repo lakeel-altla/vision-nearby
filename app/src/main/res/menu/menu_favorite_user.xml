@@ -5,7 +5,7 @@
     <item
         android:id="@+id/estimate"
         android:icon="@drawable/ic_bluetooth_searching"
-        android:title="@string/title_find"
+        android:title="@string/menu_title_find"
         app:showAsAction="ifRoom" />
 
 </menu>

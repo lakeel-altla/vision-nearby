@@ -61,7 +61,7 @@ public final class InformationFragment extends Fragment implements InformationVi
     public void onActivityCreated(@Nullable Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
 
-        getActivity().setTitle(R.string.title_information);
+        getActivity().setTitle(R.string.toolbar_title_information);
 
         ((MainActivity) getActivity()).setDrawerIndicatorEnabled(false);
 

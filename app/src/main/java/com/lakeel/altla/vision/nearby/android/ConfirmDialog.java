@@ -13,7 +13,7 @@ public final class ConfirmDialog {
 
     public ConfirmDialog(@NonNull Activity activity, @StringRes int resId) {
         builder = new MaterialDialog.Builder(activity);
-        builder.title(R.string.title_confirm);
+        builder.title(R.string.dialog_title_confirm);
         builder.positiveText(R.string.dialog_button_positive);
         builder.content(resId);
     }

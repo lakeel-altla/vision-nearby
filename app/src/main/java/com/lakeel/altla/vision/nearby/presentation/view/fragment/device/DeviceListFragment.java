@@ -66,7 +66,7 @@ public final class DeviceListFragment extends Fragment implements DeviceListView
         MainActivity activity = (MainActivity) getActivity();
         activity.setDrawerIndicatorEnabled(false);
 
-        getActivity().setTitle(R.string.title_devices);
+        getActivity().setTitle(R.string.toolbar_title_devices);
 
         recyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
         recyclerView.setHasFixedSize(true);

@@ -37,7 +37,7 @@ public final class BleSettingsFragment extends PreferenceFragmentCompat implemen
 
         setHasOptionsMenu(true);
 
-        getActivity().setTitle(R.string.title_ble_settings);
+        getActivity().setTitle(R.string.toolbar_title_ble_settings);
 
         ((MainActivity) getActivity()).setDrawerIndicatorEnabled(false);
 

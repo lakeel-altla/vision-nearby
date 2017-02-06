@@ -103,7 +103,7 @@ public final class FavoriteListPresenter extends BasePresenter<FavoriteListView>
                                     getView().updateItems(favoriteModels);
                                 }
 
-                                getView().showSnackBar(R.string.message_removed);
+                                getView().showSnackBar(R.string.snackBar_message_removed);
                             });
             subscriptions.add(subscription);
         }

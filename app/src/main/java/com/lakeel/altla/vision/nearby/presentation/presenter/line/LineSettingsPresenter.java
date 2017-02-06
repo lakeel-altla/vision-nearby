@@ -53,7 +53,7 @@ public final class LineSettingsPresenter extends BasePresenter<LineSettingsView>
         UriChecker checker = new UriChecker(url);
         Result result = checker.check();
         if (result == Result.SYNTAX_ERROR) {
-            getView().showSnackBar(R.string.error_uri_syntax);
+            getView().showSnackBar(R.string.snackBar_error_not_correct_uri);
             return;
         }
 
@@ -63,7 +63,7 @@ public final class LineSettingsPresenter extends BasePresenter<LineSettingsView>
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribe(s -> {
                     getView().showLineUrl(url);
-                    getView().showSnackBar(R.string.message_added);
+                    getView().showSnackBar(R.string.snackBar_message_added);
                 }, new ErrorAction<>());
         subscriptions.add(subscription);
     }

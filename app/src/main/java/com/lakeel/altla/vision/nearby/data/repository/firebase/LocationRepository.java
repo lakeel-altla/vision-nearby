@@ -21,7 +21,7 @@ public class LocationRepository {
 
     @Inject
     LocationRepository() {
-        geoFire = new GeoFire(FirebaseDatabase.getInstance().getReference(DATABASE_URI));
+        geoFire = new GeoFire(FirebaseDatabase.getInstance().getReferenceFromUrl(DATABASE_URI));
     }
 
     public Single<GeoLocation> find(String key) {

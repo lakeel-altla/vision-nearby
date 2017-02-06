@@ -35,7 +35,7 @@ public final class UserProfileRepository {
 
     @Inject
     public UserProfileRepository() {
-        this.reference = FirebaseDatabase.getInstance().getReference(DATABASE_URI);
+        this.reference = FirebaseDatabase.getInstance().getReferenceFromUrl(DATABASE_URI);
     }
 
     public Single<UserProfile> find(String userId) {

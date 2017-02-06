@@ -99,7 +99,7 @@ public final class FavoriteUserPresenter extends BasePresenter<FavoriteUserView>
 
     public void onMapReady() {
         isMapReadied = true;
-        if (model.latitude == null && model.longitude == null) {
+        if (model == null || model.latitude == null || model.longitude == null) {
             getView().hideLocation();
         } else {
             getView().showLocation(model.latitude, model.longitude);
@@ -143,19 +143,18 @@ public final class FavoriteUserPresenter extends BasePresenter<FavoriteUserView>
     }
 
     private void showTimes(String userId) {
-        Subscription timesSubscription = findAllPassingTimeUseCase.execute(userId)
+        Subscription subscription = findAllPassingTimeUseCase.execute(userId)
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribe(times -> getView().showTimes(times), new ErrorAction<>());
-        subscriptions.add(timesSubscription);
+        subscriptions.add(subscription);
     }
 
     private void showLineUrl(String userId) {
         Subscription subscription = findLineLinkUseCase.execute(userId)
                 .toObservable()
                 .filter(entity -> entity != null)
-                .map(entity -> entity.url)
                 .observeOn(AndroidSchedulers.mainThread())
-                .subscribe(lineUrl -> getView().showLineUrl(lineUrl), new ErrorAction<>());
+                .subscribe(entity -> getView().showLineUrl(entity.url), new ErrorAction<>());
         subscriptions.add(subscription);
     }
 }

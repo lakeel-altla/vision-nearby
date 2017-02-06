@@ -76,7 +76,7 @@ public final class NearbyUserListFragment extends Fragment implements NearbyUser
     public void onActivityCreated(Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
 
-        getActivity().setTitle(R.string.title_nearby);
+        getActivity().setTitle(R.string.toolbar_title_nearby);
 
         ((MainActivity) getActivity()).setDrawerIndicatorEnabled(true);
 
@@ -108,7 +108,7 @@ public final class NearbyUserListFragment extends Fragment implements NearbyUser
                 presenter.onBleEnabled();
             } else {
                 LOGGER.error("Failed to enable BLE.");
-                showSnackBar(R.string.error_not_enable_ble);
+                showSnackBar(R.string.snackBar_error_not_enable_ble);
             }
         } else {
             super.onActivityResult(requestCode, resultCode, data);
@@ -122,7 +122,7 @@ public final class NearbyUserListFragment extends Fragment implements NearbyUser
                 presenter.onAccessFineLocationGranted();
             } else {
                 LOGGER.warn("Access fine location permission is denied.");
-                showSnackBar(R.string.error_not_find);
+                showSnackBar(R.string.snackBar_error_not_find);
             }
         }
     }

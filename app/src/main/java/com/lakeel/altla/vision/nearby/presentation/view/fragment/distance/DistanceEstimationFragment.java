@@ -21,7 +21,6 @@ import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import com.lakeel.altla.vision.nearby.R;
-import com.lakeel.altla.vision.nearby.core.StringUtils;
 import com.lakeel.altla.vision.nearby.presentation.firebase.MyUser;
 import com.lakeel.altla.vision.nearby.presentation.presenter.estimation.DistanceEstimationPresenter;
 import com.lakeel.altla.vision.nearby.presentation.view.DistanceEstimationView;
@@ -105,7 +104,7 @@ public final class DistanceEstimationFragment extends Fragment implements Distan
         List<String> beaconIds = bundle.getStringArrayList(FragmentBundle.BEACON_IDS.name());
         String targetName = bundle.getString(FragmentBundle.TARGET_NAME.name());
 
-        String message = getResources().getString(R.string.message_finding_for_nearby_device_format, targetName);
+        String message = getResources().getString(R.string.toolbar_title_finding_for_format, targetName);
         getActivity().setTitle(message);
 
         distanceTextView.setText(getResources().getString(R.string.textView_finding));
@@ -127,7 +126,7 @@ public final class DistanceEstimationFragment extends Fragment implements Distan
                 presenter.subscribe();
             } else {
                 LOGGER.error("Failed to enable BLE.");
-                Snackbar.make(mainLayout, R.string.error_not_enable_ble, Snackbar.LENGTH_SHORT).show();
+                Snackbar.make(mainLayout, R.string.snackBar_error_not_enable_ble, Snackbar.LENGTH_SHORT).show();
             }
         } else {
             super.onActivityResult(requestCode, resultCode, data);
@@ -141,7 +140,7 @@ public final class DistanceEstimationFragment extends Fragment implements Distan
                 presenter.onAccessFineLocationGranted();
             } else {
                 LOGGER.warn("Access fine location permission is denied.");
-                Snackbar.make(mainLayout, R.string.error_not_find, Snackbar.LENGTH_SHORT).show();
+                Snackbar.make(mainLayout, R.string.snackBar_error_not_find, Snackbar.LENGTH_SHORT).show();
             }
         }
     }
@@ -171,7 +170,7 @@ public final class DistanceEstimationFragment extends Fragment implements Distan
 
     @Override
     public void showDistance(String meters) {
-        String message = getResources().getString(R.string.message_device_distance_format, meters);
+        String message = getResources().getString(R.string.snackBar_message_device_distance_format, meters);
         distanceTextView.setText(message);
     }
 

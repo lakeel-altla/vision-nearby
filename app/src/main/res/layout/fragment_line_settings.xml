@@ -14,7 +14,7 @@
         android:paddingEnd="16dp"
         android:paddingStart="16dp"
         android:paddingTop="16dp"
-        android:text="@string/title_line_url"
+        android:text="@string/textView_line_url"
         android:textAppearance="?android:attr/textAppearanceMedium" />
 
     <TextView

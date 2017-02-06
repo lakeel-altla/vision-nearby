@@ -34,7 +34,7 @@ public class BeaconRepository {
 
     @Inject
     public BeaconRepository() {
-        reference = FirebaseDatabase.getInstance().getReference(DATABASE_URI);
+        reference = FirebaseDatabase.getInstance().getReferenceFromUrl(DATABASE_URI);
     }
 
     public Single<Beacon> find(String beaconId) {

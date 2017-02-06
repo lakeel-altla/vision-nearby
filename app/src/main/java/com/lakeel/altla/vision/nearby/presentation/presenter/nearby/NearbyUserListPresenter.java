@@ -185,7 +185,7 @@ public final class NearbyUserListPresenter extends BasePresenter<NearbyUserListV
             getView().hideIndicator();
 
             if (nearbyUserModels.size() == 0) {
-                getView().showSnackBar(R.string.message_not_found);
+                getView().showSnackBar(R.string.snackBar_message_not_found);
             }
 
             subscriptions.unSubscribe();

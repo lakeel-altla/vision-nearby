@@ -109,7 +109,7 @@ public final class NearbyHistoryListPresenter extends BasePresenter<NearbyHistor
                                     getView().updateItems();
                                 }
 
-                                getView().showSnackBar(R.string.message_removed);
+                                getView().showSnackBar(R.string.snackBar_message_removed);
                             });
             subscriptions.add(subscription);
         }

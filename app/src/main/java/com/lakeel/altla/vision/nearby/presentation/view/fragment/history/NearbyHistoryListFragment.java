@@ -59,7 +59,7 @@ public final class NearbyHistoryListFragment extends Fragment implements NearbyH
     public void onActivityCreated(Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
 
-        getActivity().setTitle(R.string.title_recently);
+        getActivity().setTitle(R.string.toolbar_title_history);
 
         ((MainActivity) getActivity()).setDrawerIndicatorEnabled(true);
 

@@ -31,7 +31,7 @@ public class UserInformationRepository {
 
     @Inject
     UserInformationRepository() {
-        this.reference = FirebaseDatabase.getInstance().getReference(DATABASE_URI);
+        this.reference = FirebaseDatabase.getInstance().getReferenceFromUrl(DATABASE_URI);
     }
 
     public Completable save(String userId, String title, String message) {

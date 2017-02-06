@@ -10,25 +10,25 @@ import rx.schedulers.Schedulers;
 public final class ObserveConnectionUseCase {
 
     @Inject
-    ConnectedRepository connectionRepository;
+    ConnectedRepository connectedRepository;
 
     @Inject
-    UserConnectionRepository presencesRepository;
+    UserConnectionRepository userConnectionRepository;
 
     @Inject
     ObserveConnectionUseCase() {
     }
 
     public void execute(String userId) {
-        connectionRepository.observe()
+        connectedRepository.observe()
                 .subscribeOn(Schedulers.io())
                 .subscribe(() -> {
                     // Called when connected to firebase.
                     // Set presence to online.
-                    presencesRepository.saveOnline(userId);
+                    userConnectionRepository.saveOnline(userId);
                 });
 
         // Change presence to offline when disconnect to firebase.
-        presencesRepository.saveOfflineOnDisconnect(userId);
+        userConnectionRepository.saveOfflineOnDisconnect(userId);
     }
 }

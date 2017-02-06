@@ -59,7 +59,7 @@ public final class LineSettingsFragment extends Fragment implements LineSettings
     public void onActivityCreated(Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
 
-        getActivity().setTitle(R.string.title_line_settings);
+        getActivity().setTitle(R.string.toolbar_title_line_settings);
 
         ((MainActivity) getActivity()).setDrawerIndicatorEnabled(false);
 

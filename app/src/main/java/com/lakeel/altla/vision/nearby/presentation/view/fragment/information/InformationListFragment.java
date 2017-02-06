@@ -59,7 +59,7 @@ public final class InformationListFragment extends Fragment implements Informati
     public void onActivityCreated(@Nullable Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
 
-        getActivity().setTitle(R.string.title_information);
+        getActivity().setTitle(R.string.toolbar_title_information);
 
         ((MainActivity) getActivity()).setDrawerIndicatorEnabled(true);
 

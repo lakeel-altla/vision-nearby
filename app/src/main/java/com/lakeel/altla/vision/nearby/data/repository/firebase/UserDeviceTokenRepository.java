@@ -25,7 +25,7 @@ public final class UserDeviceTokenRepository {
 
     @Inject
     UserDeviceTokenRepository() {
-        this.reference = FirebaseDatabase.getInstance().getReference(DATABASE_URI);
+        this.reference = FirebaseDatabase.getInstance().getReferenceFromUrl(DATABASE_URI);
     }
 
     public Observable<DeviceToken> findAll(String userId) {

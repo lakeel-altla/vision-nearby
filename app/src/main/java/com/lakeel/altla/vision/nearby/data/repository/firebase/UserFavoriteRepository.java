@@ -26,7 +26,7 @@ public class UserFavoriteRepository {
 
     @Inject
     public UserFavoriteRepository() {
-        this.reference = FirebaseDatabase.getInstance().getReference(DATABASE_URI);
+        this.reference = FirebaseDatabase.getInstance().getReferenceFromUrl(DATABASE_URI);
     }
 
     public Observable<String> findAll(String userId) {

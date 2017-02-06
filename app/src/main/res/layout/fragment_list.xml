@@ -16,6 +16,6 @@
         android:layout_height="wrap_content"
         android:visibility="gone"
         android:layout_centerInParent="true"
-        android:text="@string/message_no_item_found" />
+        android:text="@string/textView_no_item_found" />
 
 </RelativeLayout>

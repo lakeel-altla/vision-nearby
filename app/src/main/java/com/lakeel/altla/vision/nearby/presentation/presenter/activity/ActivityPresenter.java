@@ -10,6 +10,8 @@ import android.support.v4.content.ContextCompat;
 
 import com.firebase.ui.auth.AuthUI;
 import com.google.android.gms.tasks.Task;
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.iid.FirebaseInstanceId;
 import com.lakeel.altla.vision.nearby.R;
 import com.lakeel.altla.vision.nearby.beacon.EddystoneUid;
@@ -73,6 +75,9 @@ public final class ActivityPresenter extends BasePresenter<ActivityView> {
 
     private final ReusableCompositeSubscription subscriptions = new ReusableCompositeSubscription();
 
+    // For observe subscription.
+    private final ReusableCompositeSubscription observeSubscriptions = new ReusableCompositeSubscription();
+
     private final FirebaseInstanceId instanceId = FirebaseInstanceId.getInstance();
 
     private final ActivityModelMapper modelMapper = new ActivityModelMapper();
@@ -85,9 +90,6 @@ public final class ActivityPresenter extends BasePresenter<ActivityView> {
 
     private final Context context;
 
-    // TODO: Presenters do not use the base presenter.
-    private Subscription observeSubscription;
-
     @Inject
     ActivityPresenter(Context context) {
         this.context = context;
@@ -99,6 +101,10 @@ public final class ActivityPresenter extends BasePresenter<ActivityView> {
 
         if (MyUser.isAuthenticated()) {
             postSignIn();
+
+            // TODO:
+            DatabaseReference databaseReference = FirebaseDatabase.getInstance().getReference();
+            databaseReference.keepSynced(true);
         } else {
             getView().showSignInFragment();
         }
@@ -124,14 +130,15 @@ public final class ActivityPresenter extends BasePresenter<ActivityView> {
         observeConnectionUseCase.execute(MyUser.getUserId());
 
         // Observe user profile
-        observeSubscription = observeUserProfileUseCase.execute()
+        Subscription subscription = observeUserProfileUseCase.execute()
                 .map(modelMapper::map)
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribe(model -> {
                     getView().updateProfile(model);
                 }, new ErrorAction<>());
+        observeSubscriptions.add(subscription);
 
-        Subscription subscription = findPreferenceUseCase.execute()
+        Subscription subscription1 = findPreferenceUseCase.execute()
                 .observeOn(Schedulers.io())
                 .subscribe(preference -> {
                     String beaconId = preference.beaconId;
@@ -147,7 +154,7 @@ public final class ActivityPresenter extends BasePresenter<ActivityView> {
                     saveToken(beaconId);
                     startAdvertiseInBackgroundIfNeeded();
                 }, new ErrorAction<>());
-        subscriptions.add(subscription);
+        subscriptions.add(subscription1);
     }
 
     public void onBleEnabled() {
@@ -170,7 +177,7 @@ public final class ActivityPresenter extends BasePresenter<ActivityView> {
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribe(e -> new ErrorAction<>(),
                         () -> {
-                            observeSubscription.unsubscribe();
+                            observeSubscriptions.unSubscribe();
 
                             // Get user data here because do not get it after signing out.
                             MyUser.UserProfile userProfile = MyUser.getUserProfile();
@@ -190,14 +197,14 @@ public final class ActivityPresenter extends BasePresenter<ActivityView> {
                                     getView().showSignInFragment();
                                 } else {
                                     LOGGER.error("Failed to sign out.", result.getException());
-                                    getView().showSnackBar(R.string.error_not_signed_out);
+                                    getView().showSnackBar(R.string.snackBar_error_not_signed_out);
                                 }
                             });
 
                             Exception e = task.getException();
                             if (e != null) {
                                 LOGGER.error("Failed to sign out.", e);
-                                getView().showSnackBar(R.string.error_not_signed_out);
+                                getView().showSnackBar(R.string.snackBar_error_not_signed_out);
                             }
                         });
         subscriptions.add(subscription);

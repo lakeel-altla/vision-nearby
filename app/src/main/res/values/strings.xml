@@ -1,14 +1,32 @@
 <resources>
     <string name="app_name">Altla Nearby</string>
 
+    <string name="button_add">Add</string>
+    <string name="button_remove">Remove</string>
+    <string name="button_lost">Lost</string>
+    <string name="button_found">Found</string>
+
+    <string name="notification_title_app_user_found">App user is found.</string>
+    <string name="notification_title_line_user_found">LINE user is found.</string>
+    <string name="notification_title_advertise_ble">Advertising as a beacon.</string>
+    <string name="notification_title_device_found">Device Found</string>
+
+    <string name="notification_message_user_using_app">You passed %1$s.</string>
+    <string name="notification_message_user_using_line">%1$s uses LINE App.</string>
+    <string name="notification_message_advertise_ble">BLE Advertise.</string>
+    <string name="notification_message_device_found">Your device has been found.</string>
+
     <string name="navigation_drawer_open">Open navigation drawer</string>
     <string name="navigation_drawer_close">Close navigation drawer</string>
 
     <string name="dialog_button_positive">OK</string>
     <string name="dialog_button_cancel">Cancel</string>
     <string name="dialog_button_send">Send</string>
-    <string name="dialog_message_confirm_find_nearby_devices">Are you sure you want to find the nearby device?</string>
+
     <string name="dialog_title_line_url">URL</string>
+    <string name="dialog_title_confirm">Confirm</string>
+
+    <string name="dialog_message_confirm_find_nearby_devices">Are you sure you want to find the nearby device?</string>
 
     <string name="textView_state">State</string>
     <string name="textView_presence">Presence</string>
@@ -27,34 +45,33 @@
     <string name="textView_connected">Connected</string>
     <string name="textView_disconnected">Disconnected</string>
     <string name="textView_finding">Finding…</string>
+    <string name="textView_temperature_format">%1$s℃</string>
+    <string name="textView_no_item_found">No items found.</string>
     <string name="textView_unknown">Unknown</string>
 
-    <string name="title_sign_in">Sign In</string>
-    <string name="title_favorites">Favorites</string>
-    <string name="title_nearby">Nearby</string>
-    <string name="title_ble_settings">BLE Settings</string>
-    <string name="title_line_settings">LINE Settings</string>
-    <string name="title_cloud_tracking">Tracking</string>
-    <string name="title_devices">Devices</string>
-    <string name="title_information">Information</string>
-    <string name="title_find_nearby_device">Find Nearby Device</string>
-    <string name="title_search">Search</string>
-    <string name="title_recently">History</string>
-    <string name="title_settings">Settings</string>
-    <string name="title_sign_out">Sign Out</string>
-    <string name="title_sns">SNS</string>
-    <string name="title_wireless_networks">Wireless &amp; Networks</string>
-    <string name="title_bluetooth">Bluetooth</string>
-    <string name="title_link">LINK</string>
-    <string name="title_line">LINE</string>
-    <string name="title_line_url">LINE URL</string>
-    <string name="title_advertise_in_background">Advertise in background</string>
-    <string name="title_subscribe_in_background">Subscribe in background</string>
-    <string name="title_confirm">Confirm</string>
-    <string name="title_share">Share</string>
-    <string name="title_find">Find</string>
-    <string name="title_directions">Directions</string>
-    <string name="title_refresh">Refresh</string>
+    <string name="menu_title_find">Find</string>
+    <string name="menu_title_directions">Directions</string>
+
+    <string name="toolbar_title_sign_in">Sign In</string>
+    <string name="toolbar_title_favorites">Favorites</string>
+    <string name="toolbar_title_nearby">Nearby</string>
+    <string name="toolbar_title_ble_settings">BLE Settings</string>
+    <string name="toolbar_title_line_settings">LINE Settings</string>
+    <string name="toolbar_title_tracking">Tracking</string>
+    <string name="toolbar_title_devices">Devices</string>
+    <string name="toolbar_title_information">Information</string>
+    <string name="toolbar_title_history">History</string>
+    <string name="toolbar_title_settings">Settings</string>
+    <string name="toolbar_title_sign_out">Sign Out</string>
+    <string name="toolbar_title_sns">SNS</string>
+    <string name="toolbar_title_wireless_networks">Wireless &amp; Networks</string>
+    <string name="toolbar_title_bluetooth">Bluetooth</string>
+    <string name="toolbar_title_finding_for_format">Finding for %1$s</string>
+
+    <string name="preference_title_line">LINE</string>
+    <string name="preference_title_devices">Devices</string>
+    <string name="preference_title_advertise_in_background">Advertise in background</string>
+    <string name="preference_title_subscribe_in_background">Subscribe in background</string>
 
     <string name="preference_summary_advertise_in_background">Allow advertise data when the app becomes
         inactive.
@@ -82,49 +99,29 @@
     <string name="user_activity_unknown">Unknown</string>
     <string name="user_activity_walking">Walking</string>
 
-    <string name="message_added">Added.</string>
-    <string name="message_saved">Saved.</string>
-    <string name="message_removed">Removed.</string>
-    <string name="message_send">Send.</string>
-    <string name="message_advertise_disable">This device can not support bluetooth advertising.
+    <string name="snackBar_message_added">Added.</string>
+    <string name="snackBar_message_saved">Saved.</string>
+    <string name="snackBar_message_removed">Removed.</string>
+    <string name="snackBar_message_send">Send.</string>
+    <string name="snackBar_message_advertise_disable">This device can not support bluetooth advertising.
     </string>
-    <string name="message_not_found">Not found.</string>
-    <string name="message_temperature_format">%1$s℃</string>
-    <string name="message_humidity_format">%1$s%%</string>
-    <string name="message_user_found">User found.</string>
-    <string name="message_found_date_format">Found Date: %1$s</string>
-    <string name="message_device_not_found">This device has not been found.</string>
-    <string name="message_finding_for_nearby_device_format">Finding for %1$s</string>
-    <string name="message_device_distance_format">%1$s meters away.</string>
-    <string name="message_no_item_found">No items found.</string>
+    <string name="snackBar_message_not_found">Not found.</string>
+    <string name="snackBar_message_humidity_format">%1$s%%</string>
+    <string name="snackBar_message_user_found">User found.</string>
+    <string name="snackBar_message_found_date_format">Found Date: %1$s</string>
+    <string name="snackBar_message_device_not_found">This device has not been found.</string>
+    <string name="snackBar_message_device_distance_format">%1$s meters away.</string>
 
-    <string name="notification_title_app_user_found">App user is found.</string>
-    <string name="notification_title_line_user_found">LINE user is found.</string>
-    <string name="notification_title_advertise_ble">Advertising as a beacon.</string>
-    <string name="notification_title_device_found">Device Found</string>
-
-    <string name="notification_message_user_using_app">You passed %1$s.</string>
-    <string name="notification_message_user_using_line">%1$s uses LINE App.</string>
-    <string name="notification_message_advertise_ble">BLE Advertise.</string>
-    <string name="notification_message_device_found">Your device has been found.</string>
-
-    <string name="button_add">Add</string>
-    <string name="button_remove">Remove</string>
-    <string name="button_lost">Lost</string>
-    <string name="button_found">Found</string>
-
-    <string name="error_process">Could not process.</string>
-    <string name="error_not_signed_in">Could not sign in.</string>
-    <string name="error_not_signed_out">Could not sign out.</string>
-    <string name="error_not_added">Could not add.</string>
-    <string name="error_not_saved">Could not save.</string>
-    <string name="error_not_found">Could not find.</string>
-    <string name="error_not_deleted">Could not delete.</string>
-    <string name="error_not_enable_ble">Could not enable BLE.</string>
-    <string name="error_not_find">Can not find.</string>
-    <string name="error_required">Required.</string>
-    <string name="error_input_empty">Required.</string>
-    <string name="error_uri_syntax">URI syntax is mistake.</string>
+    <string name="snackBar_error_not_signed_in">Could not sign in.</string>
+    <string name="snackBar_error_not_signed_out">Could not sign out.</string>
+    <string name="snackBar_error_not_added">Could not add.</string>
+    <string name="snackBar_error_not_saved">Could not save.</string>
+    <string name="snackBar_error_not_found">Could not find.</string>
+    <string name="snackBar_error_not_deleted">Could not delete.</string>
+    <string name="snackBar_error_not_enable_ble">Could not enable BLE.</string>
+    <string name="snackBar_error_not_find">Can not find.</string>
+    <string name="snackBar_error_required">Required.</string>
+    <string name="snackBar_error_not_correct_uri">URI syntax is mistake.</string>
 
     <string name="unknown_error">Unknown error</string>
 

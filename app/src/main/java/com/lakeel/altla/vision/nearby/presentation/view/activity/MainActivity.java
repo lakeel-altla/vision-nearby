@@ -118,7 +118,7 @@ public class MainActivity extends AppCompatActivity
                 presenter.onBleEnabled();
             } else {
                 LOGGER.error("Failed to enable BLE.");
-                showSnackBar(R.string.error_not_enable_ble);
+                showSnackBar(R.string.snackBar_error_not_enable_ble);
             }
         } else {
             super.onActivityResult(requestCode, resultCode, data);
@@ -233,7 +233,7 @@ public class MainActivity extends AppCompatActivity
 
     @Override
     public void showAdvertiseDisableConfirmDialog() {
-        ConfirmDialog dialog = new ConfirmDialog(MainActivity.this, R.string.message_advertise_disable);
+        ConfirmDialog dialog = new ConfirmDialog(MainActivity.this, R.string.snackBar_message_advertise_disable);
         dialog.show();
     }
 

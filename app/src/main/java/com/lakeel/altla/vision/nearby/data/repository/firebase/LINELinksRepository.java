@@ -30,7 +30,7 @@ public class LINELinksRepository {
 
     @Inject
     LINELinksRepository() {
-        this.reference = FirebaseDatabase.getInstance().getReference(DATABASE_URI);
+        this.reference = FirebaseDatabase.getInstance().getReferenceFromUrl(DATABASE_URI);
     }
 
     public Single<String> saveLineUrl(String userId, String url) {

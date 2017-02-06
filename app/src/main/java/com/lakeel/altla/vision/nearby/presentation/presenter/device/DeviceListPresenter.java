@@ -114,7 +114,7 @@ public class DeviceListPresenter extends BasePresenter<DeviceListView> {
                         } else {
                             getView().updateItems();
                         }
-                        getView().showSnackBar(R.string.message_removed);
+                        getView().showSnackBar(R.string.snackBar_message_removed);
                     }, new ErrorAction<>());
             subscriptions.add(subscription);
         }

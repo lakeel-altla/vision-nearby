@@ -56,7 +56,7 @@ public final class SettingsFragment extends PreferenceFragmentCompat {
     public void onActivityCreated(Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
 
-        getActivity().setTitle(R.string.title_settings);
+        getActivity().setTitle(R.string.toolbar_title_settings);
 
         ((MainActivity) getActivity()).setDrawerIndicatorEnabled(true);
     }

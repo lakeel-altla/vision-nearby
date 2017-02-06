@@ -60,7 +60,7 @@ public final class FavoriteListFragment extends Fragment implements FavoriteList
     public void onActivityCreated(Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
 
-        getActivity().setTitle(R.string.title_favorites);
+        getActivity().setTitle(R.string.toolbar_title_favorites);
 
         ((MainActivity) getActivity()).setDrawerIndicatorEnabled(true);
 

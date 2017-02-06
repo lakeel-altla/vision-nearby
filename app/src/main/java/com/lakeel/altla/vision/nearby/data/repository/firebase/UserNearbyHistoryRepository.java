@@ -13,7 +13,7 @@ import com.google.firebase.database.ValueEventListener;
 import com.lakeel.altla.vision.nearby.data.entity.NearbyHistoryEntity;
 import com.lakeel.altla.vision.nearby.data.execption.DataStoreException;
 import com.lakeel.altla.vision.nearby.data.mapper.entity.HistoryEntityMapper;
-import com.lakeel.altla.vision.nearby.data.mapper.model.HistoryMapper;
+import com.lakeel.altla.vision.nearby.data.mapper.model.NearbyHistoryMapper;
 import com.lakeel.altla.vision.nearby.domain.model.NearbyHistory;
 import com.lakeel.altla.vision.nearby.presentation.beacon.region.RegionState;
 
@@ -35,13 +35,13 @@ public class UserNearbyHistoryRepository {
 
     private final HistoryEntityMapper entityMapper = new HistoryEntityMapper();
 
-    private final HistoryMapper historyMapper = new HistoryMapper();
+    private final NearbyHistoryMapper nearbyHistoryMapper = new NearbyHistoryMapper();
 
     private final DatabaseReference reference;
 
     @Inject
     public UserNearbyHistoryRepository() {
-        this.reference = FirebaseDatabase.getInstance().getReference(DATABASE_URI);
+        this.reference = FirebaseDatabase.getInstance().getReferenceFromUrl(DATABASE_URI);
     }
 
     public Observable<NearbyHistory> findNearbyHistoryList(String userId) {
@@ -54,8 +54,7 @@ public class UserNearbyHistoryRepository {
                         @Override
                         public void onDataChange(DataSnapshot dataSnapshot) {
                             for (DataSnapshot snapshot : dataSnapshot.getChildren()) {
-                                NearbyHistoryEntity entity = snapshot.getValue(NearbyHistoryEntity.class);
-                                subscriber.onNext(historyMapper.map(entity, snapshot.getKey()));
+                                subscriber.onNext(nearbyHistoryMapper.map(snapshot));
                             }
                             subscriber.onCompleted();
                         }
@@ -76,8 +75,7 @@ public class UserNearbyHistoryRepository {
                         .addListenerForSingleValueEvent(new ValueEventListener() {
                             @Override
                             public void onDataChange(DataSnapshot snapshot) {
-                                NearbyHistoryEntity entity = snapshot.getValue(NearbyHistoryEntity.class);
-                                subscriber.onSuccess(historyMapper.map(entity, snapshot.getKey()));
+                                subscriber.onSuccess(nearbyHistoryMapper.map(snapshot));
                             }
 
                             @Override
@@ -92,12 +90,32 @@ public class UserNearbyHistoryRepository {
                 reference.child(myUserId)
                         .orderByChild(USER_ID_KEY)
                         .equalTo(favoriteUserId)
-                        .limitToFirst(1)
                         .addListenerForSingleValueEvent(new ValueEventListener() {
                             @Override
                             public void onDataChange(DataSnapshot dataSnapshot) {
-                                NearbyHistoryEntity entity = dataSnapshot.getValue(NearbyHistoryEntity.class);
-                                subscriber.onSuccess(historyMapper.map(entity, dataSnapshot.getKey()));
+                                DataSnapshot latestSnapshot = null;
+
+                                for (DataSnapshot snapshot : dataSnapshot.getChildren()) {
+                                    NearbyHistoryEntity entity = snapshot.getValue(NearbyHistoryEntity.class);
+
+                                    if (!entity.isEntered) {
+                                        // only enter data.
+                                        continue;
+                                    }
+
+                                    if (latestSnapshot == null) {
+                                        latestSnapshot = snapshot;
+                                        continue;
+                                    }
+
+                                    NearbyHistoryEntity latestEntity = latestSnapshot.getValue(NearbyHistoryEntity.class);
+                                    if (entity.passingTime > latestEntity.passingTime) {
+                                        // Compare passing time.
+                                        latestSnapshot = snapshot;
+                                    }
+                                }
+
+                                subscriber.onSuccess(nearbyHistoryMapper.map(latestSnapshot));
                             }
 
                             @Override

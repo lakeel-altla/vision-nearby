@@ -9,6 +9,6 @@
         android:layout_height="match_parent"
         android:layout_gravity="center"
         android:gravity="center"
-        android:text="@string/message_no_item_found"/>
+        android:text="@string/textView_no_item_found"/>
 
 </LinearLayout>

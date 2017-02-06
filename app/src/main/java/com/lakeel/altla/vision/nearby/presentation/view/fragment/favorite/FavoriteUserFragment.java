@@ -231,9 +231,9 @@ public final class FavoriteUserFragment extends Fragment implements OnMapReadyCa
                 builder.append(getContext().getString(resId));
                 builder.append("  ");
             }
-            builder.append(getString(R.string.message_temperature_format, String.valueOf(roundUppedTemperature)));
+            builder.append(getString(R.string.textView_temperature_format, String.valueOf(roundUppedTemperature)));
             builder.append("  ");
-            builder.append(getString(R.string.message_humidity_format, String.valueOf(humidity)));
+            builder.append(getString(R.string.snackBar_message_humidity_format, String.valueOf(humidity)));
 
             passingLayout.weatherTextView.setText(builder.toString());
         }

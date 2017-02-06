@@ -22,7 +22,7 @@ public class NotificationRepository {
 
     @Inject
     NotificationRepository() {
-        this.reference = FirebaseDatabase.getInstance().getReference(DATABASE_URI);
+        this.reference = FirebaseDatabase.getInstance().getReferenceFromUrl(DATABASE_URI);
     }
 
     public Completable save(String to, String title, String message) {

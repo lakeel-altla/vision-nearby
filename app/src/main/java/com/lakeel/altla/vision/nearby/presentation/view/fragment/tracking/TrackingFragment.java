@@ -85,7 +85,7 @@ public final class TrackingFragment extends Fragment implements TrackingView, On
     public void onActivityCreated(Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
 
-        getActivity().setTitle(R.string.title_cloud_tracking);
+        getActivity().setTitle(R.string.toolbar_title_tracking);
 
         ((MainActivity) getActivity()).setDrawerIndicatorEnabled(false);
 
@@ -199,7 +199,7 @@ public final class TrackingFragment extends Fragment implements TrackingView, On
     public void showFoundDate(long foundTime) {
         DateFormatter formatter = new DateFormatter(foundTime);
         String formattedDate = formatter.format();
-        String time = getContext().getResources().getString(R.string.message_found_date_format, formattedDate);
+        String time = getContext().getResources().getString(R.string.snackBar_message_found_date_format, formattedDate);
         foundDateTextView.setText(time);
     }
 

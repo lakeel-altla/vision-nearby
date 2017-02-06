@@ -4,22 +4,22 @@
     <group android:checkableBehavior="single">
         <item
             android:id="@+id/favorites"
-            android:title="@string/title_favorites" />
+            android:title="@string/toolbar_title_favorites" />
         <item
             android:id="@+id/history"
-            android:title="@string/title_recently" />
+            android:title="@string/toolbar_title_history" />
         <item
             android:id="@+id/nearby"
-            android:title="@string/title_nearby" />
+            android:title="@string/toolbar_title_nearby" />
         <item
             android:id="@+id/information"
-            android:title="@string/title_information"
+            android:title="@string/toolbar_title_information"
             android:visible="false" />
         <item
             android:id="@+id/settings"
-            android:title="@string/title_settings" />
+            android:title="@string/toolbar_title_settings" />
         <item
             android:id="@+id/signOut"
-            android:title="@string/title_sign_out" />
+            android:title="@string/toolbar_title_sign_out" />
     </group>
 </menu>

@@ -50,7 +50,7 @@ public final class PassingUserPresenter extends BasePresenter<PassingUserView> {
 
     private final ReusableCompositeSubscription subscriptions = new ReusableCompositeSubscription();
 
-    private PassingUserModel model = new PassingUserModel();
+    private PassingUserModel model;
 
     private UserPassingModelMapper modelMapper = new UserPassingModelMapper();
 
@@ -98,7 +98,7 @@ public final class PassingUserPresenter extends BasePresenter<PassingUserView> {
 
     public void onMapReady() {
         isMapReadied = true;
-        if (model.latitude == null && model.longitude == null) {
+        if (model == null || model.latitude == null || model.longitude == null) {
             getView().hideLocation();
         } else {
             getView().showLocation(model.latitude, model.longitude);
@@ -113,7 +113,7 @@ public final class PassingUserPresenter extends BasePresenter<PassingUserView> {
                 .subscribe(new ErrorAction<>(),
                         () -> {
                             getView().hideAddButton();
-                            getView().showSnackBar(R.string.message_added);
+                            getView().showSnackBar(R.string.snackBar_message_added);
                         });
         subscriptions.add(subscription);
     }

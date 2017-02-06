@@ -1,5 +1,6 @@
 package com.lakeel.altla.vision.nearby.data.mapper.model;
 
+import com.google.firebase.database.DataSnapshot;
 import com.lakeel.altla.vision.nearby.data.entity.NearbyHistoryEntity;
 import com.lakeel.altla.vision.nearby.domain.model.NearbyHistory;
 
@@ -10,11 +11,13 @@ import static com.lakeel.altla.vision.nearby.data.entity.NearbyHistoryEntity.Wea
 import static com.lakeel.altla.vision.nearby.domain.model.NearbyHistory.Location;
 import static com.lakeel.altla.vision.nearby.domain.model.NearbyHistory.Weather;
 
-public final class HistoryMapper {
+public final class NearbyHistoryMapper {
 
-    public NearbyHistory map(NearbyHistoryEntity entity, String key) {
+    public NearbyHistory map(DataSnapshot snapshot) {
+        NearbyHistoryEntity entity = snapshot.getValue(NearbyHistoryEntity.class);
+
         NearbyHistory nearbyHistory = new NearbyHistory();
-        nearbyHistory.historyId = key;
+        nearbyHistory.historyId = snapshot.getKey();
         nearbyHistory.userId = entity.userId;
         nearbyHistory.passingTime = entity.passingTime;
 

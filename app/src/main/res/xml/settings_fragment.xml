@@ -2,27 +2,27 @@
 <PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android"
     android:key="preferenceScreen">
 
-    <PreferenceCategory android:title="@string/title_wireless_networks">
+    <PreferenceCategory android:title="@string/toolbar_title_wireless_networks">
 
         <PreferenceScreen
             android:key="bleScreen"
-            android:title="@string/title_bluetooth" />
+            android:title="@string/toolbar_title_bluetooth" />
 
     </PreferenceCategory>
 
-    <PreferenceCategory android:title="@string/title_sns">
+    <PreferenceCategory android:title="@string/toolbar_title_sns">
 
         <PreferenceScreen
             android:key="lineScreen"
-            android:title="@string/title_line" />
+            android:title="@string/preference_title_line" />
 
     </PreferenceCategory>
 
-    <PreferenceCategory android:title="@string/title_cloud_tracking">
+    <PreferenceCategory android:title="@string/toolbar_title_tracking">
 
         <PreferenceScreen
             android:key="trackingScreen"
-            android:title="@string/title_devices" />
+            android:title="@string/preference_title_devices" />
 
     </PreferenceCategory>
 

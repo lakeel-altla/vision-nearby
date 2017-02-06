@@ -5,11 +5,11 @@
     <item
         android:id="@+id/find"
         android:icon="@drawable/ic_bluetooth_searching"
-        android:title="@string/title_find"
+        android:title="@string/menu_title_find"
         app:showAsAction="ifRoom" />
     <item
         android:id="@+id/directions"
         android:icon="@drawable/ic_directions"
-        android:title="@string/title_directions"
+        android:title="@string/menu_title_directions"
         app:showAsAction="ifRoom" />
 </menu>
