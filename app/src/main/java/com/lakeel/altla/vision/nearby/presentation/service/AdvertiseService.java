@@ -11,7 +11,6 @@ import android.support.v4.app.NotificationCompat;
 
 import com.lakeel.altla.vision.nearby.R;
 import com.lakeel.altla.vision.nearby.beacon.EddystoneUid;
-import com.lakeel.altla.vision.nearby.core.StringUtils;
 import com.lakeel.altla.vision.nearby.presentation.view.intent.IntentKey;
 
 import org.altbeacon.beacon.Beacon;
@@ -40,12 +39,6 @@ public final class AdvertiseService extends Service {
         String instanceId = eddystoneUID.getInstanceId();
 
         LOGGER.debug("namespaceId=" + namespaceId + " instanceId=" + instanceId);
-
-        if (StringUtils.isEmpty(namespaceId) || StringUtils.isEmpty(instanceId)) {
-            LOGGER.error("Kill the service to advertise because namespaceId or instanceId was empty.");
-            stopSelf();
-            return START_STICKY;
-        }
 
         BeaconParser beaconParser = new BeaconParser()
                 .setBeaconLayout(BeaconParser.EDDYSTONE_UID_LAYOUT);

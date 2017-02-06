@@ -16,6 +16,7 @@ public final class EddystoneUid {
     }
 
     public EddystoneUid(String beaconId) {
+        // TODO: Check the format.
         this.beaconId = beaconId;
     }
 
