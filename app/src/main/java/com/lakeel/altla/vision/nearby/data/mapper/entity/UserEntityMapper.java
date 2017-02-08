@@ -8,7 +8,7 @@ public final class UserEntityMapper {
     public UserProfileEntity map() {
         UserProfileEntity entity = new UserProfileEntity();
         MyUser.UserProfile profile = MyUser.getUserProfile();
-        entity.name = profile.userName;
+        entity.name = profile.name;
         entity.imageUri = profile.imageUri;
         entity.email = profile.email;
         return entity;

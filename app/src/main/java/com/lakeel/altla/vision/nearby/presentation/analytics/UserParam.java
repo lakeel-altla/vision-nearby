@@ -11,7 +11,7 @@ final class UserParam {
     UserParam() {
         MyUser.UserProfile userProfile = MyUser.getUserProfile();
         bundle.putString(AnalyticsParam.USER_ID.getValue(), userProfile.userId);
-        bundle.putString(AnalyticsParam.USER_NAME.getValue(), userProfile.userName);
+        bundle.putString(AnalyticsParam.USER_NAME.getValue(), userProfile.name);
     }
 
     void putString(String key, String value) {
