@@ -195,7 +195,7 @@ public class NearbyHistoryService extends IntentService {
                 Awareness.SnapshotApi.getWeather(googleApiClient)
                         .setResultCallback(result -> {
                             if (!result.getStatus().isSuccess()) {
-                                subscriber.onError(new AwarenessException("Could not get weather data. UserProfile might be turning off the gps."));
+                                subscriber.onError(new AwarenessException("Could not get weather data. User might be turning off the gps."));
                                 return;
                             }
                             Weather weather = result.getWeather();
