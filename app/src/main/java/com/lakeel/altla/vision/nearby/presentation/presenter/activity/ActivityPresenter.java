@@ -116,7 +116,8 @@ public final class ActivityPresenter extends BasePresenter<ActivityView> {
 
     public void postSignIn() {
         getView().showFavoriteListFragment();
-        showDrawerProfile();
+
+        getView().updateProfile(modelMapper.map(MyUser.getUserProfile()));
 
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
             // Need to grant permission for subscribing beacons.
@@ -188,13 +189,13 @@ public final class ActivityPresenter extends BasePresenter<ActivityView> {
                             Task<Void> task = AuthUI.getInstance().signOut(activity);
                             task.addOnCompleteListener(result -> {
                                 if (result.isSuccessful()) {
-                                    analyticsReporter.logout(userProfile.userId, userProfile.userName);
+                                    analyticsReporter.logout(userProfile.userId, userProfile.name);
 
                                     RunningServiceManager serviceManager = new RunningServiceManager(context, AdvertiseService.class);
                                     serviceManager.stopService();
 
                                     stopDetectBeaconsInBackground();
-                                    getView().showSignInFragment();
+                                    getView().finishActivity();
                                 } else {
                                     LOGGER.error("Failed to sign out.", result.getException());
                                     getView().showSnackBar(R.string.snackBar_error_not_signed_out);
@@ -231,6 +232,8 @@ public final class ActivityPresenter extends BasePresenter<ActivityView> {
             if (isAccessFineLocationGranted) {
                 startDetectBeaconsInBackgroundIfNeeded();
             }
+        } else {
+            isAdvertiseAvailableDevice = false;
         }
 
         // Set user property.
@@ -258,10 +261,6 @@ public final class ActivityPresenter extends BasePresenter<ActivityView> {
                     }
                 }, new ErrorAction<>());
         subscriptions.add(subscription);
-    }
-
-    private void showDrawerProfile() {
-        getView().showDrawerProfile(MyUser.getUserProfile());
     }
 
     private void saveBeacon(String beaconId) {

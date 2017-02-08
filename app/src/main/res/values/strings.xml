@@ -121,7 +121,7 @@
     <string name="snackBar_error_not_enable_ble">Could not enable BLE.</string>
     <string name="snackBar_error_not_find">Can not find.</string>
     <string name="snackBar_error_required">Required.</string>
-    <string name="snackBar_error_not_correct_uri">URI syntax is mistake.</string>
+    <string name="snackBar_error_invalid_uri">URI is invalid.</string>
 
     <string name="unknown_error">Unknown error</string>
 

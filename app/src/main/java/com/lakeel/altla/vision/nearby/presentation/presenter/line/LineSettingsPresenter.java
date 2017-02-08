@@ -6,17 +6,16 @@ import com.lakeel.altla.vision.nearby.domain.usecase.SaveLINEUrlUseCase;
 import com.lakeel.altla.vision.nearby.presentation.analytics.AnalyticsReporter;
 import com.lakeel.altla.vision.nearby.presentation.firebase.MyUser;
 import com.lakeel.altla.vision.nearby.presentation.presenter.BasePresenter;
-import com.lakeel.altla.vision.nearby.presentation.uri.UriChecker;
 import com.lakeel.altla.vision.nearby.presentation.view.LineSettingsView;
 import com.lakeel.altla.vision.nearby.rx.ErrorAction;
 import com.lakeel.altla.vision.nearby.rx.ReusableCompositeSubscription;
+
+import org.apache.commons.validator.routines.UrlValidator;
 
 import javax.inject.Inject;
 
 import rx.Subscription;
 import rx.android.schedulers.AndroidSchedulers;
-
-import static com.lakeel.altla.vision.nearby.presentation.uri.UriChecker.Result;
 
 public final class LineSettingsPresenter extends BasePresenter<LineSettingsView> {
 
@@ -50,10 +49,10 @@ public final class LineSettingsPresenter extends BasePresenter<LineSettingsView>
     }
 
     public void onSave(String url) {
-        UriChecker checker = new UriChecker(url);
-        Result result = checker.check();
-        if (result == Result.SYNTAX_ERROR) {
-            getView().showSnackBar(R.string.snackBar_error_not_correct_uri);
+        UrlValidator validator = UrlValidator.getInstance();
+        boolean isValid = validator.isValid(url);
+        if (!isValid) {
+            getView().showSnackBar(R.string.snackBar_error_invalid_uri);
             return;
         }
 

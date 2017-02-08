@@ -26,7 +26,6 @@ import com.lakeel.altla.vision.nearby.R;
 import com.lakeel.altla.vision.nearby.android.ConfirmDialog;
 import com.lakeel.altla.vision.nearby.presentation.application.App;
 import com.lakeel.altla.vision.nearby.presentation.di.component.ViewComponent;
-import com.lakeel.altla.vision.nearby.presentation.firebase.MyUser;
 import com.lakeel.altla.vision.nearby.presentation.presenter.activity.ActivityPresenter;
 import com.lakeel.altla.vision.nearby.presentation.presenter.model.ActivityModel;
 import com.lakeel.altla.vision.nearby.presentation.service.AdvertiseService;
@@ -209,15 +208,6 @@ public class MainActivity extends AppCompatActivity
     }
 
     @Override
-    public void showDrawerProfile(MyUser.UserProfile userProfile) {
-        ImageLoader imageLoader = ImageLoader.getInstance();
-        imageLoader.displayImage(userProfile.imageUri, drawerHeaderLayout.userImageView);
-
-        drawerHeaderLayout.userNameTextView.setText(userProfile.userName);
-        drawerHeaderLayout.emailTextView.setText(userProfile.email);
-    }
-
-    @Override
     public void updateProfile(ActivityModel model) {
         ImageLoader imageLoader = ImageLoader.getInstance();
         imageLoader.displayImage(model.imageUri, drawerHeaderLayout.userImageView);
@@ -264,6 +254,16 @@ public class MainActivity extends AppCompatActivity
         Intent intent = new Intent(getApplicationContext(), AdvertiseService.class);
         intent.putExtra(IntentKey.BEACON_ID.name(), beaconId);
         getApplicationContext().startService(intent);
+    }
+
+    @Override
+    public void finishActivity() {
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
+            finishAndRemoveTask();
+        } else {
+            finish();
+        }
+        startActivity(new Intent(MainActivity.this, MainActivity.class));
     }
 
     @Override

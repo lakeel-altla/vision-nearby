@@ -23,7 +23,7 @@ public final class LocalNotification {
                 .setContentTitle(title)
                 .setTicker(title)
                 .setContentText(message)
-                .setSmallIcon(R.mipmap.ic_nearby)
+                .setSmallIcon(R.mipmap.ic_launcher)
                 .setVibrate(new long[]{0, 200, 100, 200, 100, 200})
                 .setAutoCancel(true)
                 .setContentIntent(intent)

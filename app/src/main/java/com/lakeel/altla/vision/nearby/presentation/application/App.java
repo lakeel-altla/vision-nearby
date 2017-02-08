@@ -56,12 +56,15 @@ public class App extends Application {
 
         LOGGER.info("Altla Nearby launch.");
 
+        // NOTE:
+        // Must invoke here before using Dagger2.
+        MultiDex.install(this);
+
         DefaultComponent component = DaggerDefaultComponent.builder()
                 .contextModule(new ContextModule(this))
                 .build();
         component.inject(this);
 
-        MultiDex.install(this);
         JodaTimeAndroid.init(this);
         initImageLoader();
 
@@ -123,7 +126,8 @@ public class App extends Application {
     }
 
     private void initImageLoader() {
-        // Init ImageLoader instance.
+        // NOTE:
+        // Not use vector drawables because not support it by Universal Image Loader.
         DisplayImageOptions displayImageOptions = new DisplayImageOptions.Builder()
                 .showImageForEmptyUri(R.drawable.ic_account)
                 .showImageOnFail(R.drawable.ic_account)
