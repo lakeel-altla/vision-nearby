@@ -32,6 +32,9 @@ public final class BeaconClient {
         beaconManager.getBeaconParsers().add(new BeaconParser().
                 setBeaconLayout(BeaconParser.ALTBEACON_LAYOUT));
 
+        beaconManager.setForegroundScanPeriod(10000L);
+        beaconManager.setForegroundBetweenScanPeriod(10000L);
+
         beaconManager.setBackgroundBetweenScanPeriod(60000L);
 
         // Save device battery.
