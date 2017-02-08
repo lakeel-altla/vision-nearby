@@ -2,11 +2,8 @@ package com.lakeel.altla.vision.nearby.presentation.presenter.estimation;
 
 import android.Manifest;
 import android.bluetooth.BluetoothAdapter;
+import android.bluetooth.BluetoothDevice;
 import android.bluetooth.BluetoothManager;
-import android.bluetooth.le.BluetoothLeScanner;
-import android.bluetooth.le.ScanCallback;
-import android.bluetooth.le.ScanRecord;
-import android.bluetooth.le.ScanResult;
 import android.content.Context;
 import android.content.Intent;
 import android.content.pm.PackageManager;
@@ -37,23 +34,19 @@ public final class DistanceEstimationPresenter extends BasePresenter<DistanceEst
 
     private final Context context;
 
-    private final BluetoothLeScanner scanner;
+    private final BluetoothAdapter bluetoothAdapter;
 
     private List<String> beaconIds;
 
-    private ScanCallback scanCallback = new ScanCallback() {
-
+    private BluetoothAdapter.LeScanCallback scanCallback = new BluetoothAdapter.LeScanCallback() {
         @Override
-        public void onScanResult(int callbackType, ScanResult result) {
-            super.onScanResult(callbackType, result);
-
-            ScanRecord scanRecord = result.getScanRecord();
+        public void onLeScan(BluetoothDevice bluetoothDevice, int rssi, byte[] scanRecord) {
             if (scanRecord == null) {
                 return;
             }
 
             List<ADStructure> structures =
-                    ADPayloadParser.getInstance().parse(scanRecord.getBytes());
+                    ADPayloadParser.getInstance().parse(scanRecord);
 
             for (ADStructure structure : structures) {
                 if (structure instanceof EddystoneUID) {
@@ -67,7 +60,7 @@ public final class DistanceEstimationPresenter extends BasePresenter<DistanceEst
                             .observeOn(AndroidSchedulers.mainThread())
                             .subscribe(beaconId -> {
                                 // Calculate distance.
-                                Distance distance = new Distance(eddystoneUID.getTxPower(), result.getRssi());
+                                Distance distance = new Distance(eddystoneUID.getTxPower(), rssi);
                                 getView().showDistance(distance.getMeters());
                             });
                     subscriptions.add(subscription);
@@ -81,8 +74,7 @@ public final class DistanceEstimationPresenter extends BasePresenter<DistanceEst
         this.context = context;
 
         BluetoothManager bluetoothManager = (BluetoothManager) context.getSystemService(Context.BLUETOOTH_SERVICE);
-        BluetoothAdapter bluetoothAdapter = bluetoothManager.getAdapter();
-        scanner = bluetoothAdapter.getBluetoothLeScanner();
+        this.bluetoothAdapter = bluetoothManager.getAdapter();
     }
 
     public void setBeaconIds(List<String> beaconIds) {
@@ -99,7 +91,7 @@ public final class DistanceEstimationPresenter extends BasePresenter<DistanceEst
 
     public void onStop() {
         subscriptions.unSubscribe();
-        scanner.stopScan(scanCallback);
+        bluetoothAdapter.stopLeScan(scanCallback);
     }
 
     public void onAccessFineLocationGranted() {
@@ -108,7 +100,7 @@ public final class DistanceEstimationPresenter extends BasePresenter<DistanceEst
 
     public void subscribe() {
         getView().startAnimation();
-        scanner.startScan(scanCallback);
+        bluetoothAdapter.startLeScan(scanCallback);
     }
 
     private void checkAccessFineLocationPermission() {

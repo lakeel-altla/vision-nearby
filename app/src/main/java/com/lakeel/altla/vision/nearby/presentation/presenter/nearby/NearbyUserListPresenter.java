@@ -2,11 +2,8 @@ package com.lakeel.altla.vision.nearby.presentation.presenter.nearby;
 
 import android.Manifest;
 import android.bluetooth.BluetoothAdapter;
+import android.bluetooth.BluetoothDevice;
 import android.bluetooth.BluetoothManager;
-import android.bluetooth.le.BluetoothLeScanner;
-import android.bluetooth.le.ScanCallback;
-import android.bluetooth.le.ScanRecord;
-import android.bluetooth.le.ScanResult;
 import android.content.Context;
 import android.content.Intent;
 import android.content.pm.PackageManager;
@@ -54,21 +51,19 @@ public final class NearbyUserListPresenter extends BasePresenter<NearbyUserListV
 
     private final Context context;
 
-    private final BluetoothLeScanner scanner;
+    private final BluetoothAdapter bluetoothAdapter;
 
     private boolean isScanning;
 
-    private ScanCallback scanCallback = new ScanCallback() {
-
+    private BluetoothAdapter.LeScanCallback scanCallback = new BluetoothAdapter.LeScanCallback() {
         @Override
-        public void onScanResult(int callbackType, ScanResult result) {
-            ScanRecord scanRecord = result.getScanRecord();
+        public void onLeScan(BluetoothDevice bluetoothDevice, int i, byte[] scanRecord) {
             if (scanRecord == null) {
                 return;
             }
 
             List<ADStructure> structures =
-                    ADPayloadParser.getInstance().parse(scanRecord.getBytes());
+                    ADPayloadParser.getInstance().parse(scanRecord);
 
             for (ADStructure structure : structures) {
                 if (structure instanceof EddystoneUID) {
@@ -99,8 +94,7 @@ public final class NearbyUserListPresenter extends BasePresenter<NearbyUserListV
     NearbyUserListPresenter(Context context) {
         this.context = context;
         BluetoothManager bluetoothManager = (BluetoothManager) context.getSystemService(Context.BLUETOOTH_SERVICE);
-        BluetoothAdapter bluetoothAdapter = bluetoothManager.getAdapter();
-        scanner = bluetoothAdapter.getBluetoothLeScanner();
+        this.bluetoothAdapter = bluetoothManager.getAdapter();
     }
 
     public void onActivityCreated() {
@@ -117,7 +111,7 @@ public final class NearbyUserListPresenter extends BasePresenter<NearbyUserListV
         getView().hideIndicator();
         getView().drawDefaultActionBarColor();
 
-        scanner.stopScan(scanCallback);
+        bluetoothAdapter.stopLeScan(scanCallback);
     }
 
     public void onRefresh() {
@@ -172,13 +166,13 @@ public final class NearbyUserListPresenter extends BasePresenter<NearbyUserListV
     }
 
     private void subscribe() {
-        scanner.startScan(scanCallback);
+        bluetoothAdapter.startLeScan(scanCallback);
 
         isScanning = true;
 
         executor.schedule(() -> {
             // Stop to scan after 2 seconds.
-            scanner.stopScan(scanCallback);
+            bluetoothAdapter.stopLeScan(scanCallback);
 
             isScanning = false;
 
