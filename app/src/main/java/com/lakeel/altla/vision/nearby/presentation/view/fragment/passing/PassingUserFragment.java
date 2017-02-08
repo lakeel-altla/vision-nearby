@@ -111,10 +111,10 @@ public final class PassingUserFragment extends Fragment implements PassingUserVi
         ((MainActivity) getActivity()).setDrawerIndicatorEnabled(false);
 
         FragmentManager fragmentManager = getChildFragmentManager();
-        supportMapFragment = (SupportMapFragment) fragmentManager.findFragmentById(R.id.locationMap);
+        supportMapFragment = (SupportMapFragment) fragmentManager.findFragmentById(R.id.layoutLocationMap);
         if (supportMapFragment == null) {
             supportMapFragment = SupportMapFragment.newInstance();
-            fragmentManager.beginTransaction().replace(R.id.layoutLocation, supportMapFragment).commit();
+            fragmentManager.beginTransaction().replace(R.id.layoutLocationMap, supportMapFragment).commit();
         }
         supportMapFragment.getMapAsync(this);
 

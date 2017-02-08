@@ -91,10 +91,10 @@ public final class TrackingFragment extends Fragment implements TrackingView, On
         activity.setDrawerIndicatorEnabled(false);
 
         FragmentManager fm = getChildFragmentManager();
-        supportMapFragment = (SupportMapFragment) fm.findFragmentById(R.id.trackingMapLayout);
+        supportMapFragment = (SupportMapFragment) fm.findFragmentById(R.id.layoutTrackingMap);
         if (supportMapFragment == null) {
             supportMapFragment = SupportMapFragment.newInstance();
-            fm.beginTransaction().replace(R.id.trackingMapLayout, supportMapFragment).commit();
+            fm.beginTransaction().replace(R.id.layoutTrackingMap, supportMapFragment).commit();
         }
         supportMapFragment.getMapAsync(this);
 

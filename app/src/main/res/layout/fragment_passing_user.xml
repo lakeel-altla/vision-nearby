@@ -14,7 +14,7 @@
             android:id="@+id/header"
             android:layout_width="match_parent"
             android:layout_height="256dp"
-            android:background="@drawable/example">
+            android:background="@drawable/profile_background">
 
             <de.hdodenhof.circleimageview.CircleImageView
                 android:id="@+id/imageViewUser"
@@ -67,7 +67,7 @@
             android:layout_alignParentEnd="true"
             android:layout_marginBottom="-32dp"
             android:layout_marginEnd="20dp"
-            android:src="@drawable/ic_star"
+            app:srcCompat="@drawable/ic_star_vector"
             android:visibility="invisible"
             app:rippleColor="#ffffff" />
 
