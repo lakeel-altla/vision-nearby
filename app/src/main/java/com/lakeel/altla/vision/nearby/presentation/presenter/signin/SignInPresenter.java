@@ -43,7 +43,7 @@ public final class SignInPresenter extends BasePresenter<SignInView> {
                 .createSignInIntentBuilder()
                 .setProviders(AuthUI.GOOGLE_PROVIDER)
                 .setTosUrl(GOOGLE_TOS_URL)
-                .setTheme(R.style.FirebaseUI)
+                .setTheme(R.style.AuthUiTheme)
                 .build();
 
         getView().showSignInActivity(intent);
