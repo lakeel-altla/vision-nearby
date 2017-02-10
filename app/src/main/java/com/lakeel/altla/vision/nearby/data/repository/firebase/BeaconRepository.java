@@ -59,14 +59,12 @@ public class BeaconRepository {
                         }));
     }
 
-    public Single<String> save(String beaconId, String userId, String name) {
+    public Single<String> save(String beaconId, String userId, String deviceName) {
         return Single.create(subscriber -> {
-            BeaconEntity entity = entityMapper.map(userId, name);
-            Map<String, Object> map = entity.toMap();
-
+            BeaconEntity entity = entityMapper.map(userId, deviceName);
             Task task = reference
                     .child(beaconId)
-                    .updateChildren(map);
+                    .setValue(entity);
 
             Exception e = task.getException();
             if (e != null) {
@@ -130,11 +128,10 @@ public class BeaconRepository {
 
     public Completable saveLastUsedDeviceTime(String beaconId) {
         return Completable.create(subscriber -> {
-            Map<String, Object> map = new BeaconEntity().toLastUsedTimeMap();
-
+            BeaconEntity entity = entityMapper.map();
             Task task = reference
                     .child(beaconId)
-                    .updateChildren(map);
+                    .setValue(entity);
 
             Exception e = task.getException();
             if (e != null) {

@@ -67,7 +67,7 @@ public class NotificationService extends IntentService {
 
                     // If the beacon is lost, notify to user.
                     findAllDeviceTokenUseCase.execute(userId)
-                            // Select the found beacon.
+                            // Filter other devices of the user.
                             .filter(token -> !beaconId.equals(token.beaconId))
                             // Notify the push notification to the device.
                             .subscribe(entity -> saveNotification(entity.token, title, message), new ErrorAction<>());

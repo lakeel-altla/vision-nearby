@@ -4,7 +4,7 @@
 
     <item
         android:id="@+id/estimate"
-        android:icon="@drawable/ic_bluetooth_searching_vector"
+        android:icon="@drawable/ic_estimate_vector"
         android:title="@string/menu_title_find"
         app:showAsAction="ifRoom" />
 

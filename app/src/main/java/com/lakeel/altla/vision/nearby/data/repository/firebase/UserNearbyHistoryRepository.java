@@ -17,6 +17,7 @@ import com.lakeel.altla.vision.nearby.data.mapper.model.NearbyHistoryMapper;
 import com.lakeel.altla.vision.nearby.domain.model.NearbyHistory;
 import com.lakeel.altla.vision.nearby.presentation.beacon.region.RegionState;
 
+import java.util.HashMap;
 import java.util.Map;
 
 import javax.inject.Inject;
@@ -33,6 +34,12 @@ public class UserNearbyHistoryRepository {
 
     private static final String IS_ENTERED_KEY = "isEntered";
 
+    private static final String USER_ACTIVITY = "userActivity";
+
+    private static final String LOCATION = "location";
+
+    private static final String WEATHER = "weather";
+
     private final HistoryEntityMapper entityMapper = new HistoryEntityMapper();
 
     private final NearbyHistoryMapper nearbyHistoryMapper = new NearbyHistoryMapper();
@@ -44,7 +51,7 @@ public class UserNearbyHistoryRepository {
         this.reference = FirebaseDatabase.getInstance().getReferenceFromUrl(DATABASE_URI);
     }
 
-    public Observable<NearbyHistory> findNearbyHistoryList(String userId) {
+    public Observable<NearbyHistory> findAll(String userId) {
         return Observable.create(subscriber -> {
             reference
                     .child(userId)
@@ -67,7 +74,7 @@ public class UserNearbyHistoryRepository {
         });
     }
 
-    public Single<NearbyHistory> findNearbyHistory(String userId, String historyId) {
+    public Single<NearbyHistory> find(String userId, String historyId) {
         return Single.create(subscriber ->
                 reference
                         .child(userId)
@@ -109,7 +116,7 @@ public class UserNearbyHistoryRepository {
                                     }
 
                                     NearbyHistoryEntity latestEntity = latestSnapshot.getValue(NearbyHistoryEntity.class);
-                                    if (entity.passingTime > latestEntity.passingTime) {
+                                    if ((Long) entity.passingTime > (Long) latestEntity.passingTime) {
                                         // Compare passing time.
                                         latestSnapshot = snapshot;
                                     }
@@ -123,82 +130,6 @@ public class UserNearbyHistoryRepository {
                                 subscriber.onError(databaseError.toException());
                             }
                         }));
-    }
-
-    public Single<String> saveHistory(String myUserId, String passingUserId, RegionState regionState) {
-        return Single.create(subscriber -> {
-            NearbyHistoryEntity entity = entityMapper.map(passingUserId, regionState);
-
-            DatabaseReference pushedReference = reference.child(myUserId).push();
-            String uniqueId = pushedReference.getKey();
-
-            Task<Void> task = pushedReference
-                    .setValue(entity.toMap());
-
-            Exception exception = task.getException();
-            if (exception != null) {
-                throw new DataStoreException(exception);
-            }
-
-            subscriber.onSuccess(uniqueId);
-        });
-    }
-
-    public Completable saveUserActivity(String uniqueId, String userId, DetectedActivity userActivity) {
-        return Completable.create(subscriber -> {
-            NearbyHistoryEntity entity = entityMapper.map(userActivity);
-            Map<String, Object> map = entity.toUserActivityMap();
-
-            Task<Void> task = reference
-                    .child(userId)
-                    .child(uniqueId)
-                    .updateChildren(map);
-
-            Exception exception = task.getException();
-            if (exception != null) {
-                throw new DataStoreException(exception);
-            }
-
-            subscriber.onCompleted();
-        });
-    }
-
-    public Completable saveLocation(String uniqueId, String userId, Location location) {
-        return Completable.create(subscriber -> {
-            NearbyHistoryEntity entity = entityMapper.map(location);
-            Map<String, Object> map = entity.toLocationMap();
-
-            Task<Void> task = reference
-                    .child(userId)
-                    .child(uniqueId)
-                    .updateChildren(map);
-
-            Exception exception = task.getException();
-            if (exception != null) {
-                throw new DataStoreException(exception);
-            }
-
-            subscriber.onCompleted();
-        });
-    }
-
-    public Completable saveWeather(String uniqueId, String userId, Weather weather) {
-        return Completable.create(subscriber -> {
-            NearbyHistoryEntity entity = entityMapper.map(weather);
-            Map<String, Object> map = entity.toWeatherMap();
-
-            Task<Void> task = reference
-                    .child(userId)
-                    .child(uniqueId)
-                    .updateChildren(map);
-
-            Exception exception = task.getException();
-            if (exception != null) {
-                throw new DataStoreException(exception);
-            }
-
-            subscriber.onCompleted();
-        });
     }
 
     public Single<Long> findPassingTimes(String myUserId, String passingUserId) {
@@ -227,7 +158,83 @@ public class UserNearbyHistoryRepository {
                         }));
     }
 
-    public Completable removeNearbyHistory(String userId, String uniqueKey) {
+    public Single<String> save(String myUserId, String passingUserId, RegionState regionState) {
+        return Single.create(subscriber -> {
+            NearbyHistoryEntity entity = entityMapper.map(passingUserId, regionState);
+
+            DatabaseReference pushedReference = reference.child(myUserId).push();
+            String uniqueId = pushedReference.getKey();
+
+            Task<Void> task = pushedReference
+                    .setValue(entity);
+
+            Exception exception = task.getException();
+            if (exception != null) {
+                throw new DataStoreException(exception);
+            }
+
+            subscriber.onSuccess(uniqueId);
+        });
+    }
+
+    public Completable saveUserActivity(String uniqueId, String userId, DetectedActivity userActivity) {
+        return Completable.create(subscriber -> {
+            Map<String, Object> map = new HashMap<>();
+            map.put(USER_ACTIVITY, userActivity);
+
+            Task<Void> task = reference
+                    .child(userId)
+                    .child(uniqueId)
+                    .updateChildren(map);
+
+            Exception exception = task.getException();
+            if (exception != null) {
+                throw new DataStoreException(exception);
+            }
+
+            subscriber.onCompleted();
+        });
+    }
+
+    public Completable saveLocation(String uniqueId, String userId, Location location) {
+        return Completable.create(subscriber -> {
+            Map<String, Object> map = new HashMap<>();
+            map.put(LOCATION, location);
+
+            Task<Void> task = reference
+                    .child(userId)
+                    .child(uniqueId)
+                    .updateChildren(map);
+
+            Exception exception = task.getException();
+            if (exception != null) {
+                throw new DataStoreException(exception);
+            }
+
+            subscriber.onCompleted();
+        });
+    }
+
+    public Completable saveWeather(String uniqueId, String userId, Weather weather) {
+        return Completable.create(subscriber -> {
+            Map<String, Object> map = new HashMap<>();
+            map.put(WEATHER, weather);
+
+            Task<Void> task = reference
+                    .child(userId)
+                    .child(uniqueId)
+                    .updateChildren(map);
+
+            Exception exception = task.getException();
+            if (exception != null) {
+                throw new DataStoreException(exception);
+            }
+
+            subscriber.onCompleted();
+        });
+    }
+
+    public Completable remove(String userId, String uniqueKey) {
         return Completable.create(subscriber -> {
             Task task = reference.
                     child(userId)

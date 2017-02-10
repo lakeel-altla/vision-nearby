@@ -1,5 +1,6 @@
 package com.lakeel.altla.vision.nearby.presentation.presenter.device;
 
+import android.os.Build;
 import android.support.annotation.IntRange;
 
 import com.lakeel.altla.vision.nearby.R;
@@ -123,7 +124,14 @@ public class DeviceListPresenter extends BasePresenter<DeviceListView> {
     private void findUserDevices() {
         Subscription subscription = findAllDeviceUseCase.execute()
                 .map(modelMapper::map)
-                .toSortedList((t1, t2) -> Long.compare(t2.lastUsedTime, t1.lastUsedTime))
+                .toSortedList((model1, model2) -> {
+                    // TODO
+                    if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN_MR2) {
+                        return Long.compare(model2.lastUsedTime, model1.lastUsedTime);
+                    } else {
+                        return Long.valueOf(model2.lastUsedTime).compareTo(model1.lastUsedTime);
+                    }
+                })
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribe(models -> {
                     viewModels.clear();

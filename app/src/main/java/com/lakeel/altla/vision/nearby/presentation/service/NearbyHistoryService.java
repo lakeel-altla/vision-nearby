@@ -31,12 +31,14 @@ import com.lakeel.altla.vision.nearby.presentation.di.component.DaggerServiceCom
 import com.lakeel.altla.vision.nearby.presentation.di.component.ServiceComponent;
 import com.lakeel.altla.vision.nearby.presentation.di.module.ServiceModule;
 import com.lakeel.altla.vision.nearby.presentation.notification.LocalNotification;
-import com.lakeel.altla.vision.nearby.presentation.view.intent.DefaultIntent;
+import com.lakeel.altla.vision.nearby.presentation.view.activity.MainActivity;
 import com.lakeel.altla.vision.nearby.presentation.view.intent.IntentKey;
 import com.lakeel.altla.vision.nearby.rx.ErrorAction;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+
+import java.util.UUID;
 
 import javax.inject.Inject;
 
@@ -66,7 +68,11 @@ public class NearbyHistoryService extends IntentService {
                     .toObservable()
                     // Analytics
                     .doOnNext(user -> analyticsReporter.addHistory(user.userId, user.name))
-                    .doOnNext(NearbyHistoryService.this::sendLocalNotification)
+                    .doOnNext(userProfile -> {
+                        if (RegionState.ENTER == regionState) {
+                            showLocalNotification(userProfile);
+                        }
+                    })
                     .flatMap(user -> saveHistory(user.userId, regionState))
                     .subscribe(uniqueId -> {
                         getUserActivity()
@@ -138,12 +144,17 @@ public class NearbyHistoryService extends IntentService {
         googleApiClient.connect();
     }
 
-    private void sendLocalNotification(UserProfile userProfile) {
+    private void showLocalNotification(UserProfile userProfile) {
         String title = getString(R.string.notification_title_app_user_found);
         String message = getString(R.string.notification_message_user_using_app, userProfile.name);
 
-        DefaultIntent defaultIntent = new DefaultIntent();
-        PendingIntent pendingIntent = PendingIntent.getActivity(getApplicationContext(), 0, defaultIntent, PendingIntent.FLAG_CANCEL_CURRENT);
+        int code = UUID.randomUUID().hashCode();
+        LOGGER.debug("Notification code=" + code);
+
+        Intent intent = new Intent(getApplicationContext(), MainActivity.class);
+        intent.setFlags(Intent.FLAG_ACTIVITY_SINGLE_TOP | Intent.FLAG_ACTIVITY_CLEAR_TOP);
+
+        PendingIntent pendingIntent = PendingIntent.getActivity(getApplicationContext(), code, intent, PendingIntent.FLAG_CANCEL_CURRENT);
         LocalNotification localNotification = new LocalNotification(getApplicationContext(), title, message, pendingIntent);
         localNotification.show();
     }

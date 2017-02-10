@@ -1,5 +1,6 @@
 package com.lakeel.altla.vision.nearby.data.mapper.entity;
 
+import com.google.firebase.database.ServerValue;
 import com.lakeel.altla.vision.nearby.data.entity.InformationEntity;
 
 public final class InformationEntityMapper {
@@ -8,7 +9,7 @@ public final class InformationEntityMapper {
         InformationEntity entity = new InformationEntity();
         entity.title = title;
         entity.body = message;
+        entity.postTime = ServerValue.TIMESTAMP;
         return entity;
     }
-
 }

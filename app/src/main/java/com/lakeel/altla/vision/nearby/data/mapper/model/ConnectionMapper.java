@@ -11,7 +11,7 @@ public final class ConnectionMapper {
 
         Connection connection = new Connection();
         connection.isConnected = entity.isConnected;
-        connection.lastOnlineTime = entity.lastOnlineTime;
+        connection.lastOnlineTime = (Long) entity.lastOnlineTime;
 
         return connection;
     }

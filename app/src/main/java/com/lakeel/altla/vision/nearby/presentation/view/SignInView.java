@@ -8,7 +8,7 @@ public interface SignInView {
 
     void showSignInActivity(Intent intent);
 
-    void signInSuccess();
+    void signInSucceeded();
 
     void showSnackBar(@StringRes int resId);
 }

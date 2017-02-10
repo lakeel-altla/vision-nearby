@@ -14,7 +14,7 @@ public final class BeaconMapper {
         beacon.name = entity.deviceName;
         beacon.userId = entity.userId;
         beacon.isLost = entity.isLost;
-        beacon.lastUsedTime = entity.lastUsedTime;
+        beacon.lastUsedTime = (Long) entity.lastUsedTime;
         return beacon;
     }
 }

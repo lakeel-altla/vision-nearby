@@ -20,6 +20,6 @@ public final class SaveNearbyHistoryUseCase {
 
     public Single<String> execute(String passingUserId, RegionState regionState) {
         String myUserId = MyUser.getUserId();
-        return repository.saveHistory(myUserId, passingUserId, regionState).subscribeOn(Schedulers.io());
+        return repository.save(myUserId, passingUserId, regionState).subscribeOn(Schedulers.io());
     }
 }

@@ -2,7 +2,9 @@ package com.lakeel.altla.vision.nearby.presentation.view.actionBar;
 
 import android.app.Activity;
 import android.graphics.drawable.ColorDrawable;
+import android.os.Build;
 import android.support.annotation.ColorRes;
+import android.support.annotation.RequiresApi;
 import android.support.v4.content.ContextCompat;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
@@ -21,6 +23,7 @@ public final class ToolBarColor implements BarColor {
         this.primaryDarkColorInt = primaryDarkColorInt;
     }
 
+    @RequiresApi(api = Build.VERSION_CODES.LOLLIPOP)
     @Override
     public void draw() {
         ActionBar actionBar = ((AppCompatActivity) activity).getSupportActionBar();

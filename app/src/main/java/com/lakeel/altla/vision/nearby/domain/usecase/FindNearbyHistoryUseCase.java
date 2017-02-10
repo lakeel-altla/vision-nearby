@@ -20,6 +20,6 @@ public final class FindNearbyHistoryUseCase {
 
     public Single<NearbyHistory> execute(String historyId) {
         String userId = MyUser.getUserId();
-        return historyRepository.findNearbyHistory(userId, historyId).subscribeOn(Schedulers.io());
+        return historyRepository.find(userId, historyId).subscribeOn(Schedulers.io());
     }
 }

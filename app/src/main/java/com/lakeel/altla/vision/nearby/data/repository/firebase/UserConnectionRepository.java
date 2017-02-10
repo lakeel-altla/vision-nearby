@@ -5,14 +5,12 @@ import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
-import com.google.firebase.database.ServerValue;
 import com.google.firebase.database.ValueEventListener;
+import com.lakeel.altla.vision.nearby.data.entity.ConnectionEntity;
+import com.lakeel.altla.vision.nearby.data.mapper.entity.ConnectionEntityMapper;
 import com.lakeel.altla.vision.nearby.data.mapper.model.ConnectionMapper;
 import com.lakeel.altla.vision.nearby.domain.model.Connection;
 import com.lakeel.altla.vision.nearby.presentation.firebase.MyUser;
-
-import java.util.HashMap;
-import java.util.Map;
 
 import javax.inject.Inject;
 
@@ -25,7 +23,7 @@ public class UserConnectionRepository {
 
     private static final String IS_CONNECTED_KEY = "isConnected";
 
-    private static final String LAST_ONLINE_KEY = "lastOnlineTime";
+    private final ConnectionEntityMapper entityMapper = new ConnectionEntityMapper();
 
     private final ConnectionMapper connectionMapper = new ConnectionMapper();
 
@@ -42,13 +40,10 @@ public class UserConnectionRepository {
         // this method is called and FirebaseUser instance become null.
 
         if (MyUser.isAuthenticated()) {
-            Map<String, Object> map = new HashMap<>();
-            map.put(IS_CONNECTED_KEY, true);
-            map.put(LAST_ONLINE_KEY, ServerValue.TIMESTAMP);
-
+            ConnectionEntity entity = entityMapper.map();
             reference
                     .child(userId)
-                    .updateChildren(map);
+                    .setValue(entity);
         }
     }
 

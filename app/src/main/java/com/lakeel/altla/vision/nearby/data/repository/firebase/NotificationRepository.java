@@ -6,8 +6,6 @@ import com.google.firebase.database.FirebaseDatabase;
 import com.lakeel.altla.vision.nearby.data.entity.NotificationEntity;
 import com.lakeel.altla.vision.nearby.data.mapper.entity.NotificationEntityMapper;
 
-import java.util.Map;
-
 import javax.inject.Inject;
 
 import rx.Completable;
@@ -28,11 +26,9 @@ public class NotificationRepository {
     public Completable save(String to, String title, String message) {
         return Completable.create(subscriber -> {
             NotificationEntity entity = entityMapper.map(to, title, message);
-            Map<String, Object> map = entity.toMap();
-
             Task task = reference
                     .push()
-                    .setValue(map);
+                    .setValue(entity);
 
             Exception exception = task.getException();
             if (exception != null) {

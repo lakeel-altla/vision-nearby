@@ -4,6 +4,7 @@ import android.location.Location;
 
 import com.google.android.gms.awareness.state.Weather;
 import com.google.android.gms.location.DetectedActivity;
+import com.google.firebase.database.ServerValue;
 import com.lakeel.altla.vision.nearby.data.entity.NearbyHistoryEntity;
 import com.lakeel.altla.vision.nearby.presentation.beacon.region.RegionState;
 
@@ -19,6 +20,7 @@ public final class HistoryEntityMapper {
         NearbyHistoryEntity entity = new NearbyHistoryEntity();
         entity.userId = userId;
         entity.isEntered = RegionState.ENTER == regionState;
+        entity.passingTime = ServerValue.TIMESTAMP;
         return entity;
     }
 

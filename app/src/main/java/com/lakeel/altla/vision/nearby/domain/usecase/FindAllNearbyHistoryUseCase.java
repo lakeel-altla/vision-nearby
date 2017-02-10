@@ -26,7 +26,7 @@ public final class FindAllNearbyHistoryUseCase {
 
     public Observable<NearbyHistoryUserProfile> execute() {
         String userId = MyUser.getUserId();
-        return historyRepository.findNearbyHistoryList(userId)
+        return historyRepository.findAll(userId)
                 .subscribeOn(Schedulers.io())
                 // Join the data.
                 .flatMap(history -> {

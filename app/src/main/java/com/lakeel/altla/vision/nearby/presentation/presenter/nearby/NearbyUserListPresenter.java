@@ -11,6 +11,8 @@ import android.os.Build;
 import android.support.annotation.IntRange;
 import android.support.v4.content.ContextCompat;
 
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.FirebaseDatabase;
 import com.lakeel.altla.vision.nearby.R;
 import com.lakeel.altla.vision.nearby.domain.usecase.FindAllNearbyUserUseCase;
 import com.lakeel.altla.vision.nearby.presentation.ble.BleChecker;

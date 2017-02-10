@@ -60,6 +60,9 @@ public class App extends Application {
         // Must invoke here before using Dagger2.
         MultiDex.install(this);
 
+        // Output firebase logs.
+        FirebaseDatabase.getInstance().setLogLevel(com.google.firebase.database.Logger.Level.DEBUG);
+
         DefaultComponent component = DaggerDefaultComponent.builder()
                 .contextModule(new ContextModule(this))
                 .build();
@@ -133,7 +136,7 @@ public class App extends Application {
                 .showImageOnFail(R.drawable.ic_account)
                 .build();
 
-        // When size of the cache is exceeded, removeNearbyHistory the image that has not been used much.
+        // When size of the cache is exceeded, remove the image that has not been used much.
         ImageLoaderConfiguration config = new ImageLoaderConfiguration.Builder(this)
                 .memoryCache(new UsingFreqLimitedMemoryCache(2 * 1024 * 1024))
                 .defaultDisplayImageOptions(displayImageOptions)

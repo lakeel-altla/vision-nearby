@@ -13,7 +13,7 @@ public final class InformationMapper {
         information.informationId = snapshot.getKey();
         information.title = entity.title;
         information.body = entity.body;
-        information.postTime = entity.postTime;
+        information.postTime = (Long) entity.postTime;
 
         return information;
     }

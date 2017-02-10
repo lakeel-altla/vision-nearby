@@ -74,20 +74,20 @@ public final class PassingUserPresenter extends BasePresenter<PassingUserView> {
                 })
                 .flatMap(model1 -> findUser(model1.userId))
                 .observeOn(AndroidSchedulers.mainThread())
-                .subscribe(model -> {
-                    analyticsReporter.viewHistoryItem(model.userId, model.userName);
+                .subscribe(viewModel -> {
+                    analyticsReporter.viewHistoryItem(viewModel.userId, viewModel.userName);
 
-                    getView().showProfile(model);
-                    getView().showPassingData(model);
+                    getView().showProfile(viewModel);
+                    getView().showPassingData(viewModel);
 
                     if (isMapReadied) {
                         onMapReady();
                     }
 
-                    showPresence(model.userId);
-                    showTimes(model.userId);
-                    showLineUrl(model.userId);
-                    showAddFavoriteButtonIfNeeded(model.userId);
+                    showPresence(viewModel.userId);
+                    showTimes(viewModel.userId);
+                    showLineUrl(viewModel.userId);
+                    showAddFavoriteButtonIfNeeded(viewModel.userId);
                 }, new ErrorAction<>());
         subscriptions.add(subscription);
     }

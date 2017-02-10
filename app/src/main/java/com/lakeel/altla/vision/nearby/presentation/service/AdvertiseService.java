@@ -4,9 +4,11 @@ import android.app.Service;
 import android.bluetooth.le.AdvertiseCallback;
 import android.bluetooth.le.AdvertiseSettings;
 import android.content.Intent;
+import android.os.Build;
 import android.os.Bundle;
 import android.os.IBinder;
 import android.support.annotation.Nullable;
+import android.support.annotation.RequiresApi;
 import android.support.v4.app.NotificationCompat;
 
 import com.lakeel.altla.vision.nearby.R;
@@ -25,6 +27,7 @@ public final class AdvertiseService extends Service {
 
     private static final Logger LOGGER = LoggerFactory.getLogger(AdvertiseService.class);
 
+    @RequiresApi(api = Build.VERSION_CODES.LOLLIPOP)
     @Override
     public int onStartCommand(Intent intent, int flags, int startId) {
         if (intent == null) {

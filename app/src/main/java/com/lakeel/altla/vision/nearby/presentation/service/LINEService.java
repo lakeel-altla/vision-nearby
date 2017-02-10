@@ -10,13 +10,15 @@ import com.lakeel.altla.vision.nearby.domain.usecase.FindUserUseCase;
 import com.lakeel.altla.vision.nearby.presentation.di.component.DaggerServiceComponent;
 import com.lakeel.altla.vision.nearby.presentation.di.component.ServiceComponent;
 import com.lakeel.altla.vision.nearby.presentation.di.module.ServiceModule;
+import com.lakeel.altla.vision.nearby.presentation.notification.LocalNotification;
 import com.lakeel.altla.vision.nearby.presentation.view.intent.IntentKey;
 import com.lakeel.altla.vision.nearby.presentation.view.intent.UriIntent;
-import com.lakeel.altla.vision.nearby.presentation.notification.LocalNotification;
 import com.lakeel.altla.vision.nearby.rx.ErrorAction;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+
+import java.util.UUID;
 
 import javax.inject.Inject;
 
@@ -65,7 +67,7 @@ public class LINEService extends IntentService {
                     String message = getString(R.string.notification_message_user_using_line, userName);
 
                     UriIntent uriIntent = new UriIntent(entity.url);
-                    PendingIntent pendingIntent = PendingIntent.getActivity(getApplicationContext(), 0, uriIntent, PendingIntent.FLAG_CANCEL_CURRENT);
+                    PendingIntent pendingIntent = PendingIntent.getActivity(getApplicationContext(), UUID.randomUUID().hashCode(), uriIntent, PendingIntent.FLAG_CANCEL_CURRENT);
 
                     LocalNotification notification = new LocalNotification(getApplicationContext(), title, message, pendingIntent);
                     notification.show();

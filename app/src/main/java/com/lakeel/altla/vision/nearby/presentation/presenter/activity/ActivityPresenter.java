@@ -10,8 +10,6 @@ import android.support.v4.content.ContextCompat;
 
 import com.firebase.ui.auth.AuthUI;
 import com.google.android.gms.tasks.Task;
-import com.google.firebase.database.DatabaseReference;
-import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.iid.FirebaseInstanceId;
 import com.lakeel.altla.vision.nearby.R;
 import com.lakeel.altla.vision.nearby.beacon.EddystoneUid;
@@ -101,10 +99,6 @@ public final class ActivityPresenter extends BasePresenter<ActivityView> {
 
         if (MyUser.isAuthenticated()) {
             postSignIn();
-
-            // TODO:
-            DatabaseReference databaseReference = FirebaseDatabase.getInstance().getReference();
-            databaseReference.keepSynced(true);
         } else {
             getView().showSignInFragment();
         }

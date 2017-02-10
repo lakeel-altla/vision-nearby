@@ -12,7 +12,7 @@ public final class LocationMetaDataMapper {
         LocationMetaData metaData = new LocationMetaData();
         metaData.locationMetaDataId = snapshot.getKey();
         metaData.beaconId = entity.beaconId;
-        metaData.passingTime = entity.passingTime;
+        metaData.passingTime = (Long) entity.passingTime;
 
         return metaData;
     }

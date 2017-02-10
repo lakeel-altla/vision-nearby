@@ -19,6 +19,6 @@ public final class RemoveNearbyHistoryUseCase {
 
     public Completable execute(String uniqueKey) {
         String userId = MyUser.getUserId();
-        return repository.removeNearbyHistory(userId, uniqueKey).subscribeOn(Schedulers.io());
+        return repository.remove(userId, uniqueKey).subscribeOn(Schedulers.io());
     }
 }

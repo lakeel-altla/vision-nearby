@@ -1,5 +1,6 @@
 package com.lakeel.altla.vision.nearby.presentation.presenter.history;
 
+import android.os.Build;
 import android.support.annotation.IntRange;
 
 import com.lakeel.altla.vision.nearby.R;
@@ -48,7 +49,14 @@ public final class NearbyHistoryListPresenter extends BasePresenter<NearbyHistor
     public void onActivityCreated() {
         Subscription subscription = findAllNearbyHistoryUseCase.execute()
                 .map(nearbyHistoryUserProfile -> modelMapper.map(nearbyHistoryUserProfile))
-                .toSortedList((model1, model2) -> Long.compare(model2.passingTime, model1.passingTime))
+                .toSortedList((model1, model2) -> {
+                    // TODO
+                    if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN_MR2) {
+                        return Long.compare(model2.passingTime, model1.passingTime);
+                    } else {
+                        return Long.valueOf(model2.passingTime).compareTo(model1.passingTime);
+                    }
+                })
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribe(model -> {
                     viewModels.clear();

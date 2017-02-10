@@ -61,7 +61,7 @@ public final class UserProfileRepository {
             UserProfileEntity entity = entityMapper.map();
             Task task = reference
                     .child(userId)
-                    .updateChildren(entity.toMap());
+                    .setValue(entity);
 
             Exception e = task.getException();
             if (e != null) {

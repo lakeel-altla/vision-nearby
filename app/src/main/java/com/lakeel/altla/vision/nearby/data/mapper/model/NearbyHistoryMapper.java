@@ -19,7 +19,7 @@ public final class NearbyHistoryMapper {
         NearbyHistory nearbyHistory = new NearbyHistory();
         nearbyHistory.historyId = snapshot.getKey();
         nearbyHistory.userId = entity.userId;
-        nearbyHistory.passingTime = entity.passingTime;
+        nearbyHistory.passingTime = (Long) entity.passingTime;
 
         if (entity.userActivity != null) {
             nearbyHistory.userActivity = entity.userActivity;

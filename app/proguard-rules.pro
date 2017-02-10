@@ -45,8 +45,8 @@
 -keepattributes Signature
 -keepattributes SourceFile
 -keepattributes LineNumberTable
--keepattributes InnerClasses
 -keepattributes EnclosingMethod
+-keepattributes InnerClasses
 -keepattributes Deprecated
 
 # Preference

@@ -71,7 +71,7 @@ public final class UserLocationMetaDataRepository {
             Task task = reference
                     .child(userId)
                     .child(uniqueId)
-                    .setValue(entity.toMap());
+                    .setValue(entity);
 
             Exception exception = task.getException();
             if (exception != null) {

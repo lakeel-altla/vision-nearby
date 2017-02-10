@@ -11,8 +11,6 @@ import com.lakeel.altla.vision.nearby.data.mapper.entity.InformationEntityMapper
 import com.lakeel.altla.vision.nearby.data.mapper.model.InformationMapper;
 import com.lakeel.altla.vision.nearby.domain.model.Information;
 
-import java.util.Map;
-
 import javax.inject.Inject;
 
 import rx.Completable;
@@ -37,12 +35,10 @@ public class UserInformationRepository {
     public Completable save(String userId, String title, String message) {
         return Completable.create(subscriber -> {
             InformationEntity entity = entityMapper.map(title, message);
-            Map<String, Object> map = entity.toMap();
-
             Task task = reference
                     .child(userId)
                     .push()
-                    .setValue(map);
+                    .setValue(entity);
 
             Exception e = task.getException();
             if (e != null) {
