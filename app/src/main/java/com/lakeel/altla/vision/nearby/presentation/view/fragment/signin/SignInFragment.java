@@ -86,12 +86,12 @@ public final class SignInFragment extends Fragment implements SignInView {
     }
 
     @Override
-    public void signInSucceeded() {
+    public void postSignIn() {
         ((MainActivity) getActivity()).postSignIn();
     }
 
     @Override
     public void showSnackBar(int resId) {
-        Snackbar.make(mainLayout, R.string.snackBar_error_not_signed_in, Snackbar.LENGTH_SHORT).show();
+        Snackbar.make(mainLayout, resId, Snackbar.LENGTH_SHORT).show();
     }
 }

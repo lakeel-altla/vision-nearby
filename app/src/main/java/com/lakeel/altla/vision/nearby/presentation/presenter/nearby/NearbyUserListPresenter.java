@@ -2,8 +2,6 @@ package com.lakeel.altla.vision.nearby.presentation.presenter.nearby;
 
 import android.Manifest;
 import android.bluetooth.BluetoothAdapter;
-import android.bluetooth.BluetoothDevice;
-import android.bluetooth.BluetoothManager;
 import android.content.Context;
 import android.content.Intent;
 import android.content.pm.PackageManager;
@@ -11,11 +9,12 @@ import android.os.Build;
 import android.support.annotation.IntRange;
 import android.support.v4.content.ContextCompat;
 
-import com.google.firebase.database.DatabaseReference;
-import com.google.firebase.database.FirebaseDatabase;
 import com.lakeel.altla.vision.nearby.R;
 import com.lakeel.altla.vision.nearby.domain.usecase.FindAllNearbyUserUseCase;
 import com.lakeel.altla.vision.nearby.presentation.ble.BleChecker;
+import com.lakeel.altla.vision.nearby.presentation.ble.scanner.BleScanCallback;
+import com.lakeel.altla.vision.nearby.presentation.ble.scanner.BleScanner;
+import com.lakeel.altla.vision.nearby.presentation.ble.scanner.BleScannerFactory;
 import com.lakeel.altla.vision.nearby.presentation.presenter.BaseItemPresenter;
 import com.lakeel.altla.vision.nearby.presentation.presenter.BasePresenter;
 import com.lakeel.altla.vision.nearby.presentation.presenter.mapper.NearbyUsersModelMapper;
@@ -53,17 +52,14 @@ public final class NearbyUserListPresenter extends BasePresenter<NearbyUserListV
 
     private final Context context;
 
-    private final BluetoothAdapter bluetoothAdapter;
+    private final BleScanner bleScanner;
 
     private boolean isScanning;
 
-    private BluetoothAdapter.LeScanCallback scanCallback = new BluetoothAdapter.LeScanCallback() {
-        @Override
-        public void onLeScan(BluetoothDevice bluetoothDevice, int i, byte[] scanRecord) {
-            if (scanRecord == null) {
-                return;
-            }
+    private final BleScanCallback scanCallback = new BleScanCallback() {
 
+        @Override
+        public void onScan(int rssi, byte[] scanRecord) {
             List<ADStructure> structures =
                     ADPayloadParser.getInstance().parse(scanRecord);
 
@@ -95,8 +91,7 @@ public final class NearbyUserListPresenter extends BasePresenter<NearbyUserListV
     @Inject
     NearbyUserListPresenter(Context context) {
         this.context = context;
-        BluetoothManager bluetoothManager = (BluetoothManager) context.getSystemService(Context.BLUETOOTH_SERVICE);
-        this.bluetoothAdapter = bluetoothManager.getAdapter();
+        this.bleScanner = BleScannerFactory.create(context, scanCallback);
     }
 
     public void onActivityCreated() {
@@ -113,7 +108,7 @@ public final class NearbyUserListPresenter extends BasePresenter<NearbyUserListV
         getView().hideIndicator();
         getView().drawDefaultActionBarColor();
 
-        bluetoothAdapter.stopLeScan(scanCallback);
+        bleScanner.stopScan();
     }
 
     public void onRefresh() {
@@ -168,13 +163,13 @@ public final class NearbyUserListPresenter extends BasePresenter<NearbyUserListV
     }
 
     private void subscribe() {
-        bluetoothAdapter.startLeScan(scanCallback);
+        bleScanner.startScan();
 
         isScanning = true;
 
         executor.schedule(() -> {
-            // Stop to scan after 2 seconds.
-            bluetoothAdapter.stopLeScan(scanCallback);
+            // Stop to scan after 5 seconds.
+            bleScanner.stopScan();
 
             isScanning = false;
 
@@ -185,7 +180,7 @@ public final class NearbyUserListPresenter extends BasePresenter<NearbyUserListV
             }
 
             subscriptions.unSubscribe();
-        }, 1, TimeUnit.SECONDS);
+        }, 5, TimeUnit.SECONDS);
     }
 
     public final class NearbyUserItemPresenter extends BaseItemPresenter<NearbyUserItemView> {

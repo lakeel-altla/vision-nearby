@@ -124,14 +124,7 @@ public class DeviceListPresenter extends BasePresenter<DeviceListView> {
     private void findUserDevices() {
         Subscription subscription = findAllDeviceUseCase.execute()
                 .map(modelMapper::map)
-                .toSortedList((model1, model2) -> {
-                    // TODO
-                    if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN_MR2) {
-                        return Long.compare(model2.lastUsedTime, model1.lastUsedTime);
-                    } else {
-                        return Long.valueOf(model2.lastUsedTime).compareTo(model1.lastUsedTime);
-                    }
-                })
+                .toSortedList((model1, model2) -> sort(model1.lastUsedTime, model2.lastUsedTime))
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribe(models -> {
                     viewModels.clear();
@@ -139,5 +132,13 @@ public class DeviceListPresenter extends BasePresenter<DeviceListView> {
                     getView().updateItems();
                 }, new ErrorAction<>());
         subscriptions.add(subscription);
+    }
+
+    private int sort(long value1, long value2) {
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN_MR2) {
+            return Long.compare(value2, value1);
+        } else {
+            return Long.valueOf(value2).compareTo(value1);
+        }
     }
 }

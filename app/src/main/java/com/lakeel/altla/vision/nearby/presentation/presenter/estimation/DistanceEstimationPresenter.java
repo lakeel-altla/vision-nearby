@@ -2,8 +2,6 @@ package com.lakeel.altla.vision.nearby.presentation.presenter.estimation;
 
 import android.Manifest;
 import android.bluetooth.BluetoothAdapter;
-import android.bluetooth.BluetoothDevice;
-import android.bluetooth.BluetoothManager;
 import android.content.Context;
 import android.content.Intent;
 import android.content.pm.PackageManager;
@@ -12,6 +10,9 @@ import android.support.v4.content.ContextCompat;
 
 import com.lakeel.altla.vision.nearby.presentation.beacon.distance.Distance;
 import com.lakeel.altla.vision.nearby.presentation.ble.BleChecker;
+import com.lakeel.altla.vision.nearby.presentation.ble.scanner.BleScanCallback;
+import com.lakeel.altla.vision.nearby.presentation.ble.scanner.BleScanner;
+import com.lakeel.altla.vision.nearby.presentation.ble.scanner.BleScannerFactory;
 import com.lakeel.altla.vision.nearby.presentation.presenter.BasePresenter;
 import com.lakeel.altla.vision.nearby.presentation.view.DistanceEstimationView;
 import com.lakeel.altla.vision.nearby.rx.ReusableCompositeSubscription;
@@ -34,17 +35,14 @@ public final class DistanceEstimationPresenter extends BasePresenter<DistanceEst
 
     private final Context context;
 
-    private final BluetoothAdapter bluetoothAdapter;
+    private final BleScanner bleScanner;
 
     private List<String> beaconIds;
 
-    private BluetoothAdapter.LeScanCallback scanCallback = new BluetoothAdapter.LeScanCallback() {
-        @Override
-        public void onLeScan(BluetoothDevice bluetoothDevice, int rssi, byte[] scanRecord) {
-            if (scanRecord == null) {
-                return;
-            }
+    private final BleScanCallback scanCallback = new BleScanCallback() {
 
+        @Override
+        public void onScan(int rssi, byte[] scanRecord) {
             List<ADStructure> structures =
                     ADPayloadParser.getInstance().parse(scanRecord);
 
@@ -63,6 +61,7 @@ public final class DistanceEstimationPresenter extends BasePresenter<DistanceEst
                                 Distance distance = new Distance(eddystoneUID.getTxPower(), rssi);
                                 getView().showDistance(distance.getMeters());
                             });
+
                     subscriptions.add(subscription);
                 }
             }
@@ -72,9 +71,7 @@ public final class DistanceEstimationPresenter extends BasePresenter<DistanceEst
     @Inject
     DistanceEstimationPresenter(Context context) {
         this.context = context;
-
-        BluetoothManager bluetoothManager = (BluetoothManager) context.getSystemService(Context.BLUETOOTH_SERVICE);
-        this.bluetoothAdapter = bluetoothManager.getAdapter();
+        this.bleScanner = BleScannerFactory.create(context, scanCallback);
     }
 
     public void setBeaconIds(List<String> beaconIds) {
@@ -91,7 +88,7 @@ public final class DistanceEstimationPresenter extends BasePresenter<DistanceEst
 
     public void onStop() {
         subscriptions.unSubscribe();
-        bluetoothAdapter.stopLeScan(scanCallback);
+        bleScanner.stopScan();
     }
 
     public void onAccessFineLocationGranted() {
@@ -100,7 +97,7 @@ public final class DistanceEstimationPresenter extends BasePresenter<DistanceEst
 
     public void subscribe() {
         getView().startAnimation();
-        bluetoothAdapter.startLeScan(scanCallback);
+        bleScanner.startScan();
     }
 
     private void checkAccessFineLocationPermission() {

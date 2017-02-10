@@ -49,14 +49,7 @@ public final class NearbyHistoryListPresenter extends BasePresenter<NearbyHistor
     public void onActivityCreated() {
         Subscription subscription = findAllNearbyHistoryUseCase.execute()
                 .map(nearbyHistoryUserProfile -> modelMapper.map(nearbyHistoryUserProfile))
-                .toSortedList((model1, model2) -> {
-                    // TODO
-                    if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN_MR2) {
-                        return Long.compare(model2.passingTime, model1.passingTime);
-                    } else {
-                        return Long.valueOf(model2.passingTime).compareTo(model1.passingTime);
-                    }
-                })
+                .toSortedList((model1, model2) -> sortByLatest(model1.passingTime, model2.passingTime))
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribe(model -> {
                     viewModels.clear();
@@ -120,6 +113,14 @@ public final class NearbyHistoryListPresenter extends BasePresenter<NearbyHistor
                                 getView().showSnackBar(R.string.snackBar_message_removed);
                             });
             subscriptions.add(subscription);
+        }
+    }
+
+    private int sortByLatest(long value1, long value2) {
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN_MR2) {
+            return Long.compare(value2, value1);
+        } else {
+            return Long.valueOf(value2).compareTo(value1);
         }
     }
 }
