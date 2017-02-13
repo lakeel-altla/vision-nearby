@@ -50,13 +50,15 @@ public final class PassingUserPresenter extends BasePresenter<PassingUserView> {
 
     private final ReusableCompositeSubscription subscriptions = new ReusableCompositeSubscription();
 
-    private UserPassingModelMapper modelMapper = new UserPassingModelMapper();
+    private final UserPassingModelMapper modelMapper = new UserPassingModelMapper();
 
     private PassingUserModel viewModel;
 
     private String historyId;
 
     private boolean isMapReadied;
+
+    private boolean isAdding = false;
 
     @Inject
     PassingUserPresenter() {
@@ -106,12 +108,18 @@ public final class PassingUserPresenter extends BasePresenter<PassingUserView> {
     }
 
     public void onAdd() {
+        if (isAdding) {
+            return;
+        }
+        isAdding = true;
+
         analyticsReporter.addFavorite(viewModel.userId, viewModel.userName);
 
         Subscription subscription = saveFavoriteUseCase.execute(viewModel.userId)
                 .observeOn(AndroidSchedulers.mainThread())
-                .subscribe(new ErrorAction<>(),
+                .subscribe(e -> isAdding = false,
                         () -> {
+                            isAdding = false;
                             getView().hideAddButton();
                             getView().showSnackBar(R.string.snackBar_message_added);
                         });
