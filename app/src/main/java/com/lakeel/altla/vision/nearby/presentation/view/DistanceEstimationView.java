@@ -6,7 +6,7 @@ public interface DistanceEstimationView {
 
     void startAnimation();
 
-    void showDistance(String meters);
+    void showDistanceMessage(String distanceMessage);
 
     void requestAccessFineLocationPermission();
 

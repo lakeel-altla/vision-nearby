@@ -8,6 +8,7 @@ import android.content.pm.PackageManager;
 import android.os.Build;
 import android.support.v4.content.ContextCompat;
 
+import com.lakeel.altla.vision.nearby.R;
 import com.lakeel.altla.vision.nearby.presentation.beacon.distance.Distance;
 import com.lakeel.altla.vision.nearby.presentation.ble.BleChecker;
 import com.lakeel.altla.vision.nearby.presentation.ble.scanner.BleScanCallback;
@@ -60,7 +61,8 @@ public final class DistanceEstimationPresenter extends BasePresenter<DistanceEst
                             .subscribe(beaconId -> {
                                 // Calculate distance.
                                 Distance distance = new Distance(eddystoneUID.getTxPower(), rssi);
-                                getView().showDistance(distance.getMeters());
+                                String distanceMessage = context.getResources().getString(R.string.snackBar_message_device_distance_format, distance.getMeters());
+                                getView().showDistanceMessage(distanceMessage);
                             });
 
                     subscriptions.add(subscription);

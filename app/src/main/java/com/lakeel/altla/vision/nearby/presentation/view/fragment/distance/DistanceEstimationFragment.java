@@ -125,7 +125,7 @@ public final class DistanceEstimationFragment extends Fragment implements Distan
             if (RESULT_OK == resultCode) {
                 presenter.subscribe();
             } else {
-                LOGGER.error("Failed to enable BLE.");
+                LOGGER.warn("User deny to enable BLE.");
                 Snackbar.make(mainLayout, R.string.snackBar_error_not_enable_ble, Snackbar.LENGTH_SHORT).show();
             }
         } else {
@@ -169,9 +169,8 @@ public final class DistanceEstimationFragment extends Fragment implements Distan
     }
 
     @Override
-    public void showDistance(String meters) {
-        String message = getResources().getString(R.string.snackBar_message_device_distance_format, meters);
-        distanceTextView.setText(message);
+    public void showDistanceMessage(String distanceMessage) {
+        distanceTextView.setText(distanceMessage);
     }
 
     @RequiresApi(api = Build.VERSION_CODES.M)
