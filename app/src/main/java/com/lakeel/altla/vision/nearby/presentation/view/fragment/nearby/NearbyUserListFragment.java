@@ -20,8 +20,6 @@ import android.view.ViewGroup;
 import com.lakeel.altla.vision.nearby.R;
 import com.lakeel.altla.vision.nearby.presentation.presenter.nearby.NearbyUserListPresenter;
 import com.lakeel.altla.vision.nearby.presentation.view.NearbyUserListView;
-import com.lakeel.altla.vision.nearby.presentation.view.actionBar.BarColorContext;
-import com.lakeel.altla.vision.nearby.presentation.view.actionBar.BarColorFactory;
 import com.lakeel.altla.vision.nearby.presentation.view.activity.MainActivity;
 import com.lakeel.altla.vision.nearby.presentation.view.adapter.NearbyUserAdapter;
 import com.lakeel.altla.vision.nearby.presentation.view.divider.DividerItemDecoration;
@@ -67,8 +65,6 @@ public final class NearbyUserListFragment extends Fragment implements NearbyUser
 
         presenter.onCreateView(this);
 
-        drawDefaultActionBarColor();
-
         return view;
     }
 
@@ -93,6 +89,19 @@ public final class NearbyUserListFragment extends Fragment implements NearbyUser
         NearbyUserAdapter adapter = new NearbyUserAdapter(presenter);
         recyclerView.setAdapter(adapter);
         presenter.onActivityCreated();
+    }
+
+    @Override
+    public void onPause() {
+        super.onPause();
+
+        // NOTE:
+        // If you do not call it here, fragment will not switch.
+        if (swipeRefreshLayout.isRefreshing()) {
+            swipeRefreshLayout.setRefreshing(false);
+            swipeRefreshLayout.destroyDrawingCache();
+            swipeRefreshLayout.clearAnimation();
+        }
     }
 
     @Override
@@ -151,12 +160,6 @@ public final class NearbyUserListFragment extends Fragment implements NearbyUser
     @Override
     public void hideIndicator() {
         swipeRefreshLayout.post(() -> swipeRefreshLayout.setRefreshing(false));
-    }
-
-    @Override
-    public void drawDefaultActionBarColor() {
-        BarColorContext context = new BarColorContext(BarColorFactory.createDefaultColor(this));
-        context.draw();
     }
 
     @Override

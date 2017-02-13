@@ -112,7 +112,6 @@ public final class NearbyUserListPresenter extends BasePresenter<NearbyUserListV
         subscriptions.unSubscribe();
 
         getView().hideIndicator();
-        getView().drawDefaultActionBarColor();
 
         bleScanner.stopScan();
     }
