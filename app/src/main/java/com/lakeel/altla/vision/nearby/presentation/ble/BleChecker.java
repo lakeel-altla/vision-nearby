@@ -7,7 +7,6 @@ import android.os.Build;
 
 import org.altbeacon.beacon.BeaconTransmitter;
 
-import static com.lakeel.altla.vision.nearby.presentation.ble.BleChecker.State.DISABLE;
 import static com.lakeel.altla.vision.nearby.presentation.ble.BleChecker.State.ENABLE;
 import static com.lakeel.altla.vision.nearby.presentation.ble.BleChecker.State.OFF;
 import static com.lakeel.altla.vision.nearby.presentation.ble.BleChecker.State.SUBSCRIBE_ONLY;
@@ -17,7 +16,7 @@ import static org.altbeacon.beacon.BeaconTransmitter.NOT_SUPPORTED_CANNOT_GET_AD
 public final class BleChecker {
 
     public enum State {
-        OFF("off"), ENABLE("enable"), DISABLE("disable"), SUBSCRIBE_ONLY("subscribe_only");
+        OFF("off"), ENABLE("enable"), SUBSCRIBE_ONLY("subscribe_only");
 
         private String value;
 
@@ -45,10 +44,6 @@ public final class BleChecker {
         // Because it may not support the advertisement, check the devices.
 
         BluetoothAdapter bluetoothAdapter = manager.getAdapter();
-
-        if (bluetoothAdapter == null) {
-            return DISABLE;
-        }
 
         if (!bluetoothAdapter.isEnabled()) {
             return OFF;
