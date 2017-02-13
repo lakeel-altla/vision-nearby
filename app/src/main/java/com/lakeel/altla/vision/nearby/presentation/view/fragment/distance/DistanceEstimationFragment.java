@@ -140,7 +140,7 @@ public final class DistanceEstimationFragment extends Fragment implements Distan
                 presenter.onAccessFineLocationGranted();
             } else {
                 LOGGER.warn("Access fine location permission is denied.");
-                Snackbar.make(mainLayout, R.string.snackBar_error_not_find, Snackbar.LENGTH_SHORT).show();
+                Snackbar.make(mainLayout, R.string.snackBar_error_not_detected, Snackbar.LENGTH_SHORT).show();
             }
         }
     }
