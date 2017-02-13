@@ -117,9 +117,9 @@
     <string name="snackBar_error_not_added">Could not add.</string>
     <string name="snackBar_error_not_saved">Could not save.</string>
     <string name="snackBar_error_not_found">Could not find.</string>
+    <string name="snackBar_error_not_detected">Could not detect.</string>
     <string name="snackBar_error_not_deleted">Could not delete.</string>
     <string name="snackBar_error_not_enable_ble">Could not enable BLE.</string>
-    <string name="snackBar_error_not_find">Can not find.</string>
     <string name="snackBar_error_required">Required.</string>
     <string name="snackBar_error_invalid_uri">URI is invalid.</string>
 

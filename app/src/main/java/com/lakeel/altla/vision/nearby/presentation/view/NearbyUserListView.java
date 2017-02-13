@@ -14,11 +14,7 @@ public interface NearbyUserListView {
 
     void hideIndicator();
 
-    void drawEditableActionBarColor();
-
     void drawDefaultActionBarColor();
-
-    void hideOptionMenu();
 
     void showSnackBar(int resId);
 }

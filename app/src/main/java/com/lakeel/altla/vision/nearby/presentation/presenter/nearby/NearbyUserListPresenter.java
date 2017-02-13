@@ -46,9 +46,9 @@ public final class NearbyUserListPresenter extends BasePresenter<NearbyUserListV
 
     private final List<NearbyUserModel> viewModels = new ArrayList<>();
 
-    private NearbyUsersModelMapper modelMapper = new NearbyUsersModelMapper();
+    private final NearbyUsersModelMapper modelMapper = new NearbyUsersModelMapper();
 
-    private ScheduledThreadPoolExecutor executor = new ScheduledThreadPoolExecutor(1);
+    private final ScheduledThreadPoolExecutor executor = new ScheduledThreadPoolExecutor(1);
 
     private final Context context;
 
@@ -56,6 +56,7 @@ public final class NearbyUserListPresenter extends BasePresenter<NearbyUserListV
 
     private boolean isScanning;
 
+    @SuppressWarnings("FieldCanBeLocal")
     private final BleScanCallback scanCallback = new BleScanCallback() {
 
         @Override
@@ -69,7 +70,7 @@ public final class NearbyUserListPresenter extends BasePresenter<NearbyUserListV
                     String beaconId = eddystoneUID.getBeaconIdAsString().toLowerCase();
 
                     Subscription subscription = findAllNearbyUserUseCase.execute(beaconId)
-                            .map(user -> modelMapper.map(user))
+                            .map(modelMapper::map)
                             .observeOn(AndroidSchedulers.mainThread())
                             .subscribe(scannedModel -> {
                                 for (NearbyUserModel model : viewModels) {
@@ -98,7 +99,12 @@ public final class NearbyUserListPresenter extends BasePresenter<NearbyUserListV
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
             checkAccessFineLocationPermission();
         } else {
-            checkDeviceBle();
+            if (isBleEnabled()) {
+                getView().showIndicator();
+                subscribe();
+            } else {
+                getView().showBleEnabledActivity(new Intent(BluetoothAdapter.ACTION_REQUEST_ENABLE));
+            }
         }
     }
 
@@ -109,6 +115,11 @@ public final class NearbyUserListPresenter extends BasePresenter<NearbyUserListV
         getView().drawDefaultActionBarColor();
 
         bleScanner.stopScan();
+    }
+
+    public void onBleEnabled() {
+        getView().showIndicator();
+        subscribe();
     }
 
     public void onRefresh() {
@@ -132,34 +143,34 @@ public final class NearbyUserListPresenter extends BasePresenter<NearbyUserListV
         return viewModels.size();
     }
 
-    public void onBleEnabled() {
-        subscribe();
-    }
-
     public void onAccessFineLocationGranted() {
-        checkDeviceBle();
+        if (isBleEnabled()) {
+            getView().showIndicator();
+            subscribe();
+        } else {
+            getView().showBleEnabledActivity(new Intent(BluetoothAdapter.ACTION_REQUEST_ENABLE));
+        }
     }
 
     private void checkAccessFineLocationPermission() {
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
             int permissionResult = ContextCompat.checkSelfPermission(context, Manifest.permission.ACCESS_FINE_LOCATION);
             if (permissionResult == PackageManager.PERMISSION_GRANTED) {
-                checkDeviceBle();
+                if (isBleEnabled()) {
+                    getView().showIndicator();
+                    subscribe();
+                } else {
+                    getView().showBleEnabledActivity(new Intent(BluetoothAdapter.ACTION_REQUEST_ENABLE));
+                }
             } else {
                 getView().requestAccessFineLocationPermission();
             }
         }
     }
 
-    private void checkDeviceBle() {
+    private boolean isBleEnabled() {
         BleChecker checker = new BleChecker(context);
-        BleChecker.State state = checker.checkState();
-        if (state == BleChecker.State.OFF) {
-            getView().showBleEnabledActivity(new Intent(BluetoothAdapter.ACTION_REQUEST_ENABLE));
-        } else if (state == BleChecker.State.ENABLE || state == BleChecker.State.SUBSCRIBE_ONLY) {
-            getView().showIndicator();
-            subscribe();
-        }
+        return checker.checkState() != BleChecker.State.OFF;
     }
 
     private void subscribe() {

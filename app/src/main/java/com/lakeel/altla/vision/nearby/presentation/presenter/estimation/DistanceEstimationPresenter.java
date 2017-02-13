@@ -39,6 +39,7 @@ public final class DistanceEstimationPresenter extends BasePresenter<DistanceEst
 
     private List<String> beaconIds;
 
+    @SuppressWarnings("FieldCanBeLocal")
     private final BleScanCallback scanCallback = new BleScanCallback() {
 
         @Override

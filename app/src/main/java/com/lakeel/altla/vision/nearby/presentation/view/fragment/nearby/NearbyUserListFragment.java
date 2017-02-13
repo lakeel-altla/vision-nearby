@@ -107,8 +107,8 @@ public final class NearbyUserListFragment extends Fragment implements NearbyUser
             if (RESULT_OK == resultCode) {
                 presenter.onBleEnabled();
             } else {
-                LOGGER.error("Failed to enable BLE.");
-                showSnackBar(R.string.snackBar_error_not_enable_ble);
+                LOGGER.warn("User deny to enable BLE.");
+                showSnackBar(R.string.snackBar_error_not_detected);
             }
         } else {
             super.onActivityResult(requestCode, resultCode, data);
@@ -122,7 +122,7 @@ public final class NearbyUserListFragment extends Fragment implements NearbyUser
                 presenter.onAccessFineLocationGranted();
             } else {
                 LOGGER.warn("Access fine location permission is denied.");
-                showSnackBar(R.string.snackBar_error_not_find);
+                showSnackBar(R.string.snackBar_error_not_found);
             }
         }
     }
@@ -154,20 +154,9 @@ public final class NearbyUserListFragment extends Fragment implements NearbyUser
     }
 
     @Override
-    public void drawEditableActionBarColor() {
-        BarColorContext context = new BarColorContext(BarColorFactory.createEditableColor(this));
-        context.draw();
-    }
-
-    @Override
     public void drawDefaultActionBarColor() {
         BarColorContext context = new BarColorContext(BarColorFactory.createDefaultColor(this));
         context.draw();
-    }
-
-    @Override
-    public void hideOptionMenu() {
-        setHasOptionsMenu(false);
     }
 
     @Override
