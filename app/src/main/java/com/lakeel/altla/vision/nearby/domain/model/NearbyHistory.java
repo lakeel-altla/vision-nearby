@@ -1,10 +1,17 @@
 package com.lakeel.altla.vision.nearby.domain.model;
 
+import com.google.firebase.database.Exclude;
+
+import java.util.List;
+
 public final class NearbyHistory {
 
+    @Exclude
     public String historyId;
 
     public String userId;
+
+    public boolean isEntered;
 
     public Integer userActivity;
 
@@ -12,7 +19,7 @@ public final class NearbyHistory {
 
     public Weather weather;
 
-    public long passingTime;
+    public Object passingTime;
 
     public static class Location {
 
@@ -23,11 +30,10 @@ public final class NearbyHistory {
 
     public static class Weather {
 
-        public int[] conditions;
+        public List<Integer> conditions;
 
         public int humidity;
 
         public float temperature;
     }
-
 }

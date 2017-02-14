@@ -6,7 +6,7 @@ import javax.inject.Inject;
 
 import rx.Single;
 
-public final class SaveUserBeaconUseCase {
+final class SaveUserBeaconUseCase {
 
     @Inject
     UserProfileRepository repository;

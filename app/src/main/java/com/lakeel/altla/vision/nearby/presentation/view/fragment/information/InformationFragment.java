@@ -2,11 +2,14 @@ package com.lakeel.altla.vision.nearby.presentation.view.fragment.information;
 
 import android.os.Bundle;
 import android.support.annotation.Nullable;
+import android.support.annotation.StringRes;
+import android.support.design.widget.Snackbar;
 import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import com.lakeel.altla.vision.nearby.R;
@@ -14,7 +17,6 @@ import com.lakeel.altla.vision.nearby.presentation.presenter.information.Informa
 import com.lakeel.altla.vision.nearby.presentation.presenter.model.InformationModel;
 import com.lakeel.altla.vision.nearby.presentation.view.InformationView;
 import com.lakeel.altla.vision.nearby.presentation.view.activity.MainActivity;
-import com.lakeel.altla.vision.nearby.presentation.view.fragment.bundle.BundleKey;
 
 import javax.inject.Inject;
 
@@ -23,23 +25,28 @@ import butterknife.ButterKnife;
 
 public final class InformationFragment extends Fragment implements InformationView {
 
-    public static InformationFragment newInstance(String informationId) {
-        Bundle bundle = new Bundle();
-        bundle.putString(BundleKey.INFORMATION_ID.name(), informationId);
-
-        InformationFragment fragment = new InformationFragment();
-        fragment.setArguments(bundle);
-        return fragment;
-    }
-
     @Inject
     InformationPresenter presenter;
+
+    @BindView(R.id.mainLayout)
+    LinearLayout mainLayout;
 
     @BindView(R.id.textViewTitle)
     TextView titleTextView;
 
     @BindView(R.id.textViewBody)
     TextView bodyTextView;
+
+    private static final String BUNDLE_INFORMATION_ID = "informationId";
+
+    public static InformationFragment newInstance(String informationId) {
+        Bundle bundle = new Bundle();
+        bundle.putString(BUNDLE_INFORMATION_ID, informationId);
+
+        InformationFragment fragment = new InformationFragment();
+        fragment.setArguments(bundle);
+        return fragment;
+    }
 
     @Nullable
     @Override
@@ -52,7 +59,7 @@ public final class InformationFragment extends Fragment implements InformationVi
 
         MainActivity.getUserComponent(this).inject(this);
 
-        presenter.onCreateView(this);
+        presenter.onCreateView(this, getArguments());
 
         return view;
     }
@@ -65,10 +72,7 @@ public final class InformationFragment extends Fragment implements InformationVi
 
         ((MainActivity) getActivity()).setDrawerIndicatorEnabled(false);
 
-        Bundle bundle = getArguments();
-        String informationId = (String) bundle.get(BundleKey.INFORMATION_ID.name());
-
-        presenter.onActivityCreated(informationId);
+        presenter.onActivityCreated();
     }
 
     public void onStop() {
@@ -92,5 +96,10 @@ public final class InformationFragment extends Fragment implements InformationVi
     public void showInformation(InformationModel model) {
         titleTextView.setText(model.title);
         bodyTextView.setText(model.body);
+    }
+
+    @Override
+    public void showSnackBar(@StringRes int resId) {
+        Snackbar.make(mainLayout, resId, Snackbar.LENGTH_SHORT).show();
     }
 }

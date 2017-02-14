@@ -20,19 +20,17 @@ import android.widget.ImageView;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
+import com.google.firebase.auth.FirebaseUser;
 import com.lakeel.altla.vision.nearby.R;
-import com.lakeel.altla.vision.nearby.presentation.firebase.MyUser;
+import com.lakeel.altla.vision.nearby.presentation.firebase.CurrentUser;
 import com.lakeel.altla.vision.nearby.presentation.presenter.estimation.DistanceEstimationPresenter;
 import com.lakeel.altla.vision.nearby.presentation.view.DistanceEstimationView;
 import com.lakeel.altla.vision.nearby.presentation.view.activity.MainActivity;
-import com.lakeel.altla.vision.nearby.presentation.view.fragment.bundle.BundleKey;
+import com.lakeel.altla.vision.nearby.presentation.view.fragment.bundle.EstimationTarget;
 import com.nostra13.universalimageloader.core.ImageLoader;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-
-import java.util.ArrayList;
-import java.util.List;
 
 import javax.inject.Inject;
 
@@ -61,14 +59,15 @@ public final class DistanceEstimationFragment extends Fragment implements Distan
 
     private static final Logger LOGGER = LoggerFactory.getLogger(DistanceEstimationFragment.class);
 
+    private static final String BUNDLE_ESTIMATION_TARGET = "estimationTarget";
+
     private static final int REQUEST_CODE_ENABLE_BLE = 111;
 
     private static final int REQUEST_CODE_ACCESS_FINE_LOCATION = 222;
 
-    public static DistanceEstimationFragment newInstance(ArrayList<String> beaconIds, String targetName) {
+    public static DistanceEstimationFragment newInstance(EstimationTarget target) {
         Bundle args = new Bundle();
-        args.putStringArrayList(BundleKey.BEACON_IDS.name(), beaconIds);
-        args.putSerializable(BundleKey.TARGET_NAME.name(), targetName);
+        args.putSerializable(BUNDLE_ESTIMATION_TARGET, target);
 
         DistanceEstimationFragment fragment = new DistanceEstimationFragment();
         fragment.setArguments(args);
@@ -86,7 +85,7 @@ public final class DistanceEstimationFragment extends Fragment implements Distan
         // Dagger
         MainActivity.getUserComponent(this).inject(this);
 
-        presenter.onCreateView(this);
+        presenter.onCreateView(this, getArguments());
 
         return view;
     }
@@ -97,19 +96,16 @@ public final class DistanceEstimationFragment extends Fragment implements Distan
 
         ((MainActivity) getActivity()).setDrawerIndicatorEnabled(false);
 
+        FirebaseUser firebaseUser = CurrentUser.getUser();
         ImageLoader imageLoader = ImageLoader.getInstance();
-        imageLoader.displayImage(MyUser.getUserProfile().imageUri, userImageView);
-
-        Bundle bundle = getArguments();
-        List<String> beaconIds = bundle.getStringArrayList(BundleKey.BEACON_IDS.name());
-        String targetName = bundle.getString(BundleKey.TARGET_NAME.name());
-
-        String message = getResources().getString(R.string.toolbar_title_finding_for_format, targetName);
-        getActivity().setTitle(message);
+        if (firebaseUser.getPhotoUrl() == null) {
+            imageLoader.displayImage(null, userImageView);
+        } else {
+            imageLoader.displayImage(firebaseUser.getPhotoUrl().toString(), userImageView);
+        }
 
         distanceTextView.setText(getResources().getString(R.string.textView_finding));
 
-        presenter.setBeaconIds(beaconIds);
         presenter.onActivityCreated();
     }
 
@@ -125,7 +121,7 @@ public final class DistanceEstimationFragment extends Fragment implements Distan
             if (RESULT_OK == resultCode) {
                 presenter.subscribe();
             } else {
-                LOGGER.warn("User deny to enable BLE.");
+                LOGGER.warn("User deny token enable BLE.");
                 Snackbar.make(mainLayout, R.string.snackBar_error_not_enable_ble, Snackbar.LENGTH_SHORT).show();
             }
         } else {
@@ -155,6 +151,12 @@ public final class DistanceEstimationFragment extends Fragment implements Distan
                 break;
         }
         return false;
+    }
+
+    @Override
+    public void showTitle(String targetName) {
+        String title = getResources().getString(R.string.toolbar_title_finding_for_format, targetName);
+        getActivity().setTitle(title);
     }
 
     @Override

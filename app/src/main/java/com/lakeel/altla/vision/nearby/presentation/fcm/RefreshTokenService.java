@@ -1,12 +1,13 @@
 package com.lakeel.altla.vision.nearby.presentation.fcm;
 
 import com.google.android.gms.tasks.Task;
+import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.iid.FirebaseInstanceId;
 import com.google.firebase.iid.FirebaseInstanceIdService;
 import com.lakeel.altla.vision.nearby.data.execption.DataStoreException;
-import com.lakeel.altla.vision.nearby.presentation.firebase.MyUser;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -36,7 +37,7 @@ public final class RefreshTokenService extends FirebaseInstanceIdService {
 
     @Override
     public void onTokenRefresh() {
-        if (!MyUser.isAuthenticated()) {
+        if (FirebaseAuth.getInstance().getCurrentUser() == null) {
             return;
         }
 
@@ -45,21 +46,24 @@ public final class RefreshTokenService extends FirebaseInstanceIdService {
 
         saveToken(refreshedToken)
                 .subscribeOn(Schedulers.io())
-                .doOnError(e -> LOGGER.error("Failed to save refreshed token."))
+                .doOnError(e -> LOGGER.error("Failed token save refreshed token."))
                 .subscribe();
     }
 
     Single<String> saveToken(String token) {
         return Single.create(subscriber -> {
-            Task task = reference
-                    .child(MyUser.getUserId())
-                    .setValue(token)
-                    .addOnSuccessListener(aVoid -> subscriber.onSuccess(token))
-                    .addOnFailureListener(subscriber::onError);
+            FirebaseUser firebaseUser = FirebaseAuth.getInstance().getCurrentUser();
+            if (firebaseUser != null) {
+                Task task = reference
+                        .child(firebaseUser.getUid())
+                        .setValue(token)
+                        .addOnSuccessListener(aVoid -> subscriber.onSuccess(token))
+                        .addOnFailureListener(subscriber::onError);
 
-            Exception e = task.getException();
-            if (e != null) {
-                throw new DataStoreException(e);
+                Exception e = task.getException();
+                if (e != null) {
+                    throw new DataStoreException(e);
+                }
             }
         });
     }

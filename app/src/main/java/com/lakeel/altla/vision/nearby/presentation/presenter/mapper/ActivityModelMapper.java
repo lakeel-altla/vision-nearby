@@ -1,21 +1,28 @@
 package com.lakeel.altla.vision.nearby.presentation.presenter.mapper;
 
+import com.google.firebase.auth.FirebaseUser;
 import com.lakeel.altla.vision.nearby.domain.model.UserProfile;
-import com.lakeel.altla.vision.nearby.presentation.firebase.MyUser;
+import com.lakeel.altla.vision.nearby.presentation.firebase.CurrentUser;
 import com.lakeel.altla.vision.nearby.presentation.presenter.model.ActivityModel;
 
 public final class ActivityModelMapper {
 
-    public ActivityModel map(MyUser.UserProfile userProfile) {
+    private ActivityModelMapper() {
+    }
+
+    public static ActivityModel map() {
         ActivityModel model = new ActivityModel();
-        model.userId = userProfile.userId;
-        model.userName = userProfile.name;
-        model.email = userProfile.email;
-        model.imageUri = userProfile.imageUri;
+        FirebaseUser firebaseUser = CurrentUser.getUser();
+        model.userId = firebaseUser.getUid();
+        model.userName = firebaseUser.getDisplayName();
+        model.email = firebaseUser.getEmail();
+        if (firebaseUser.getPhotoUrl() != null) {
+            model.imageUri = firebaseUser.getPhotoUrl().toString();
+        }
         return model;
     }
 
-    public ActivityModel map(UserProfile userProfile) {
+    public static ActivityModel map(UserProfile userProfile) {
         ActivityModel model = new ActivityModel();
         model.userId = userProfile.userId;
         model.userName = userProfile.name;

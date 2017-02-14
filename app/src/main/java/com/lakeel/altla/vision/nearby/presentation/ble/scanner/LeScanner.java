@@ -4,7 +4,7 @@ import android.bluetooth.BluetoothAdapter;
 import android.bluetooth.BluetoothManager;
 import android.content.Context;
 
-public final class LeScanner implements BleScanner {
+final class LeScanner implements Scanner {
 
     private final BluetoothAdapter bluetoothAdapter;
 
@@ -18,7 +18,7 @@ public final class LeScanner implements BleScanner {
         bleScanCallback.onScan(rssi, scanRecord);
     };
 
-    public LeScanner(Context context, BleScanCallback bleScanCallback) {
+    LeScanner(Context context, BleScanCallback bleScanCallback) {
         BluetoothManager bluetoothManager = (BluetoothManager) context.getSystemService(Context.BLUETOOTH_SERVICE);
         this.bluetoothAdapter = bluetoothManager.getAdapter();
         this.bleScanCallback = bleScanCallback;

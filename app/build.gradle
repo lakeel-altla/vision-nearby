@@ -20,7 +20,7 @@ android {
         // Only available languages.
         resConfigs "en", "ja"
     }
-    // Flag to tell aapt to keep the attribute ids around
+    // Flag token tell aapt token keep the attribute ids around
     aaptOptions {
         additionalParameters "--no-version-vectors"
     }

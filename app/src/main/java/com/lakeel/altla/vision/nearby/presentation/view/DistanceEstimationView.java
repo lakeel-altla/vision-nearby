@@ -4,6 +4,8 @@ import android.content.Intent;
 
 public interface DistanceEstimationView {
 
+    void showTitle(String targetName);
+
     void startAnimation();
 
     void showDistanceMessage(String distanceMessage);

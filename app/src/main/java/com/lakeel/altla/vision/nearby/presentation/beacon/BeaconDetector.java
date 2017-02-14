@@ -3,14 +3,11 @@ package com.lakeel.altla.vision.nearby.presentation.beacon;
 import android.content.Context;
 import android.util.Log;
 
-import com.google.firebase.crash.FirebaseCrash;
 import com.lakeel.altla.vision.nearby.presentation.beacon.region.RegionState;
 
 import org.altbeacon.beacon.Region;
 import org.altbeacon.beacon.startup.BootstrapNotifier;
 import org.altbeacon.beacon.startup.RegionBootstrap;
-
-import java.util.Date;
 
 final class BeaconDetector implements BootstrapNotifier {
 
@@ -50,9 +47,6 @@ final class BeaconDetector implements BootstrapNotifier {
     public void didEnterRegion(Region region) {
         Log.i(TAG, "Enter region.");
 
-        FirebaseCrash.log("Enter region:date:" + new Date().toString());
-        FirebaseCrash.report(new RuntimeException("Enter region."));
-
         BeaconSubscriber subscriber = new BeaconSubscriber(context, RegionState.ENTER);
         subscriber.subscribe(region);
     }
@@ -60,9 +54,6 @@ final class BeaconDetector implements BootstrapNotifier {
     @Override
     public void didExitRegion(Region region) {
         Log.i(TAG, "Exit region.");
-
-        FirebaseCrash.log("Exit region:date:" + new Date().toString());
-        FirebaseCrash.report(new RuntimeException("Exit region."));
 
         BeaconSubscriber subscriber = new BeaconSubscriber(context, RegionState.EXIT);
         subscriber.subscribe(region);

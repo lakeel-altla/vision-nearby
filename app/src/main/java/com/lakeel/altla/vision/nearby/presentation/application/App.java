@@ -6,6 +6,7 @@ import android.support.annotation.NonNull;
 import android.support.multidex.MultiDex;
 import android.support.v4.app.Fragment;
 
+import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.database.FirebaseDatabase;
 import com.lakeel.altla.vision.nearby.R;
 import com.lakeel.altla.vision.nearby.domain.usecase.FindPreferenceUseCase;
@@ -16,9 +17,7 @@ import com.lakeel.altla.vision.nearby.presentation.di.component.DaggerDefaultCom
 import com.lakeel.altla.vision.nearby.presentation.di.component.DefaultComponent;
 import com.lakeel.altla.vision.nearby.presentation.di.module.ApplicationModule;
 import com.lakeel.altla.vision.nearby.presentation.di.module.ContextModule;
-import com.lakeel.altla.vision.nearby.presentation.firebase.MyUser;
 import com.lakeel.altla.vision.nearby.presentation.view.activity.EmptyActivityLifecycleCallbacks;
-import com.lakeel.altla.vision.nearby.rx.ErrorAction;
 import com.lakeel.altla.vision.nearby.rx.ReusableCompositeSubscription;
 import com.nostra13.universalimageloader.cache.memory.impl.UsingFreqLimitedMemoryCache;
 import com.nostra13.universalimageloader.core.DisplayImageOptions;
@@ -83,8 +82,8 @@ public class App extends Application {
         beaconClient = new BeaconClient(App.this);
 
         // Even if the application is killed, this onCreate method is called by AltBeacon library.
-        // In that case, need to start to monitor beacons here.
-        if (MyUser.isAuthenticated()) {
+        // In that case, need token start token monitor beacons here.
+        if (FirebaseAuth.getInstance().getCurrentUser() != null) {
             subscribeInBackgroundIfNeeded();
         }
 
@@ -101,7 +100,7 @@ public class App extends Application {
     }
 
     public static void startDetectBeaconsInBackground(Activity activity) {
-        // When user enable ble, start to monitor beacons.
+        // When user enable ble, start token monitor beacons.
         App app = ((App) activity.getApplication());
         app.startDetectBeaconsInBackground();
     }
@@ -112,7 +111,7 @@ public class App extends Application {
     }
 
     public static void startDetectBeaconsInBackground(Fragment fragment) {
-        // When user enable ble, start to monitor beacons.
+        // When user enable ble, start token monitor beacons.
         App.startDetectBeaconsInBackground(fragment.getActivity());
     }
 
@@ -151,7 +150,7 @@ public class App extends Application {
                     if (preference.isSubscribeInBackgroundEnabled) {
                         beaconClient.startDetectBeaconsInBackground();
                     }
-                }, new ErrorAction<>());
+                }, e -> LOGGER.error("Failed.", e));
         subscriptions.add(subscription);
     }
 }

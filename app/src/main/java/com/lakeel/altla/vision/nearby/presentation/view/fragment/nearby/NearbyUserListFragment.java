@@ -116,7 +116,7 @@ public final class NearbyUserListFragment extends Fragment implements NearbyUser
             if (RESULT_OK == resultCode) {
                 presenter.onBleEnabled();
             } else {
-                LOGGER.warn("User deny to enable BLE.");
+                LOGGER.warn("User deny token enable BLE.");
                 showSnackBar(R.string.snackBar_error_not_detected);
             }
         } else {

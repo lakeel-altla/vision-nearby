@@ -1,7 +1,7 @@
 package com.lakeel.altla.vision.nearby.domain.usecase;
 
-import com.lakeel.altla.vision.nearby.data.entity.LineLinkEntity;
 import com.lakeel.altla.vision.nearby.data.repository.firebase.LINELinksRepository;
+import com.lakeel.altla.vision.nearby.domain.model.LineLink;
 
 import javax.inject.Inject;
 
@@ -17,7 +17,7 @@ public final class FindLineLinkUseCase {
     FindLineLinkUseCase() {
     }
 
-    public Single<LineLinkEntity> execute(String userId) {
-        return repository.findByUserId(userId).subscribeOn(Schedulers.io());
+    public Single<LineLink> execute(String userId) {
+        return repository.find(userId).subscribeOn(Schedulers.io());
     }
 }

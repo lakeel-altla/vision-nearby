@@ -1,7 +1,7 @@
 package com.lakeel.altla.vision.nearby.domain.usecase;
 
 import com.lakeel.altla.vision.nearby.data.repository.firebase.LINELinksRepository;
-import com.lakeel.altla.vision.nearby.presentation.firebase.MyUser;
+import com.lakeel.altla.vision.nearby.presentation.firebase.CurrentUser;
 
 import javax.inject.Inject;
 
@@ -18,7 +18,7 @@ public final class SaveLINEUrlUseCase {
     }
 
     public Single<String> execute(String url) {
-        String userId = MyUser.getUserId();
-        return repository.saveLineUrl(userId, url).subscribeOn(Schedulers.io());
+        String userId = CurrentUser.getUid();
+        return repository.save(userId, url).subscribeOn(Schedulers.io());
     }
 }

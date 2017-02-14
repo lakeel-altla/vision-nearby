@@ -10,11 +10,5 @@ public final class NearbyHistoryModel {
 
     public String userName;
 
-    public LocationModel locationModel;
-
-    public WeatherModel weather;
-
-    public Integer userActivity;
-
     public long passingTime;
 }

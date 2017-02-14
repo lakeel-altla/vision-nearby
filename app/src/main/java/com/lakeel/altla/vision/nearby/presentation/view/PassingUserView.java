@@ -8,13 +8,7 @@ public interface PassingUserView {
 
     void showTitle(String title);
 
-    void showProfile(PassingUserModel model);
-
-    void showTimes(long times);
-
-    void showPassingData(PassingUserModel model);
-
-    void showPresence(PassingUserModel model);
+    void updateModel(PassingUserModel model);
 
     void showLocation(String latitude, String longitude);
 
@@ -23,8 +17,6 @@ public interface PassingUserView {
     void showAddButton();
 
     void hideAddButton();
-
-    void showLineUrl(String url);
 
     void showSnackBar(@StringRes int resId);
 }

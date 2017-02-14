@@ -6,7 +6,7 @@ import javax.inject.Inject;
 
 import rx.Single;
 
-public final class FindDeviceTokenUseCase {
+final class FindDeviceTokenUseCase {
 
     @Inject
     UserDeviceTokenRepository repository;
@@ -14,6 +14,7 @@ public final class FindDeviceTokenUseCase {
     @Inject
     FindDeviceTokenUseCase() {
     }
+
     public Single<String> execute(String userId) {
         return repository.find(userId);
     }

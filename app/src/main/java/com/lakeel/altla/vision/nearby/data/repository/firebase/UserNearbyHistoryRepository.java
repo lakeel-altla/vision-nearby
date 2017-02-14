@@ -9,11 +9,9 @@ import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.ServerValue;
 import com.google.firebase.database.ValueEventListener;
-import com.lakeel.altla.vision.nearby.data.entity.NearbyHistoryEntity;
 import com.lakeel.altla.vision.nearby.data.execption.DataStoreException;
-import com.lakeel.altla.vision.nearby.data.mapper.entity.HistoryEntityMapper;
-import com.lakeel.altla.vision.nearby.data.mapper.model.NearbyHistoryMapper;
 import com.lakeel.altla.vision.nearby.domain.model.NearbyHistory;
 import com.lakeel.altla.vision.nearby.presentation.beacon.region.RegionState;
 
@@ -40,10 +38,6 @@ public class UserNearbyHistoryRepository {
 
     private static final String WEATHER = "weather";
 
-    private final HistoryEntityMapper entityMapper = new HistoryEntityMapper();
-
-    private final NearbyHistoryMapper nearbyHistoryMapper = new NearbyHistoryMapper();
-
     private final DatabaseReference reference;
 
     @Inject
@@ -61,7 +55,7 @@ public class UserNearbyHistoryRepository {
                         @Override
                         public void onDataChange(DataSnapshot dataSnapshot) {
                             for (DataSnapshot snapshot : dataSnapshot.getChildren()) {
-                                subscriber.onNext(nearbyHistoryMapper.map(snapshot));
+                                subscriber.onNext(map(snapshot));
                             }
                             subscriber.onCompleted();
                         }
@@ -82,7 +76,7 @@ public class UserNearbyHistoryRepository {
                         .addListenerForSingleValueEvent(new ValueEventListener() {
                             @Override
                             public void onDataChange(DataSnapshot snapshot) {
-                                subscriber.onSuccess(nearbyHistoryMapper.map(snapshot));
+                                subscriber.onSuccess(map(snapshot));
                             }
 
                             @Override
@@ -92,9 +86,9 @@ public class UserNearbyHistoryRepository {
                         }));
     }
 
-    public Single<NearbyHistory> findLatest(String myUserId, String favoriteUserId) {
+    public Single<NearbyHistory> findLatest(String userId, String favoriteUserId) {
         return Single.create(subscriber ->
-                reference.child(myUserId)
+                reference.child(userId)
                         .orderByChild(USER_ID_KEY)
                         .equalTo(favoriteUserId)
                         .addListenerForSingleValueEvent(new ValueEventListener() {
@@ -103,9 +97,9 @@ public class UserNearbyHistoryRepository {
                                 DataSnapshot latestSnapshot = null;
 
                                 for (DataSnapshot snapshot : dataSnapshot.getChildren()) {
-                                    NearbyHistoryEntity entity = snapshot.getValue(NearbyHistoryEntity.class);
+                                    NearbyHistory nearbyHistory = snapshot.getValue(NearbyHistory.class);
 
-                                    if (!entity.isEntered) {
+                                    if (!nearbyHistory.isEntered) {
                                         // only enter data.
                                         continue;
                                     }
@@ -115,14 +109,14 @@ public class UserNearbyHistoryRepository {
                                         continue;
                                     }
 
-                                    NearbyHistoryEntity latestEntity = latestSnapshot.getValue(NearbyHistoryEntity.class);
-                                    if ((Long) entity.passingTime > (Long) latestEntity.passingTime) {
+                                    NearbyHistory latestNearbyHistory = latestSnapshot.getValue(NearbyHistory.class);
+                                    if ((Long) nearbyHistory.passingTime > (Long) latestNearbyHistory.passingTime) {
                                         // Compare passing time.
                                         latestSnapshot = snapshot;
                                     }
                                 }
 
-                                subscriber.onSuccess(nearbyHistoryMapper.map(latestSnapshot));
+                                subscriber.onSuccess(map(latestSnapshot));
                             }
 
                             @Override
@@ -143,7 +137,7 @@ public class UserNearbyHistoryRepository {
                             public void onDataChange(DataSnapshot dataSnapshot) {
                                 long time = 0;
                                 for (DataSnapshot snapshot : dataSnapshot.getChildren()) {
-                                    NearbyHistoryEntity entity = snapshot.getValue(NearbyHistoryEntity.class);
+                                    NearbyHistory entity = snapshot.getValue(NearbyHistory.class);
                                     if (entity.isEntered) {
                                         time++;
                                     }
@@ -158,22 +152,25 @@ public class UserNearbyHistoryRepository {
                         }));
     }
 
-    public Single<String> save(String myUserId, String passingUserId, RegionState regionState) {
+    public Single<String> save(String userId, String passingUserId, RegionState regionState) {
         return Single.create(subscriber -> {
-            NearbyHistoryEntity entity = entityMapper.map(passingUserId, regionState);
+            NearbyHistory nearbyHistory = new NearbyHistory();
+            nearbyHistory.userId = passingUserId;
+            nearbyHistory.isEntered = RegionState.ENTER == regionState;
+            nearbyHistory.passingTime = ServerValue.TIMESTAMP;
 
-            DatabaseReference pushedReference = reference.child(myUserId).push();
-            String uniqueId = pushedReference.getKey();
+            DatabaseReference pushedReference = reference.child(userId).push();
+            String historyId = pushedReference.getKey();
 
             Task<Void> task = pushedReference
-                    .setValue(entity);
+                    .setValue(nearbyHistory);
 
             Exception exception = task.getException();
             if (exception != null) {
                 throw new DataStoreException(exception);
             }
 
-            subscriber.onSuccess(uniqueId);
+            subscriber.onSuccess(historyId);
         });
     }
 
@@ -248,5 +245,11 @@ public class UserNearbyHistoryRepository {
 
             subscriber.onCompleted();
         });
+    }
+
+    private NearbyHistory map(DataSnapshot dataSnapshot) {
+        NearbyHistory nearbyHistory = dataSnapshot.getValue(NearbyHistory.class);
+        nearbyHistory.historyId = dataSnapshot.getKey();
+        return nearbyHistory;
     }
 }

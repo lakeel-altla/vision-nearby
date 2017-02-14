@@ -2,7 +2,7 @@ package com.lakeel.altla.vision.nearby.domain.usecase;
 
 import com.google.android.gms.awareness.state.Weather;
 import com.lakeel.altla.vision.nearby.data.repository.firebase.UserNearbyHistoryRepository;
-import com.lakeel.altla.vision.nearby.presentation.firebase.MyUser;
+import com.lakeel.altla.vision.nearby.presentation.firebase.CurrentUser;
 
 import javax.inject.Inject;
 
@@ -19,7 +19,7 @@ public final class SaveWeatherUseCase {
     }
 
     public Completable execute(String uniqueId, Weather weather) {
-        String userId = MyUser.getUserId();
+        String userId = CurrentUser.getUid();
         return repository.saveWeather(uniqueId, userId, weather).subscribeOn(Schedulers.io());
     }
 }

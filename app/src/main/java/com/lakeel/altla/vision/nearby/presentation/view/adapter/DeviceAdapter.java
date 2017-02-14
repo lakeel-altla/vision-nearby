@@ -84,7 +84,7 @@ public final class DeviceAdapter extends RecyclerView.Adapter<DeviceAdapter.Devi
 
         @Override
         public void showItem(DeviceModel model) {
-            deviceNameTextView.setText(model.name);
+            deviceNameTextView.setText(model.deviceName);
             itemLayout.setOnClickListener(view -> itemPresenter.onClick(model));
 
             DateFormatter formatter = new DateFormatter(model.lastUsedTime);

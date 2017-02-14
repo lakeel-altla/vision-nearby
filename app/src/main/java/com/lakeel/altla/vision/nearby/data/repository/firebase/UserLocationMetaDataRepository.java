@@ -6,11 +6,8 @@ import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
-import com.lakeel.altla.vision.nearby.data.entity.LocationMetaDataEntity;
 import com.lakeel.altla.vision.nearby.data.execption.DataStoreException;
-import com.lakeel.altla.vision.nearby.data.mapper.entity.LocationDataEntityMapper;
-import com.lakeel.altla.vision.nearby.data.mapper.model.LocationMetaDataMapper;
-import com.lakeel.altla.vision.nearby.domain.model.LocationMetaData;
+import com.lakeel.altla.vision.nearby.domain.model.LocationMeta;
 
 import java.util.Iterator;
 
@@ -25,10 +22,6 @@ public final class UserLocationMetaDataRepository {
 
     private static final String KEY_BEACON_ID = "beaconId";
 
-    private final LocationDataEntityMapper entityMapper = new LocationDataEntityMapper();
-
-    private final LocationMetaDataMapper metaDataMapper = new LocationMetaDataMapper();
-
     private final DatabaseReference reference;
 
     @Inject
@@ -36,7 +29,7 @@ public final class UserLocationMetaDataRepository {
         this.reference = FirebaseDatabase.getInstance().getReferenceFromUrl(DATABASE_URI);
     }
 
-    public Single<LocationMetaData> findLatest(String userId, String beaconId) {
+    public Single<LocationMeta> findLatest(String userId, String beaconId) {
         return Single.create(subscriber ->
                 reference
                         .child(userId)
@@ -54,7 +47,7 @@ public final class UserLocationMetaDataRepository {
                                 Iterator<DataSnapshot> iterator = dataSnapshot.getChildren().iterator();
                                 while (iterator.hasNext()) {
                                     DataSnapshot snapshot = iterator.next();
-                                    subscriber.onSuccess(metaDataMapper.map(snapshot));
+                                    subscriber.onSuccess(map(userId, snapshot));
                                 }
                             }
 
@@ -65,13 +58,12 @@ public final class UserLocationMetaDataRepository {
                         }));
     }
 
-    public Completable save(String uniqueId, String userId, String beaconId) {
+    public Completable save(LocationMeta locationMeta) {
         return Completable.create(subscriber -> {
-            LocationMetaDataEntity entity = entityMapper.map(beaconId);
             Task task = reference
-                    .child(userId)
-                    .child(uniqueId)
-                    .setValue(entity);
+                    .child(locationMeta.userId)
+                    .child(locationMeta.locationMetaDataId)
+                    .setValue(locationMeta);
 
             Exception exception = task.getException();
             if (exception != null) {
@@ -80,5 +72,12 @@ public final class UserLocationMetaDataRepository {
 
             subscriber.onCompleted();
         });
+    }
+
+    private LocationMeta map(String userId, DataSnapshot dataSnapshot) {
+        LocationMeta locationMeta = dataSnapshot.getValue(LocationMeta.class);
+        locationMeta.userId = userId;
+        locationMeta.locationMetaDataId = dataSnapshot.getKey();
+        return locationMeta;
     }
 }

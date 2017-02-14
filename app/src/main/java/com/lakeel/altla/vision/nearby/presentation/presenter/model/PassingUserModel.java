@@ -4,27 +4,25 @@ public final class PassingUserModel {
 
     public String userId;
 
+    public boolean isConnected;
+
+    public long lastOnlineTime;
+
     public String userName;
 
     public String email;
 
     public String imageUri;
 
-    public String latitude;
-
-    public String longitude;
-
-    public int[] conditions;
-
-    public int humidity;
-
-    public float temperature;
+    public long passingTimes;
 
     public Integer userActivity;
 
-    public long passingTime;
+    public long times;
 
-    public boolean isConnected;
+    public String lineUrl;
 
-    public long lastOnlineTime;
+    public WeatherModel weatherModel;
+
+    public LocationModel locationModel;
 }

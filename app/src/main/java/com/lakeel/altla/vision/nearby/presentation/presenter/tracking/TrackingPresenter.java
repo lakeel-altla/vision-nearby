@@ -1,16 +1,22 @@
 package com.lakeel.altla.vision.nearby.presentation.presenter.tracking;
 
+import android.os.Bundle;
+
 import com.firebase.geofire.GeoLocation;
+import com.lakeel.altla.vision.nearby.R;
 import com.lakeel.altla.vision.nearby.domain.usecase.FindDeviceLocationUseCase;
 import com.lakeel.altla.vision.nearby.presentation.analytics.AnalyticsReporter;
 import com.lakeel.altla.vision.nearby.presentation.presenter.BasePresenter;
 import com.lakeel.altla.vision.nearby.presentation.presenter.mapper.TrackingModelMapper;
 import com.lakeel.altla.vision.nearby.presentation.presenter.model.TrackingModel;
 import com.lakeel.altla.vision.nearby.presentation.view.TrackingView;
+import com.lakeel.altla.vision.nearby.presentation.view.fragment.bundle.EstimationTarget;
 import com.lakeel.altla.vision.nearby.presentation.view.fragment.bundle.TrackingBeacon;
 import com.lakeel.altla.vision.nearby.presentation.view.intent.GoogleMapIntent;
-import com.lakeel.altla.vision.nearby.rx.ErrorAction;
 import com.lakeel.altla.vision.nearby.rx.ReusableCompositeSubscription;
+
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.util.ArrayList;
 
@@ -27,11 +33,13 @@ public final class TrackingPresenter extends BasePresenter<TrackingView> {
     @Inject
     FindDeviceLocationUseCase findDeviceLocationUseCase;
 
+    private static final Logger LOGGER = LoggerFactory.getLogger(TrackingPresenter.class);
+
+    private static final String BUNDLE_TRACKING_BEACON = "trackingBeacon";
+
     private final ReusableCompositeSubscription subscriptions = new ReusableCompositeSubscription();
 
     private TrackingModel viewModel = new TrackingModel();
-
-    private TrackingModelMapper modelMapper = new TrackingModelMapper();
 
     private TrackingBeacon trackingBeacon;
 
@@ -43,8 +51,9 @@ public final class TrackingPresenter extends BasePresenter<TrackingView> {
     TrackingPresenter() {
     }
 
-    public void setTrackingBeacon(TrackingBeacon trackingBeacon) {
-        this.trackingBeacon = trackingBeacon;
+    public void onCreateView(TrackingView view, Bundle bundle) {
+        super.onCreateView(view);
+        trackingBeacon = (TrackingBeacon) bundle.getSerializable(BUNDLE_TRACKING_BEACON);
     }
 
     public void onResume() {
@@ -56,7 +65,7 @@ public final class TrackingPresenter extends BasePresenter<TrackingView> {
                     }
                 })
                 .filter(location -> location != null)
-                .map(location -> modelMapper.map(location))
+                .map(TrackingModelMapper::map)
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribe(model -> {
                     this.viewModel = model;
@@ -71,7 +80,10 @@ public final class TrackingPresenter extends BasePresenter<TrackingView> {
                             getView().showOptionMenu();
                         }
                     }
-                }, new ErrorAction<>());
+                }, e -> {
+                    LOGGER.error("Failed.", e);
+                    getView().showSnackBar(R.string.snackBar_error_failed);
+                });
         subscriptions.add(subscription);
     }
 
@@ -81,6 +93,7 @@ public final class TrackingPresenter extends BasePresenter<TrackingView> {
 
     public void onMapReady() {
         isMapReadied = true;
+
         if (viewModel.geoLocation != null) {
             getView().showLocationMap(viewModel.geoLocation);
         }
@@ -95,7 +108,9 @@ public final class TrackingPresenter extends BasePresenter<TrackingView> {
 
         ArrayList<String> beaconIds = new ArrayList<>(1);
         beaconIds.add(trackingBeacon.beaconId);
-        getView().showDistanceEstimationFragment(beaconIds, trackingBeacon.name);
+
+        EstimationTarget target = new EstimationTarget(trackingBeacon.name, beaconIds);
+        getView().showDistanceEstimationFragment(target);
     }
 
     public void onDirectionMenuClick() {

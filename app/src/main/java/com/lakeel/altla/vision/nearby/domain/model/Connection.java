@@ -4,5 +4,5 @@ public final class Connection {
 
     public boolean isConnected;
 
-    public long lastOnlineTime;
+    public Object lastOnlineTime;
 }

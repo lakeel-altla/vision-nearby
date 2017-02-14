@@ -18,7 +18,6 @@ import com.lakeel.altla.vision.nearby.presentation.di.component.DaggerServiceCom
 import com.lakeel.altla.vision.nearby.presentation.di.component.ServiceComponent;
 import com.lakeel.altla.vision.nearby.presentation.di.module.ServiceModule;
 import com.lakeel.altla.vision.nearby.presentation.view.intent.IntentKey;
-import com.lakeel.altla.vision.nearby.rx.ErrorAction;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -50,7 +49,12 @@ public final class LocationService extends IntentService {
                     .toObservable()
                     .filter(location -> location != null)
                     .flatMap(LocationService.this::saveDeviceLocation)
-                    .subscribe(uniqueId -> saveLocationMetaData(uniqueId, userId, beaconId), new ErrorAction<>());
+                    .subscribe(locationMetaDataId -> {
+                                saveLocationMetaData(userId, locationMetaDataId, beaconId);
+                            },
+                            e -> {
+                                LOGGER.error("Failed.", e);
+                            });
         }
 
         @Override
@@ -121,7 +125,7 @@ public final class LocationService extends IntentService {
         return saveDeviceLocationUseCase.execute(location).toObservable();
     }
 
-    private void saveLocationMetaData(String uniqueId, String userId, String beaconId) {
-        saveLocationMetaDataUseCase.execute(uniqueId, userId, beaconId).subscribe();
+    private void saveLocationMetaData(String userId, String locationMetaDataId, String beaconId) {
+        saveLocationMetaDataUseCase.execute(userId, locationMetaDataId, beaconId).subscribe();
     }
 }

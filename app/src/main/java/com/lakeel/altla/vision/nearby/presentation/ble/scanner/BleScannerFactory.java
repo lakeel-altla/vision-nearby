@@ -8,9 +8,9 @@ public final class BleScannerFactory {
     private BleScannerFactory() {
     }
 
-    public static BleScanner create(Context context, BleScanCallback scanCallback) {
+    public static Scanner create(Context context, BleScanCallback scanCallback) {
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
-            return new Scanner(context, scanCallback);
+            return new BleScanner(context, scanCallback);
         } else {
             return new LeScanner(context, scanCallback);
         }

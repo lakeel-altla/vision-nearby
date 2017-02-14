@@ -1,16 +1,14 @@
 package com.lakeel.altla.vision.nearby.data.repository.firebase;
 
 import com.google.android.gms.tasks.Task;
+import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.ServerValue;
 import com.google.firebase.database.ValueEventListener;
-import com.lakeel.altla.vision.nearby.data.entity.ConnectionEntity;
-import com.lakeel.altla.vision.nearby.data.mapper.entity.ConnectionEntityMapper;
-import com.lakeel.altla.vision.nearby.data.mapper.model.ConnectionMapper;
 import com.lakeel.altla.vision.nearby.domain.model.Connection;
-import com.lakeel.altla.vision.nearby.presentation.firebase.MyUser;
 
 import javax.inject.Inject;
 
@@ -22,10 +20,6 @@ public class UserConnectionRepository {
     private static final String DATABASE_URI = "https://profile-notification-95441.firebaseio.com/userConnections";
 
     private static final String IS_CONNECTED_KEY = "isConnected";
-
-    private final ConnectionEntityMapper entityMapper = new ConnectionEntityMapper();
-
-    private final ConnectionMapper connectionMapper = new ConnectionMapper();
 
     private final DatabaseReference reference;
 
@@ -39,11 +33,14 @@ public class UserConnectionRepository {
         // Check user authentication because when user sign out,
         // this method is called and FirebaseUser instance become null.
 
-        if (MyUser.isAuthenticated()) {
-            ConnectionEntity entity = entityMapper.map();
+        if (FirebaseAuth.getInstance().getCurrentUser() != null) {
+            Connection connection = new Connection();
+            connection.isConnected = true;
+            connection.lastOnlineTime = ServerValue.TIMESTAMP;
+
             reference
                     .child(userId)
-                    .setValue(entity);
+                    .setValue(connection);
         }
     }
 
@@ -78,7 +75,7 @@ public class UserConnectionRepository {
                         .addListenerForSingleValueEvent(new ValueEventListener() {
                             @Override
                             public void onDataChange(DataSnapshot dataSnapshot) {
-                                subscriber.onSuccess(connectionMapper.map(dataSnapshot));
+                                subscriber.onSuccess(map(dataSnapshot));
                             }
 
                             @Override
@@ -86,5 +83,9 @@ public class UserConnectionRepository {
                                 subscriber.onError(databaseError.toException());
                             }
                         }));
+    }
+
+    private Connection map(DataSnapshot dataSnapshot) {
+        return dataSnapshot.getValue(Connection.class);
     }
 }

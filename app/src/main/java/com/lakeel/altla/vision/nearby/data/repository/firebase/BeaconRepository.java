@@ -1,15 +1,15 @@
 package com.lakeel.altla.vision.nearby.data.repository.firebase;
 
+import android.support.annotation.Nullable;
+
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.ServerValue;
 import com.google.firebase.database.ValueEventListener;
-import com.lakeel.altla.vision.nearby.data.entity.BeaconEntity;
 import com.lakeel.altla.vision.nearby.data.execption.DataStoreException;
-import com.lakeel.altla.vision.nearby.data.mapper.entity.BeaconEntityMapper;
-import com.lakeel.altla.vision.nearby.data.mapper.model.BeaconMapper;
 import com.lakeel.altla.vision.nearby.domain.model.Beacon;
 
 import java.util.HashMap;
@@ -26,9 +26,7 @@ public class BeaconRepository {
 
     private static final String KEY_IS_LOST = "isLost";
 
-    private final BeaconEntityMapper entityMapper = new BeaconEntityMapper();
-
-    private final BeaconMapper beaconMapper = new BeaconMapper();
+    private static final String KEY_LAST_USED_TIME = "lastUsedTime";
 
     private final DatabaseReference reference;
 
@@ -44,12 +42,7 @@ public class BeaconRepository {
                         .addListenerForSingleValueEvent(new ValueEventListener() {
                             @Override
                             public void onDataChange(DataSnapshot dataSnapshot) {
-                                BeaconEntity entity = dataSnapshot.getValue(BeaconEntity.class);
-                                if (entity == null) {
-                                    subscriber.onSuccess(null);
-                                } else {
-                                    subscriber.onSuccess(beaconMapper.map(dataSnapshot));
-                                }
+                                subscriber.onSuccess(map(dataSnapshot));
                             }
 
                             @Override
@@ -59,19 +52,19 @@ public class BeaconRepository {
                         }));
     }
 
-    public Single<String> save(String beaconId, String userId, String deviceName) {
+    public Single<String> save(Beacon beacon) {
         return Single.create(subscriber -> {
-            BeaconEntity entity = entityMapper.map(userId, deviceName);
+
             Task task = reference
-                    .child(beaconId)
-                    .setValue(entity);
+                    .child(beacon.beaconId)
+                    .setValue(beacon);
 
             Exception e = task.getException();
             if (e != null) {
                 throw new DataStoreException(e);
             }
 
-            subscriber.onSuccess(beaconId);
+            subscriber.onSuccess(beacon.beaconId);
         });
     }
 
@@ -128,10 +121,12 @@ public class BeaconRepository {
 
     public Completable saveLastUsedDeviceTime(String beaconId) {
         return Completable.create(subscriber -> {
-            BeaconEntity entity = entityMapper.map();
+            Map<String, Object> map = new HashMap<>();
+            map.put(KEY_LAST_USED_TIME, ServerValue.TIMESTAMP);
+
             Task task = reference
                     .child(beaconId)
-                    .setValue(entity);
+                    .updateChildren(map);
 
             Exception e = task.getException();
             if (e != null) {
@@ -140,5 +135,15 @@ public class BeaconRepository {
 
             subscriber.onCompleted();
         });
+    }
+
+    @Nullable
+    private Beacon map(DataSnapshot dataSnapshot) {
+        Beacon beacon = dataSnapshot.getValue(Beacon.class);
+        if (beacon == null) {
+            return null;
+        }
+        beacon.beaconId = dataSnapshot.getKey();
+        return beacon;
     }
 }

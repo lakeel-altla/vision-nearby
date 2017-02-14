@@ -1,5 +1,7 @@
 package com.lakeel.altla.vision.nearby.data.repository.firebase;
 
+import android.support.annotation.Nullable;
+
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
@@ -7,7 +9,6 @@ import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
 import com.lakeel.altla.vision.nearby.data.execption.DataStoreException;
-import com.lakeel.altla.vision.nearby.data.mapper.model.FavoriteMapper;
 import com.lakeel.altla.vision.nearby.domain.model.Favorite;
 
 import javax.inject.Inject;
@@ -20,13 +21,11 @@ public class UserFavoriteRepository {
 
     private static final String DATABASE_URI = "https://profile-notification-95441.firebaseio.com/userFavorites";
 
-    private final FavoriteMapper favoriteMapper = new FavoriteMapper();
-
     private final DatabaseReference reference;
 
     @Inject
     public UserFavoriteRepository() {
-        this.reference = FirebaseDatabase.getInstance().getReferenceFromUrl(DATABASE_URI);
+        reference = FirebaseDatabase.getInstance().getReferenceFromUrl(DATABASE_URI);
     }
 
     public Observable<String> findAll(String userId) {
@@ -42,8 +41,8 @@ public class UserFavoriteRepository {
                                 if (isFavorite == null || !isFavorite) {
                                     subscriber.onNext(null);
                                 } else {
-                                    String favoriteUserId = snapshot.getKey();
-                                    subscriber.onNext(favoriteUserId);
+                                    // Return favorite user id.
+                                    subscriber.onNext(snapshot.getKey());
                                 }
                             }
                             subscriber.onCompleted();
@@ -57,20 +56,15 @@ public class UserFavoriteRepository {
         });
     }
 
-    public Single<Favorite> findAll(String myUserId, String favoriteUserId) {
+    public Single<Favorite> find(String userId, String favoriteUserId) {
         return Single.create(subscriber ->
                 reference
-                        .child(myUserId)
+                        .child(userId)
                         .child(favoriteUserId)
                         .addListenerForSingleValueEvent(new ValueEventListener() {
                             @Override
                             public void onDataChange(DataSnapshot dataSnapshot) {
-                                Boolean isFavorite = (Boolean) dataSnapshot.getValue();
-                                if (isFavorite == null || !isFavorite) {
-                                    subscriber.onSuccess(null);
-                                } else {
-                                    subscriber.onSuccess(favoriteMapper.map(dataSnapshot));
-                                }
+                                subscriber.onSuccess(map(userId, dataSnapshot));
                             }
 
                             @Override
@@ -80,11 +74,11 @@ public class UserFavoriteRepository {
                         }));
     }
 
-    public Completable save(String myUserId, String favoriteUserId) {
+    public Completable save(Favorite favorite) {
         return Completable.create(subscriber -> {
             Task<Void> task = reference
-                    .child(myUserId)
-                    .child(favoriteUserId)
+                    .child(favorite.userId)
+                    .child(favorite.favoriteUserId)
                     .setValue(true);
 
             Exception exception = task.getException();
@@ -96,10 +90,10 @@ public class UserFavoriteRepository {
         });
     }
 
-    public Completable remove(String myUserId, String favoriteUserId) {
+    public Completable remove(String userId, String favoriteUserId) {
         return Completable.create(subscriber -> {
             Task task = reference
-                    .child(myUserId)
+                    .child(userId)
                     .child(favoriteUserId)
                     .removeValue();
 
@@ -110,5 +104,20 @@ public class UserFavoriteRepository {
 
             subscriber.onCompleted();
         });
+    }
+
+    @Nullable
+    private Favorite map(String userId, DataSnapshot dataSnapshot) {
+        if (dataSnapshot.getValue() == null) {
+            return null;
+        }
+        Boolean isFavoriteUser = (Boolean) dataSnapshot.getValue();
+        if (!isFavoriteUser) {
+            return null;
+        }
+        Favorite favorite = new Favorite();
+        favorite.favoriteUserId = dataSnapshot.getKey();
+        favorite.userId = userId;
+        return favorite;
     }
 }

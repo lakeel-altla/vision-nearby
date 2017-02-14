@@ -1,4 +1,4 @@
-package com.lakeel.altla.vision.nearby.core;
+package com.lakeel.altla.vision.nearby.presentation.exception;
 
 public final class NullArgumentException extends IllegalArgumentException {
 

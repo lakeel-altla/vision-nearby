@@ -2,7 +2,7 @@ package com.lakeel.altla.vision.nearby.domain.usecase;
 
 import com.lakeel.altla.vision.nearby.data.repository.firebase.UserNearbyHistoryRepository;
 import com.lakeel.altla.vision.nearby.domain.model.NearbyHistory;
-import com.lakeel.altla.vision.nearby.presentation.firebase.MyUser;
+import com.lakeel.altla.vision.nearby.presentation.firebase.CurrentUser;
 
 import javax.inject.Inject;
 
@@ -19,7 +19,7 @@ public final class FindLatestNearbyHistoryUseCase {
     }
 
     public Single<NearbyHistory> execute(String favoriteUserId) {
-        String userId = MyUser.getUserId();
+        String userId = CurrentUser.getUid();
         return repository.findLatest(userId, favoriteUserId).subscribeOn(Schedulers.io());
     }
 }

@@ -112,6 +112,7 @@
     <string name="snackBar_message_device_not_found">This device has not been found.</string>
     <string name="snackBar_message_device_distance_format">%1$s meters away.</string>
 
+    <string name="snackBar_error_failed">Failed.</string>
     <string name="snackBar_error_not_signed_in">Could not sign in.</string>
     <string name="snackBar_error_not_signed_out">Could not sign out.</string>
     <string name="snackBar_error_not_added">Could not add.</string>

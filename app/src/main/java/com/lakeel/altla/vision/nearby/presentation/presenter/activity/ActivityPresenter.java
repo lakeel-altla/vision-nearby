@@ -10,6 +10,8 @@ import android.support.v4.content.ContextCompat;
 
 import com.firebase.ui.auth.AuthUI;
 import com.google.android.gms.tasks.Task;
+import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.iid.FirebaseInstanceId;
 import com.lakeel.altla.vision.nearby.R;
 import com.lakeel.altla.vision.nearby.beacon.EddystoneUid;
@@ -24,14 +26,12 @@ import com.lakeel.altla.vision.nearby.domain.usecase.SaveLastUsedDeviceTimeUseCa
 import com.lakeel.altla.vision.nearby.presentation.analytics.AnalyticsReporter;
 import com.lakeel.altla.vision.nearby.presentation.ble.BleChecker;
 import com.lakeel.altla.vision.nearby.presentation.ble.BleChecker.State;
-import com.lakeel.altla.vision.nearby.presentation.firebase.MyUser;
+import com.lakeel.altla.vision.nearby.presentation.firebase.CurrentUser;
 import com.lakeel.altla.vision.nearby.presentation.presenter.BasePresenter;
 import com.lakeel.altla.vision.nearby.presentation.presenter.mapper.ActivityModelMapper;
 import com.lakeel.altla.vision.nearby.presentation.service.AdvertiseService;
 import com.lakeel.altla.vision.nearby.presentation.service.RunningServiceManager;
 import com.lakeel.altla.vision.nearby.presentation.view.ActivityView;
-import com.lakeel.altla.vision.nearby.rx.EmptyAction;
-import com.lakeel.altla.vision.nearby.rx.ErrorAction;
 import com.lakeel.altla.vision.nearby.rx.ReusableCompositeSubscription;
 
 import org.slf4j.Logger;
@@ -73,12 +73,10 @@ public final class ActivityPresenter extends BasePresenter<ActivityView> {
 
     private final ReusableCompositeSubscription subscriptions = new ReusableCompositeSubscription();
 
-    // For observe subscription.
+    // For observeProfile subscription.
     private final ReusableCompositeSubscription observeSubscriptions = new ReusableCompositeSubscription();
 
     private final FirebaseInstanceId instanceId = FirebaseInstanceId.getInstance();
-
-    private final ActivityModelMapper modelMapper = new ActivityModelMapper();
 
     private boolean isAdvertiseAvailableDevice = true;
 
@@ -97,10 +95,10 @@ public final class ActivityPresenter extends BasePresenter<ActivityView> {
     public void onCreateView(ActivityView activityView) {
         super.onCreateView(activityView);
 
-        if (MyUser.isAuthenticated()) {
-            postSignIn();
-        } else {
+        if (FirebaseAuth.getInstance().getCurrentUser() == null) {
             getView().showSignInFragment();
+        } else {
+            postSignIn();
         }
     }
 
@@ -110,11 +108,10 @@ public final class ActivityPresenter extends BasePresenter<ActivityView> {
 
     public void postSignIn() {
         getView().showFavoriteListFragment();
-
-        getView().updateProfile(modelMapper.map(MyUser.getUserProfile()));
+        getView().updateProfile(ActivityModelMapper.map());
 
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
-            // Need to grant permission for subscribing beacons.
+            // Need token grant permission for subscribing beacons.
             checkAccessFineLocationPermission();
         } else {
             isAccessFineLocationGranted = true;
@@ -122,17 +119,21 @@ public final class ActivityPresenter extends BasePresenter<ActivityView> {
         }
 
         // Observe user presence.
-        observeConnectionUseCase.execute(MyUser.getUserId());
+        observeConnectionUseCase.execute();
 
         // Observe user profile
         Subscription subscription = observeUserProfileUseCase.execute()
-                .map(modelMapper::map)
+                .map(ActivityModelMapper::map)
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribe(model -> {
                     getView().updateProfile(model);
-                }, new ErrorAction<>());
+                }, e -> {
+                    LOGGER.error("Failed.", e);
+                    getView().showSnackBar(R.string.snackBar_error_failed);
+                });
         observeSubscriptions.add(subscription);
 
+        // TODO (Simply)
         Subscription subscription1 = findPreferenceUseCase.execute()
                 .observeOn(Schedulers.io())
                 .subscribe(preference -> {
@@ -148,7 +149,10 @@ public final class ActivityPresenter extends BasePresenter<ActivityView> {
                     saveBeacon(beaconId);
                     saveToken(beaconId);
                     startAdvertiseInBackgroundIfNeeded();
-                }, new ErrorAction<>());
+                }, e -> {
+                    LOGGER.error("Failed.", e);
+                    getView().showSnackBar(R.string.snackBar_error_failed);
+                });
         subscriptions.add(subscription1);
     }
 
@@ -170,20 +174,25 @@ public final class ActivityPresenter extends BasePresenter<ActivityView> {
     public void onSignOut(@NonNull Activity activity) {
         Subscription subscription = offlineUseCase.execute()
                 .observeOn(AndroidSchedulers.mainThread())
-                .subscribe(e -> new ErrorAction<>(),
+                .subscribe(e -> {
+                            LOGGER.error("Failed.", e);
+                            getView().showSnackBar(R.string.snackBar_error_failed);
+                        },
                         () -> {
                             observeSubscriptions.unSubscribe();
 
                             // Get user data here because do not get it after signing out.
-                            MyUser.UserProfile userProfile = MyUser.getUserProfile();
+                            FirebaseUser firebaseUser = CurrentUser.getUser();
+                            String uid = firebaseUser.getUid();
+                            String name = firebaseUser.getDisplayName();
 
                             // Unless you explicitly sign out, sign-in state continues.
-                            // If you want to sign out, it is necessary to both sign out FirebaseAuth and Play Service Auth.
+                            // If you want token sign out, it is necessary token both sign out FirebaseAuth and Play Service Auth.
 
                             Task<Void> task = AuthUI.getInstance().signOut(activity);
                             task.addOnCompleteListener(result -> {
                                 if (result.isSuccessful()) {
-                                    analyticsReporter.logout(userProfile.userId, userProfile.name);
+                                    analyticsReporter.logout(uid, name);
 
                                     RunningServiceManager serviceManager = new RunningServiceManager(context, AdvertiseService.class);
                                     serviceManager.stopService();
@@ -191,14 +200,14 @@ public final class ActivityPresenter extends BasePresenter<ActivityView> {
                                     stopDetectBeaconsInBackground();
                                     getView().finishActivity();
                                 } else {
-                                    LOGGER.error("Failed to sign out.", result.getException());
+                                    LOGGER.error("Failed token sign out.", result.getException());
                                     getView().showSnackBar(R.string.snackBar_error_not_signed_out);
                                 }
                             });
 
                             Exception e = task.getException();
                             if (e != null) {
-                                LOGGER.error("Failed to sign out.", e);
+                                LOGGER.error("Failed token sign out.", e);
                                 getView().showSnackBar(R.string.snackBar_error_not_signed_out);
                             }
                         });
@@ -253,13 +262,20 @@ public final class ActivityPresenter extends BasePresenter<ActivityView> {
                     if (preference.isSubscribeInBackgroundEnabled) {
                         getView().startDetectBeaconsInBackground();
                     }
-                }, new ErrorAction<>());
+                }, e -> {
+                    LOGGER.error("Failed.", e);
+                    getView().showSnackBar(R.string.snackBar_error_failed);
+                });
         subscriptions.add(subscription);
     }
 
     private void saveBeacon(String beaconId) {
         Subscription subscription = saveBeaconUseCase.execute(beaconId)
-                .subscribe(new EmptyAction<>(), new ErrorAction<>());
+                .subscribe(s -> {
+                }, e -> {
+                    LOGGER.error("Failed.", e);
+                    getView().showSnackBar(R.string.snackBar_error_failed);
+                });
         subscriptions.add(subscription);
     }
 
@@ -270,8 +286,12 @@ public final class ActivityPresenter extends BasePresenter<ActivityView> {
     }
 
     private void saveToken(String beaconId) {
-        Subscription subscription = saveDeviceTokenUseCase.execute(beaconId, instanceId.getToken())
-                .subscribe(new EmptyAction<>(), new ErrorAction<>());
+        Subscription subscription = saveDeviceTokenUseCase.execute(beaconId)
+                .subscribe(e -> {
+                    LOGGER.error("Failed.", e);
+                    getView().showSnackBar(R.string.snackBar_error_failed);
+                }, () -> {
+                });
         subscriptions.add(subscription);
     }
 
@@ -289,7 +309,10 @@ public final class ActivityPresenter extends BasePresenter<ActivityView> {
                         isAlreadyAdvertised = true;
                         getView().startAdvertise(preference.beaconId);
                     }
-                }, new ErrorAction<>());
+                }, e -> {
+                    LOGGER.error("Failed.", e);
+                    getView().showSnackBar(R.string.snackBar_error_failed);
+                });
         subscriptions.add(subscription);
     }
 

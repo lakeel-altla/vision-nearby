@@ -1,6 +1,8 @@
 package com.lakeel.altla.vision.nearby.domain.usecase;
 
+import com.google.firebase.database.ServerValue;
 import com.lakeel.altla.vision.nearby.data.repository.firebase.UserLocationMetaDataRepository;
+import com.lakeel.altla.vision.nearby.domain.model.LocationMeta;
 
 import javax.inject.Inject;
 
@@ -16,7 +18,12 @@ public final class SaveLocationMetaDataUseCase {
     SaveLocationMetaDataUseCase() {
     }
 
-    public Completable execute(String uniqueId, String userId, String beaconId) {
-        return repository.save(uniqueId, userId, beaconId).subscribeOn(Schedulers.io());
+    public Completable execute(String userId, String locationMetaDataId, String beaconId) {
+        LocationMeta locationMeta = new LocationMeta();
+        locationMeta.userId = userId;
+        locationMeta.locationMetaDataId = locationMetaDataId;
+        locationMeta.beaconId = beaconId;
+        locationMeta.passingTime = ServerValue.TIMESTAMP;
+        return repository.save(locationMeta).subscribeOn(Schedulers.io());
     }
 }

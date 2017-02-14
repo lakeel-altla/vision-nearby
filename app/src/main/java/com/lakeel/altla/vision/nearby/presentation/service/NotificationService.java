@@ -12,8 +12,6 @@ import com.lakeel.altla.vision.nearby.presentation.di.component.DaggerServiceCom
 import com.lakeel.altla.vision.nearby.presentation.di.component.ServiceComponent;
 import com.lakeel.altla.vision.nearby.presentation.di.module.ServiceModule;
 import com.lakeel.altla.vision.nearby.presentation.view.intent.IntentKey;
-import com.lakeel.altla.vision.nearby.rx.EmptyAction;
-import com.lakeel.altla.vision.nearby.rx.ErrorAction;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -57,7 +55,7 @@ public class NotificationService extends IntentService {
         String userId = intent.getStringExtra(IntentKey.USER_ID.name());
 
         String title = getApplicationContext().getString(R.string.notification_title_device_found);
-        String message = getApplicationContext().getString(R.string.notification_message_device_found);
+        String body = getApplicationContext().getString(R.string.notification_message_device_found);
 
         findBeaconUseCase.execute(beaconId)
                 .subscribe(beacon -> {
@@ -65,17 +63,23 @@ public class NotificationService extends IntentService {
                         return;
                     }
 
-                    // If the beacon is lost, notify to user.
+                    // If the beacon is lost, notify token user.
                     findAllDeviceTokenUseCase.execute(userId)
                             // Filter other devices of the user.
                             .filter(token -> !beaconId.equals(token.beaconId))
-                            // Notify the push notification to the device.
-                            .subscribe(entity -> saveNotification(entity.token, title, message), new ErrorAction<>());
+                            // Notify the push notification token the device.
+                            .subscribe(deviceToken -> saveNotification(deviceToken.token, title, body),
+                                    e -> {
+                                        LOGGER.error("Failed.", e);
+                                    });
 
-                    saveInformationUseCase.execute(userId, title, message)
+                    saveInformationUseCase.execute(userId, title, body)
                             .toObservable()
-                            .subscribe(new EmptyAction<>(), new ErrorAction<>());
-                }, new ErrorAction<>());
+                            .subscribe(o -> {
+                            }, e -> {
+                                LOGGER.error("Failed.", e);
+                            });
+                }, e -> LOGGER.error("Failed.", e));
     }
 
     private void saveNotification(String token, String title, String message) {

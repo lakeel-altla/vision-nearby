@@ -10,12 +10,14 @@ import com.lakeel.altla.vision.nearby.domain.usecase.RemoveNearbyHistoryUseCase;
 import com.lakeel.altla.vision.nearby.presentation.analytics.AnalyticsReporter;
 import com.lakeel.altla.vision.nearby.presentation.presenter.BaseItemPresenter;
 import com.lakeel.altla.vision.nearby.presentation.presenter.BasePresenter;
-import com.lakeel.altla.vision.nearby.presentation.presenter.mapper.HistoryModelMapper;
+import com.lakeel.altla.vision.nearby.presentation.presenter.mapper.NearbyHistoryModelMapper;
 import com.lakeel.altla.vision.nearby.presentation.presenter.model.NearbyHistoryModel;
 import com.lakeel.altla.vision.nearby.presentation.view.NearbyHistoryItemView;
 import com.lakeel.altla.vision.nearby.presentation.view.NearbyHistoryListView;
-import com.lakeel.altla.vision.nearby.rx.ErrorAction;
 import com.lakeel.altla.vision.nearby.rx.ReusableCompositeSubscription;
+
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -36,9 +38,9 @@ public final class NearbyHistoryListPresenter extends BasePresenter<NearbyHistor
     @Inject
     RemoveNearbyHistoryUseCase removeNearbyHistoryUseCase;
 
-    private final ReusableCompositeSubscription subscriptions = new ReusableCompositeSubscription();
+    private static final Logger LOGGER = LoggerFactory.getLogger(NearbyHistoryListPresenter.class);
 
-    private HistoryModelMapper modelMapper = new HistoryModelMapper();
+    private final ReusableCompositeSubscription subscriptions = new ReusableCompositeSubscription();
 
     private final List<NearbyHistoryModel> viewModels = new ArrayList<>();
 
@@ -48,7 +50,7 @@ public final class NearbyHistoryListPresenter extends BasePresenter<NearbyHistor
 
     public void onActivityCreated() {
         Subscription subscription = findAllNearbyHistoryUseCase.execute()
-                .map(nearbyHistoryUserProfile -> modelMapper.map(nearbyHistoryUserProfile))
+                .map(NearbyHistoryModelMapper::map)
                 .toSortedList((model1, model2) -> sortByLatest(model1.passingTime, model2.passingTime))
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribe(model -> {
@@ -62,7 +64,10 @@ public final class NearbyHistoryListPresenter extends BasePresenter<NearbyHistor
                     }
 
                     getView().updateItems();
-                }, new ErrorAction<>());
+                }, e -> {
+                    LOGGER.error("Failed.", e);
+                    getView().showSnackBar(R.string.snackBar_error_failed);
+                });
         subscriptions.add(subscription);
     }
 
@@ -96,7 +101,10 @@ public final class NearbyHistoryListPresenter extends BasePresenter<NearbyHistor
 
             Subscription subscription = removeNearbyHistoryUseCase.execute(model.historyId)
                     .observeOn(AndroidSchedulers.mainThread())
-                    .subscribe(new ErrorAction<>(),
+                    .subscribe(e -> {
+                                LOGGER.error("Failed.", e);
+                                getView().showSnackBar(R.string.snackBar_error_failed);
+                            },
                             () -> {
                                 int size = viewModels.size();
 

@@ -2,11 +2,14 @@ package com.lakeel.altla.vision.nearby.presentation.view.fragment.information;
 
 import android.os.Bundle;
 import android.support.annotation.Nullable;
+import android.support.annotation.StringRes;
+import android.support.design.widget.Snackbar;
 import android.support.v4.app.Fragment;
 import android.support.v7.widget.LinearLayoutManager;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.RelativeLayout;
 
 import com.lakeel.altla.vision.nearby.R;
 import com.lakeel.altla.vision.nearby.presentation.presenter.information.InformationListPresenter;
@@ -26,6 +29,9 @@ public final class InformationListFragment extends Fragment implements Informati
 
     @Inject
     InformationListPresenter presenter;
+
+    @BindView(R.id.mainLayout)
+    RelativeLayout mainLayout;
 
     @BindView(R.id.recyclerView)
     EmptySupportedRecyclerView recyclerView;
@@ -89,5 +95,10 @@ public final class InformationListFragment extends Fragment implements Informati
     public void showInformationFragment(String informationId) {
         FragmentController controller = new FragmentController(this);
         controller.showInformationFragment(informationId);
+    }
+
+    @Override
+    public void showSnackBar(@StringRes int resId) {
+        Snackbar.make(mainLayout, resId, Snackbar.LENGTH_SHORT).show();
     }
 }

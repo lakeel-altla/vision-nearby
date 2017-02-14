@@ -2,10 +2,11 @@ package com.lakeel.altla.vision.nearby.domain.usecase;
 
 import android.os.Build;
 
+import com.lakeel.altla.vision.nearby.data.repository.android.PreferenceRepository;
 import com.lakeel.altla.vision.nearby.data.repository.firebase.BeaconRepository;
 import com.lakeel.altla.vision.nearby.data.repository.firebase.UserProfileRepository;
-import com.lakeel.altla.vision.nearby.data.repository.android.PreferenceRepository;
-import com.lakeel.altla.vision.nearby.presentation.firebase.MyUser;
+import com.lakeel.altla.vision.nearby.domain.model.Beacon;
+import com.lakeel.altla.vision.nearby.presentation.firebase.CurrentUser;
 
 import javax.inject.Inject;
 
@@ -28,10 +29,11 @@ public final class SaveBeaconUseCase {
     }
 
     public Single<String> execute(String beaconId) {
-        String userId = MyUser.getUserId();
+        String userId = CurrentUser.getUid();
+
         return preferenceRepository.saveBeaconId(userId, beaconId)
                 .flatMap(id -> saveUserBeacon(userId, beaconId))
-                .flatMap(id -> saveBeacon(beaconId, userId))
+                .flatMap(id -> saveBeacon(userId, beaconId))
                 .subscribeOn(Schedulers.io());
     }
 
@@ -39,7 +41,13 @@ public final class SaveBeaconUseCase {
         return usersRepository.saveUserBeacon(userId, beaconId).subscribeOn(Schedulers.io());
     }
 
-    private Single<String> saveBeacon(String beaconId, String userId) {
-        return beaconsRepository.save(beaconId, userId, Build.MODEL).subscribeOn(Schedulers.io());
+    private Single<String> saveBeacon(String userId, String beaconId) {
+        Beacon beacon = new Beacon();
+        beacon.beaconId = beaconId;
+        beacon.userId = userId;
+        beacon.name = Build.MODEL;
+        beacon.os = "Android";
+        beacon.version = Build.VERSION.RELEASE;
+        return beaconsRepository.save(beacon).subscribeOn(Schedulers.io());
     }
 }

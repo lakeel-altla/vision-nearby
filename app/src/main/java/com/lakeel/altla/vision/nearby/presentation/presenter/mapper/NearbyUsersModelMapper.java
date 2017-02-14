@@ -5,7 +5,10 @@ import com.lakeel.altla.vision.nearby.presentation.presenter.model.NearbyUserMod
 
 public final class NearbyUsersModelMapper {
 
-    public NearbyUserModel map(UserProfile userProfile) {
+    private NearbyUsersModelMapper() {
+    }
+
+    public static NearbyUserModel map(UserProfile userProfile) {
         NearbyUserModel model = new NearbyUserModel();
         model.userId = userProfile.userId;
         model.userName = userProfile.name;

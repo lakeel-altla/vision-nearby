@@ -6,16 +6,18 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.os.Build;
+import android.os.Bundle;
 import android.support.v4.content.ContextCompat;
 
 import com.lakeel.altla.vision.nearby.R;
 import com.lakeel.altla.vision.nearby.presentation.beacon.distance.Distance;
 import com.lakeel.altla.vision.nearby.presentation.ble.BleChecker;
 import com.lakeel.altla.vision.nearby.presentation.ble.scanner.BleScanCallback;
-import com.lakeel.altla.vision.nearby.presentation.ble.scanner.BleScanner;
+import com.lakeel.altla.vision.nearby.presentation.ble.scanner.Scanner;
 import com.lakeel.altla.vision.nearby.presentation.ble.scanner.BleScannerFactory;
 import com.lakeel.altla.vision.nearby.presentation.presenter.BasePresenter;
 import com.lakeel.altla.vision.nearby.presentation.view.DistanceEstimationView;
+import com.lakeel.altla.vision.nearby.presentation.view.fragment.bundle.EstimationTarget;
 import com.lakeel.altla.vision.nearby.rx.ReusableCompositeSubscription;
 import com.neovisionaries.bluetooth.ble.advertising.ADPayloadParser;
 import com.neovisionaries.bluetooth.ble.advertising.ADStructure;
@@ -32,13 +34,15 @@ import rx.schedulers.Schedulers;
 
 public final class DistanceEstimationPresenter extends BasePresenter<DistanceEstimationView> {
 
+    private static final String BUNDLE_ESTIMATION_TARGET = "estimationTarget";
+
     private final ReusableCompositeSubscription subscriptions = new ReusableCompositeSubscription();
 
     private final Context context;
 
-    private final BleScanner bleScanner;
+    private final Scanner scanner;
 
-    private List<String> beaconIds;
+    private EstimationTarget target;
 
     @SuppressWarnings("FieldCanBeLocal")
     private final BleScanCallback scanCallback = new BleScanCallback() {
@@ -53,7 +57,7 @@ public final class DistanceEstimationPresenter extends BasePresenter<DistanceEst
                     EddystoneUID eddystoneUID = (EddystoneUID) structure;
                     String scannedBeaconId = eddystoneUID.getBeaconIdAsString().toLowerCase();
 
-                    Subscription subscription = Observable.from(beaconIds)
+                    Subscription subscription = Observable.from(target.beaconIds)
                             // Filter beacons.
                             .filter(beaconId -> beaconId.equals(scannedBeaconId))
                             .subscribeOn(Schedulers.io())
@@ -74,14 +78,17 @@ public final class DistanceEstimationPresenter extends BasePresenter<DistanceEst
     @Inject
     DistanceEstimationPresenter(Context context) {
         this.context = context;
-        this.bleScanner = BleScannerFactory.create(context, scanCallback);
+        this.scanner = BleScannerFactory.create(context, scanCallback);
     }
 
-    public void setBeaconIds(List<String> beaconIds) {
-        this.beaconIds = beaconIds;
+    public void onCreateView(DistanceEstimationView view, Bundle bundle) {
+        super.onCreateView(view);
+        this.target = (EstimationTarget) bundle.getSerializable(BUNDLE_ESTIMATION_TARGET);
     }
 
     public void onActivityCreated() {
+        getView().showTitle(target.name);
+
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
             checkAccessFineLocationPermission();
         } else {
@@ -91,7 +98,7 @@ public final class DistanceEstimationPresenter extends BasePresenter<DistanceEst
 
     public void onStop() {
         subscriptions.unSubscribe();
-        bleScanner.stopScan();
+        scanner.stopScan();
     }
 
     public void onAccessFineLocationGranted() {
@@ -100,7 +107,7 @@ public final class DistanceEstimationPresenter extends BasePresenter<DistanceEst
 
     public void subscribe() {
         getView().startAnimation();
-        bleScanner.startScan();
+        scanner.startScan();
     }
 
     private void checkAccessFineLocationPermission() {

@@ -5,12 +5,15 @@ import com.lakeel.altla.vision.nearby.presentation.presenter.model.InformationMo
 
 public final class InformationModelMapper {
 
-    public InformationModel map(Information information) {
+    private InformationModelMapper() {
+    }
+
+    public static InformationModel map(Information information) {
         InformationModel model = new InformationModel();
         model.informationId = information.informationId;
         model.title = information.title;
         model.body = information.body;
-        model.postTime = information.postTime;
+        model.postTime = (Long) information.postTime;
         return model;
     }
 }

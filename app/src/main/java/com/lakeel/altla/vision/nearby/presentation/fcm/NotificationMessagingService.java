@@ -47,6 +47,6 @@ public class NotificationMessagingService extends FirebaseMessagingService {
     @Override
     public void onSendError(String msgId, Exception e) {
         super.onSendError(msgId, e);
-        LOGGER.error("FCM has failed to send a notification body.", e);
+        LOGGER.error("FCM has failed token send a notification body.", e);
     }
 }

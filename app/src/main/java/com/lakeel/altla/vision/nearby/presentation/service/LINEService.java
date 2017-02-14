@@ -13,7 +13,6 @@ import com.lakeel.altla.vision.nearby.presentation.di.module.ServiceModule;
 import com.lakeel.altla.vision.nearby.presentation.notification.LocalNotification;
 import com.lakeel.altla.vision.nearby.presentation.view.intent.IntentKey;
 import com.lakeel.altla.vision.nearby.presentation.view.intent.UriIntent;
-import com.lakeel.altla.vision.nearby.rx.ErrorAction;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -55,22 +54,24 @@ public class LINEService extends IntentService {
         // Show LINE URL notification.
         findUserUseCase.execute(userId)
                 .subscribeOn(Schedulers.io())
-                .subscribe(userEntity -> showLineNotification(userId, userEntity.name), new ErrorAction<>());
+                .subscribe(userProfile -> showLineNotification(userId, userProfile.name), e -> LOGGER.error("Failed.", e));
     }
 
     private void showLineNotification(String userId, String userName) {
         findLineLinkUseCase.execute(userId)
                 .toObservable()
-                .filter(entity -> entity != null)
-                .subscribe(entity -> {
+                .filter(lineLink -> lineLink != null)
+                .subscribe(lineLink -> {
                     String title = getString(R.string.notification_title_line_user_found);
                     String message = getString(R.string.notification_message_user_using_line, userName);
 
-                    UriIntent uriIntent = new UriIntent(entity.url);
+                    UriIntent uriIntent = new UriIntent(lineLink.url);
                     PendingIntent pendingIntent = PendingIntent.getActivity(getApplicationContext(), UUID.randomUUID().hashCode(), uriIntent, PendingIntent.FLAG_CANCEL_CURRENT);
 
                     LocalNotification notification = new LocalNotification(getApplicationContext(), title, message, pendingIntent);
                     notification.show();
+                }, e -> {
+                    LOGGER.error("Failed.", e);
                 });
     }
 }

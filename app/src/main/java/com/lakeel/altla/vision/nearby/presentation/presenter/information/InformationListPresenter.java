@@ -2,6 +2,7 @@ package com.lakeel.altla.vision.nearby.presentation.presenter.information;
 
 import android.support.annotation.IntRange;
 
+import com.lakeel.altla.vision.nearby.R;
 import com.lakeel.altla.vision.nearby.domain.usecase.FindAllInformationUseCase;
 import com.lakeel.altla.vision.nearby.presentation.presenter.BaseItemPresenter;
 import com.lakeel.altla.vision.nearby.presentation.presenter.BasePresenter;
@@ -10,8 +11,10 @@ import com.lakeel.altla.vision.nearby.presentation.presenter.model.InformationMo
 import com.lakeel.altla.vision.nearby.presentation.view.InformationItemView;
 import com.lakeel.altla.vision.nearby.presentation.view.InformationListView;
 import com.lakeel.altla.vision.nearby.presentation.view.adapter.InformationAdapter;
-import com.lakeel.altla.vision.nearby.rx.ErrorAction;
 import com.lakeel.altla.vision.nearby.rx.ReusableCompositeSubscription;
+
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.util.ArrayList;
 import java.util.Collections;
@@ -27,9 +30,9 @@ public final class InformationListPresenter extends BasePresenter<InformationLis
     @Inject
     FindAllInformationUseCase findAllInformationUseCase;
 
-    private final ReusableCompositeSubscription subscriptions = new ReusableCompositeSubscription();
+    private static final Logger LOGGER = LoggerFactory.getLogger(InformationListPresenter.class);
 
-    private InformationModelMapper modelMapper = new InformationModelMapper();
+    private final ReusableCompositeSubscription subscriptions = new ReusableCompositeSubscription();
 
     private List<InformationModel> viewModels = new ArrayList<>();
 
@@ -39,7 +42,7 @@ public final class InformationListPresenter extends BasePresenter<InformationLis
 
     public void onActivityCreated() {
         Subscription subscription = findAllInformationUseCase.execute()
-                .map(information -> modelMapper.map(information))
+                .map(InformationModelMapper::map)
                 .toList()
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribe(models -> {
@@ -49,7 +52,10 @@ public final class InformationListPresenter extends BasePresenter<InformationLis
                     this.viewModels.addAll(models);
 
                     getView().updateItems();
-                }, new ErrorAction<>());
+                }, e -> {
+                    LOGGER.error("Failed.", e);
+                    getView().showSnackBar(R.string.snackBar_error_failed);
+                });
         subscriptions.add(subscription);
     }
 

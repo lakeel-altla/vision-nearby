@@ -1,16 +1,18 @@
 package com.lakeel.altla.vision.nearby.presentation.presenter.line;
 
+import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.auth.FirebaseUser;
 import com.lakeel.altla.vision.nearby.R;
 import com.lakeel.altla.vision.nearby.domain.usecase.FindLineLinkUseCase;
 import com.lakeel.altla.vision.nearby.domain.usecase.SaveLINEUrlUseCase;
 import com.lakeel.altla.vision.nearby.presentation.analytics.AnalyticsReporter;
-import com.lakeel.altla.vision.nearby.presentation.firebase.MyUser;
 import com.lakeel.altla.vision.nearby.presentation.presenter.BasePresenter;
 import com.lakeel.altla.vision.nearby.presentation.view.LineSettingsView;
-import com.lakeel.altla.vision.nearby.rx.ErrorAction;
 import com.lakeel.altla.vision.nearby.rx.ReusableCompositeSubscription;
 
 import org.apache.commons.validator.routines.UrlValidator;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import javax.inject.Inject;
 
@@ -28,6 +30,8 @@ public final class LineSettingsPresenter extends BasePresenter<LineSettingsView>
     @Inject
     FindLineLinkUseCase findLineLinkUseCase;
 
+    private static final Logger LOGGER = LoggerFactory.getLogger(LineSettingsPresenter.class);
+
     private final ReusableCompositeSubscription subscriptions = new ReusableCompositeSubscription();
 
     @Inject
@@ -35,13 +39,21 @@ public final class LineSettingsPresenter extends BasePresenter<LineSettingsView>
     }
 
     public void onActivityCreated() {
-        Subscription subscription = findLineLinkUseCase.execute(MyUser.getUserId())
-                .toObservable()
-                .filter(entity -> entity != null)
-                .map(entity -> entity.url)
-                .observeOn(AndroidSchedulers.mainThread())
-                .subscribe(url -> getView().showLineUrl(url), new ErrorAction<>());
-        subscriptions.add(subscription);
+        FirebaseUser firebaseUser = FirebaseAuth.getInstance().getCurrentUser();
+        if (firebaseUser != null) {
+            Subscription subscription = findLineLinkUseCase.execute(firebaseUser.getUid())
+                    .toObservable()
+                    .filter(lineLink -> lineLink != null)
+                    .map(lineLink -> lineLink.url)
+                    .observeOn(AndroidSchedulers.mainThread())
+                    .subscribe(url -> getView().showLineUrl(url),
+                            e -> {
+                                LOGGER.error("Failed.", e);
+                                getView().showSnackBar(R.string.snackBar_error_failed);
+                            });
+            subscriptions.add(subscription);
+
+        }
     }
 
     public void onStop() {
@@ -63,7 +75,10 @@ public final class LineSettingsPresenter extends BasePresenter<LineSettingsView>
                 .subscribe(s -> {
                     getView().showLineUrl(url);
                     getView().showSnackBar(R.string.snackBar_message_added);
-                }, new ErrorAction<>());
+                }, e -> {
+                    LOGGER.error("Failed.", e);
+                    getView().showSnackBar(R.string.snackBar_error_failed);
+                });
         subscriptions.add(subscription);
     }
 }

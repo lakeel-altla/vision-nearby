@@ -8,6 +8,7 @@ import android.support.v4.app.FragmentTransaction;
 
 import com.lakeel.altla.vision.nearby.R;
 import com.lakeel.altla.vision.nearby.presentation.view.fragment.ble.BleSettingsFragment;
+import com.lakeel.altla.vision.nearby.presentation.view.fragment.bundle.EstimationTarget;
 import com.lakeel.altla.vision.nearby.presentation.view.fragment.bundle.FavoriteUser;
 import com.lakeel.altla.vision.nearby.presentation.view.fragment.bundle.TrackingBeacon;
 import com.lakeel.altla.vision.nearby.presentation.view.fragment.device.DeviceListFragment;
@@ -101,8 +102,8 @@ public final class FragmentController {
         replaceFragment(R.id.fragmentPlaceholder, fragment, DEVICE_LIST_FRAGMENT_TAG);
     }
 
-    public void showDistanceEstimationFragment(ArrayList<String> beaconIds, String targetName) {
-        DistanceEstimationFragment fragment = DistanceEstimationFragment.newInstance(beaconIds, targetName);
+    public void showDistanceEstimationFragment(EstimationTarget target) {
+        DistanceEstimationFragment fragment = DistanceEstimationFragment.newInstance(target);
         replaceFragment(R.id.fragmentPlaceholder, fragment, DISTANCE_ESTIMATION_FRAGMENT_TAG);
     }
 

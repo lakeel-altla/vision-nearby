@@ -13,7 +13,7 @@ import com.lakeel.altla.vision.nearby.R;
 import com.lakeel.altla.vision.nearby.domain.usecase.FindAllNearbyUserUseCase;
 import com.lakeel.altla.vision.nearby.presentation.ble.BleChecker;
 import com.lakeel.altla.vision.nearby.presentation.ble.scanner.BleScanCallback;
-import com.lakeel.altla.vision.nearby.presentation.ble.scanner.BleScanner;
+import com.lakeel.altla.vision.nearby.presentation.ble.scanner.Scanner;
 import com.lakeel.altla.vision.nearby.presentation.ble.scanner.BleScannerFactory;
 import com.lakeel.altla.vision.nearby.presentation.presenter.BaseItemPresenter;
 import com.lakeel.altla.vision.nearby.presentation.presenter.BasePresenter;
@@ -21,11 +21,13 @@ import com.lakeel.altla.vision.nearby.presentation.presenter.mapper.NearbyUsersM
 import com.lakeel.altla.vision.nearby.presentation.presenter.model.NearbyUserModel;
 import com.lakeel.altla.vision.nearby.presentation.view.NearbyUserItemView;
 import com.lakeel.altla.vision.nearby.presentation.view.NearbyUserListView;
-import com.lakeel.altla.vision.nearby.rx.ErrorAction;
 import com.lakeel.altla.vision.nearby.rx.ReusableCompositeSubscription;
 import com.neovisionaries.bluetooth.ble.advertising.ADPayloadParser;
 import com.neovisionaries.bluetooth.ble.advertising.ADStructure;
 import com.neovisionaries.bluetooth.ble.advertising.EddystoneUID;
+
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -42,17 +44,17 @@ public final class NearbyUserListPresenter extends BasePresenter<NearbyUserListV
     @Inject
     FindAllNearbyUserUseCase findAllNearbyUserUseCase;
 
+    private static final Logger LOGGER = LoggerFactory.getLogger(NearbyUserListPresenter.class);
+
     private final ReusableCompositeSubscription subscriptions = new ReusableCompositeSubscription();
 
     private final List<NearbyUserModel> viewModels = new ArrayList<>();
-
-    private final NearbyUsersModelMapper modelMapper = new NearbyUsersModelMapper();
 
     private final ScheduledThreadPoolExecutor executor = new ScheduledThreadPoolExecutor(1);
 
     private final Context context;
 
-    private final BleScanner bleScanner;
+    private final Scanner scanner;
 
     private boolean isScanning;
 
@@ -70,7 +72,7 @@ public final class NearbyUserListPresenter extends BasePresenter<NearbyUserListV
                     String beaconId = eddystoneUID.getBeaconIdAsString().toLowerCase();
 
                     Subscription subscription = findAllNearbyUserUseCase.execute(beaconId)
-                            .map(modelMapper::map)
+                            .map(NearbyUsersModelMapper::map)
                             .observeOn(AndroidSchedulers.mainThread())
                             .subscribe(scannedModel -> {
                                 for (NearbyUserModel model : viewModels) {
@@ -82,7 +84,9 @@ public final class NearbyUserListPresenter extends BasePresenter<NearbyUserListV
 
                                 viewModels.add(scannedModel);
                                 getView().updateItems();
-                            }, new ErrorAction<>());
+                            }, e -> {
+                                LOGGER.error("Failed.", e);
+                            });
                     subscriptions.add(subscription);
                 }
             }
@@ -92,7 +96,7 @@ public final class NearbyUserListPresenter extends BasePresenter<NearbyUserListV
     @Inject
     NearbyUserListPresenter(Context context) {
         this.context = context;
-        this.bleScanner = BleScannerFactory.create(context, scanCallback);
+        this.scanner = BleScannerFactory.create(context, scanCallback);
     }
 
     public void onActivityCreated() {
@@ -113,7 +117,7 @@ public final class NearbyUserListPresenter extends BasePresenter<NearbyUserListV
 
         getView().hideIndicator();
 
-        bleScanner.stopScan();
+        scanner.stopScan();
     }
 
     public void onBleEnabled() {
@@ -173,13 +177,13 @@ public final class NearbyUserListPresenter extends BasePresenter<NearbyUserListV
     }
 
     private void subscribe() {
-        bleScanner.startScan();
+        scanner.startScan();
 
         isScanning = true;
 
         executor.schedule(() -> {
-            // Stop to scan after 5 seconds.
-            bleScanner.stopScan();
+            // Stop token scan after 5 seconds.
+            scanner.stopScan();
 
             isScanning = false;
 

@@ -1,7 +1,7 @@
 package com.lakeel.altla.vision.nearby.domain.usecase;
 
 import com.lakeel.altla.vision.nearby.data.repository.firebase.UserNearbyHistoryRepository;
-import com.lakeel.altla.vision.nearby.presentation.firebase.MyUser;
+import com.lakeel.altla.vision.nearby.presentation.firebase.CurrentUser;
 
 import javax.inject.Inject;
 
@@ -18,7 +18,7 @@ public final class RemoveNearbyHistoryUseCase {
     }
 
     public Completable execute(String uniqueKey) {
-        String userId = MyUser.getUserId();
+        String userId = CurrentUser.getUid();
         return repository.remove(userId, uniqueKey).subscribeOn(Schedulers.io());
     }
 }

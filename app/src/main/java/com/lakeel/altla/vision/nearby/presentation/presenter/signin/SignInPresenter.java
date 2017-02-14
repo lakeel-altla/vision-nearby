@@ -59,11 +59,11 @@ public final class SignInPresenter extends BasePresenter<SignInView> {
         Subscription subscription = saveUserProfileUseCase.execute()
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribe(e -> {
-                    LOGGER.error("Failed to sign in.", e);
+                    LOGGER.error("Failed token sign in.", e);
 
                     FirebaseAuth.getInstance().signOut();
                     getView().showSnackBar(R.string.snackBar_error_not_signed_in);
-                }, () -> getView().postSignIn());
+                }, () -> getView().onSignedIn());
         subscriptions.add(subscription);
     }
 }

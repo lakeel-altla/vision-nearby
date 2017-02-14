@@ -13,8 +13,10 @@ import com.lakeel.altla.vision.nearby.presentation.presenter.mapper.FavoriteMode
 import com.lakeel.altla.vision.nearby.presentation.presenter.model.FavoriteModel;
 import com.lakeel.altla.vision.nearby.presentation.view.FavoriteItemView;
 import com.lakeel.altla.vision.nearby.presentation.view.FavoriteListView;
-import com.lakeel.altla.vision.nearby.rx.ErrorAction;
 import com.lakeel.altla.vision.nearby.rx.ReusableCompositeSubscription;
+
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -35,9 +37,9 @@ public final class FavoriteListPresenter extends BasePresenter<FavoriteListView>
     @Inject
     RemoveFavoriteUseCase removeFavoriteUseCase;
 
-    private final ReusableCompositeSubscription subscriptions = new ReusableCompositeSubscription();
+    private static final Logger LOGGER = LoggerFactory.getLogger(FavoriteListPresenter.class);
 
-    private FavoriteModelMapper favoriteModelMapper = new FavoriteModelMapper();
+    private final ReusableCompositeSubscription subscriptions = new ReusableCompositeSubscription();
 
     private final List<FavoriteModel> viewModels = new ArrayList<>();
 
@@ -47,7 +49,7 @@ public final class FavoriteListPresenter extends BasePresenter<FavoriteListView>
 
     public void onActivityCreated() {
         Subscription subscription = findAllFavoriteUseCase.execute()
-                .map(user -> favoriteModelMapper.map(user))
+                .map(FavoriteModelMapper::map)
                 .toList()
                 .subscribe(favoritesModels -> {
                     viewModels.clear();
@@ -60,7 +62,10 @@ public final class FavoriteListPresenter extends BasePresenter<FavoriteListView>
                     }
 
                     getView().updateItems(viewModels);
-                }, new ErrorAction<>());
+                }, e -> {
+                    LOGGER.error("Failed.", e);
+                    getView().showSnackBar(R.string.snackBar_error_failed);
+                });
         subscriptions.add(subscription);
     }
 
@@ -90,7 +95,10 @@ public final class FavoriteListPresenter extends BasePresenter<FavoriteListView>
 
             Subscription subscription = removeFavoriteUseCase.execute(model.userId)
                     .observeOn(AndroidSchedulers.mainThread())
-                    .subscribe(new ErrorAction<>(),
+                    .subscribe(e -> {
+                                LOGGER.error("Failed.", e);
+                                getView().showSnackBar(R.string.snackBar_error_failed);
+                            },
                             () -> {
                                 int size = viewModels.size();
                                 viewModels.remove(model);

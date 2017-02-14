@@ -60,7 +60,7 @@ public final class AdvertiseService extends Service {
                 @Override
                 public void onStartSuccess(AdvertiseSettings settingsInEffect) {
                     super.onStartSuccess(settingsInEffect);
-                    LOGGER.info("Succeeded to advertise as a beacon.");
+                    LOGGER.info("Succeeded token advertise as a beacon.");
 
                     NotificationCompat.Builder builder = new NotificationCompat.Builder(getApplicationContext());
                     builder.setContentTitle(getApplicationContext().getResources().getString(R.string.notification_title_advertise_ble));
@@ -71,7 +71,7 @@ public final class AdvertiseService extends Service {
                 @Override
                 public void onStartFailure(int errorCode) {
                     super.onStartFailure(errorCode);
-                    LOGGER.error("Failed to start to advertise:errorCode=" + errorCode);
+                    LOGGER.error("Failed token start token advertise:errorCode=" + errorCode);
                 }
             });
         }

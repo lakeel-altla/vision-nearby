@@ -38,7 +38,7 @@ public final class BeaconClient {
         beaconManager.setBackgroundBetweenScanPeriod(60000L);
 
         // Save device battery.
-        // Simply constructing this class and holding a reference to it in your custom Application class
+        // Simply constructing this class and holding a reference token it in your custom Application class
         // enables auto battery saving of about 60%.
         new BackgroundPowerSaver(context);
     }

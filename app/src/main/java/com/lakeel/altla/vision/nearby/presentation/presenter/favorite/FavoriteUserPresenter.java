@@ -1,5 +1,9 @@
 package com.lakeel.altla.vision.nearby.presentation.presenter.favorite;
 
+import android.os.Bundle;
+
+import com.lakeel.altla.vision.nearby.R;
+import com.lakeel.altla.vision.nearby.core.StringUtils;
 import com.lakeel.altla.vision.nearby.domain.usecase.FindAllPassingTimeUseCase;
 import com.lakeel.altla.vision.nearby.domain.usecase.FindAllUserBeaconUseCase;
 import com.lakeel.altla.vision.nearby.domain.usecase.FindConnectionUseCase;
@@ -11,15 +15,17 @@ import com.lakeel.altla.vision.nearby.presentation.presenter.BasePresenter;
 import com.lakeel.altla.vision.nearby.presentation.presenter.mapper.FavoriteUserModelMapper;
 import com.lakeel.altla.vision.nearby.presentation.presenter.model.FavoriteUserModel;
 import com.lakeel.altla.vision.nearby.presentation.view.FavoriteUserView;
+import com.lakeel.altla.vision.nearby.presentation.view.fragment.bundle.EstimationTarget;
 import com.lakeel.altla.vision.nearby.presentation.view.fragment.bundle.FavoriteUser;
-import com.lakeel.altla.vision.nearby.rx.ErrorAction;
 import com.lakeel.altla.vision.nearby.rx.ReusableCompositeSubscription;
+
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.util.ArrayList;
 
 import javax.inject.Inject;
 
-import rx.Single;
 import rx.Subscription;
 import rx.android.schedulers.AndroidSchedulers;
 
@@ -46,11 +52,13 @@ public final class FavoriteUserPresenter extends BasePresenter<FavoriteUserView>
     @Inject
     FindAllUserBeaconUseCase findAllUserBeaconUseCase;
 
+    private static final Logger LOGGER = LoggerFactory.getLogger(FavoriteUserPresenter.class);
+
+    private static final String BUNDLE_FAVORITE_USER = "favoriteUser";
+
     private final ReusableCompositeSubscription subscriptions = new ReusableCompositeSubscription();
 
-    private final FavoriteUserModelMapper modelMapper = new FavoriteUserModelMapper();
-
-    private FavoriteUserModel viewModel;
+    private FavoriteUserModel model;
 
     private FavoriteUser favoriteUser;
 
@@ -60,34 +68,65 @@ public final class FavoriteUserPresenter extends BasePresenter<FavoriteUserView>
     FavoriteUserPresenter() {
     }
 
-    public void setFavoriteUser(FavoriteUser favoriteUser) {
-        this.favoriteUser = favoriteUser;
+    public void onCreateView(FavoriteUserView view, Bundle bundle) {
+        super.onCreateView(view);
+        this.favoriteUser = (FavoriteUser) bundle.getSerializable(BUNDLE_FAVORITE_USER);
+    }
+
+    public void onActivityCreated() {
+        getView().showTitle(favoriteUser.name);
     }
 
     public void onResume() {
         analyticsReporter.viewFavoriteItem(favoriteUser.userId, favoriteUser.name);
 
         Subscription subscription = findLatestNearbyHistoryUseCase.execute(favoriteUser.userId)
-                .map(history -> {
-                    viewModel = modelMapper.map(history);
-                    return viewModel;
+                .map(nearbyHistory -> {
+                    model = FavoriteUserModelMapper.map(nearbyHistory);
+                    return model;
                 })
-                .flatMap(model -> findUser(favoriteUser.userId))
+                .flatMap(model ->
+                        findUserUseCase.execute(favoriteUser.userId)
+                                .map(user -> {
+                                    this.model.userName = user.name;
+                                    this.model.imageUri = user.imageUri;
+                                    this.model.email = user.email;
+                                    return this.model;
+                                }))
+                .flatMap(model ->
+                        findConnectionUseCase.execute(favoriteUser.userId)
+                                .map(connection -> {
+                                    this.model.isConnected = connection.isConnected;
+                                    this.model.lastOnlineTime = (Long) connection.lastOnlineTime;
+                                    return this.model;
+                                }))
+                .flatMap(model ->
+                        findAllPassingTimeUseCase.execute(favoriteUser.userId)
+                                .map(times -> {
+                                    this.model.times = times;
+                                    return this.model;
+                                }))
+                .flatMapObservable(model ->
+                        findLineLinkUseCase.execute(favoriteUser.userId)
+                                .toObservable()
+                                .filter(lineLink -> lineLink != null)
+                                .map(lineLink -> {
+                                    if (!StringUtils.isEmpty(lineLink.url)) {
+                                        this.model.lineUrl = lineLink.url;
+                                    }
+                                    return this.model;
+                                }))
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribe(model -> {
-                    analyticsReporter.viewFavoriteItem(model.userId, model.userName);
-
-                    getView().showProfile(model);
-                    getView().showPassingData(model);
-
                     if (isMapReadied) {
                         onMapReady();
                     }
 
-                    showPresence(model.userId);
-                    showTimes(model.userId);
-                    showLineUrl(model.userId);
-                }, new ErrorAction<>());
+                    getView().updateModel(model);
+                }, e -> {
+                    LOGGER.error("Failed.", e);
+                    getView().showSnackBar(R.string.snackBar_error_failed);
+                });
         subscriptions.add(subscription);
     }
 
@@ -97,10 +136,10 @@ public final class FavoriteUserPresenter extends BasePresenter<FavoriteUserView>
 
     public void onMapReady() {
         isMapReadied = true;
-        if (viewModel == null || viewModel.latitude == null || viewModel.longitude == null) {
+        if (model == null || model.locationModel == null) {
             getView().hideLocation();
         } else {
-            getView().showLocation(viewModel.latitude, viewModel.longitude);
+            getView().showLocation(model.locationModel.latitude, model.locationModel.longitude);
         }
     }
 
@@ -113,46 +152,12 @@ public final class FavoriteUserPresenter extends BasePresenter<FavoriteUserView>
 
                     ArrayList<String> beaconIds = new ArrayList<>(beacons.size());
                     beaconIds.addAll(beacons);
-                    getView().showDistanceEstimationFragment(beaconIds, favoriteUser.name);
-                }, new ErrorAction<>());
-        subscriptions.add(subscription);
-    }
-
-    private Single<FavoriteUserModel> findUser(String userId) {
-        return findUserUseCase.execute(userId)
-                .map(user -> {
-                    viewModel.userName = user.name;
-                    viewModel.imageUri = user.imageUri;
-                    viewModel.email = user.email;
-                    return viewModel;
+                    EstimationTarget estimationTarget = new EstimationTarget(favoriteUser.name, beaconIds);
+                    getView().showDistanceEstimationFragment(estimationTarget);
+                }, e -> {
+                    LOGGER.error("Failed.", e);
+                    getView().showSnackBar(R.string.snackBar_error_failed);
                 });
-    }
-
-    private void showPresence(String userId) {
-        Subscription subscription = findConnectionUseCase.execute(userId)
-                .map(connection -> {
-                    viewModel.isConnected = connection.isConnected;
-                    viewModel.lastOnlineTime = connection.lastOnlineTime;
-                    return viewModel;
-                })
-                .observeOn(AndroidSchedulers.mainThread())
-                .subscribe(model -> getView().showPresence(model), new ErrorAction<>());
-        subscriptions.add(subscription);
-    }
-
-    private void showTimes(String userId) {
-        Subscription subscription = findAllPassingTimeUseCase.execute(userId)
-                .observeOn(AndroidSchedulers.mainThread())
-                .subscribe(times -> getView().showTimes(times), new ErrorAction<>());
-        subscriptions.add(subscription);
-    }
-
-    private void showLineUrl(String userId) {
-        Subscription subscription = findLineLinkUseCase.execute(userId)
-                .toObservable()
-                .filter(entity -> entity != null)
-                .observeOn(AndroidSchedulers.mainThread())
-                .subscribe(entity -> getView().showLineUrl(entity.url), new ErrorAction<>());
         subscriptions.add(subscription);
     }
 }

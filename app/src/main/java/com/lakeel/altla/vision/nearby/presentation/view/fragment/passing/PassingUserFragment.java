@@ -22,6 +22,7 @@ import com.google.android.gms.maps.model.CircleOptions;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.MarkerOptions;
 import com.lakeel.altla.vision.nearby.R;
+import com.lakeel.altla.vision.nearby.core.StringUtils;
 import com.lakeel.altla.vision.nearby.presentation.awareness.UserActivity;
 import com.lakeel.altla.vision.nearby.presentation.awareness.WeatherCondition;
 import com.lakeel.altla.vision.nearby.presentation.presenter.model.PassingUserModel;
@@ -30,7 +31,6 @@ import com.lakeel.altla.vision.nearby.presentation.view.PassingUserView;
 import com.lakeel.altla.vision.nearby.presentation.view.activity.MainActivity;
 import com.lakeel.altla.vision.nearby.presentation.view.color.AppColor;
 import com.lakeel.altla.vision.nearby.presentation.view.date.DateFormatter;
-import com.lakeel.altla.vision.nearby.presentation.view.fragment.bundle.BundleKey;
 import com.lakeel.altla.vision.nearby.presentation.view.layout.PassingLayout;
 import com.lakeel.altla.vision.nearby.presentation.view.layout.PresenceLayout;
 import com.lakeel.altla.vision.nearby.presentation.view.layout.ProfileLayout;
@@ -60,6 +60,8 @@ public final class PassingUserFragment extends Fragment implements PassingUserVi
     @BindView(R.id.addButton)
     FloatingActionButton addButton;
 
+    private static final String BUNDLE_HISTORY_ID = "historyId";
+
     private PresenceLayout presenceLayout = new PresenceLayout();
 
     private PassingLayout passingLayout = new PassingLayout();
@@ -76,7 +78,7 @@ public final class PassingUserFragment extends Fragment implements PassingUserVi
 
     public static PassingUserFragment newInstance(String historyId) {
         Bundle args = new Bundle();
-        args.putString(BundleKey.NEARBY_HISTORY_ID.name(), historyId);
+        args.putString(BUNDLE_HISTORY_ID, historyId);
 
         PassingUserFragment fragment = new PassingUserFragment();
         fragment.setArguments(args);
@@ -97,7 +99,7 @@ public final class PassingUserFragment extends Fragment implements PassingUserVi
         // Dagger
         MainActivity.getUserComponent(this).inject(this);
 
-        presenter.onCreateView(this);
+        presenter.onCreateView(this, getArguments());
 
         setHasOptionsMenu(true);
 
@@ -117,10 +119,6 @@ public final class PassingUserFragment extends Fragment implements PassingUserVi
             fragmentManager.beginTransaction().replace(R.id.layoutLocationMap, supportMapFragment).commit();
         }
         supportMapFragment.getMapAsync(this);
-
-        Bundle bundle = getArguments();
-        String historyId = (String) bundle.get(BundleKey.NEARBY_HISTORY_ID.name());
-        presenter.setHistoryId(historyId);
     }
 
     @Override
@@ -170,33 +168,38 @@ public final class PassingUserFragment extends Fragment implements PassingUserVi
     }
 
     @Override
-    public void showProfile(PassingUserModel model) {
+    public void updateModel(PassingUserModel model) {
+        // State
+        int connectionResId;
+        if (model.isConnected) {
+            connectionResId = R.string.textView_connected;
+        } else {
+            connectionResId = R.string.textView_disconnected;
+        }
+        presenceLayout.presenceTextView.setText(connectionResId);
+        presenceLayout.lastOnlineTextView.setText(new DateFormatter(model.lastOnlineTime).format());
+
+        // Profile
         ImageLoader imageLoader = ImageLoader.getInstance();
         imageLoader.displayImage(model.imageUri, userImageView);
 
         profileLayout.userNameTextView.setText(model.userName);
+
         profileLayout.emailTextView.setAutoLinkMask(Linkify.EMAIL_ADDRESSES);
         profileLayout.emailTextView.setText(model.email);
-    }
 
-    @Override
-    public void showTimes(long times) {
-        passingLayout.timesTextView.setText(String.valueOf(times));
-    }
+        // Passing
+        passingLayout.passingTimeTextView.setText(new DateFormatter(model.passingTimes).format());
 
-    @Override
-    public void showPassingData(PassingUserModel model) {
-        DateFormatter dateFormatter = new DateFormatter(model.passingTime);
-        passingLayout.passingTimeTextView.setText(dateFormatter.format());
-
-        if (model.conditions == null || model.conditions.length == 0) {
-            int resId = WeatherCondition.UNKNOWN.getResValue();
-            passingLayout.weatherTextView.setText(getContext().getString(resId));
+        if (model.weatherModel == null) {
+            int weatherResId = WeatherCondition.UNKNOWN.getResValue();
+            passingLayout.weatherTextView.setText(getContext().getString(weatherResId));
         } else {
-            BigDecimal temperature = new BigDecimal(model.temperature);
+            BigDecimal temperature = new BigDecimal(model.weatherModel.temperature);
             BigDecimal roundUppedTemperature = temperature.setScale(0, BigDecimal.ROUND_HALF_UP);
-            int humidity = model.humidity;
-            int conditions[] = model.conditions;
+
+            int humidity = model.weatherModel.humidity;
+            int conditions[] = model.weatherModel.conditions;
 
             StringBuilder builder = new StringBuilder();
             for (int value : conditions) {
@@ -212,22 +215,15 @@ public final class PassingUserFragment extends Fragment implements PassingUserVi
             passingLayout.weatherTextView.setText(builder.toString());
         }
 
-        int resId = UserActivity.toUserActivity(model.userActivity).getResValue();
-        passingLayout.userActivityTextView.setText(getContext().getString(resId));
-    }
+        int userActivityResId = UserActivity.toUserActivity(model.userActivity).getResValue();
+        passingLayout.userActivityTextView.setText(getContext().getString(userActivityResId));
 
-    @Override
-    public void showPresence(PassingUserModel model) {
-        int resId;
-        if (model.isConnected) {
-            resId = R.string.textView_connected;
-        } else {
-            resId = R.string.textView_disconnected;
+        passingLayout.timesTextView.setText(String.valueOf(model.times));
+
+        // SNS
+        if (!StringUtils.isEmpty(model.lineUrl)) {
+            snsLayout.lineUrlTextView.setText(model.lineUrl);
         }
-        presenceLayout.presenceTextView.setText(resId);
-
-        DateFormatter dateFormatter = new DateFormatter(model.lastOnlineTime);
-        presenceLayout.lastOnlineTextView.setText(dateFormatter.format());
     }
 
     @Override
@@ -269,12 +265,6 @@ public final class PassingUserFragment extends Fragment implements PassingUserVi
     @Override
     public void hideAddButton() {
         addButton.setVisibility(View.GONE);
-    }
-
-    @Override
-    public void showLineUrl(String url) {
-        snsLayout.lineUrlTextView.setAutoLinkMask(Linkify.WEB_URLS);
-        snsLayout.lineUrlTextView.setText(url);
     }
 
     @Override

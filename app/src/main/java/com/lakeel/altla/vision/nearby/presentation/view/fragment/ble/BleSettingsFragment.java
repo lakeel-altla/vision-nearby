@@ -2,9 +2,12 @@ package com.lakeel.altla.vision.nearby.presentation.view.fragment.ble;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.support.annotation.StringRes;
+import android.support.design.widget.Snackbar;
 import android.support.v7.preference.PreferenceFragmentCompat;
 import android.support.v7.preference.SwitchPreferenceCompat;
 import android.view.MenuItem;
+import android.view.View;
 
 import com.lakeel.altla.vision.nearby.R;
 import com.lakeel.altla.vision.nearby.presentation.application.App;
@@ -113,5 +116,13 @@ public final class BleSettingsFragment extends PreferenceFragmentCompat implemen
     @Override
     public void stopSubscribeInBackground() {
         App.stopDetectBeaconsInBackground(this);
+    }
+
+    @Override
+    public void showSnackBar(@StringRes int resId) {
+        View view = getView();
+        if (view != null) {
+            Snackbar.make(view, resId, Snackbar.LENGTH_SHORT).show();
+        }
     }
 }

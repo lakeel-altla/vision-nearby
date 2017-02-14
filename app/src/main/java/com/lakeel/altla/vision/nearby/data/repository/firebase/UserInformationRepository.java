@@ -6,9 +6,6 @@ import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
-import com.lakeel.altla.vision.nearby.data.entity.InformationEntity;
-import com.lakeel.altla.vision.nearby.data.mapper.entity.InformationEntityMapper;
-import com.lakeel.altla.vision.nearby.data.mapper.model.InformationMapper;
 import com.lakeel.altla.vision.nearby.domain.model.Information;
 
 import javax.inject.Inject;
@@ -21,10 +18,6 @@ public class UserInformationRepository {
 
     private static final String DATABASE_URI = "https://profile-notification-95441.firebaseio.com/userInformation";
 
-    private final InformationEntityMapper entityMapper = new InformationEntityMapper();
-
-    private final InformationMapper informationMapper = new InformationMapper();
-
     private final DatabaseReference reference;
 
     @Inject
@@ -32,13 +25,12 @@ public class UserInformationRepository {
         this.reference = FirebaseDatabase.getInstance().getReferenceFromUrl(DATABASE_URI);
     }
 
-    public Completable save(String userId, String title, String message) {
+    public Completable save(Information information) {
         return Completable.create(subscriber -> {
-            InformationEntity entity = entityMapper.map(title, message);
             Task task = reference
-                    .child(userId)
+                    .child(information.userId)
                     .push()
-                    .setValue(entity);
+                    .setValue(information);
 
             Exception e = task.getException();
             if (e != null) {
@@ -57,7 +49,7 @@ public class UserInformationRepository {
                         @Override
                         public void onDataChange(DataSnapshot dataSnapshot) {
                             for (DataSnapshot snapshot : dataSnapshot.getChildren()) {
-                                subscriber.onNext(informationMapper.map(snapshot));
+                                subscriber.onNext(map(userId, snapshot));
                             }
                             subscriber.onCompleted();
                         }
@@ -77,8 +69,8 @@ public class UserInformationRepository {
                         .child(informationId)
                         .addListenerForSingleValueEvent(new ValueEventListener() {
                             @Override
-                            public void onDataChange(DataSnapshot snapshot) {
-                                subscriber.onSuccess(informationMapper.map(snapshot));
+                            public void onDataChange(DataSnapshot dataSnapshot) {
+                                subscriber.onSuccess(map(userId, dataSnapshot));
                             }
 
                             @Override
@@ -86,5 +78,12 @@ public class UserInformationRepository {
                                 subscriber.onError(databaseError.toException());
                             }
                         }));
+    }
+
+    private Information map(String userId, DataSnapshot dataSnapshot) {
+        Information information = dataSnapshot.getValue(Information.class);
+        information.userId = userId;
+        information.informationId = dataSnapshot.getKey();
+        return information;
     }
 }

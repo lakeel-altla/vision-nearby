@@ -2,7 +2,7 @@ package com.lakeel.altla.vision.nearby.domain.usecase;
 
 import com.lakeel.altla.vision.nearby.data.repository.firebase.UserFavoriteRepository;
 import com.lakeel.altla.vision.nearby.domain.model.Favorite;
-import com.lakeel.altla.vision.nearby.presentation.firebase.MyUser;
+import com.lakeel.altla.vision.nearby.presentation.firebase.CurrentUser;
 
 import javax.inject.Inject;
 
@@ -19,7 +19,7 @@ public final class FindFavoriteUseCase {
     }
 
     public Single<Favorite> execute(String favoriteUserId) {
-        String myUserId = MyUser.getUserId();
-        return repository.findAll(myUserId, favoriteUserId).subscribeOn(Schedulers.io());
+        String userId = CurrentUser.getUid();
+        return repository.find(userId, favoriteUserId).subscribeOn(Schedulers.io());
     }
 }

@@ -2,7 +2,7 @@ package com.lakeel.altla.vision.nearby.domain.usecase;
 
 import com.lakeel.altla.vision.nearby.data.repository.android.PreferenceRepository;
 import com.lakeel.altla.vision.nearby.domain.model.Preference;
-import com.lakeel.altla.vision.nearby.presentation.firebase.MyUser;
+import com.lakeel.altla.vision.nearby.presentation.firebase.CurrentUser;
 
 import javax.inject.Inject;
 
@@ -18,7 +18,7 @@ public final class FindPreferenceUseCase {
     }
 
     public Single<Preference> execute() {
-        String userId = MyUser.getUserId();
+        String userId = CurrentUser.getUid();
         return repository.findPreferences(userId);
     }
 

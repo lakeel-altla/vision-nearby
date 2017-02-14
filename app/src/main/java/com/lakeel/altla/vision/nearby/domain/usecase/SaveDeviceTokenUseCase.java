@@ -1,12 +1,14 @@
 package com.lakeel.altla.vision.nearby.domain.usecase;
 
-import com.lakeel.altla.vision.nearby.data.repository.firebase.UserDeviceTokenRepository;
+import com.google.firebase.iid.FirebaseInstanceId;
 import com.lakeel.altla.vision.nearby.data.repository.android.PreferenceRepository;
-import com.lakeel.altla.vision.nearby.presentation.firebase.MyUser;
+import com.lakeel.altla.vision.nearby.data.repository.firebase.UserDeviceTokenRepository;
+import com.lakeel.altla.vision.nearby.domain.model.DeviceToken;
+import com.lakeel.altla.vision.nearby.presentation.firebase.CurrentUser;
 
 import javax.inject.Inject;
 
-import rx.Single;
+import rx.Completable;
 import rx.schedulers.Schedulers;
 
 public final class SaveDeviceTokenUseCase {
@@ -21,8 +23,11 @@ public final class SaveDeviceTokenUseCase {
     SaveDeviceTokenUseCase() {
     }
 
-    public Single<String> execute(String beaconId, String token) {
-        String userId = MyUser.getUserId();
-        return tokensRepository.save(userId, beaconId, token).subscribeOn(Schedulers.io());
+    public Completable execute(String beaconId) {
+        DeviceToken deviceToken = new DeviceToken();
+        deviceToken.userId = CurrentUser.getUid();
+        deviceToken.beaconId = beaconId;
+        deviceToken.token = FirebaseInstanceId.getInstance().getToken();
+        return tokensRepository.save(deviceToken).subscribeOn(Schedulers.io());
     }
 }

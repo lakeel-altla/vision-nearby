@@ -4,7 +4,7 @@ public final class DeviceModel {
 
     public String beaconId;
 
-    public String name;
+    public String deviceName;
 
     public long lastUsedTime;
 

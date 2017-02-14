@@ -17,8 +17,10 @@ import com.lakeel.altla.vision.nearby.presentation.presenter.model.DeviceModel;
 import com.lakeel.altla.vision.nearby.presentation.view.DeviceItemView;
 import com.lakeel.altla.vision.nearby.presentation.view.DeviceListView;
 import com.lakeel.altla.vision.nearby.presentation.view.adapter.DeviceAdapter;
-import com.lakeel.altla.vision.nearby.rx.ErrorAction;
 import com.lakeel.altla.vision.nearby.rx.ReusableCompositeSubscription;
+
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -45,9 +47,9 @@ public class DeviceListPresenter extends BasePresenter<DeviceListView> {
     @Inject
     FoundDeviceUseCase foundDeviceUseCase;
 
-    private final ReusableCompositeSubscription subscriptions = new ReusableCompositeSubscription();
+    private static final Logger LOGGER = LoggerFactory.getLogger(DeviceListPresenter.class);
 
-    private final DeviceModelMapper modelMapper = new DeviceModelMapper();
+    private final ReusableCompositeSubscription subscriptions = new ReusableCompositeSubscription();
 
     private final List<DeviceModel> viewModels = new ArrayList<>();
 
@@ -81,29 +83,35 @@ public class DeviceListPresenter extends BasePresenter<DeviceListView> {
         }
 
         public void onClick(DeviceModel model) {
-            getView().showTrackingFragment(model.beaconId, model.name);
+            getView().showTrackingFragment(model.beaconId, model.deviceName);
         }
 
         public void onFound(DeviceModel model) {
-            analyticsReporter.foundDevice(model.beaconId, model.name);
+            analyticsReporter.foundDevice(model.beaconId, model.deviceName);
 
             Subscription subscription = foundDeviceUseCase.execute(model.beaconId)
                     .observeOn(AndroidSchedulers.mainThread())
-                    .subscribe(new ErrorAction<>(), DeviceListPresenter.this::findUserDevices);
+                    .subscribe(e -> {
+                        LOGGER.error("Failed.", e);
+                        getView().showSnackBar(R.string.snackBar_error_failed);
+                    }, DeviceListPresenter.this::findUserDevices);
             subscriptions.add(subscription);
         }
 
         public void onLost(DeviceModel model) {
-            analyticsReporter.lostDevice(model.beaconId, model.name);
+            analyticsReporter.lostDevice(model.beaconId, model.deviceName);
 
             Subscription subscription = lostDeviceUseCase.execute(model.beaconId)
                     .observeOn(AndroidSchedulers.mainThread())
-                    .subscribe(new ErrorAction<>(), DeviceListPresenter.this::findUserDevices);
+                    .subscribe(e -> {
+                        LOGGER.error("Failed.", e);
+                        getView().showSnackBar(R.string.snackBar_error_failed);
+                    }, DeviceListPresenter.this::findUserDevices);
             subscriptions.add(subscription);
         }
 
         public void onRemove(DeviceModel model) {
-            analyticsReporter.removeDevice(model.beaconId, model.name);
+            analyticsReporter.removeDevice(model.beaconId, model.deviceName);
 
             Subscription subscription = removeDeviceUseCase.execute(model.beaconId)
                     .observeOn(AndroidSchedulers.mainThread())
@@ -116,21 +124,27 @@ public class DeviceListPresenter extends BasePresenter<DeviceListView> {
                             getView().updateItems();
                         }
                         getView().showSnackBar(R.string.snackBar_message_removed);
-                    }, new ErrorAction<>());
+                    }, e -> {
+                        LOGGER.error("Failed.", e);
+                        getView().showSnackBar(R.string.snackBar_error_failed);
+                    });
             subscriptions.add(subscription);
         }
     }
 
     private void findUserDevices() {
         Subscription subscription = findAllDeviceUseCase.execute()
-                .map(modelMapper::map)
+                .map(DeviceModelMapper::map)
                 .toSortedList((model1, model2) -> sort(model1.lastUsedTime, model2.lastUsedTime))
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribe(models -> {
                     viewModels.clear();
                     viewModels.addAll(models);
                     getView().updateItems();
-                }, new ErrorAction<>());
+                }, e -> {
+                    LOGGER.error("Failed.", e);
+                    getView().showSnackBar(R.string.snackBar_error_failed);
+                });
         subscriptions.add(subscription);
     }
 

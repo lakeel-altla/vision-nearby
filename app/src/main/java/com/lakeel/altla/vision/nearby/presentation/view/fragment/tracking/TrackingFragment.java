@@ -1,6 +1,8 @@
 package com.lakeel.altla.vision.nearby.presentation.view.fragment.tracking;
 
 import android.os.Bundle;
+import android.support.annotation.StringRes;
+import android.support.design.widget.Snackbar;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.view.LayoutInflater;
@@ -28,12 +30,10 @@ import com.lakeel.altla.vision.nearby.presentation.view.activity.MainActivity;
 import com.lakeel.altla.vision.nearby.presentation.view.color.AppColor;
 import com.lakeel.altla.vision.nearby.presentation.view.date.DateFormatter;
 import com.lakeel.altla.vision.nearby.presentation.view.fragment.FragmentController;
-import com.lakeel.altla.vision.nearby.presentation.view.fragment.bundle.BundleKey;
+import com.lakeel.altla.vision.nearby.presentation.view.fragment.bundle.EstimationTarget;
 import com.lakeel.altla.vision.nearby.presentation.view.fragment.bundle.TrackingBeacon;
 import com.lakeel.altla.vision.nearby.presentation.view.intent.GoogleMapIntent;
 import com.lakeel.altla.vision.nearby.presentation.view.map.Radius;
-
-import java.util.ArrayList;
 
 import javax.inject.Inject;
 
@@ -51,6 +51,8 @@ public final class TrackingFragment extends Fragment implements TrackingView, On
     @BindView(R.id.textViewFoundDate)
     TextView foundDateTextView;
 
+    private static final String BUNDLE_TRACKING_BEACON = "trackingBeacon";
+
     private View mapView;
 
     private GoogleMap map;
@@ -59,7 +61,7 @@ public final class TrackingFragment extends Fragment implements TrackingView, On
 
     public static TrackingFragment newInstance(TrackingBeacon trackingBeacon) {
         Bundle bundle = new Bundle();
-        bundle.putSerializable(BundleKey.TRACKING_BEACON.name(), trackingBeacon);
+        bundle.putSerializable(BUNDLE_TRACKING_BEACON, trackingBeacon);
 
         TrackingFragment fragment = new TrackingFragment();
         fragment.setArguments(bundle);
@@ -76,7 +78,7 @@ public final class TrackingFragment extends Fragment implements TrackingView, On
 
         MainActivity.getUserComponent(this).inject(this);
 
-        presenter.onCreateView(this);
+        presenter.onCreateView(this, getArguments());
 
         return view;
     }
@@ -97,10 +99,6 @@ public final class TrackingFragment extends Fragment implements TrackingView, On
             fm.beginTransaction().replace(R.id.layoutTrackingMap, supportMapFragment).commit();
         }
         supportMapFragment.getMapAsync(this);
-
-        Bundle bundle = getArguments();
-        TrackingBeacon trackingBeacon = (TrackingBeacon) bundle.getSerializable(BundleKey.TRACKING_BEACON.name());
-        presenter.setTrackingBeacon(trackingBeacon);
     }
 
     @Override
@@ -214,8 +212,13 @@ public final class TrackingFragment extends Fragment implements TrackingView, On
     }
 
     @Override
-    public void showDistanceEstimationFragment(ArrayList<String> beaconIds, String beaconName) {
+    public void showDistanceEstimationFragment(EstimationTarget target) {
         FragmentController controller = new FragmentController(this);
-        controller.showDistanceEstimationFragment(beaconIds, beaconName);
+        controller.showDistanceEstimationFragment(target);
+    }
+
+    @Override
+    public void showSnackBar(@StringRes int resId) {
+        Snackbar.make(mainLayout, resId, Snackbar.LENGTH_SHORT).show();
     }
 }

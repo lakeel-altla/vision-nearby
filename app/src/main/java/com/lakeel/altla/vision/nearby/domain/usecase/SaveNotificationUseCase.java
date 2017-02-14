@@ -1,6 +1,8 @@
 package com.lakeel.altla.vision.nearby.domain.usecase;
 
+import com.google.firebase.database.ServerValue;
 import com.lakeel.altla.vision.nearby.data.repository.firebase.NotificationRepository;
+import com.lakeel.altla.vision.nearby.domain.model.Notification;
 
 import javax.inject.Inject;
 
@@ -16,7 +18,12 @@ public final class SaveNotificationUseCase {
     SaveNotificationUseCase() {
     }
 
-    public Completable execute(String to, String title, String message) {
-        return repository.save(to, title, message).subscribeOn(Schedulers.io());
+    public Completable execute(String token, String title, String message) {
+        Notification notification = new Notification();
+        notification.token = token;
+        notification.title = title;
+        notification.message = message;
+        notification.registrationTime = ServerValue.TIMESTAMP;
+        return repository.save(notification).subscribeOn(Schedulers.io());
     }
 }

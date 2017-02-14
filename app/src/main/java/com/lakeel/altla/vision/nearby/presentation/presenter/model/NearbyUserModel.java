@@ -7,6 +7,4 @@ public final class NearbyUserModel {
     public String userName;
 
     public String imageUri;
-
-    public boolean isChecked;
 }

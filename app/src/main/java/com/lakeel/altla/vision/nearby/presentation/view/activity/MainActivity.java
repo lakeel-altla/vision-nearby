@@ -22,8 +22,8 @@ import android.view.MenuItem;
 import android.view.View;
 import android.widget.RelativeLayout;
 
+import com.afollestad.materialdialogs.MaterialDialog;
 import com.lakeel.altla.vision.nearby.R;
-import com.lakeel.altla.vision.nearby.android.ConfirmDialog;
 import com.lakeel.altla.vision.nearby.presentation.application.App;
 import com.lakeel.altla.vision.nearby.presentation.di.component.ViewComponent;
 import com.lakeel.altla.vision.nearby.presentation.presenter.activity.ActivityPresenter;
@@ -70,7 +70,7 @@ public class MainActivity extends AppCompatActivity
         // Memo:
         // By the management of the memory by the Android OS, re-construction of Fragment is carried out automatically.
         // But once you create an instance of the Dagger after super#onCreate(),
-        // it will be done to rebuild the Fragment in the processing of the super#onCreate.
+        // it will be done token rebuild the Fragment in the processing of the super#onCreate.
         // because the NullPointerException occurs, create an instance of the Dagger before super#onCreate().
 
         // Dagger
@@ -116,7 +116,7 @@ public class MainActivity extends AppCompatActivity
             if (RESULT_OK == resultCode) {
                 presenter.onBleEnabled();
             } else {
-                LOGGER.error("Failed to enable BLE.");
+                LOGGER.error("Failed token enable BLE.");
                 showSnackBar(R.string.snackBar_error_not_enable_ble);
             }
         } else {
@@ -223,8 +223,11 @@ public class MainActivity extends AppCompatActivity
 
     @Override
     public void showAdvertiseDisableConfirmDialog() {
-        ConfirmDialog dialog = new ConfirmDialog(MainActivity.this, R.string.snackBar_message_advertise_disable);
-        dialog.show();
+        MaterialDialog.Builder builder = new MaterialDialog.Builder(MainActivity.this);
+        builder.title(R.string.dialog_title_confirm);
+        builder.positiveText(R.string.dialog_button_positive);
+        builder.content(R.string.snackBar_message_advertise_disable);
+        builder.show();
     }
 
     @Override

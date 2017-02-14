@@ -33,7 +33,6 @@ import com.lakeel.altla.vision.nearby.presentation.di.module.ServiceModule;
 import com.lakeel.altla.vision.nearby.presentation.notification.LocalNotification;
 import com.lakeel.altla.vision.nearby.presentation.view.activity.MainActivity;
 import com.lakeel.altla.vision.nearby.presentation.view.intent.IntentKey;
-import com.lakeel.altla.vision.nearby.rx.ErrorAction;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -67,23 +66,25 @@ public class NearbyHistoryService extends IntentService {
             findUserUseCase.execute(userId)
                     .toObservable()
                     // Analytics
-                    .doOnNext(user -> analyticsReporter.addHistory(user.userId, user.name))
+                    .doOnNext(userProfile -> analyticsReporter.addHistory(userProfile.userId, userProfile.name))
                     .doOnNext(userProfile -> {
                         if (RegionState.ENTER == regionState) {
                             showLocalNotification(userProfile);
                         }
                     })
-                    .flatMap(user -> saveHistory(user.userId, regionState))
-                    .subscribe(uniqueId -> {
+                    .flatMap(userProfile -> saveHistory(userProfile.userId, regionState))
+                    .subscribe(historyId -> {
                         getUserActivity()
-                                .subscribe(userActivity -> saveUserActivity(uniqueId, userActivity), new ErrorAction<>());
+                                .subscribe(userActivity -> saveUserActivity(historyId, userActivity), e -> LOGGER.error("Failed.", e));
 
                         getUserLocation(context)
-                                .subscribe(location -> saveUserLocation(uniqueId, location), new ErrorAction<>());
+                                .subscribe(location -> saveUserLocation(historyId, location), e -> LOGGER.error("Failed.", e));
 
                         getWeather(context)
-                                .subscribe(weather -> saveWeather(uniqueId, weather), new ErrorAction<>());
-                    }, new ErrorAction<>());
+                                .subscribe(weather -> saveWeather(historyId, weather), e -> LOGGER.error("Failed.", e));
+                    }, e -> {
+                        LOGGER.error("Failed.", e);
+                    });
         }
 
         @Override
@@ -134,7 +135,7 @@ public class NearbyHistoryService extends IntentService {
 
         Context context = getApplicationContext();
         String userId = intent.getStringExtra(IntentKey.USER_ID.name());
-        int regionState = intent.getIntExtra(IntentKey.REGION.name(), 0);
+        int regionState = intent.getIntExtra(IntentKey.REGION_STATE.name(), 0);
 
         googleApiClient = new GoogleApiClient.Builder(context)
                 .addApi(Awareness.API)
@@ -219,15 +220,15 @@ public class NearbyHistoryService extends IntentService {
         });
     }
 
-    private void saveUserActivity(String uniqueId, DetectedActivity userActivity) {
-        saveUserActivityUseCase.execute(uniqueId, userActivity).subscribe();
+    private void saveUserActivity(String historyId, DetectedActivity userActivity) {
+        saveUserActivityUseCase.execute(historyId, userActivity).subscribe();
     }
 
-    private void saveUserLocation(String uniqueId, Location location) {
-        saveUserLocationUseCase.execute(uniqueId, location).subscribe();
+    private void saveUserLocation(String historyId, Location location) {
+        saveUserLocationUseCase.execute(historyId, location).subscribe();
     }
 
-    private void saveWeather(String uniqueId, Weather weather) {
-        saveWeatherUseCase.execute(uniqueId, weather).subscribe();
+    private void saveWeather(String historyId, Weather weather) {
+        saveWeatherUseCase.execute(historyId, weather).subscribe();
     }
 }

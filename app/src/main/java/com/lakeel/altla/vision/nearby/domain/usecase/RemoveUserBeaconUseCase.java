@@ -6,7 +6,7 @@ import javax.inject.Inject;
 
 import rx.Single;
 
-public final class RemoveUserBeaconUseCase {
+final class RemoveUserBeaconUseCase {
 
     @Inject
     UserProfileRepository repository;

@@ -1,9 +1,10 @@
 package com.lakeel.altla.vision.nearby.presentation.view;
 
-import com.firebase.geofire.GeoLocation;
-import com.lakeel.altla.vision.nearby.presentation.view.intent.GoogleMapIntent;
+import android.support.annotation.StringRes;
 
-import java.util.ArrayList;
+import com.firebase.geofire.GeoLocation;
+import com.lakeel.altla.vision.nearby.presentation.view.fragment.bundle.EstimationTarget;
+import com.lakeel.altla.vision.nearby.presentation.view.intent.GoogleMapIntent;
 
 public interface TrackingView {
 
@@ -17,5 +18,7 @@ public interface TrackingView {
 
     void showOptionMenu();
 
-    void showDistanceEstimationFragment(ArrayList<String> beaconIds, String beaconName);
+    void showDistanceEstimationFragment(EstimationTarget target);
+
+    void showSnackBar(@StringRes int resId);
 }

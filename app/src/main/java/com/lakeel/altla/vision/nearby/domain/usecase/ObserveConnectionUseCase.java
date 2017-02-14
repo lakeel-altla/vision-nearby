@@ -2,6 +2,7 @@ package com.lakeel.altla.vision.nearby.domain.usecase;
 
 import com.lakeel.altla.vision.nearby.data.repository.firebase.ConnectedRepository;
 import com.lakeel.altla.vision.nearby.data.repository.firebase.UserConnectionRepository;
+import com.lakeel.altla.vision.nearby.presentation.firebase.CurrentUser;
 
 import javax.inject.Inject;
 
@@ -19,16 +20,18 @@ public final class ObserveConnectionUseCase {
     ObserveConnectionUseCase() {
     }
 
-    public void execute(String userId) {
+    public void execute() {
+        String userId = CurrentUser.getUid();
+
         connectedRepository.observe()
                 .subscribeOn(Schedulers.io())
                 .subscribe(() -> {
-                    // Called when connected to firebase.
-                    // Set presence to online.
+                    // Called when connected token firebase.
+                    // Set presence token online.
                     userConnectionRepository.saveOnline(userId);
                 });
 
-        // Change presence to offline when disconnect to firebase.
+        // Change presence token offline when disconnect token firebase.
         userConnectionRepository.saveOfflineOnDisconnect(userId);
     }
 }

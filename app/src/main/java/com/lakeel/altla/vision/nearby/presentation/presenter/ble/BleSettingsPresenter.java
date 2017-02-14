@@ -2,6 +2,7 @@ package com.lakeel.altla.vision.nearby.presentation.presenter.ble;
 
 import android.content.Context;
 
+import com.lakeel.altla.vision.nearby.R;
 import com.lakeel.altla.vision.nearby.domain.usecase.FindPreferenceUseCase;
 import com.lakeel.altla.vision.nearby.presentation.analytics.AnalyticsReporter;
 import com.lakeel.altla.vision.nearby.presentation.ble.BleChecker;
@@ -10,8 +11,10 @@ import com.lakeel.altla.vision.nearby.presentation.presenter.BasePresenter;
 import com.lakeel.altla.vision.nearby.presentation.service.AdvertiseService;
 import com.lakeel.altla.vision.nearby.presentation.service.RunningServiceManager;
 import com.lakeel.altla.vision.nearby.presentation.view.BleSettingsView;
-import com.lakeel.altla.vision.nearby.rx.ErrorAction;
 import com.lakeel.altla.vision.nearby.rx.ReusableCompositeSubscription;
+
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import javax.inject.Inject;
 
@@ -25,6 +28,8 @@ public final class BleSettingsPresenter extends BasePresenter<BleSettingsView> {
 
     @Inject
     FindPreferenceUseCase findPreferenceUseCase;
+
+    private static final Logger LOGGER = LoggerFactory.getLogger(BleSettingsPresenter.class);
 
     private final ReusableCompositeSubscription subscriptions = new ReusableCompositeSubscription();
 
@@ -52,7 +57,11 @@ public final class BleSettingsPresenter extends BasePresenter<BleSettingsView> {
 
         Subscription subscription = findPreferenceUseCase.execute()
                 .observeOn(AndroidSchedulers.mainThread())
-                .subscribe(preference -> getView().startAdvertiseInBackground(preference.beaconId), new ErrorAction<>());
+                .subscribe(preference -> getView().startAdvertiseInBackground(preference.beaconId),
+                        e -> {
+                            LOGGER.error("Failed.", e);
+                            getView().showSnackBar(R.string.snackBar_error_failed);
+                        });
         subscriptions.add(subscription);
     }
 

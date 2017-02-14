@@ -2,7 +2,7 @@ package com.lakeel.altla.vision.nearby.domain.usecase;
 
 import com.lakeel.altla.vision.nearby.data.repository.firebase.UserInformationRepository;
 import com.lakeel.altla.vision.nearby.domain.model.Information;
-import com.lakeel.altla.vision.nearby.presentation.firebase.MyUser;
+import com.lakeel.altla.vision.nearby.presentation.firebase.CurrentUser;
 
 import javax.inject.Inject;
 
@@ -19,7 +19,7 @@ public final class FindAllInformationUseCase {
     }
 
     public Observable<Information> execute() {
-        String userId = MyUser.getUserId();
+        String userId = CurrentUser.getUid();
         return repository.findAll(userId).subscribeOn(Schedulers.io());
     }
 }

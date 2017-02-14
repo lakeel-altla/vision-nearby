@@ -3,7 +3,7 @@ package com.lakeel.altla.vision.nearby.domain.usecase;
 import com.lakeel.altla.vision.nearby.data.repository.firebase.BeaconRepository;
 import com.lakeel.altla.vision.nearby.data.repository.firebase.UserProfileRepository;
 import com.lakeel.altla.vision.nearby.domain.model.Beacon;
-import com.lakeel.altla.vision.nearby.presentation.firebase.MyUser;
+import com.lakeel.altla.vision.nearby.presentation.firebase.CurrentUser;
 
 import javax.inject.Inject;
 
@@ -23,11 +23,12 @@ public final class FindAllDeviceUseCase {
     }
 
     public Observable<Beacon> execute() {
-        String userId = MyUser.getUserId();
+        String userId = CurrentUser.getUid();
+
         return usersRepository.findUserBeacons(userId)
                 .subscribeOn(Schedulers.io())
                 .flatMap(this::findBeacon)
-                .filter(entity -> entity != null);
+                .filter(beacon -> beacon != null);
     }
 
     private Observable<Beacon> findBeacon(String beaconId) {

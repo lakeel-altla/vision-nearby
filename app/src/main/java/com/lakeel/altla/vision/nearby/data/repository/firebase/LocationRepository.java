@@ -24,11 +24,11 @@ public class LocationRepository {
         geoFire = new GeoFire(FirebaseDatabase.getInstance().getReferenceFromUrl(DATABASE_URI));
     }
 
-    public Single<GeoLocation> find(String key) {
+    public Single<GeoLocation> find(String locationKey) {
         return Single.create(subscriber ->
-                geoFire.getLocation(key, new LocationCallback() {
+                geoFire.getLocation(locationKey, new LocationCallback() {
                     @Override
-                    public void onLocationResult(String key1, GeoLocation location) {
+                    public void onLocationResult(String key, GeoLocation location) {
                         if (location == null) {
                             subscriber.onSuccess(null);
                         } else {
