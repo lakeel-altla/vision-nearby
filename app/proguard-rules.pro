@@ -1,6 +1,6 @@
 
 # Reflection (Firebase)
--keep class com.lakeel.altla.vision.nearby.data.entity.**{ *; }
+-keep class com.lakeel.altla.vision.nearby.domain.model.**{ *; }
 
 # Android Classes
 -keep public class * extends android.app.Activity
