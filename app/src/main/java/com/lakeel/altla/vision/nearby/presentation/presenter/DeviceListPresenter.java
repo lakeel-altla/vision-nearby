@@ -116,11 +116,13 @@ public class DeviceListPresenter extends BasePresenter<DeviceListView> {
                     .subscribe(s -> {
                         int size = viewModels.size();
                         viewModels.remove(model);
+
                         if (CollectionUtils.isEmpty(viewModels)) {
                             getView().removeAll(size);
                         } else {
                             getView().updateItems();
                         }
+
                         getView().showSnackBar(R.string.snackBar_message_removed);
                     }, e -> {
                         LOGGER.error("Failed.", e);
@@ -138,6 +140,7 @@ public class DeviceListPresenter extends BasePresenter<DeviceListView> {
                 .subscribe(models -> {
                     viewModels.clear();
                     viewModels.addAll(models);
+
                     getView().updateItems();
                 }, e -> {
                     LOGGER.error("Failed.", e);
