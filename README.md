@@ -1,4 +1,4 @@
-# altla-nearby
+# vision-nearby
 
 ## Description
 This sample application is that performs proximity communication using BLE (Bluetooth Low Energy).
