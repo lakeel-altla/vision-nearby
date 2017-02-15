@@ -1,0 +1,139 @@
+apply plugin: 'com.android.application'
+apply plugin: 'me.tatarka.retrolambda'
+apply plugin: 'com.neenbedankt.android-apt'
+
+android {
+    compileSdkVersion 25
+    buildToolsVersion "25.0.2"
+
+    defaultConfig {
+        applicationId "com.lakeel.altla.vision.nearby"
+        minSdkVersion 18
+        targetSdkVersion 25
+        versionCode 1
+        versionName "1.0"
+        multiDexEnabled true
+        // Stops the Gradle plugin’s automatic rasterization of vectors
+        vectorDrawables.generatedDensities = []
+        // Use support library for vector drawables.
+        vectorDrawables.useSupportLibrary = true
+        // Only available languages.
+        resConfigs "en", "ja"
+    }
+    // Flag token tell aapt token keep the attribute ids around
+    aaptOptions {
+        additionalParameters "--no-version-vectors"
+    }
+    dexOptions {
+        preDexLibraries false
+        javaMaxHeapSize "2g"
+    }
+    buildTypes {
+        debug {
+            minifyEnabled false
+            debuggable true
+        }
+        release {
+            debuggable false
+            // Enable proguard.
+            minifyEnabled true
+            // Compress resources.
+            shrinkResources true
+            proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
+        }
+    }
+    compileOptions {
+        sourceCompatibility JavaVersion.VERSION_1_8
+        targetCompatibility JavaVersion.VERSION_1_8
+    }
+    // Exclude conflicted files in the libraries.
+    packagingOptions {
+        exclude 'META-INF/LICENSE.txt'
+        exclude 'META-INF/NOTICE.txt'
+    }
+}
+
+dependencies {
+    compile fileTree(include: ['*.jar'], dir: 'libs')
+    testCompile 'junit:junit:4.12'
+
+    // Preference
+    compile 'com.takisoft.fix:preference-v7:24.2.0.0'
+
+    // Multi dex support
+    compile 'com.android.support:multidex:1.0.1'
+
+    // support library
+    compile 'com.android.support:appcompat-v7:25.1.1'
+    compile 'com.android.support:design:25.1.1'
+    compile 'com.android.support:support-annotations:25.1.1'
+    compile "com.android.support:support-vector-drawable:25.1.1"
+    compile "com.android.support:animated-vector-drawable:25.1.1"
+
+    //  RecyclerView Animation
+    compile 'com.marshalchen.ultimaterecyclerview:library:0.7.0'
+
+    // altbeacon
+    compile 'org.altbeacon:android-beacon-library:2.9.2'
+
+    // nv-bluetooth
+    compile 'com.neovisionaries:nv-bluetooth:1.8'
+
+    // Date
+    compile 'net.danlew:android.joda:2.9.4.1'
+
+    // material dialog
+    compile 'com.afollestad.material-dialogs:core:0.9.0.0'
+
+    // Rx
+    compile 'io.reactivex:rxandroid:1.2.1'
+    compile 'io.reactivex:rxjava:1.1.6'
+
+    // DI
+    compile 'com.google.dagger:dagger:2.0.2'
+    apt 'com.google.dagger:dagger-compiler:2.0.2'
+    provided 'org.glassfish:javax.annotation:10.0-b28'
+
+    // image
+    compile 'com.nostra13.universalimageloader:universal-image-loader:1.9.5'
+    compile 'de.hdodenhof:circleimageview:2.1.0'
+    compile 'com.amulyakhare:com.amulyakhare.textdrawable:1.0.1'
+
+    // butternife
+    compile 'com.jakewharton:butterknife:8.1.0'
+    apt 'com.jakewharton:butterknife-compiler:8.1.0'
+
+    // Must set the same version.
+    compile 'com.google.firebase:firebase-auth:10.0.1'
+    compile 'com.google.android.gms:play-services-auth:10.0.1'
+    compile 'com.google.firebase:firebase-database:10.0.1'
+    compile 'com.google.android.gms:play-services-nearby:10.0.1'
+    compile 'com.google.android.gms:play-services-maps:10.0.1'
+    compile 'com.google.android.gms:play-services-awareness:10.0.1'
+    compile 'com.google.firebase:firebase-messaging:10.0.1'
+    compile 'com.google.firebase:firebase-core:10.0.1'
+    compile 'com.google.firebase:firebase-crash:10.0.1'
+    compile 'com.firebaseui:firebase-ui-auth:0.6.2'
+
+    // geofire
+    compile 'com.firebase:geofire-android:2.1.1'
+
+    // validator
+    compile group: 'commons-validator', name: 'commons-validator', version: '1.5.1'
+
+    // log
+    compile 'org.slf4j:slf4j-api:1.7.21'
+    compile 'com.github.tony19:logback-android-core:1.1.1-6'
+    compile('com.github.tony19:logback-android-classic:1.1.1-6') {
+        // workaround issue #73
+        exclude group: 'com.google.android', module: 'android'
+    }
+    compile 'com.sun.mail:android-mail:1.5.5'
+    compile 'com.sun.mail:android-activation:1.5.5'
+}
+
+configurations {
+    all*.exclude group: 'commons-logging', module: 'commons-logging'
+}
+
+apply plugin: 'com.google.gms.google-services'

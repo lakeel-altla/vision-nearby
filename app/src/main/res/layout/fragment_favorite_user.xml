@@ -1,0 +1,54 @@
+<?xml version="1.0" encoding="utf-8"?>
+<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/white">
+
+    <LinearLayout
+        android:id="@+id/mainLayout"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical">
+
+        <FrameLayout
+            android:layout_width="match_parent"
+            android:layout_height="256dp"
+            android:background="@drawable/profile_background">
+
+            <de.hdodenhof.circleimageview.CircleImageView
+                android:id="@+id/imageViewUser"
+                android:layout_width="70dp"
+                android:layout_height="70dp"
+                android:layout_gravity="bottom|start"
+                android:layout_margin="20dp" />
+
+        </FrameLayout>
+
+        <!-- State -->
+        <include
+            android:id="@+id/presenceLayout"
+            layout="@layout/layout_presence" />
+
+        <include layout="@layout/divider" />
+
+        <!-- Profile -->
+        <include
+            android:id="@+id/profileLayout"
+            layout="@layout/layout_profile" />
+
+        <include layout="@layout/divider" />
+
+        <!-- Passing -->
+        <include
+            android:id="@+id/passingLayout"
+            layout="@layout/layout_passing" />
+
+        <include layout="@layout/divider" />
+
+        <!-- SNS -->
+        <include
+            android:id="@+id/snsLayout"
+            layout="@layout/layout_sns" />
+
+    </LinearLayout>
+</ScrollView>
