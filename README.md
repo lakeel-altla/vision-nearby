@@ -53,7 +53,7 @@ You can see detected user profile.
 <br>
 User profile contains personal information (such as name, email) associated with a Google Account and environment data (such as weather, location) when proximity communication has occurred.
 
-### Favorite
+### Favorite management
 It is possible to manage nearby users as favorites and access favorite user profile.
 
 ### Device tracking
