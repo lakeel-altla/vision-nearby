@@ -20,7 +20,7 @@ When you can detect nearby users and you can get user information.
 This sample application uses Firebase that known as mobile backend as a service (MBaaS).
 <br>
 <br>
-You need to create a Firebase project, and download a ```google-services.json``` flie.
+You need to create a Firebase project, and download a ```google-services.json``` file.
 <br>
 After downloading the ```google-services.json file```, copy this into your project's module folder, typically app/.
 <br>
@@ -54,7 +54,7 @@ You can see detected user profile.
 User profile contains personal information (such as name, email) associated with a Google Account and environment data (such as weather, location) when proximity communication has occurred.
 
 ### Favorite
-It is possible to manage nearby users as favorites and access favorited user profile.
+It is possible to manage nearby users as favorites and access favorite user profile.
 
 ### Device tracking
 You can track the location of the device.
