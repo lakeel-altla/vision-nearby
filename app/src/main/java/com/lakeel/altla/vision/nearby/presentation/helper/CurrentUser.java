@@ -20,4 +20,9 @@ public final class CurrentUser {
         }
         return firebaseUser;
     }
+
+    public static boolean isSignedIn() {
+        FirebaseUser firebaseUser = FirebaseAuth.getInstance().getCurrentUser();
+        return firebaseUser != null;
+    }
 }

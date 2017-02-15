@@ -55,7 +55,6 @@ android {
 
 dependencies {
     compile fileTree(include: ['*.jar'], dir: 'libs')
-    compile project(':nearby-library')
     testCompile 'junit:junit:4.12'
 
     // Preference

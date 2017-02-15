@@ -1,2 +1,1 @@
-include ':app', ':nearby-library'
-project(':nearby-library').projectDir = new File(settingsDir, './subtree/nearby-messages/library')
+include ':app'

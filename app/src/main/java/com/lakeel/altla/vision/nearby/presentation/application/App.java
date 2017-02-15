@@ -82,7 +82,7 @@ public class App extends Application {
 
         // Even if the application is killed, this onCreate method is called by AltBeacon library.
         // In that case, need token start token monitor beacons here.
-        if (CurrentUser.getUser() != null) {
+        if (CurrentUser.isSignedIn()) {
             subscribeInBackgroundIfNeeded();
         }
 

@@ -10,7 +10,6 @@ import android.support.v4.content.ContextCompat;
 
 import com.firebase.ui.auth.AuthUI;
 import com.google.android.gms.tasks.Task;
-import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.lakeel.altla.vision.nearby.R;
 import com.lakeel.altla.vision.nearby.beacon.EddystoneUid;
@@ -91,10 +90,10 @@ public final class ActivityPresenter extends BasePresenter<ActivityView> {
     public void onCreateView(ActivityView activityView) {
         super.onCreateView(activityView);
 
-        if (FirebaseAuth.getInstance().getCurrentUser() == null) {
-            getView().showSignInFragment();
-        } else {
+        if (CurrentUser.isSignedIn()) {
             postSignIn();
+        } else {
+            getView().showSignInFragment();
         }
     }
 
