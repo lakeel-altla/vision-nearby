@@ -8,6 +8,7 @@ import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.location.Location;
 import android.os.Bundle;
+import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v4.content.ContextCompat;
 
@@ -26,7 +27,7 @@ import com.lakeel.altla.vision.nearby.domain.usecase.SaveUserLocationUseCase;
 import com.lakeel.altla.vision.nearby.domain.usecase.SaveWeatherUseCase;
 import com.lakeel.altla.vision.nearby.presentation.analytics.AnalyticsReporter;
 import com.lakeel.altla.vision.nearby.presentation.awareness.AwarenessException;
-import com.lakeel.altla.vision.nearby.presentation.beacon.region.RegionState;
+import com.lakeel.altla.vision.nearby.presentation.beacon.region.RegionType;
 import com.lakeel.altla.vision.nearby.presentation.di.component.DaggerServiceComponent;
 import com.lakeel.altla.vision.nearby.presentation.di.component.ServiceComponent;
 import com.lakeel.altla.vision.nearby.presentation.di.module.ServiceModule;
@@ -46,51 +47,6 @@ import rx.Single;
 import rx.SingleSubscriber;
 
 public class NearbyHistoryService extends IntentService {
-
-    private class ConnectionCallback implements GoogleApiClient.ConnectionCallbacks {
-
-        private final Context context;
-
-        private final String userId;
-
-        private final RegionState regionState;
-
-        ConnectionCallback(Context context, String userId, RegionState regionState) {
-            this.context = context;
-            this.userId = userId;
-            this.regionState = regionState;
-        }
-
-        @Override
-        public void onConnected(@Nullable Bundle bundle) {
-            findUserUseCase.execute(userId)
-                    .toObservable()
-                    // Analytics
-                    .doOnNext(userProfile -> analyticsReporter.addHistory(userProfile.userId, userProfile.name))
-                    .doOnNext(userProfile -> {
-                        if (RegionState.ENTER == regionState) {
-                            showLocalNotification(userProfile);
-                        }
-                    })
-                    .flatMap(userProfile -> saveHistory(userProfile.userId, regionState))
-                    .subscribe(historyId -> {
-                        getUserActivity()
-                                .subscribe(userActivity -> saveUserActivity(historyId, userActivity), e -> LOGGER.error("Failed.", e));
-
-                        getUserLocation(context)
-                                .subscribe(location -> saveUserLocation(historyId, location), e -> LOGGER.error("Failed.", e));
-
-                        getWeather(context)
-                                .subscribe(weather -> saveWeather(historyId, weather), e -> LOGGER.error("Failed.", e));
-                    }, e -> {
-                        LOGGER.error("Failed.", e);
-                    });
-        }
-
-        @Override
-        public void onConnectionSuspended(int i) {
-        }
-    }
 
     @Inject
     AnalyticsReporter analyticsReporter;
@@ -117,8 +73,9 @@ public class NearbyHistoryService extends IntentService {
 
     private GoogleApiClient googleApiClient;
 
-    // This constructor is need.
     public NearbyHistoryService() {
+        // NOTE:
+        // This constructor is need.
         this(NearbyHistoryService.class.getSimpleName());
     }
 
@@ -133,39 +90,74 @@ public class NearbyHistoryService extends IntentService {
                 .build();
         serviceComponent.inject(this);
 
-        Context context = getApplicationContext();
         String userId = intent.getStringExtra(IntentKey.USER_ID.name());
-        int regionState = intent.getIntExtra(IntentKey.REGION_STATE.name(), 0);
 
-        googleApiClient = new GoogleApiClient.Builder(context)
+        int value = intent.getIntExtra(IntentKey.REGION_TYPE.name(), 0);
+        RegionType regionType = RegionType.toRegionType(value);
+
+        googleApiClient = new GoogleApiClient.Builder(getApplicationContext())
                 .addApi(Awareness.API)
-                .addConnectionCallbacks(new ConnectionCallback(context, userId, RegionState.toRegionState(regionState)))
+                .addConnectionCallbacks(new GoogleApiClient.ConnectionCallbacks() {
+
+                    @Override
+                    public void onConnected(@Nullable Bundle bundle) {
+                        // Save history.
+                        findUserUseCase.execute(userId)
+                                .toObservable()
+                                // Analytics
+                                .doOnNext(userProfile -> analyticsReporter.addHistory(userProfile.userId, userProfile.name))
+                                .doOnNext(userProfile -> {
+                                    if (RegionType.ENTER == regionType) {
+                                        showLocalNotification(userProfile);
+                                    }
+                                })
+                                .flatMap(userProfile -> saveHistory(userProfile.userId, regionType))
+                                .subscribe(nearbyHistoryId -> {
+                                    getUserActivity()
+                                            .subscribe(userActivity -> saveUserActivity(nearbyHistoryId, userActivity),
+                                                    e -> LOGGER.error("Failed to get user activity.", e));
+
+                                    getUserLocation(getApplicationContext())
+                                            .subscribe(location -> saveUserLocation(nearbyHistoryId, location),
+                                                    e -> LOGGER.error("Failed to get user location.", e));
+
+                                    getWeather(getApplicationContext())
+                                            .subscribe(weather -> saveWeather(nearbyHistoryId, weather),
+                                                    e -> LOGGER.error("Failed to get weather.", e));
+                                }, e -> {
+                                    LOGGER.error("Failed.", e);
+                                });
+                    }
+
+                    @Override
+                    public void onConnectionSuspended(int i) {
+                        LOGGER.info("Connection Suspended:cause=" + i);
+                    }
+                })
                 .build();
 
         googleApiClient.connect();
     }
 
-    private void showLocalNotification(UserProfile userProfile) {
+    private void showLocalNotification(@NonNull UserProfile userProfile) {
+        Intent intent = new Intent(getApplicationContext(), MainActivity.class);
+        intent.setFlags(Intent.FLAG_ACTIVITY_SINGLE_TOP | Intent.FLAG_ACTIVITY_CLEAR_TOP);
+        PendingIntent pendingIntent = PendingIntent.getActivity(getApplicationContext(), UUID.randomUUID().hashCode(), intent, PendingIntent.FLAG_CANCEL_CURRENT);
+
         String title = getString(R.string.notification_title_app_user_found);
         String message = getString(R.string.notification_message_user_using_app, userProfile.name);
 
-        int code = UUID.randomUUID().hashCode();
-        LOGGER.debug("Notification code=" + code);
-
-        Intent intent = new Intent(getApplicationContext(), MainActivity.class);
-        intent.setFlags(Intent.FLAG_ACTIVITY_SINGLE_TOP | Intent.FLAG_ACTIVITY_CLEAR_TOP);
-
-        PendingIntent pendingIntent = PendingIntent.getActivity(getApplicationContext(), code, intent, PendingIntent.FLAG_CANCEL_CURRENT);
         LocalNotification localNotification = new LocalNotification(getApplicationContext(), title, message, pendingIntent);
         localNotification.show();
     }
 
-    private Observable<String> saveHistory(String passingUserId, RegionState regionState) {
-        return saveNearbyHistoryUseCase.execute(passingUserId, regionState).toObservable();
+    private Observable<String> saveHistory(@NonNull String passingUserId, @NonNull RegionType regionType) {
+        return saveNearbyHistoryUseCase.execute(passingUserId, regionType).toObservable();
     }
 
     private Single<DetectedActivity> getUserActivity() {
         return Single.create(new Single.OnSubscribe<DetectedActivity>() {
+
             @Override
             public void call(SingleSubscriber<? super DetectedActivity> subscriber) {
                 Awareness.SnapshotApi.getDetectedActivity(googleApiClient)
@@ -182,7 +174,7 @@ public class NearbyHistoryService extends IntentService {
         });
     }
 
-    private Single<Location> getUserLocation(Context context) {
+    private Single<Location> getUserLocation(@NonNull Context context) {
         return Single.create(subscriber -> {
             if (ContextCompat.checkSelfPermission(context, Manifest.permission.ACCESS_FINE_LOCATION) == PackageManager.PERMISSION_GRANTED) {
                 Awareness.SnapshotApi.getLocation(googleApiClient)
@@ -201,7 +193,7 @@ public class NearbyHistoryService extends IntentService {
         });
     }
 
-    private Single<Weather> getWeather(Context context) {
+    private Single<Weather> getWeather(@NonNull Context context) {
         return Single.create(subscriber -> {
             if (ContextCompat.checkSelfPermission(context, Manifest.permission.ACCESS_FINE_LOCATION) == PackageManager.PERMISSION_GRANTED) {
                 Awareness.SnapshotApi.getWeather(googleApiClient)
@@ -220,15 +212,24 @@ public class NearbyHistoryService extends IntentService {
         });
     }
 
-    private void saveUserActivity(String historyId, DetectedActivity userActivity) {
-        saveUserActivityUseCase.execute(historyId, userActivity).subscribe();
+    private void saveUserActivity(@NonNull String nearbyHistoryId, @NonNull DetectedActivity userActivity) {
+        saveUserActivityUseCase.execute(nearbyHistoryId, userActivity)
+                .subscribe(e -> LOGGER.error("Failed to save user activity.", e),
+                        () -> {
+                        });
     }
 
-    private void saveUserLocation(String historyId, Location location) {
-        saveUserLocationUseCase.execute(historyId, location).subscribe();
+    private void saveUserLocation(@NonNull String nearbyHistoryId, @NonNull Location location) {
+        saveUserLocationUseCase.execute(nearbyHistoryId, location)
+                .subscribe(e -> LOGGER.error("Failed to save user location.", e),
+                        () -> {
+                        });
     }
 
-    private void saveWeather(String historyId, Weather weather) {
-        saveWeatherUseCase.execute(historyId, weather).subscribe();
+    private void saveWeather(@NonNull String nearbyHistoryId, @NonNull Weather weather) {
+        saveWeatherUseCase.execute(nearbyHistoryId, weather)
+                .subscribe(e -> LOGGER.error("Failed to save weather.", e),
+                        () -> {
+                        });
     }
 }

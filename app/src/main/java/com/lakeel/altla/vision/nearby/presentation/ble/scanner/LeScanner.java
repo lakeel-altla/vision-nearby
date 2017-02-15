@@ -15,7 +15,7 @@ final class LeScanner implements Scanner {
             return;
         }
 
-        bleScanCallback.onScan(rssi, scanRecord);
+        bleScanCallback.onScanned(rssi, scanRecord);
     };
 
     LeScanner(Context context, BleScanCallback bleScanCallback) {

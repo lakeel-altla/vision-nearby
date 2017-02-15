@@ -4,7 +4,7 @@ import android.content.Context;
 import android.os.Bundle;
 
 import com.google.firebase.analytics.FirebaseAnalytics;
-import com.lakeel.altla.vision.nearby.presentation.ble.BleChecker;
+import com.lakeel.altla.vision.nearby.presentation.ble.checker.BleChecker;
 
 public final class AnalyticsReporter {
 

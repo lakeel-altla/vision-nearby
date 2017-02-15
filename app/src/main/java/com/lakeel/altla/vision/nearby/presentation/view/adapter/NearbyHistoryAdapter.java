@@ -9,7 +9,7 @@ import android.widget.TextView;
 
 import com.lakeel.altla.vision.nearby.R;
 import com.lakeel.altla.vision.nearby.core.StringUtils;
-import com.lakeel.altla.vision.nearby.presentation.presenter.history.NearbyHistoryListPresenter;
+import com.lakeel.altla.vision.nearby.presentation.presenter.NearbyHistoryListPresenter;
 import com.lakeel.altla.vision.nearby.presentation.presenter.model.NearbyHistoryModel;
 import com.lakeel.altla.vision.nearby.presentation.view.NearbyHistoryItemView;
 import com.lakeel.altla.vision.nearby.presentation.view.date.DateFormatter;

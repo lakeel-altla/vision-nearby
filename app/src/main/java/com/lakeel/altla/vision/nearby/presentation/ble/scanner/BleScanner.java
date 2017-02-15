@@ -25,7 +25,7 @@ final class BleScanner implements Scanner {
                 return;
             }
 
-            bleScanCallback.onScan(result.getRssi(), result.getScanRecord().getBytes());
+            bleScanCallback.onScanned(result.getRssi(), result.getScanRecord().getBytes());
         }
     };
 

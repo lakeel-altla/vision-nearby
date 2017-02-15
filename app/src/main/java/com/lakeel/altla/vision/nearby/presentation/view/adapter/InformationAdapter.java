@@ -8,7 +8,7 @@ import android.view.ViewGroup;
 import android.widget.TextView;
 
 import com.lakeel.altla.vision.nearby.R;
-import com.lakeel.altla.vision.nearby.presentation.presenter.information.InformationListPresenter;
+import com.lakeel.altla.vision.nearby.presentation.presenter.InformationListPresenter;
 import com.lakeel.altla.vision.nearby.presentation.presenter.model.InformationModel;
 import com.lakeel.altla.vision.nearby.presentation.view.InformationItemView;
 import com.lakeel.altla.vision.nearby.presentation.view.date.DateFormatter;

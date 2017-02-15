@@ -2,7 +2,7 @@ package com.lakeel.altla.vision.nearby.domain.usecase;
 
 import com.lakeel.altla.vision.nearby.data.repository.firebase.UserFavoriteRepository;
 import com.lakeel.altla.vision.nearby.domain.model.Favorite;
-import com.lakeel.altla.vision.nearby.presentation.firebase.CurrentUser;
+import com.lakeel.altla.vision.nearby.presentation.helper.CurrentUser;
 
 import javax.inject.Inject;
 

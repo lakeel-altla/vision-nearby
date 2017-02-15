@@ -13,7 +13,7 @@ import com.google.firebase.database.ServerValue;
 import com.google.firebase.database.ValueEventListener;
 import com.lakeel.altla.vision.nearby.data.execption.DataStoreException;
 import com.lakeel.altla.vision.nearby.domain.model.NearbyHistory;
-import com.lakeel.altla.vision.nearby.presentation.beacon.region.RegionState;
+import com.lakeel.altla.vision.nearby.presentation.beacon.region.RegionType;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -152,11 +152,11 @@ public class UserNearbyHistoryRepository {
                         }));
     }
 
-    public Single<String> save(String userId, String passingUserId, RegionState regionState) {
+    public Single<String> save(String userId, String passingUserId, RegionType regionType) {
         return Single.create(subscriber -> {
             NearbyHistory nearbyHistory = new NearbyHistory();
             nearbyHistory.userId = passingUserId;
-            nearbyHistory.isEntered = RegionState.ENTER == regionState;
+            nearbyHistory.isEntered = RegionType.ENTER == regionType;
             nearbyHistory.passingTime = ServerValue.TIMESTAMP;
 
             DatabaseReference pushedReference = reference.child(userId).push();

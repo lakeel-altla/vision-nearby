@@ -9,7 +9,7 @@ import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
 import com.lakeel.altla.vision.nearby.data.execption.DataStoreException;
 import com.lakeel.altla.vision.nearby.domain.model.UserProfile;
-import com.lakeel.altla.vision.nearby.presentation.firebase.CurrentUser;
+import com.lakeel.altla.vision.nearby.presentation.helper.CurrentUser;
 
 import java.util.HashMap;
 import java.util.Map;

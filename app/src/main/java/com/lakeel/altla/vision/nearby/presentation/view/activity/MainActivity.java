@@ -26,7 +26,7 @@ import com.afollestad.materialdialogs.MaterialDialog;
 import com.lakeel.altla.vision.nearby.R;
 import com.lakeel.altla.vision.nearby.presentation.application.App;
 import com.lakeel.altla.vision.nearby.presentation.di.component.ViewComponent;
-import com.lakeel.altla.vision.nearby.presentation.presenter.activity.ActivityPresenter;
+import com.lakeel.altla.vision.nearby.presentation.presenter.ActivityPresenter;
 import com.lakeel.altla.vision.nearby.presentation.presenter.model.ActivityModel;
 import com.lakeel.altla.vision.nearby.presentation.service.AdvertiseService;
 import com.lakeel.altla.vision.nearby.presentation.view.ActivityView;

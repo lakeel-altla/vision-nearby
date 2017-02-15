@@ -1,6 +1,7 @@
 package com.lakeel.altla.vision.nearby.presentation.beacon;
 
 import android.content.Context;
+import android.support.annotation.NonNull;
 
 import org.altbeacon.beacon.BeaconManager;
 import org.altbeacon.beacon.BeaconParser;
@@ -14,11 +15,11 @@ public final class BeaconClient {
 
     private final BeaconDetector beaconDetector;
 
-    public BeaconClient(Context context) {
+    public BeaconClient(@NonNull Context context) {
         beaconDetector = new BeaconDetector(context);
 
+        // Parse settings.
         BeaconManager beaconManager = BeaconManager.getInstanceForApplication(context);
-
         beaconManager.getBeaconParsers().add(new BeaconParser().
                 setBeaconLayout(I_BEACON_LAYOUT));
         beaconManager.getBeaconParsers().add(new BeaconParser().

@@ -5,7 +5,7 @@ import com.lakeel.altla.vision.nearby.data.repository.firebase.UserProfileReposi
 import com.lakeel.altla.vision.nearby.domain.model.NearbyHistory;
 import com.lakeel.altla.vision.nearby.domain.model.PassingUserProfile;
 import com.lakeel.altla.vision.nearby.domain.model.UserProfile;
-import com.lakeel.altla.vision.nearby.presentation.firebase.CurrentUser;
+import com.lakeel.altla.vision.nearby.presentation.helper.CurrentUser;
 
 import javax.inject.Inject;
 

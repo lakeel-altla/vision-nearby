@@ -14,7 +14,7 @@ import com.amulyakhare.textdrawable.TextDrawable;
 import com.lakeel.altla.vision.nearby.R;
 import com.lakeel.altla.vision.nearby.core.StringUtils;
 import com.lakeel.altla.vision.nearby.presentation.presenter.model.NearbyUserModel;
-import com.lakeel.altla.vision.nearby.presentation.presenter.nearby.NearbyUserListPresenter;
+import com.lakeel.altla.vision.nearby.presentation.presenter.NearbyUserListPresenter;
 import com.lakeel.altla.vision.nearby.presentation.view.NearbyUserItemView;
 import com.nostra13.universalimageloader.core.ImageLoader;
 

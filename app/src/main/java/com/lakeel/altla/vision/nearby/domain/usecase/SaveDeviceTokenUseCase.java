@@ -4,7 +4,7 @@ import com.google.firebase.iid.FirebaseInstanceId;
 import com.lakeel.altla.vision.nearby.data.repository.android.PreferenceRepository;
 import com.lakeel.altla.vision.nearby.data.repository.firebase.UserDeviceTokenRepository;
 import com.lakeel.altla.vision.nearby.domain.model.DeviceToken;
-import com.lakeel.altla.vision.nearby.presentation.firebase.CurrentUser;
+import com.lakeel.altla.vision.nearby.presentation.helper.CurrentUser;
 
 import javax.inject.Inject;
 

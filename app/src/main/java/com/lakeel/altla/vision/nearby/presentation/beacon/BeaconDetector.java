@@ -1,17 +1,19 @@
 package com.lakeel.altla.vision.nearby.presentation.beacon;
 
 import android.content.Context;
-import android.util.Log;
+import android.support.annotation.NonNull;
 
-import com.lakeel.altla.vision.nearby.presentation.beacon.region.RegionState;
+import com.lakeel.altla.vision.nearby.presentation.beacon.region.RegionType;
 
 import org.altbeacon.beacon.Region;
 import org.altbeacon.beacon.startup.BootstrapNotifier;
 import org.altbeacon.beacon.startup.RegionBootstrap;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 final class BeaconDetector implements BootstrapNotifier {
 
-    private static final String TAG = BeaconDetector.class.getSimpleName();
+    private static final Logger LOGGER = LoggerFactory.getLogger(BeaconDetector.class);
 
     private final Context context;
 
@@ -21,10 +23,10 @@ final class BeaconDetector implements BootstrapNotifier {
 
     private boolean isAlreadySubscribed;
 
-    BeaconDetector(Context context) {
-        this.context = context;
+    BeaconDetector(@NonNull Context context) {
         // All beacons are subscribed.
-        this.region = new Region("background-region", null, null, null);
+        this.context = context;
+        region = new Region("background-region", null, null, null);
     }
 
     boolean isAlreadySubscribed() {
@@ -33,7 +35,6 @@ final class BeaconDetector implements BootstrapNotifier {
 
     void start() {
         isAlreadySubscribed = true;
-
         // Subscribe beacons in the background.
         regionBootstrap = new RegionBootstrap(this, region);
     }
@@ -45,23 +46,21 @@ final class BeaconDetector implements BootstrapNotifier {
 
     @Override
     public void didEnterRegion(Region region) {
-        Log.i(TAG, "Enter region.");
-
-        BeaconSubscriber subscriber = new BeaconSubscriber(context, RegionState.ENTER);
+        LOGGER.info("Enter region.");
+        BeaconSubscriber subscriber = new BeaconSubscriber(context, RegionType.ENTER);
         subscriber.subscribe(region);
     }
 
     @Override
     public void didExitRegion(Region region) {
-        Log.i(TAG, "Exit region.");
-
-        BeaconSubscriber subscriber = new BeaconSubscriber(context, RegionState.EXIT);
+        LOGGER.info("Exit region.");
+        BeaconSubscriber subscriber = new BeaconSubscriber(context, RegionType.EXIT);
         subscriber.subscribe(region);
     }
 
     @Override
     public void didDetermineStateForRegion(int i, Region region) {
-        Log.d(TAG, "Region state is changed:state=" + RegionState.toRegionState(i));
+        LOGGER.info("Region state is changed:state=" + RegionType.toRegionType(i));
     }
 
     @Override

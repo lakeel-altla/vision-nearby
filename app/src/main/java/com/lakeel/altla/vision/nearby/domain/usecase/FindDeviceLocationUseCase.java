@@ -5,7 +5,7 @@ import com.lakeel.altla.vision.nearby.data.repository.firebase.LocationRepositor
 import com.lakeel.altla.vision.nearby.data.repository.firebase.UserLocationMetaDataRepository;
 import com.lakeel.altla.vision.nearby.domain.model.Location;
 import com.lakeel.altla.vision.nearby.domain.model.LocationMeta;
-import com.lakeel.altla.vision.nearby.presentation.firebase.CurrentUser;
+import com.lakeel.altla.vision.nearby.presentation.helper.CurrentUser;
 
 import javax.inject.Inject;
 

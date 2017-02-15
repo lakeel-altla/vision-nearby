@@ -6,7 +6,7 @@ import com.lakeel.altla.vision.nearby.data.repository.android.PreferenceReposito
 import com.lakeel.altla.vision.nearby.data.repository.firebase.BeaconRepository;
 import com.lakeel.altla.vision.nearby.data.repository.firebase.UserProfileRepository;
 import com.lakeel.altla.vision.nearby.domain.model.Beacon;
-import com.lakeel.altla.vision.nearby.presentation.firebase.CurrentUser;
+import com.lakeel.altla.vision.nearby.presentation.helper.CurrentUser;
 
 import javax.inject.Inject;
 

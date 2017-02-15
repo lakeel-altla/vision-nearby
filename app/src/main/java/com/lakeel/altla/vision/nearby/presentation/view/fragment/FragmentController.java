@@ -7,25 +7,9 @@ import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentTransaction;
 
 import com.lakeel.altla.vision.nearby.R;
-import com.lakeel.altla.vision.nearby.presentation.view.fragment.ble.BleSettingsFragment;
 import com.lakeel.altla.vision.nearby.presentation.view.fragment.bundle.EstimationTarget;
 import com.lakeel.altla.vision.nearby.presentation.view.fragment.bundle.FavoriteUser;
 import com.lakeel.altla.vision.nearby.presentation.view.fragment.bundle.TrackingBeacon;
-import com.lakeel.altla.vision.nearby.presentation.view.fragment.device.DeviceListFragment;
-import com.lakeel.altla.vision.nearby.presentation.view.fragment.distance.DistanceEstimationFragment;
-import com.lakeel.altla.vision.nearby.presentation.view.fragment.favorite.FavoriteListFragment;
-import com.lakeel.altla.vision.nearby.presentation.view.fragment.favorite.FavoriteUserFragment;
-import com.lakeel.altla.vision.nearby.presentation.view.fragment.history.NearbyHistoryListFragment;
-import com.lakeel.altla.vision.nearby.presentation.view.fragment.information.InformationFragment;
-import com.lakeel.altla.vision.nearby.presentation.view.fragment.information.InformationListFragment;
-import com.lakeel.altla.vision.nearby.presentation.view.fragment.line.LineSettingsFragment;
-import com.lakeel.altla.vision.nearby.presentation.view.fragment.nearby.NearbyUserListFragment;
-import com.lakeel.altla.vision.nearby.presentation.view.fragment.passing.PassingUserFragment;
-import com.lakeel.altla.vision.nearby.presentation.view.fragment.settings.SettingsFragment;
-import com.lakeel.altla.vision.nearby.presentation.view.fragment.signin.SignInFragment;
-import com.lakeel.altla.vision.nearby.presentation.view.fragment.tracking.TrackingFragment;
-
-import java.util.ArrayList;
 
 public final class FragmentController {
 

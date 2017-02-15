@@ -3,7 +3,7 @@ package com.lakeel.altla.vision.nearby.presentation.analytics;
 import android.os.Bundle;
 
 import com.google.firebase.auth.FirebaseUser;
-import com.lakeel.altla.vision.nearby.presentation.firebase.CurrentUser;
+import com.lakeel.altla.vision.nearby.presentation.helper.CurrentUser;
 
 final class UserParam {
 

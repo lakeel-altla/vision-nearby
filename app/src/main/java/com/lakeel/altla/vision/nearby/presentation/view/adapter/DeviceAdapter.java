@@ -12,7 +12,7 @@ import android.widget.TextView;
 
 import com.lakeel.altla.vision.nearby.R;
 import com.lakeel.altla.vision.nearby.presentation.presenter.model.DeviceModel;
-import com.lakeel.altla.vision.nearby.presentation.presenter.device.DeviceListPresenter;
+import com.lakeel.altla.vision.nearby.presentation.presenter.DeviceListPresenter;
 import com.lakeel.altla.vision.nearby.presentation.view.date.DateFormatter;
 import com.lakeel.altla.vision.nearby.presentation.view.DeviceItemView;
 

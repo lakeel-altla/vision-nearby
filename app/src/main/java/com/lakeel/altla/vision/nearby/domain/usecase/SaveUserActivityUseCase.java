@@ -2,7 +2,7 @@ package com.lakeel.altla.vision.nearby.domain.usecase;
 
 import com.google.android.gms.location.DetectedActivity;
 import com.lakeel.altla.vision.nearby.data.repository.firebase.UserNearbyHistoryRepository;
-import com.lakeel.altla.vision.nearby.presentation.firebase.CurrentUser;
+import com.lakeel.altla.vision.nearby.presentation.helper.CurrentUser;
 
 import javax.inject.Inject;
 

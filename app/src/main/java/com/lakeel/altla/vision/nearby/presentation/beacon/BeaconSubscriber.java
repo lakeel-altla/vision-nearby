@@ -3,15 +3,16 @@ package com.lakeel.altla.vision.nearby.presentation.beacon;
 import android.content.Context;
 import android.content.Intent;
 import android.os.RemoteException;
+import android.support.annotation.NonNull;
 
-import com.google.firebase.auth.FirebaseAuth;
 import com.lakeel.altla.vision.nearby.beacon.BeaconRangeNotifier;
 import com.lakeel.altla.vision.nearby.domain.model.Beacon;
 import com.lakeel.altla.vision.nearby.domain.usecase.FindBeaconUseCase;
-import com.lakeel.altla.vision.nearby.presentation.beacon.region.RegionState;
+import com.lakeel.altla.vision.nearby.presentation.beacon.region.RegionType;
 import com.lakeel.altla.vision.nearby.presentation.di.component.DaggerDefaultComponent;
 import com.lakeel.altla.vision.nearby.presentation.di.component.DefaultComponent;
 import com.lakeel.altla.vision.nearby.presentation.di.module.ContextModule;
+import com.lakeel.altla.vision.nearby.presentation.helper.CurrentUser;
 import com.lakeel.altla.vision.nearby.presentation.service.LINEService;
 import com.lakeel.altla.vision.nearby.presentation.service.LocationService;
 import com.lakeel.altla.vision.nearby.presentation.service.NearbyHistoryService;
@@ -34,27 +35,28 @@ public final class BeaconSubscriber {
 
     private final Context context;
 
-    private final RegionState regionState;
+    private final RegionType regionType;
 
     private final BeaconManager beaconManager;
 
-    BeaconSubscriber(Context context, RegionState regionState) {
+    BeaconSubscriber(@NonNull Context context, @NonNull RegionType regionType) {
         DefaultComponent component = DaggerDefaultComponent.builder()
                 .contextModule(new ContextModule(context))
                 .build();
         component.inject(this);
 
         this.context = context;
-        this.regionState = regionState;
+        this.regionType = regionType;
         beaconManager = BeaconManager.getInstanceForApplication(context);
     }
 
-    public void subscribe(Region region) {
+    public void subscribe(@NonNull Region region) {
         beaconManager.addRangeNotifier(new BeaconRangeNotifier() {
 
             @Override
             protected void onFound(String beaconId) {
-                if (FirebaseAuth.getInstance().getCurrentUser() == null) {
+                if (CurrentUser.getUser() == null) {
+                    LOGGER.warn("Not subscribe beacons in background because not signed in.");
                     return;
                 }
 
@@ -62,7 +64,7 @@ public final class BeaconSubscriber {
                         .execute(beaconId)
                         .subscribe(beacon -> {
                             if (beacon == null) {
-                                LOGGER.info("Not registered the beacon:beaconId=" + beaconId);
+                                LOGGER.info("Not registered beacon:beaconId=" + beaconId);
                                 return;
                             }
 
@@ -76,44 +78,42 @@ public final class BeaconSubscriber {
                         });
 
                 try {
-                    // Stop token subscribe.
                     beaconManager.stopRangingBeaconsInRegion(region);
                 } catch (RemoteException e) {
-                    LOGGER.error("Failed token stopService token subscribe beacons.", e);
+                    LOGGER.error("Failed to stop to subscribe beacons.", e);
                 }
             }
         });
 
         try {
-            // Start token subscribe.
             beaconManager.startRangingBeaconsInRegion(region);
         } catch (RemoteException e) {
-            LOGGER.error("Failed token start token subscribe beacons.", e);
+            LOGGER.error("Failed to start to subscribe beacons.", e);
         }
     }
 
-    private void startNearbyHistoryService(String userId) {
+    private void startNearbyHistoryService(@NonNull String userId) {
         Intent intent = new Intent(context, NearbyHistoryService.class);
         intent.putExtra(IntentKey.USER_ID.name(), userId);
-        intent.putExtra(IntentKey.REGION_STATE.name(), regionState.getValue());
+        intent.putExtra(IntentKey.REGION_TYPE.name(), regionType.getValue());
         context.startService(intent);
     }
 
-    private void startNotificationService(Beacon beacon) {
+    private void startNotificationService(@NonNull Beacon beacon) {
         Intent intent = new Intent(context, NotificationService.class);
         intent.putExtra(IntentKey.USER_ID.name(), beacon.userId);
         intent.putExtra(IntentKey.BEACON_ID.name(), beacon.beaconId);
         context.startService(intent);
     }
 
-    private void startLocationService(Beacon beacon) {
+    private void startLocationService(@NonNull Beacon beacon) {
         Intent intent = new Intent(context, LocationService.class);
         intent.putExtra(IntentKey.USER_ID.name(), beacon.userId);
         intent.putExtra(IntentKey.BEACON_ID.name(), beacon.beaconId);
         context.startService(intent);
     }
 
-    private void startLineService(String userId) {
+    private void startLineService(@NonNull String userId) {
         Intent intent = new Intent(context, LINEService.class);
         intent.putExtra(IntentKey.USER_ID.name(), userId);
         context.startService(intent);

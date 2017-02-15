@@ -1,6 +1,6 @@
 package com.lakeel.altla.vision.nearby.presentation.view;
 
-import com.lakeel.altla.vision.nearby.presentation.presenter.history.NearbyHistoryListPresenter;
+import com.lakeel.altla.vision.nearby.presentation.presenter.NearbyHistoryListPresenter;
 import com.lakeel.altla.vision.nearby.presentation.presenter.model.NearbyHistoryModel;
 
 public interface NearbyHistoryItemView extends ItemView {

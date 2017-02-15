@@ -2,7 +2,7 @@ package com.lakeel.altla.vision.nearby.presentation.presenter.mapper;
 
 import com.google.firebase.auth.FirebaseUser;
 import com.lakeel.altla.vision.nearby.domain.model.UserProfile;
-import com.lakeel.altla.vision.nearby.presentation.firebase.CurrentUser;
+import com.lakeel.altla.vision.nearby.presentation.helper.CurrentUser;
 import com.lakeel.altla.vision.nearby.presentation.presenter.model.ActivityModel;
 
 public final class ActivityModelMapper {
