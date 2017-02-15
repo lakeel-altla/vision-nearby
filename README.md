@@ -7,12 +7,12 @@ In recent years, proximity communication has been attention.
 
 For example, there are the following cases.
 
-- Set the beacon in the store and deliver the coupon when the user passed the store
-- Set the beacon at the bus stop and display the bus timetable when the user approaches the bus stop
+- Set the beacon in the store and deliver the coupon when the user passed the store.
+- Set the beacon at the bus stop and display the bus timetable when the user approaches the bus stop.
 
-This sample application activates the Android device as a beacon (Eddystone-UID) and each Android devices advertise and subscribe using BLE.
+This sample application activates the Android device as a beacon (Eddystone-UID) and each Android devices advertise and subscribe by using BLE.
 <br>
-When you can detect nearby users and you can get user information.
+When you can detect nearby users and you can get the user information.
 
 ## Getting started
 
@@ -35,9 +35,9 @@ Please refer to the following link.
 <br>
 [Authenticate Using Google Sign-In on Android - Before you begin](https://firebase.google.com/docs/auth/android/google-signin)
 
-## Function
+## Features
 
-### Sgin in
+### Sign in
 Use Google sign in.
 
 ### Detection of the nearby users
