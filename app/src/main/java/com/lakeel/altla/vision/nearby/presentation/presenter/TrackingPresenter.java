@@ -56,7 +56,8 @@ public final class TrackingPresenter extends BasePresenter<TrackingView> {
     }
 
     public void onResume() {
-        Subscription subscription = findDeviceLocationUseCase.execute(trackingBeacon.beaconId)
+        Subscription subscription = findDeviceLocationUseCase
+                .execute(trackingBeacon.beaconId)
                 .toObservable()
                 .doOnNext(location -> {
                     if (location == null) {
@@ -117,6 +118,7 @@ public final class TrackingPresenter extends BasePresenter<TrackingView> {
 
         GeoLocation geoLocation = viewModel.geoLocation;
         GoogleMapIntent intent = new GoogleMapIntent(geoLocation.latitude, geoLocation.longitude);
+
         getView().launchGoogleMapApp(intent);
     }
 }

@@ -30,10 +30,6 @@ public final class AdvertiseService extends Service {
     @RequiresApi(api = Build.VERSION_CODES.LOLLIPOP)
     @Override
     public int onStartCommand(Intent intent, int flags, int startId) {
-        if (intent == null) {
-            throw new RuntimeException("Intent is empty.");
-        }
-
         Bundle bundle = intent.getExtras();
         String beaconId = (String) bundle.get(IntentKey.BEACON_ID.name());
 
@@ -60,7 +56,7 @@ public final class AdvertiseService extends Service {
                 @Override
                 public void onStartSuccess(AdvertiseSettings settingsInEffect) {
                     super.onStartSuccess(settingsInEffect);
-                    LOGGER.info("Succeeded token advertise as a beacon.");
+                    LOGGER.info("Succeeded to advertise as a beacon.");
 
                     NotificationCompat.Builder builder = new NotificationCompat.Builder(getApplicationContext());
                     builder.setContentTitle(getApplicationContext().getResources().getString(R.string.notification_title_advertise_ble));
@@ -71,7 +67,7 @@ public final class AdvertiseService extends Service {
                 @Override
                 public void onStartFailure(int errorCode) {
                     super.onStartFailure(errorCode);
-                    LOGGER.error("Failed token start token advertise:errorCode=" + errorCode);
+                    LOGGER.error("Failed to start to advertise:errorCode=" + errorCode);
                 }
             });
         }

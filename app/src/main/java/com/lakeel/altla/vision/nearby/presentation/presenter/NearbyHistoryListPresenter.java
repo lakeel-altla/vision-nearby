@@ -47,7 +47,8 @@ public final class NearbyHistoryListPresenter extends BasePresenter<NearbyHistor
     }
 
     public void onActivityCreated() {
-        Subscription subscription = findAllNearbyHistoryUseCase.execute()
+        Subscription subscription = findAllNearbyHistoryUseCase
+                .execute()
                 .map(NearbyHistoryModelMapper::map)
                 .toSortedList((model1, model2) -> sortByLatest(model1.passingTime, model2.passingTime))
                 .observeOn(AndroidSchedulers.mainThread())
@@ -66,6 +67,7 @@ public final class NearbyHistoryListPresenter extends BasePresenter<NearbyHistor
                     LOGGER.error("Failed.", e);
                     getView().showSnackBar(R.string.snackBar_error_failed);
                 });
+
         subscriptions.add(subscription);
     }
 

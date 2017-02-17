@@ -10,7 +10,7 @@ public interface ActivityView {
 
     void showSignInFragment();
 
-    void updateProfile(ActivityModel model);
+    void showDrawerHeaderProfile(ActivityModel model);
 
     void showSnackBar(@StringRes int resId);
 
@@ -24,7 +24,7 @@ public interface ActivityView {
 
     void stopDetectBeaconsInBackground();
 
-    void startAdvertise(String beaconId);
+    void startAdvertiseInBackground(String beaconId);
 
     void finishActivity();
 }

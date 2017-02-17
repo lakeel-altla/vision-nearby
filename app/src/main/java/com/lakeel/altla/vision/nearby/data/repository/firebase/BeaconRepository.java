@@ -52,8 +52,8 @@ public class BeaconRepository {
                         }));
     }
 
-    public Single<String> save(Beacon beacon) {
-        return Single.create(subscriber -> {
+    public Completable save(Beacon beacon) {
+        return Completable.create(subscriber -> {
 
             Task task = reference
                     .child(beacon.beaconId)
@@ -64,7 +64,7 @@ public class BeaconRepository {
                 throw new DataStoreException(e);
             }
 
-            subscriber.onSuccess(beacon.beaconId);
+            subscriber.onCompleted();
         });
     }
 

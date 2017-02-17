@@ -87,7 +87,7 @@ public final class SignInFragment extends Fragment implements SignInView {
 
     @Override
     public void onSignedIn() {
-        ((MainActivity) getActivity()).postSignIn();
+        ((MainActivity) getActivity()).onSignedIn();
     }
 
     @Override

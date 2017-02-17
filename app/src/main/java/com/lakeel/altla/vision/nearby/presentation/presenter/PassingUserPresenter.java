@@ -74,7 +74,8 @@ public final class PassingUserPresenter extends BasePresenter<PassingUserView> {
     }
 
     public void onResume() {
-        Subscription subscription = findNearbyHistoryUseCase.execute(historyId)
+        Subscription subscription = findNearbyHistoryUseCase
+                .execute(historyId)
                 .map(history -> {
                     model = UserPassingModelMapper.map(history);
                     return model;
@@ -157,7 +158,8 @@ public final class PassingUserPresenter extends BasePresenter<PassingUserView> {
     }
 
     private void showAddFavoriteButtonIfNeeded(String favoriteUserId) {
-        Subscription subscription = findFavoriteUseCase.execute(favoriteUserId)
+        Subscription subscription = findFavoriteUseCase
+                .execute(favoriteUserId)
                 .toObservable()
                 .filter(favorite -> favorite == null)
                 .observeOn(AndroidSchedulers.mainThread())

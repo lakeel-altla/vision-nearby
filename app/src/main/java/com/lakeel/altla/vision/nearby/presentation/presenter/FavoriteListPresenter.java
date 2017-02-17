@@ -46,7 +46,8 @@ public final class FavoriteListPresenter extends BasePresenter<FavoriteListView>
     }
 
     public void onActivityCreated() {
-        Subscription subscription = findAllFavoriteUseCase.execute()
+        Subscription subscription = findAllFavoriteUseCase
+                .execute()
                 .map(FavoriteModelMapper::map)
                 .toList()
                 .subscribe(favoritesModels -> {

@@ -41,7 +41,9 @@ final class BeaconDetector implements BootstrapNotifier {
 
     void stop() {
         isAlreadySubscribed = false;
-        regionBootstrap.removeRegion(region);
+        if (regionBootstrap != null) {
+            regionBootstrap.removeRegion(region);
+        }
     }
 
     @Override

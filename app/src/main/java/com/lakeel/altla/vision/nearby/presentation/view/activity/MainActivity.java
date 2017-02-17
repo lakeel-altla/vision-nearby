@@ -208,7 +208,7 @@ public class MainActivity extends AppCompatActivity
     }
 
     @Override
-    public void updateProfile(ActivityModel model) {
+    public void showDrawerHeaderProfile(ActivityModel model) {
         ImageLoader imageLoader = ImageLoader.getInstance();
         imageLoader.displayImage(model.imageUri, drawerHeaderLayout.userImageView);
 
@@ -253,7 +253,7 @@ public class MainActivity extends AppCompatActivity
     }
 
     @Override
-    public void startAdvertise(String beaconId) {
+    public void startAdvertiseInBackground(String beaconId) {
         Intent intent = new Intent(getApplicationContext(), AdvertiseService.class);
         intent.putExtra(IntentKey.BEACON_ID.name(), beaconId);
         getApplicationContext().startService(intent);
@@ -290,7 +290,7 @@ public class MainActivity extends AppCompatActivity
         toggle.setDrawerIndicatorEnabled(enabled);
     }
 
-    public void postSignIn() {
-        presenter.postSignIn();
+    public void onSignedIn() {
+        presenter.onSignedIn();
     }
 }

@@ -7,6 +7,7 @@ import com.lakeel.altla.vision.nearby.domain.model.Preference;
 
 import javax.inject.Inject;
 
+import rx.Completable;
 import rx.Single;
 
 public class PreferenceRepository {
@@ -32,10 +33,10 @@ public class PreferenceRepository {
         return Single.just(preference);
     }
 
-    public Single<String> saveBeaconId(String userId, String beaconId) {
+    public Completable saveBeaconId(String userId, String beaconId) {
         SharedPreferences.Editor editor = sharedPreferences.edit();
         editor.putString(KEY_BEACON_ID + userId, beaconId);
         editor.apply();
-        return Single.just(beaconId);
+        return Completable.complete();
     }
 }

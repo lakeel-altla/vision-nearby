@@ -53,8 +53,9 @@ public final class UserProfileRepository {
 
     public Completable save(String userId) {
         return Completable.create(subscriber -> {
-            UserProfile userProfile = new UserProfile();
             FirebaseUser firebaseUser = CurrentUser.getUser();
+
+            UserProfile userProfile = new UserProfile();
             userProfile.name = firebaseUser.getDisplayName();
             userProfile.email = firebaseUser.getEmail();
             if (firebaseUser.getPhotoUrl() != null) {
@@ -97,8 +98,8 @@ public final class UserProfileRepository {
         });
     }
 
-    public Single<String> saveUserBeacon(String userId, String beaconId) {
-        return Single.create(subscriber -> {
+    public Completable saveUserBeacon(String userId, String beaconId) {
+        return Completable.create(subscriber -> {
             Map<String, Object> map = new HashMap<>();
             map.put(beaconId, true);
 
@@ -112,7 +113,7 @@ public final class UserProfileRepository {
                 subscriber.onError(e);
             }
 
-            subscriber.onSuccess(beaconId);
+            subscriber.onCompleted();
         });
     }
 
