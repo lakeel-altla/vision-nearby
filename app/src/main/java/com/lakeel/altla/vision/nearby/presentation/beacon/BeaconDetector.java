@@ -24,7 +24,6 @@ final class BeaconDetector implements BootstrapNotifier {
     private boolean isAlreadySubscribed;
 
     BeaconDetector(@NonNull Context context) {
-        // All beacons are subscribed.
         this.context = context;
         region = new Region("background-region", null, null, null);
     }
@@ -41,6 +40,7 @@ final class BeaconDetector implements BootstrapNotifier {
 
     void stop() {
         isAlreadySubscribed = false;
+
         if (regionBootstrap != null) {
             regionBootstrap.removeRegion(region);
         }
@@ -49,6 +49,7 @@ final class BeaconDetector implements BootstrapNotifier {
     @Override
     public void didEnterRegion(Region region) {
         LOGGER.info("Enter region.");
+
         BeaconSubscriber subscriber = new BeaconSubscriber(context, RegionType.ENTER);
         subscriber.subscribe(region);
     }
@@ -56,6 +57,7 @@ final class BeaconDetector implements BootstrapNotifier {
     @Override
     public void didExitRegion(Region region) {
         LOGGER.info("Exit region.");
+
         BeaconSubscriber subscriber = new BeaconSubscriber(context, RegionType.EXIT);
         subscriber.subscribe(region);
     }

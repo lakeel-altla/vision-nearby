@@ -5,6 +5,7 @@ import android.content.res.TypedArray;
 import android.graphics.Canvas;
 import android.graphics.Rect;
 import android.graphics.drawable.Drawable;
+import android.support.annotation.NonNull;
 import android.support.v7.widget.RecyclerView;
 import android.view.View;
 
@@ -16,7 +17,7 @@ public final class DividerItemDecoration extends RecyclerView.ItemDecoration {
 
     private Drawable divider;
 
-    public DividerItemDecoration(Context context) {
+    public DividerItemDecoration(@NonNull Context context) {
         final TypedArray a = context.obtainStyledAttributes(ATTRS);
         divider = a.getDrawable(0);
         a.recycle();
@@ -27,7 +28,12 @@ public final class DividerItemDecoration extends RecyclerView.ItemDecoration {
         drawVertical(c, parent);
     }
 
-    public void drawVertical(Canvas c, RecyclerView parent) {
+    @Override
+    public void getItemOffsets(Rect outRect, View view, RecyclerView parent, RecyclerView.State state) {
+        outRect.set(0, 0, 0, divider.getIntrinsicHeight());
+    }
+
+    private void drawVertical(Canvas c, RecyclerView parent) {
         final int left = parent.getPaddingLeft();
         final int right = parent.getWidth() - parent.getPaddingRight();
 
@@ -41,10 +47,5 @@ public final class DividerItemDecoration extends RecyclerView.ItemDecoration {
             divider.setBounds(left, top, right, bottom);
             divider.draw(c);
         }
-    }
-
-    @Override
-    public void getItemOffsets(Rect outRect, View view, RecyclerView parent, RecyclerView.State state) {
-        outRect.set(0, 0, 0, divider.getIntrinsicHeight());
     }
 }

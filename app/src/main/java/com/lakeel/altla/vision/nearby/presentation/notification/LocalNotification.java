@@ -4,6 +4,7 @@ import android.app.Notification;
 import android.app.NotificationManager;
 import android.app.PendingIntent;
 import android.content.Context;
+import android.support.annotation.NonNull;
 import android.support.v4.app.NotificationCompat;
 import android.support.v4.content.ContextCompat;
 
@@ -17,7 +18,7 @@ public final class LocalNotification {
 
     private final Notification notification;
 
-    public LocalNotification(Context context, String title, String message, PendingIntent intent) {
+    public LocalNotification(@NonNull Context context, @NonNull String title, @NonNull String message, @NonNull PendingIntent intent) {
         this.context = context;
         notification = new NotificationCompat.Builder(context)
                 .setContentTitle(title)

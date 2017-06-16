@@ -1,6 +1,6 @@
 package com.lakeel.altla.vision.nearby.presentation.analytics;
 
-public enum AnalyticsEvent {
+enum AnalyticsEvent {
     LOG_OUT("logout"),
     VIEW_FAVORITE_ITEM("view_favorite_item"),
     ADD_FAVORITE("add_favorite"),
@@ -19,7 +19,7 @@ public enum AnalyticsEvent {
     ADD_HISTORY("add_history"),
     REMOVE_HISTORY("remove_history");
 
-    private String value;
+    private final String value;
 
     AnalyticsEvent(String value) {
         this.value = value;

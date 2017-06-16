@@ -1,6 +1,7 @@
 package com.lakeel.altla.vision.nearby.presentation.view.fragment;
 
 import android.os.Bundle;
+import android.support.annotation.NonNull;
 import android.support.design.widget.Snackbar;
 import android.support.v4.app.Fragment;
 import android.support.v7.widget.LinearLayoutManager;
@@ -62,15 +63,16 @@ public final class FavoriteListFragment extends Fragment implements FavoriteList
 
         getActivity().setTitle(R.string.toolbar_title_favorites);
 
-        ((MainActivity) getActivity()).setDrawerIndicatorEnabled(true);
+        MainActivity activity = ((MainActivity) getActivity());
+        activity.setDrawerIndicatorEnabled(true);
 
-        RecyclerView.LayoutManager mLayoutManager = new ScrollSmoothLineaerLayoutManager(getContext(), LinearLayoutManager.VERTICAL, false, 500);
-        recyclerView.setLayoutManager(mLayoutManager);
+        RecyclerView.LayoutManager layoutManager = new ScrollSmoothLineaerLayoutManager(getContext(), LinearLayoutManager.VERTICAL, false, 500);
+        recyclerView.setLayoutManager(layoutManager);
         recyclerView.setHasFixedSize(true);
         recyclerView.addItemDecoration(new DividerItemDecoration(getContext()));
 
-        FavoriteAdapter favoritesRecyclerAdapter = new FavoriteAdapter(presenter);
-        recyclerView.setAdapter(favoritesRecyclerAdapter);
+        FavoriteAdapter favoriteAdapter = new FavoriteAdapter(presenter);
+        recyclerView.setAdapter(favoriteAdapter);
 
         presenter.onActivityCreated();
     }
@@ -82,7 +84,7 @@ public final class FavoriteListFragment extends Fragment implements FavoriteList
     }
 
     @Override
-    public void updateItems(List<FavoriteModel> models) {
+    public void updateItems(@NonNull List<FavoriteModel> models) {
         FavoriteAdapter adapter = ((FavoriteAdapter) recyclerView.getAdapter());
         adapter.removeAll();
         adapter.insert(models);
@@ -90,7 +92,8 @@ public final class FavoriteListFragment extends Fragment implements FavoriteList
 
     @Override
     public void removeAll(int size) {
-        recyclerView.getAdapter().notifyItemRangeRemoved(0, size);
+        RecyclerView.Adapter adapter = recyclerView.getAdapter();
+        adapter.notifyItemRangeRemoved(0, size);
     }
 
     @Override
@@ -110,7 +113,7 @@ public final class FavoriteListFragment extends Fragment implements FavoriteList
     }
 
     @Override
-    public void showFavoriteUserFragment(FavoriteModel model) {
+    public void showFavoriteUserFragment(@NonNull FavoriteModel model) {
         FragmentController controller = new FragmentController(this);
         controller.showFavoriteUserFragment(new FavoriteUser(model.userId, model.userName));
     }

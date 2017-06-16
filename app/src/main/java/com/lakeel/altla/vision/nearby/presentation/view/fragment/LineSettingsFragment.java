@@ -1,6 +1,7 @@
 package com.lakeel.altla.vision.nearby.presentation.view.fragment;
 
 import android.os.Bundle;
+import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.annotation.StringRes;
 import android.support.design.widget.Snackbar;
@@ -59,9 +60,9 @@ public final class LineSettingsFragment extends Fragment implements LineSettings
     public void onActivityCreated(Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
 
-        getActivity().setTitle(R.string.toolbar_title_line_settings);
-
-        ((MainActivity) getActivity()).setDrawerIndicatorEnabled(false);
+        MainActivity activity = ((MainActivity) getActivity());
+        activity.setTitle(R.string.toolbar_title_line_settings);
+        activity.setDrawerIndicatorEnabled(false);
 
         mainLayout.setOnClickListener(view ->
                 new MaterialDialog.Builder(getContext())
@@ -72,7 +73,8 @@ public final class LineSettingsFragment extends Fragment implements LineSettings
                         .input(StringUtils.EMPTY, StringUtils.EMPTY, false, (dialog1, input) ->
                                 presenter.onSave(input.toString())
                         )
-                        .show());
+                        .show()
+        );
 
         presenter.onActivityCreated();
     }
@@ -96,7 +98,7 @@ public final class LineSettingsFragment extends Fragment implements LineSettings
     }
 
     @Override
-    public void showLineUrl(String url) {
+    public void showLineUrl(@NonNull String url) {
         lineUrlTextView.setText(url);
     }
 

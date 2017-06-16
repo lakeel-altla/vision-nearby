@@ -2,6 +2,7 @@ package com.lakeel.altla.vision.nearby.presentation.view.fragment;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.support.annotation.NonNull;
 import android.support.annotation.StringRes;
 import android.support.design.widget.Snackbar;
 import android.support.v7.preference.PreferenceFragmentCompat;
@@ -36,18 +37,18 @@ public final class BleSettingsFragment extends PreferenceFragmentCompat implemen
 
     @Override
     public void onCreatePreferences(Bundle savedInstanceState, String rootKey) {
+        // Dagger
+        MainActivity.getUserComponent(this).inject(this);
+
         addPreferencesFromResource(R.xml.settings_ble);
 
         setHasOptionsMenu(true);
 
-        getActivity().setTitle(R.string.toolbar_title_ble_settings);
-
-        ((MainActivity) getActivity()).setDrawerIndicatorEnabled(false);
-
-        // Dagger
-        MainActivity.getUserComponent(this).inject(this);
-
         presenter.onCreateView(this);
+
+        MainActivity activity = ((MainActivity) getActivity());
+        activity.setTitle(R.string.toolbar_title_ble_settings);
+        activity.setDrawerIndicatorEnabled(false);
 
         advertisePreference = (SwitchPreferenceCompat) findPreference(KEY_ADVERTISE_IN_BACKGROUND);
         advertisePreference.setOnPreferenceChangeListener((preference, newValue) -> {
@@ -102,7 +103,7 @@ public final class BleSettingsFragment extends PreferenceFragmentCompat implemen
     }
 
     @Override
-    public void startAdvertiseInBackground(String beaconId) {
+    public void startAdvertiseInBackground(@NonNull String beaconId) {
         Intent intent = new Intent(getContext(), AdvertiseService.class);
         intent.putExtra(IntentKey.BEACON_ID.name(), beaconId);
         getContext().startService(intent);

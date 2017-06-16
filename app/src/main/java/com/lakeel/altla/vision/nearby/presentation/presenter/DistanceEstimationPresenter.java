@@ -7,6 +7,7 @@ import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.os.Build;
 import android.os.Bundle;
+import android.support.annotation.NonNull;
 import android.support.v4.content.ContextCompat;
 
 import com.lakeel.altla.vision.nearby.R;
@@ -56,18 +57,18 @@ public final class DistanceEstimationPresenter extends BasePresenter<DistanceEst
                     EddystoneUID eddystoneUID = (EddystoneUID) structure;
                     String scannedBeaconId = eddystoneUID.getBeaconIdAsString().toLowerCase();
 
-                    Subscription subscription = Observable.from(target.beaconIds)
+                    Subscription subscription = Observable
+                            .from(target.beaconIds)
                             // Filter beacons.
                             .filter(beaconId -> beaconId.equals(scannedBeaconId))
                             .subscribeOn(Schedulers.io())
                             .observeOn(AndroidSchedulers.mainThread())
                             .subscribe(beaconId -> {
-                                // Calculate distance.
                                 Distance distance = new Distance(eddystoneUID.getTxPower(), rssi);
+
                                 String distanceMessage = context.getResources().getString(R.string.snackBar_message_device_distance_format, distance.getMeters());
                                 getView().showDistanceMessage(distanceMessage);
                             });
-
                     subscriptions.add(subscription);
                 }
             }
@@ -80,13 +81,13 @@ public final class DistanceEstimationPresenter extends BasePresenter<DistanceEst
         this.scanner = BleScannerFactory.create(context, scanCallback);
     }
 
-    public void onCreateView(DistanceEstimationView view, Bundle bundle) {
+    public void onCreateView(@NonNull DistanceEstimationView view, @NonNull Bundle bundle) {
         super.onCreateView(view);
         this.target = (EstimationTarget) bundle.getSerializable(BUNDLE_ESTIMATION_TARGET);
     }
 
     public void onActivityCreated() {
-        getView().showTitle(target.name);
+        getView().showTitle(target.targetName);
 
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
             checkAccessFineLocationPermission();

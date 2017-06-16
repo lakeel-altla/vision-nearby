@@ -1,5 +1,7 @@
 package com.lakeel.altla.vision.nearby.domain.usecase;
 
+import android.support.annotation.NonNull;
+
 import com.lakeel.altla.vision.nearby.data.repository.firebase.BeaconRepository;
 import com.lakeel.altla.vision.nearby.data.repository.firebase.UserProfileRepository;
 import com.lakeel.altla.vision.nearby.domain.model.UserProfile;
@@ -9,7 +11,7 @@ import javax.inject.Inject;
 import rx.Observable;
 import rx.schedulers.Schedulers;
 
-public final class FindAllNearbyUserUseCase {
+public final class FindNearbyUserUseCase {
 
     @Inject
     BeaconRepository beaconsRepository;
@@ -18,11 +20,12 @@ public final class FindAllNearbyUserUseCase {
     UserProfileRepository usersRepository;
 
     @Inject
-    FindAllNearbyUserUseCase() {
+    FindNearbyUserUseCase() {
     }
 
-    public Observable<UserProfile> execute(String beaconId) {
-        return beaconsRepository.find(beaconId)
+    public Observable<UserProfile> execute(@NonNull String beaconId) {
+        return beaconsRepository
+                .find(beaconId)
                 .subscribeOn(Schedulers.io())
                 .toObservable()
                 // Exclude public beacon.

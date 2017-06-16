@@ -12,6 +12,7 @@ import com.lakeel.altla.vision.nearby.presentation.presenter.mapper.NearbyHistor
 import com.lakeel.altla.vision.nearby.presentation.presenter.model.NearbyHistoryModel;
 import com.lakeel.altla.vision.nearby.presentation.view.NearbyHistoryItemView;
 import com.lakeel.altla.vision.nearby.presentation.view.NearbyHistoryListView;
+import com.lakeel.altla.vision.nearby.presentation.view.fragment.bundle.PassingUser;
 import com.lakeel.altla.vision.nearby.rx.ReusableCompositeSubscription;
 
 import org.slf4j.Logger;
@@ -40,7 +41,7 @@ public final class NearbyHistoryListPresenter extends BasePresenter<NearbyHistor
 
     private final ReusableCompositeSubscription subscriptions = new ReusableCompositeSubscription();
 
-    private final List<NearbyHistoryModel> viewModels = new ArrayList<>();
+    private final List<NearbyHistoryModel> models = new ArrayList<>();
 
     @Inject
     NearbyHistoryListPresenter() {
@@ -53,8 +54,8 @@ public final class NearbyHistoryListPresenter extends BasePresenter<NearbyHistor
                 .toSortedList((model1, model2) -> sortByLatest(model1.passingTime, model2.passingTime))
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribe(model -> {
-                    viewModels.clear();
-                    viewModels.addAll(model);
+                    models.clear();
+                    models.addAll(model);
 
                     if (CollectionUtils.isEmpty(model)) {
                         getView().showEmptyView();
@@ -67,7 +68,6 @@ public final class NearbyHistoryListPresenter extends BasePresenter<NearbyHistor
                     LOGGER.error("Failed.", e);
                     getView().showSnackBar(R.string.snackBar_error_failed);
                 });
-
         subscriptions.add(subscription);
     }
 
@@ -82,35 +82,37 @@ public final class NearbyHistoryListPresenter extends BasePresenter<NearbyHistor
     }
 
     public List<NearbyHistoryModel> getItems() {
-        return viewModels;
+        return models;
     }
 
     public final class HistoryItemPresenter extends BaseItemPresenter<NearbyHistoryItemView> {
 
         @Override
         public void onBind(@IntRange(from = 0) int position) {
-            getItemView().showItem(viewModels.get(position));
+            getItemView().showItem(models.get(position));
         }
 
         public void onClick(NearbyHistoryModel model) {
-            getView().showPassingUserFragment(model.historyId);
+            getView().showPassingUserFragment(new PassingUser(model.historyId, model.userId, model.userName));
         }
 
         public void onRemove(NearbyHistoryModel model) {
             analyticsReporter.removeHistory(model.userId, model.userName);
 
-            Subscription subscription = removeNearbyHistoryUseCase.execute(model.historyId)
+            Subscription subscription = removeNearbyHistoryUseCase
+                    .execute(model.historyId)
                     .observeOn(AndroidSchedulers.mainThread())
                     .subscribe(e -> {
                                 LOGGER.error("Failed.", e);
                                 getView().showSnackBar(R.string.snackBar_error_failed);
                             },
                             () -> {
-                                int size = viewModels.size();
+                                // Store model size.
+                                int size = models.size();
 
-                                viewModels.remove(model);
+                                models.remove(model);
 
-                                if (CollectionUtils.isEmpty(viewModels)) {
+                                if (CollectionUtils.isEmpty(models)) {
                                     getView().removeAll(size);
                                     getView().showEmptyView();
                                 } else {

@@ -1,6 +1,7 @@
 package com.lakeel.altla.vision.nearby.presentation.view.adapter;
 
 import android.support.annotation.IntRange;
+import android.support.annotation.NonNull;
 import android.view.View;
 import android.widget.Button;
 import android.widget.ImageView;
@@ -26,22 +27,23 @@ import butterknife.ButterKnife;
 
 public final class NearbyHistoryAdapter extends SwipeableUltimateViewAdapter<NearbyHistoryModel> {
 
-    private NearbyHistoryListPresenter nearbyHistoryListPresenter;
+    private NearbyHistoryListPresenter presenter;
 
-    public NearbyHistoryAdapter(NearbyHistoryListPresenter nearbyHistoryListPresenter) {
+    public NearbyHistoryAdapter(@NonNull NearbyHistoryListPresenter presenter) {
+        // NOTE: Must set a mutable list.
         super(new ArrayList<>());
-        this.nearbyHistoryListPresenter = nearbyHistoryListPresenter;
+        this.presenter = presenter;
     }
 
     @Override
     protected int getNormalLayoutResId() {
-        return R.layout.item_history;
+        return R.layout.item_nearby_history;
     }
 
     @Override
     protected UltimateRecyclerviewViewHolder newViewHolder(View view) {
         NearbyHistoryItemViewHolder viewHolder = new NearbyHistoryItemViewHolder(view, true);
-        nearbyHistoryListPresenter.onCreateItemView(viewHolder);
+        presenter.onCreateItemView(viewHolder);
         return viewHolder;
     }
 
@@ -68,13 +70,14 @@ public final class NearbyHistoryAdapter extends SwipeableUltimateViewAdapter<Nea
         @BindView(R.id.buttonRemove)
         Button removeButton;
 
-        @BindView(R.id.swipeLayout)
+        @BindView(R.id.layoutSwipe)
         SwipeLayout swipeLayout;
 
         private NearbyHistoryListPresenter.HistoryItemPresenter itemPresenter;
 
-        NearbyHistoryItemViewHolder(View itemView, boolean bind) {
+        NearbyHistoryItemViewHolder(@NonNull View itemView, boolean bind) {
             super(itemView);
+
             if (bind) {
                 ButterKnife.bind(this, itemView);
                 swipeLayout.setDragEdge(SwipeLayout.DragEdge.Right);
@@ -83,12 +86,12 @@ public final class NearbyHistoryAdapter extends SwipeableUltimateViewAdapter<Nea
         }
 
         @Override
-        public void setItemPresenter(NearbyHistoryListPresenter.HistoryItemPresenter itemPresenter) {
+        public void setItemPresenter(@NonNull NearbyHistoryListPresenter.HistoryItemPresenter itemPresenter) {
             this.itemPresenter = itemPresenter;
         }
 
         @Override
-        public void showItem(NearbyHistoryModel model) {
+        public void showItem(@NonNull NearbyHistoryModel model) {
             String userName = model.userName;
             String imageUri = model.imageUri;
 

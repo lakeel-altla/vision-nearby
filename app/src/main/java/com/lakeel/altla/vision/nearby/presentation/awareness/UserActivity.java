@@ -12,9 +12,9 @@ public enum UserActivity {
     UNKNOWN(com.google.android.gms.location.DetectedActivity.UNKNOWN, R.string.user_activity_unknown),
     WALKING(com.google.android.gms.location.DetectedActivity.WALKING, R.string.user_activity_walking);
 
-    private int intValue;
+    private final int intValue;
 
-    private int resValue;
+    private final int resValue;
 
     UserActivity(int intValue, int resValue) {
         this.intValue = intValue;
@@ -29,11 +29,13 @@ public enum UserActivity {
         if (integerValue == null) {
             return UNKNOWN;
         }
+
         for (UserActivity currentActivity : values()) {
             if (currentActivity.intValue == integerValue) {
                 return currentActivity;
             }
         }
+
         return UNKNOWN;
     }
 }

@@ -1,6 +1,8 @@
 package com.lakeel.altla.vision.nearby.domain.usecase;
 
+import com.google.firebase.database.ServerValue;
 import com.lakeel.altla.vision.nearby.data.repository.firebase.UserNearbyHistoryRepository;
+import com.lakeel.altla.vision.nearby.domain.model.NearbyHistory;
 import com.lakeel.altla.vision.nearby.presentation.beacon.region.RegionType;
 import com.lakeel.altla.vision.nearby.presentation.helper.CurrentUser;
 
@@ -19,7 +21,10 @@ public final class SaveNearbyHistoryUseCase {
     }
 
     public Single<String> execute(String passingUserId, RegionType regionType) {
-        String myUserId = CurrentUser.getUid();
-        return repository.save(myUserId, passingUserId, regionType).subscribeOn(Schedulers.io());
+        NearbyHistory nearbyHistory = new NearbyHistory();
+        nearbyHistory.userId = passingUserId;
+        nearbyHistory.isEntered = RegionType.ENTER == regionType;
+        nearbyHistory.passingTime = ServerValue.TIMESTAMP;
+        return repository.save(CurrentUser.getUid(), nearbyHistory).subscribeOn(Schedulers.io());
     }
 }

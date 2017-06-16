@@ -1,5 +1,7 @@
 package com.lakeel.altla.vision.nearby.domain.usecase;
 
+import android.support.annotation.NonNull;
+
 import com.google.firebase.iid.FirebaseInstanceId;
 import com.lakeel.altla.vision.nearby.data.repository.android.PreferenceRepository;
 import com.lakeel.altla.vision.nearby.data.repository.firebase.UserDeviceTokenRepository;
@@ -8,7 +10,7 @@ import com.lakeel.altla.vision.nearby.presentation.helper.CurrentUser;
 
 import javax.inject.Inject;
 
-import rx.Completable;
+import rx.Observable;
 import rx.schedulers.Schedulers;
 
 public final class SaveDeviceTokenUseCase {
@@ -23,7 +25,7 @@ public final class SaveDeviceTokenUseCase {
     SaveDeviceTokenUseCase() {
     }
 
-    public Completable execute(String beaconId) {
+    public Observable<DeviceToken> execute(@NonNull String beaconId) {
         DeviceToken deviceToken = new DeviceToken();
         deviceToken.userId = CurrentUser.getUid();
         deviceToken.beaconId = beaconId;

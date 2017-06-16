@@ -45,7 +45,7 @@ public final class SignInPresenter extends BasePresenter<SignInView> {
                 .setTheme(R.style.AuthUiTheme)
                 .build();
 
-        getView().showSignInActivity(intent);
+        getView().showGoogleSignInActivity(intent);
     }
 
     public void onStop() {
@@ -58,7 +58,7 @@ public final class SignInPresenter extends BasePresenter<SignInView> {
         Subscription subscription = signInUseCase
                 .execute()
                 .observeOn(AndroidSchedulers.mainThread())
-                .subscribe(aVoid -> {
+                .subscribe(deviceToken -> {
                     getView().onSignedIn();
                 }, e -> {
                     LOGGER.error("Failed to sign in.", e);

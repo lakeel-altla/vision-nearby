@@ -1,5 +1,7 @@
 package com.lakeel.altla.vision.nearby.domain.usecase;
 
+import android.support.annotation.NonNull;
+
 import com.lakeel.altla.vision.nearby.data.repository.firebase.UserConnectionRepository;
 import com.lakeel.altla.vision.nearby.domain.model.Connection;
 
@@ -17,7 +19,7 @@ public class FindConnectionUseCase {
     FindConnectionUseCase() {
     }
 
-    public Single<Connection> execute(String userId) {
+    public Single<Connection> execute(@NonNull String userId) {
         return repository.find(userId).subscribeOn(Schedulers.io());
     }
 }

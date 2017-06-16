@@ -44,7 +44,6 @@ import javax.inject.Inject;
 
 import rx.Observable;
 import rx.Single;
-import rx.SingleSubscriber;
 
 public class NearbyHistoryService extends IntentService {
 
@@ -73,9 +72,9 @@ public class NearbyHistoryService extends IntentService {
 
     private GoogleApiClient googleApiClient;
 
+    // NOTE:
+    // This constructor is need.
     public NearbyHistoryService() {
-        // NOTE:
-        // This constructor is need.
         this(NearbyHistoryService.class.getSimpleName());
     }
 
@@ -91,9 +90,7 @@ public class NearbyHistoryService extends IntentService {
         serviceComponent.inject(this);
 
         String userId = intent.getStringExtra(IntentKey.USER_ID.name());
-
-        int value = intent.getIntExtra(IntentKey.REGION_TYPE.name(), 0);
-        RegionType regionType = RegionType.toRegionType(value);
+        RegionType regionType = RegionType.toRegionType(intent.getIntExtra(IntentKey.REGION_TYPE.name(), 0));
 
         googleApiClient = new GoogleApiClient.Builder(getApplicationContext())
                 .addApi(Awareness.API)
@@ -101,7 +98,6 @@ public class NearbyHistoryService extends IntentService {
 
                     @Override
                     public void onConnected(@Nullable Bundle bundle) {
-                        // Save history.
                         findUserUseCase.execute(userId)
                                 .toObservable()
                                 // Analytics
@@ -111,22 +107,20 @@ public class NearbyHistoryService extends IntentService {
                                         showLocalNotification(userProfile);
                                     }
                                 })
-                                .flatMap(userProfile -> saveHistory(userProfile.userId, regionType))
+                                .flatMap(userProfile -> saveNearbyHistory(userProfile.userId, regionType))
                                 .subscribe(nearbyHistoryId -> {
                                     getUserActivity()
                                             .subscribe(userActivity -> saveUserActivity(nearbyHistoryId, userActivity),
-                                                    e -> LOGGER.error("Failed to get user activity.", e));
+                                                    e -> LOGGER.error("Failed to save user activity.", e));
 
                                     getUserLocation(getApplicationContext())
                                             .subscribe(location -> saveUserLocation(nearbyHistoryId, location),
-                                                    e -> LOGGER.error("Failed to get user location.", e));
+                                                    e -> LOGGER.error("Failed to save user location.", e));
 
                                     getWeather(getApplicationContext())
                                             .subscribe(weather -> saveWeather(nearbyHistoryId, weather),
-                                                    e -> LOGGER.error("Failed to get weather.", e));
-                                }, e -> {
-                                    LOGGER.error("Failed.", e);
-                                });
+                                                    e -> LOGGER.error("Failed to save weather.", e));
+                                }, e -> LOGGER.error("Failed.", e));
                     }
 
                     @Override
@@ -139,7 +133,7 @@ public class NearbyHistoryService extends IntentService {
         googleApiClient.connect();
     }
 
-    private void showLocalNotification(@NonNull UserProfile userProfile) {
+    private void showLocalNotification(UserProfile userProfile) {
         Intent intent = new Intent(getApplicationContext(), MainActivity.class);
         intent.setFlags(Intent.FLAG_ACTIVITY_SINGLE_TOP | Intent.FLAG_ACTIVITY_CLEAR_TOP);
         PendingIntent pendingIntent = PendingIntent.getActivity(getApplicationContext(), UUID.randomUUID().hashCode(), intent, PendingIntent.FLAG_CANCEL_CURRENT);
@@ -151,40 +145,39 @@ public class NearbyHistoryService extends IntentService {
         localNotification.show();
     }
 
-    private Observable<String> saveHistory(@NonNull String passingUserId, @NonNull RegionType regionType) {
+    private Observable<String> saveNearbyHistory(String passingUserId, RegionType regionType) {
         return saveNearbyHistoryUseCase.execute(passingUserId, regionType).toObservable();
     }
 
     private Single<DetectedActivity> getUserActivity() {
-        return Single.create(new Single.OnSubscribe<DetectedActivity>() {
-
-            @Override
-            public void call(SingleSubscriber<? super DetectedActivity> subscriber) {
-                Awareness.SnapshotApi.getDetectedActivity(googleApiClient)
+        return Single.create(subscriber ->
+                Awareness
+                        .SnapshotApi
+                        .getDetectedActivity(googleApiClient)
                         .setResultCallback(result -> {
                             if (!result.getStatus().isSuccess()) {
                                 subscriber.onError(new AwarenessException("Could not get user activity."));
-                                return;
+                            } else {
+                                ActivityRecognitionResult activityRecognitionResult = result.getActivityRecognitionResult();
+                                DetectedActivity probableActivity = activityRecognitionResult.getMostProbableActivity();
+                                subscriber.onSuccess(probableActivity);
                             }
-                            ActivityRecognitionResult ar = result.getActivityRecognitionResult();
-                            DetectedActivity probableActivity = ar.getMostProbableActivity();
-                            subscriber.onSuccess(probableActivity);
-                        });
-            }
-        });
+                        }));
     }
 
     private Single<Location> getUserLocation(@NonNull Context context) {
         return Single.create(subscriber -> {
             if (ContextCompat.checkSelfPermission(context, Manifest.permission.ACCESS_FINE_LOCATION) == PackageManager.PERMISSION_GRANTED) {
-                Awareness.SnapshotApi.getLocation(googleApiClient)
+                Awareness
+                        .SnapshotApi
+                        .getLocation(googleApiClient)
                         .setResultCallback(result -> {
                             if (!result.getStatus().isSuccess()) {
                                 subscriber.onError(new AwarenessException("Could not get user location. User might be turning off the gps."));
-                                return;
+                            } else {
+                                Location location = result.getLocation();
+                                subscriber.onSuccess(location);
                             }
-                            Location location = result.getLocation();
-                            subscriber.onSuccess(location);
                         });
             } else {
                 LOGGER.warn("Location permission is not granted.");
@@ -196,14 +189,16 @@ public class NearbyHistoryService extends IntentService {
     private Single<Weather> getWeather(@NonNull Context context) {
         return Single.create(subscriber -> {
             if (ContextCompat.checkSelfPermission(context, Manifest.permission.ACCESS_FINE_LOCATION) == PackageManager.PERMISSION_GRANTED) {
-                Awareness.SnapshotApi.getWeather(googleApiClient)
+                Awareness
+                        .SnapshotApi
+                        .getWeather(googleApiClient)
                         .setResultCallback(result -> {
                             if (!result.getStatus().isSuccess()) {
                                 subscriber.onError(new AwarenessException("Could not get weather data. User might be turning off the gps."));
-                                return;
+                            } else {
+                                Weather weather = result.getWeather();
+                                subscriber.onSuccess(weather);
                             }
-                            Weather weather = result.getWeather();
-                            subscriber.onSuccess(weather);
                         });
             } else {
                 LOGGER.warn("Location permission is not granted.");

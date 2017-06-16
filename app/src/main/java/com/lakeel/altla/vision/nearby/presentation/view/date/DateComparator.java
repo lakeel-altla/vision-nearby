@@ -1,8 +1,10 @@
 package com.lakeel.altla.vision.nearby.presentation.view.date;
 
+import android.support.annotation.NonNull;
+
 import org.joda.time.DateTime;
 
-public final class DateComparator {
+final class DateComparator {
 
     private final int day1;
 
@@ -20,7 +22,7 @@ public final class DateComparator {
 
     private final int era2;
 
-    public DateComparator(DateTime dateTime1, DateTime dateTime2) {
+    DateComparator(@NonNull DateTime dateTime1, @NonNull DateTime dateTime2) {
         day1 = dateTime1.getDayOfWeek();
         day2 = dateTime2.getDayOfWeek();
 
@@ -34,15 +36,15 @@ public final class DateComparator {
         era2 = dateTime2.getEra();
     }
 
-    public boolean isSameDay() {
+    boolean isSameDay() {
         return (day1 == day2) && (week1 == week2) && (year1 == year2) && (era1 == era2);
     }
 
-    public boolean isSameWeek() {
+    boolean isSameWeek() {
         return (week1 == week2) && (year1 == year2) && (era1 == era2);
     }
 
-    public boolean isSameYear() {
+    boolean isSameYear() {
         return (year1 == year2) && (era1 == era2);
     }
 }

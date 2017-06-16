@@ -14,7 +14,7 @@ public final class FavoriteUserModel {
 
     public Integer userActivity;
 
-    public long times;
+    public long passingTimes;
 
     public long passingTime;
 

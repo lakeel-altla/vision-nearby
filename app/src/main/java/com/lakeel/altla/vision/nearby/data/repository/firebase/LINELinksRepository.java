@@ -1,5 +1,6 @@
 package com.lakeel.altla.vision.nearby.data.repository.firebase;
 
+import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 
 import com.google.android.gms.tasks.Task;
@@ -27,29 +28,12 @@ public class LINELinksRepository {
         this.reference = FirebaseDatabase.getInstance().getReferenceFromUrl(DATABASE_URI);
     }
 
-    public Single<String> save(String userId, String url) {
-        return Single.create(subscriber -> {
-            LineLink lineLink = new LineLink();
-            lineLink.url = url;
-
-            Task<Void> task = reference
-                    .child(userId)
-                    .setValue(lineLink);
-
-            Exception exception = task.getException();
-            if (exception != null) {
-                throw new DataStoreException(exception);
-            }
-
-            subscriber.onSuccess(url);
-        });
-    }
-
-    public Single<LineLink> find(String userId) {
+    public Single<LineLink> find(@NonNull String userId) {
         return Single.create(subscriber ->
                 reference
                         .child(userId)
                         .addListenerForSingleValueEvent(new ValueEventListener() {
+
                             @Override
                             public void onDataChange(DataSnapshot dataSnapshot) {
                                 subscriber.onSuccess(map(dataSnapshot));
@@ -60,6 +44,21 @@ public class LINELinksRepository {
                                 subscriber.onError(databaseError.toException());
                             }
                         }));
+    }
+
+    public Single<String> save(@NonNull LineLink lineLink) {
+        return Single.create(subscriber -> {
+            Task<Void> task = reference
+                    .child(lineLink.userId)
+                    .setValue(lineLink);
+
+            Exception exception = task.getException();
+            if (exception != null) {
+                throw new DataStoreException(exception);
+            }
+
+            subscriber.onSuccess(lineLink.url);
+        });
     }
 
     @Nullable

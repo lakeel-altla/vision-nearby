@@ -1,6 +1,7 @@
 package com.lakeel.altla.vision.nearby.presentation.view.fragment;
 
 import android.os.Bundle;
+import android.support.annotation.NonNull;
 import android.support.annotation.StringRes;
 import android.support.design.widget.Snackbar;
 import android.support.v4.app.Fragment;
@@ -84,7 +85,15 @@ public final class FavoriteUserFragment extends Fragment implements OnMapReadyCa
 
         FavoriteUserFragment fragment = new FavoriteUserFragment();
         fragment.setArguments(args);
+
         return fragment;
+    }
+
+    @Override
+    public void onCreate(Bundle savedInstance) {
+        super.onCreate(savedInstance);
+
+
     }
 
     @Override
@@ -92,14 +101,13 @@ public final class FavoriteUserFragment extends Fragment implements OnMapReadyCa
                              Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_favorite_user, container, false);
 
-        ButterKnife.bind(this, view);
+        setHasOptionsMenu(true);
 
+        ButterKnife.bind(this, view);
         ButterKnife.bind(presenceLayout, view.findViewById(R.id.presenceLayout));
         ButterKnife.bind(profileLayout, view.findViewById(R.id.profileLayout));
         ButterKnife.bind(passingLayout, view.findViewById(R.id.passingLayout));
         ButterKnife.bind(snsLayout, view.findViewById(R.id.snsLayout));
-
-        setHasOptionsMenu(true);
 
         // Dagger
         MainActivity.getUserComponent(this).inject(this);
@@ -117,10 +125,12 @@ public final class FavoriteUserFragment extends Fragment implements OnMapReadyCa
 
         FragmentManager fragmentManager = getChildFragmentManager();
         supportMapFragment = (SupportMapFragment) fragmentManager.findFragmentById(R.id.layoutLocationMap);
+
         if (supportMapFragment == null) {
             supportMapFragment = SupportMapFragment.newInstance();
             fragmentManager.beginTransaction().replace(R.id.layoutLocationMap, supportMapFragment).commit();
         }
+
         supportMapFragment.getMapAsync(this);
 
         presenter.onActivityCreated();
@@ -136,6 +146,12 @@ public final class FavoriteUserFragment extends Fragment implements OnMapReadyCa
         }
 
         presenter.onResume();
+    }
+
+    @Override
+    public void onStop() {
+        super.onStop();
+        presenter.onStop();
     }
 
     @Override
@@ -170,20 +186,16 @@ public final class FavoriteUserFragment extends Fragment implements OnMapReadyCa
     }
 
     @Override
-    public void showTitle(String title) {
+    public void showTitle(@NonNull String title) {
         getActivity().setTitle(title);
     }
 
     @Override
-    public void updateModel(FavoriteUserModel model) {
+    public void updateModel(@NonNull FavoriteUserModel model) {
         // State
-        int connectionResId;
-        if (model.isConnected) {
-            connectionResId = R.string.textView_connected;
-        } else {
-            connectionResId = R.string.textView_disconnected;
-        }
+        int connectionResId = model.isConnected ? R.string.textView_connected : R.string.textView_disconnected;
         presenceLayout.presenceTextView.setText(connectionResId);
+
         presenceLayout.lastOnlineTextView.setText(new DateFormatter(model.lastOnlineTime).format());
 
         // Profile
@@ -191,7 +203,6 @@ public final class FavoriteUserFragment extends Fragment implements OnMapReadyCa
         imageLoader.displayImage(model.imageUri, userImageView);
 
         profileLayout.userNameTextView.setText(model.userName);
-
         profileLayout.emailTextView.setAutoLinkMask(Linkify.EMAIL_ADDRESSES);
         profileLayout.emailTextView.setText(model.email);
 
@@ -222,10 +233,10 @@ public final class FavoriteUserFragment extends Fragment implements OnMapReadyCa
             passingLayout.weatherTextView.setText(builder.toString());
         }
 
-        int userActivityResId = UserActivity.toUserActivity(model.userActivity).getResValue();
-        passingLayout.userActivityTextView.setText(getContext().getString(userActivityResId));
+        String userActivityText = getContext().getString(UserActivity.toUserActivity(model.userActivity).getResValue());
+        passingLayout.userActivityTextView.setText(userActivityText);
 
-        passingLayout.timesTextView.setText(String.valueOf(model.times));
+        passingLayout.timesTextView.setText(String.valueOf(model.passingTimes));
 
         // SNS
         if (!StringUtils.isEmpty(model.lineUrl)) {
@@ -234,7 +245,7 @@ public final class FavoriteUserFragment extends Fragment implements OnMapReadyCa
     }
 
     @Override
-    public void showLocation(String latitude, String longitude) {
+    public void showLocation(@NonNull String latitude, @NonNull String longitude) {
         // Show unknown text.
         passingLayout.locationMapLayout.setVisibility(View.VISIBLE);
         passingLayout.unknownTextView.setVisibility(View.GONE);
@@ -260,7 +271,7 @@ public final class FavoriteUserFragment extends Fragment implements OnMapReadyCa
     }
 
     @Override
-    public void showDistanceEstimationFragment(EstimationTarget target) {
+    public void showDistanceEstimationFragment(@NonNull EstimationTarget target) {
         FragmentController controller = new FragmentController(this);
         controller.showDistanceEstimationFragment(target);
     }

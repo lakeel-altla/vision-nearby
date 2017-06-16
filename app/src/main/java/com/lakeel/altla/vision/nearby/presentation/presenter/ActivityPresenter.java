@@ -76,7 +76,7 @@ public final class ActivityPresenter extends BasePresenter<ActivityView> {
     }
 
     @Override
-    public void onCreateView(ActivityView view) {
+    public void onCreateView(@NonNull ActivityView view) {
         super.onCreateView(view);
 
         if (CurrentUser.isSignedIn()) {
@@ -92,11 +92,10 @@ public final class ActivityPresenter extends BasePresenter<ActivityView> {
 
     public void onSignedIn() {
         getView().showFavoriteListFragment();
-        getView().showDrawerHeaderProfile(ActivityModelMapper.map());
+        getView().updateDrawerProfile(ActivityModelMapper.map());
 
         observeSignedInUser();
         saveLastUsedDeviceTime();
-        startAdvertiseInBackgroundIfNeeded();
 
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
             // Need to grant permission for subscribing beacons.
@@ -105,6 +104,8 @@ public final class ActivityPresenter extends BasePresenter<ActivityView> {
             isAccessFineLocationGranted = true;
             checkDeviceBle();
         }
+
+        startAdvertiseInBackgroundIfNeeded();
     }
 
     public void onBleEnabled() {
@@ -163,6 +164,7 @@ public final class ActivityPresenter extends BasePresenter<ActivityView> {
                                 getView().showSnackBar(R.string.snackBar_error_not_signed_out);
                             }
                         });
+
         subscriptions.add(subscription);
     }
 
@@ -186,7 +188,7 @@ public final class ActivityPresenter extends BasePresenter<ActivityView> {
                 .map(ActivityModelMapper::map)
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribe(model -> {
-                    getView().showDrawerHeaderProfile(model);
+                    getView().updateDrawerProfile(model);
                 }, e -> {
                     LOGGER.error("Failed.", e);
                     getView().showSnackBar(R.string.snackBar_error_failed);
@@ -198,25 +200,34 @@ public final class ActivityPresenter extends BasePresenter<ActivityView> {
         BleChecker checker = new BleChecker(context);
         State state = checker.checkState();
 
-        if (state == State.ENABLE) {
-            isAdvertiseAvailableDevice = true;
-            startAdvertiseInBackgroundIfNeeded();
+        switch (state) {
+            case ENABLE: {
+                isAdvertiseAvailableDevice = true;
+                startAdvertiseInBackgroundIfNeeded();
 
-            if (isAccessFineLocationGranted) {
-                startDetectBeaconsInBackgroundIfNeeded();
+                if (isAccessFineLocationGranted) {
+                    startDetectBeaconsInBackgroundIfNeeded();
+                }
+                break;
             }
-        } else if (state == State.OFF) {
-            isAdvertiseAvailableDevice = false;
-            getView().showBleEnabledActivity();
-        } else if (state == State.SUBSCRIBE_ONLY) {
-            isAdvertiseAvailableDevice = false;
-            getView().showAdvertiseDisableConfirmDialog();
+            case OFF: {
+                isAdvertiseAvailableDevice = false;
+                getView().showBleEnabledActivity();
+                break;
+            }
+            case SUBSCRIBE_ONLY: {
+                isAdvertiseAvailableDevice = false;
+                getView().showAdvertiseDisableConfirmDialog();
 
-            if (isAccessFineLocationGranted) {
-                startDetectBeaconsInBackgroundIfNeeded();
+                if (isAccessFineLocationGranted) {
+                    startDetectBeaconsInBackgroundIfNeeded();
+                }
+                break;
             }
-        } else {
-            isAdvertiseAvailableDevice = false;
+            default: {
+                isAdvertiseAvailableDevice = false;
+                break;
+            }
         }
 
         // Set user property.
@@ -228,11 +239,10 @@ public final class ActivityPresenter extends BasePresenter<ActivityView> {
                 .execute()
                 .subscribe(preference -> {
                     if (preference.isAdvertiseInBackgroundEnabled && isAdvertiseAvailableDevice) {
-                        if (isAlreadyAdvertised) {
-                            return;
+                        if (!isAlreadyAdvertised) {
+                            isAlreadyAdvertised = true;
+                            getView().startAdvertiseInBackground(preference.beaconId);
                         }
-                        isAlreadyAdvertised = true;
-                        getView().startAdvertiseInBackground(preference.beaconId);
                     }
                 }, e -> {
                     LOGGER.error("Failed.", e);

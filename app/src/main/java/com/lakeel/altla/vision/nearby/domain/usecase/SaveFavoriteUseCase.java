@@ -1,5 +1,7 @@
 package com.lakeel.altla.vision.nearby.domain.usecase;
 
+import android.support.annotation.NonNull;
+
 import com.lakeel.altla.vision.nearby.data.repository.firebase.UserFavoriteRepository;
 import com.lakeel.altla.vision.nearby.domain.model.Favorite;
 import com.lakeel.altla.vision.nearby.presentation.helper.CurrentUser;
@@ -18,7 +20,7 @@ public final class SaveFavoriteUseCase {
     SaveFavoriteUseCase() {
     }
 
-    public Completable execute(String favoriteUserId) {
+    public Completable execute(@NonNull String favoriteUserId) {
         Favorite favorite = new Favorite();
         favorite.userId = CurrentUser.getUid();
         favorite.favoriteUserId = favoriteUserId;

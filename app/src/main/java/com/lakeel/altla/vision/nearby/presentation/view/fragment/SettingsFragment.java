@@ -9,7 +9,7 @@ import com.lakeel.altla.vision.nearby.presentation.view.activity.MainActivity;
 
 public final class SettingsFragment extends PreferenceFragmentCompat {
 
-    private static final String KEY_BLUETOOTH_SCREEN = "bleScreen";
+    private static final String KEY_BLE_SCREEN = "bleScreen";
 
     private static final String KEY_LINE_SCREEN = "lineScreen";
 
@@ -27,7 +27,7 @@ public final class SettingsFragment extends PreferenceFragmentCompat {
         MainActivity.getUserComponent(this).inject(this);
 
         // BLE
-        PreferenceScreen bleScreen = (PreferenceScreen) findPreference(KEY_BLUETOOTH_SCREEN);
+        PreferenceScreen bleScreen = (PreferenceScreen) findPreference(KEY_BLE_SCREEN);
         bleScreen.setOnPreferenceClickListener(preference -> {
             FragmentController controller = new FragmentController(this);
             controller.showBleSettingsFragment();
@@ -55,8 +55,8 @@ public final class SettingsFragment extends PreferenceFragmentCompat {
     public void onActivityCreated(Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
 
-        getActivity().setTitle(R.string.toolbar_title_settings);
-
-        ((MainActivity) getActivity()).setDrawerIndicatorEnabled(true);
+        MainActivity activity = ((MainActivity) getActivity());
+        activity.setDrawerIndicatorEnabled(true);
+        activity.setTitle(R.string.toolbar_title_settings);
     }
 }

@@ -134,6 +134,7 @@ public class MainActivity extends AppCompatActivity
                 LOGGER.warn("Access fine location permission is denied.");
             }
         }
+
         super.onRequestPermissionsResult(requestCode, permissions, grantResults);
     }
 
@@ -191,6 +192,7 @@ public class MainActivity extends AppCompatActivity
 
         DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
         drawer.closeDrawer(GravityCompat.START);
+
         return true;
     }
 
@@ -208,17 +210,12 @@ public class MainActivity extends AppCompatActivity
     }
 
     @Override
-    public void showDrawerHeaderProfile(ActivityModel model) {
+    public void updateDrawerProfile(@NonNull ActivityModel model) {
         ImageLoader imageLoader = ImageLoader.getInstance();
         imageLoader.displayImage(model.imageUri, drawerHeaderLayout.userImageView);
 
         drawerHeaderLayout.userNameTextView.setText(model.userName);
         drawerHeaderLayout.emailTextView.setText(model.email);
-    }
-
-    @Override
-    public void showSnackBar(int resId) {
-        Snackbar.make(mainLayout, resId, Snackbar.LENGTH_SHORT).show();
     }
 
     @Override
@@ -253,7 +250,7 @@ public class MainActivity extends AppCompatActivity
     }
 
     @Override
-    public void startAdvertiseInBackground(String beaconId) {
+    public void startAdvertiseInBackground(@NonNull String beaconId) {
         Intent intent = new Intent(getApplicationContext(), AdvertiseService.class);
         intent.putExtra(IntentKey.BEACON_ID.name(), beaconId);
         getApplicationContext().startService(intent);
@@ -271,15 +268,20 @@ public class MainActivity extends AppCompatActivity
 
     @Override
     public void showFavoriteListFragment() {
+        drawerLayout.setDrawerLockMode(DrawerLayout.LOCK_MODE_UNLOCKED);
+
         ActionBar actionBar = getSupportActionBar();
         if (actionBar != null) {
             actionBar.setDisplayHomeAsUpEnabled(true);
         }
 
-        drawerLayout.setDrawerLockMode(DrawerLayout.LOCK_MODE_UNLOCKED);
-
         FragmentController fragmentController = new FragmentController(this);
         fragmentController.showFavoriteListFragment();
+    }
+
+    @Override
+    public void showSnackBar(int resId) {
+        Snackbar.make(mainLayout, resId, Snackbar.LENGTH_SHORT).show();
     }
 
     public static ViewComponent getUserComponent(@NonNull Fragment fragment) {

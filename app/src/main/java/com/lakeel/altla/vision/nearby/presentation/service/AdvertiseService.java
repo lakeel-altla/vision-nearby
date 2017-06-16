@@ -37,40 +37,43 @@ public final class AdvertiseService extends Service {
         String namespaceId = eddystoneUID.getNamespaceId();
         String instanceId = eddystoneUID.getInstanceId();
 
-        LOGGER.debug("namespaceId=" + namespaceId + " instanceId=" + instanceId);
+        LOGGER.debug("namespaceId=" + namespaceId);
+        LOGGER.debug("instanceId=" + instanceId);
 
         BeaconParser beaconParser = new BeaconParser()
                 .setBeaconLayout(BeaconParser.EDDYSTONE_UID_LAYOUT);
         BeaconTransmitter beaconTransmitter = new BeaconTransmitter(getApplicationContext(), beaconParser);
 
         if (beaconTransmitter.isStarted()) {
-            LOGGER.warn("Already started.");
-        } else {
-            // Transmit as a Eddystone-UID.
-            Beacon beacon = new Beacon.Builder()
-                    .setId1(namespaceId)
-                    .setId2(instanceId)
-                    .build();
-
-            beaconTransmitter.startAdvertising(beacon, new AdvertiseCallback() {
-                @Override
-                public void onStartSuccess(AdvertiseSettings settingsInEffect) {
-                    super.onStartSuccess(settingsInEffect);
-                    LOGGER.info("Succeeded to advertise as a beacon.");
-
-                    NotificationCompat.Builder builder = new NotificationCompat.Builder(getApplicationContext());
-                    builder.setContentTitle(getApplicationContext().getResources().getString(R.string.notification_title_advertise_ble));
-                    builder.setSmallIcon(android.R.drawable.ic_lock_idle_alarm);
-                    startForeground(UUID.randomUUID().variant(), builder.build());
-                }
-
-                @Override
-                public void onStartFailure(int errorCode) {
-                    super.onStartFailure(errorCode);
-                    LOGGER.error("Failed to start to advertise:errorCode=" + errorCode);
-                }
-            });
+            LOGGER.warn("Already started to advertise.");
+            return START_STICKY;
         }
+
+        Beacon beacon = new Beacon.Builder()
+                .setId1(namespaceId)
+                .setId2(instanceId)
+                .build();
+
+        // Transmit as a Eddystone-UID.
+        beaconTransmitter.startAdvertising(beacon, new AdvertiseCallback() {
+
+            @Override
+            public void onStartSuccess(AdvertiseSettings settingsInEffect) {
+                super.onStartSuccess(settingsInEffect);
+                LOGGER.info("Succeeded to advertise as a beacon.");
+
+                NotificationCompat.Builder builder = new NotificationCompat.Builder(getApplicationContext());
+                builder.setContentTitle(getApplicationContext().getResources().getString(R.string.notification_title_advertise_ble));
+                builder.setSmallIcon(android.R.drawable.ic_lock_idle_alarm);
+                startForeground(UUID.randomUUID().variant(), builder.build());
+            }
+
+            @Override
+            public void onStartFailure(int errorCode) {
+                super.onStartFailure(errorCode);
+                LOGGER.error("Failed to start to advertise:errorCode=" + errorCode);
+            }
+        });
 
         return START_STICKY;
     }

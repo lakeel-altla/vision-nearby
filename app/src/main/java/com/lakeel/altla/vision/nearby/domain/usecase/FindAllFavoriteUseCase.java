@@ -25,7 +25,8 @@ public final class FindAllFavoriteUseCase {
     public Observable<UserProfile> execute() {
         String userId = CurrentUser.getUid();
 
-        return favoritesRepository.findAll(userId)
+        return favoritesRepository
+                .findAll(userId)
                 .subscribeOn(Schedulers.io())
                 .flatMap(this::findUser);
     }

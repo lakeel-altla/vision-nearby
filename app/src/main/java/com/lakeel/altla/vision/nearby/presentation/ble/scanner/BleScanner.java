@@ -8,6 +8,7 @@ import android.bluetooth.le.ScanCallback;
 import android.bluetooth.le.ScanResult;
 import android.content.Context;
 import android.os.Build;
+import android.support.annotation.NonNull;
 
 @TargetApi(value = Build.VERSION_CODES.LOLLIPOP)
 final class BleScanner implements Scanner {
@@ -24,12 +25,11 @@ final class BleScanner implements Scanner {
             if (result.getScanRecord() == null) {
                 return;
             }
-
             bleScanCallback.onScanned(result.getRssi(), result.getScanRecord().getBytes());
         }
     };
 
-    BleScanner(Context context, BleScanCallback scanCallback) {
+    BleScanner(@NonNull Context context, @NonNull BleScanCallback scanCallback) {
         BluetoothManager bluetoothManager = (BluetoothManager) context.getSystemService(Context.BLUETOOTH_SERVICE);
         BluetoothAdapter bluetoothAdapter = bluetoothManager.getAdapter();
         this.bluetoothLeScanner = bluetoothAdapter.getBluetoothLeScanner();

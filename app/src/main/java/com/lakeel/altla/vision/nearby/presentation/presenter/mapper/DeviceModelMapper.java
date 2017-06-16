@@ -1,5 +1,7 @@
 package com.lakeel.altla.vision.nearby.presentation.presenter.mapper;
 
+import android.support.annotation.NonNull;
+
 import com.lakeel.altla.vision.nearby.domain.model.Beacon;
 import com.lakeel.altla.vision.nearby.presentation.presenter.model.DeviceModel;
 
@@ -8,7 +10,7 @@ public final class DeviceModelMapper {
     private DeviceModelMapper() {
     }
 
-    public static DeviceModel map(Beacon beacon) {
+    public static DeviceModel map(@NonNull Beacon beacon) {
         DeviceModel model = new DeviceModel();
         model.beaconId = beacon.beaconId;
         model.deviceName = beacon.name;

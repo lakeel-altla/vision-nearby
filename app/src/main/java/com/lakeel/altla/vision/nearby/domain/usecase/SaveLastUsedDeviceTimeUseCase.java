@@ -23,7 +23,6 @@ public final class SaveLastUsedDeviceTimeUseCase {
 
     public Observable<Void> execute() {
         String userId = CurrentUser.getUid();
-
         return preferenceRepository
                 .findPreferences(userId)
                 .subscribeOn(Schedulers.io())

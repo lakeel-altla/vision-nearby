@@ -1,6 +1,7 @@
 package com.lakeel.altla.vision.nearby.presentation.presenter;
 
 import android.os.Bundle;
+import android.support.annotation.NonNull;
 
 import com.lakeel.altla.vision.nearby.R;
 import com.lakeel.altla.vision.nearby.core.StringUtils;
@@ -67,25 +68,26 @@ public final class FavoriteUserPresenter extends BasePresenter<FavoriteUserView>
     FavoriteUserPresenter() {
     }
 
-    public void onCreateView(FavoriteUserView view, Bundle bundle) {
+    public void onCreateView(@NonNull FavoriteUserView view, @NonNull Bundle bundle) {
         super.onCreateView(view);
         this.favoriteUser = (FavoriteUser) bundle.getSerializable(BUNDLE_FAVORITE_USER);
     }
 
     public void onActivityCreated() {
+        analyticsReporter.viewFavoriteItem(favoriteUser.userId, favoriteUser.name);
         getView().showTitle(favoriteUser.name);
     }
 
     public void onResume() {
-        analyticsReporter.viewFavoriteItem(favoriteUser.userId, favoriteUser.name);
-
-        Subscription subscription = findLatestNearbyHistoryUseCase.execute(favoriteUser.userId)
+        Subscription subscription = findLatestNearbyHistoryUseCase
+                .execute(favoriteUser.userId)
                 .map(nearbyHistory -> {
                     model = FavoriteUserModelMapper.map(nearbyHistory);
                     return model;
                 })
                 .flatMap(model ->
-                        findUserUseCase.execute(favoriteUser.userId)
+                        findUserUseCase
+                                .execute(favoriteUser.userId)
                                 .map(user -> {
                                     this.model.userName = user.name;
                                     this.model.imageUri = user.imageUri;
@@ -93,20 +95,23 @@ public final class FavoriteUserPresenter extends BasePresenter<FavoriteUserView>
                                     return this.model;
                                 }))
                 .flatMap(model ->
-                        findConnectionUseCase.execute(favoriteUser.userId)
+                        findConnectionUseCase
+                                .execute(favoriteUser.userId)
                                 .map(connection -> {
                                     this.model.isConnected = connection.isConnected;
                                     this.model.lastOnlineTime = (Long) connection.lastOnlineTime;
                                     return this.model;
                                 }))
                 .flatMap(model ->
-                        findAllPassingTimeUseCase.execute(favoriteUser.userId)
+                        findAllPassingTimeUseCase
+                                .execute(favoriteUser.userId)
                                 .map(times -> {
-                                    this.model.times = times;
+                                    this.model.passingTimes = times;
                                     return this.model;
                                 }))
                 .flatMapObservable(model ->
-                        findLineLinkUseCase.execute(favoriteUser.userId)
+                        findLineLinkUseCase
+                                .execute(favoriteUser.userId)
                                 .toObservable()
                                 .filter(lineLink -> lineLink != null)
                                 .map(lineLink -> {
@@ -135,6 +140,7 @@ public final class FavoriteUserPresenter extends BasePresenter<FavoriteUserView>
 
     public void onMapReady() {
         isMapReadied = true;
+
         if (model == null || model.locationModel == null) {
             getView().hideLocation();
         } else {
@@ -143,7 +149,8 @@ public final class FavoriteUserPresenter extends BasePresenter<FavoriteUserView>
     }
 
     public void onEstimateDistanceMenuClick() {
-        Subscription subscription = findAllUserBeaconUseCase.execute(favoriteUser.userId)
+        Subscription subscription = findAllUserBeaconUseCase
+                .execute(favoriteUser.userId)
                 .toList()
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribe(beacons -> {
@@ -151,6 +158,7 @@ public final class FavoriteUserPresenter extends BasePresenter<FavoriteUserView>
 
                     ArrayList<String> beaconIds = new ArrayList<>(beacons.size());
                     beaconIds.addAll(beacons);
+
                     EstimationTarget estimationTarget = new EstimationTarget(favoriteUser.name, beaconIds);
                     getView().showDistanceEstimationFragment(estimationTarget);
                 }, e -> {

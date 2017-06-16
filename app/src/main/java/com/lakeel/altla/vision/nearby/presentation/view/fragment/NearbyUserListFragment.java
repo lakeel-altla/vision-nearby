@@ -39,7 +39,7 @@ public final class NearbyUserListFragment extends Fragment implements NearbyUser
     @Inject
     NearbyUserListPresenter presenter;
 
-    @BindView(R.id.swipeLayout)
+    @BindView(R.id.layoutSwipe)
     SwipeRefreshLayout swipeRefreshLayout;
 
     @BindView(R.id.recyclerView)
@@ -72,9 +72,9 @@ public final class NearbyUserListFragment extends Fragment implements NearbyUser
     public void onActivityCreated(Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
 
-        getActivity().setTitle(R.string.toolbar_title_nearby);
-
-        ((MainActivity) getActivity()).setDrawerIndicatorEnabled(true);
+        MainActivity activity = ((MainActivity) getActivity());
+        activity.setTitle(R.string.toolbar_title_nearby);
+        activity.setDrawerIndicatorEnabled(true);
 
         swipeRefreshLayout.setColorSchemeResources(R.color.colorPrimary, R.color.colorPrimary, R.color.colorPrimary, R.color.colorPrimary);
         swipeRefreshLayout.setOnRefreshListener(() -> {
@@ -137,7 +137,7 @@ public final class NearbyUserListFragment extends Fragment implements NearbyUser
     }
 
     @Override
-    public void showBleEnabledActivity(Intent intent) {
+    public void showBleEnabledActivity(@NonNull Intent intent) {
         startActivityForResult(intent, REQUEST_CODE_ENABLE_BLE);
     }
 

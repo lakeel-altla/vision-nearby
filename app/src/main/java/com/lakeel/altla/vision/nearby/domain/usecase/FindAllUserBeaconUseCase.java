@@ -1,5 +1,7 @@
 package com.lakeel.altla.vision.nearby.domain.usecase;
 
+import android.support.annotation.NonNull;
+
 import com.lakeel.altla.vision.nearby.data.repository.firebase.UserProfileRepository;
 
 import javax.inject.Inject;
@@ -16,7 +18,7 @@ public final class FindAllUserBeaconUseCase {
     FindAllUserBeaconUseCase() {
     }
 
-    public Observable<String> execute(String userId) {
+    public Observable<String> execute(@NonNull String userId) {
         return repository.findUserBeacons(userId).subscribeOn(Schedulers.io());
     }
 }

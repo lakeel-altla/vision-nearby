@@ -1,5 +1,7 @@
 package com.lakeel.altla.vision.nearby.domain.usecase;
 
+import android.support.annotation.NonNull;
+
 import com.lakeel.altla.vision.nearby.data.repository.firebase.LINELinksRepository;
 import com.lakeel.altla.vision.nearby.domain.model.LineLink;
 
@@ -17,7 +19,7 @@ public final class FindLineLinkUseCase {
     FindLineLinkUseCase() {
     }
 
-    public Single<LineLink> execute(String userId) {
+    public Single<LineLink> execute(@NonNull String userId) {
         return repository.find(userId).subscribeOn(Schedulers.io());
     }
 }

@@ -49,7 +49,7 @@ public class DeviceListPresenter extends BasePresenter<DeviceListView> {
 
     private final ReusableCompositeSubscription subscriptions = new ReusableCompositeSubscription();
 
-    private final List<DeviceModel> viewModels = new ArrayList<>();
+    private final List<DeviceModel> models = new ArrayList<>();
 
     @Inject
     DeviceListPresenter() {
@@ -64,7 +64,7 @@ public class DeviceListPresenter extends BasePresenter<DeviceListView> {
     }
 
     public int getItemCount() {
-        return viewModels.size();
+        return models.size();
     }
 
     public void onCreateItemView(DeviceAdapter.DeviceItemViewHolder viewHolder) {
@@ -77,7 +77,7 @@ public class DeviceListPresenter extends BasePresenter<DeviceListView> {
 
         @Override
         public void onBind(@IntRange(from = 0) int position) {
-            getItemView().showItem(viewModels.get(position));
+            getItemView().showItem(models.get(position));
         }
 
         public void onClick(DeviceModel model) {
@@ -87,7 +87,8 @@ public class DeviceListPresenter extends BasePresenter<DeviceListView> {
         public void onFound(DeviceModel model) {
             analyticsReporter.foundDevice(model.beaconId, model.deviceName);
 
-            Subscription subscription = foundDeviceUseCase.execute(model.beaconId)
+            Subscription subscription = foundDeviceUseCase
+                    .execute(model.beaconId)
                     .observeOn(AndroidSchedulers.mainThread())
                     .subscribe(e -> {
                         LOGGER.error("Failed.", e);
@@ -99,7 +100,8 @@ public class DeviceListPresenter extends BasePresenter<DeviceListView> {
         public void onLost(DeviceModel model) {
             analyticsReporter.lostDevice(model.beaconId, model.deviceName);
 
-            Subscription subscription = lostDeviceUseCase.execute(model.beaconId)
+            Subscription subscription = lostDeviceUseCase
+                    .execute(model.beaconId)
                     .observeOn(AndroidSchedulers.mainThread())
                     .subscribe(e -> {
                         LOGGER.error("Failed.", e);
@@ -111,13 +113,14 @@ public class DeviceListPresenter extends BasePresenter<DeviceListView> {
         public void onRemove(DeviceModel model) {
             analyticsReporter.removeDevice(model.beaconId, model.deviceName);
 
-            Subscription subscription = removeDeviceUseCase.execute(model.beaconId)
+            Subscription subscription = removeDeviceUseCase
+                    .execute(model.beaconId)
                     .observeOn(AndroidSchedulers.mainThread())
                     .subscribe(s -> {
-                        int size = viewModels.size();
-                        viewModels.remove(model);
+                        int size = models.size();
+                        models.remove(model);
 
-                        if (CollectionUtils.isEmpty(viewModels)) {
+                        if (CollectionUtils.isEmpty(models)) {
                             getView().removeAll(size);
                         } else {
                             getView().updateItems();
@@ -133,13 +136,14 @@ public class DeviceListPresenter extends BasePresenter<DeviceListView> {
     }
 
     private void findUserDevices() {
-        Subscription subscription = findAllDeviceUseCase.execute()
+        Subscription subscription = findAllDeviceUseCase
+                .execute()
                 .map(DeviceModelMapper::map)
                 .toSortedList((model1, model2) -> sortByLatest(model1.lastUsedTime, model2.lastUsedTime))
                 .observeOn(AndroidSchedulers.mainThread())
-                .subscribe(models -> {
-                    viewModels.clear();
-                    viewModels.addAll(models);
+                .subscribe(deviceModels -> {
+                    models.clear();
+                    models.addAll(deviceModels);
 
                     getView().updateItems();
                 }, e -> {

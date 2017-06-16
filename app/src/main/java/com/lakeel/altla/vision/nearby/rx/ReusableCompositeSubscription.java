@@ -13,6 +13,7 @@ public final class ReusableCompositeSubscription {
         if (compositeSubscription == null) {
             compositeSubscription = new CompositeSubscription();
         }
+
         compositeSubscription.add(subscription);
     }
 

@@ -1,5 +1,7 @@
 package com.lakeel.altla.vision.nearby.domain.usecase;
 
+import android.support.annotation.NonNull;
+
 import com.lakeel.altla.vision.nearby.data.repository.firebase.UserDeviceTokenRepository;
 import com.lakeel.altla.vision.nearby.domain.model.DeviceToken;
 
@@ -17,7 +19,7 @@ public final class FindAllDeviceTokenUseCase {
     FindAllDeviceTokenUseCase() {
     }
 
-    public Observable<DeviceToken> execute(String userId) {
+    public Observable<DeviceToken> execute(@NonNull String userId) {
         return repository.findAll(userId).subscribeOn(Schedulers.io());
     }
 }

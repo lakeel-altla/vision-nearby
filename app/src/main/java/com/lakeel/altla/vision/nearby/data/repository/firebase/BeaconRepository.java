@@ -1,5 +1,6 @@
 package com.lakeel.altla.vision.nearby.data.repository.firebase;
 
+import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 
 import com.google.android.gms.tasks.Task;
@@ -18,6 +19,7 @@ import java.util.Map;
 import javax.inject.Inject;
 
 import rx.Completable;
+import rx.Observable;
 import rx.Single;
 
 public class BeaconRepository {
@@ -35,11 +37,12 @@ public class BeaconRepository {
         reference = FirebaseDatabase.getInstance().getReferenceFromUrl(DATABASE_URI);
     }
 
-    public Single<Beacon> find(String beaconId) {
+    public Single<Beacon> find(@NonNull String beaconId) {
         return Single.create(subscriber ->
                 reference
                         .child(beaconId)
                         .addListenerForSingleValueEvent(new ValueEventListener() {
+
                             @Override
                             public void onDataChange(DataSnapshot dataSnapshot) {
                                 subscriber.onSuccess(map(dataSnapshot));
@@ -52,8 +55,8 @@ public class BeaconRepository {
                         }));
     }
 
-    public Completable save(Beacon beacon) {
-        return Completable.create(subscriber -> {
+    public Observable<Beacon> save(@NonNull Beacon beacon) {
+        return Observable.create(subscriber -> {
 
             Task task = reference
                     .child(beacon.beaconId)
@@ -64,11 +67,11 @@ public class BeaconRepository {
                 throw new DataStoreException(e);
             }
 
-            subscriber.onCompleted();
+            subscriber.onNext(beacon);
         });
     }
 
-    public Single<String> remove(String beaconId) {
+    public Single<String> remove(@NonNull String beaconId) {
         return Single.create(subscriber -> {
             Task task = reference
                     .child(beaconId)
@@ -83,7 +86,7 @@ public class BeaconRepository {
         });
     }
 
-    public Completable lostDevice(String beaconId) {
+    public Completable lostDevice(@NonNull String beaconId) {
         return Completable.create(subscriber -> {
             Map<String, Object> map = new HashMap<>();
             map.put(KEY_IS_LOST, true);
@@ -101,7 +104,7 @@ public class BeaconRepository {
         });
     }
 
-    public Completable foundDevice(String beaconId) {
+    public Completable foundDevice(@NonNull String beaconId) {
         return Completable.create(subscriber -> {
             Map<String, Object> map = new HashMap<>();
             map.put(KEY_IS_LOST, false);
@@ -119,7 +122,7 @@ public class BeaconRepository {
         });
     }
 
-    public Completable saveLastUsedDeviceTime(String beaconId) {
+    public Completable saveLastUsedDeviceTime(@NonNull String beaconId) {
         return Completable.create(subscriber -> {
             Map<String, Object> map = new HashMap<>();
             map.put(KEY_LAST_USED_TIME, ServerValue.TIMESTAMP);

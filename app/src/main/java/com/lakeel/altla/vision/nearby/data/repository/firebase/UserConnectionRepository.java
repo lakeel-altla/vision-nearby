@@ -1,5 +1,7 @@
 package com.lakeel.altla.vision.nearby.data.repository.firebase;
 
+import android.support.annotation.NonNull;
+
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.database.DataSnapshot;
@@ -19,7 +21,7 @@ public class UserConnectionRepository {
 
     private static final String DATABASE_URI = "https://profile-notification-95441.firebaseio.com/userConnections";
 
-    private static final String IS_CONNECTED_KEY = "isConnected";
+    private static final String KEY_IS_CONNECTED = "isConnected";
 
     private final DatabaseReference reference;
 
@@ -28,7 +30,25 @@ public class UserConnectionRepository {
         this.reference = FirebaseDatabase.getInstance().getReferenceFromUrl(DATABASE_URI);
     }
 
-    public void saveOnline(String userId) {
+    public Single<Connection> find(@NonNull String userId) {
+        return Single.create(subscriber ->
+                reference
+                        .child(userId)
+                        .addListenerForSingleValueEvent(new ValueEventListener() {
+
+                            @Override
+                            public void onDataChange(DataSnapshot dataSnapshot) {
+                                subscriber.onSuccess(map(dataSnapshot));
+                            }
+
+                            @Override
+                            public void onCancelled(DatabaseError databaseError) {
+                                subscriber.onError(databaseError.toException());
+                            }
+                        }));
+    }
+
+    public void saveOnline(@NonNull String userId) {
 
         // Check user authentication because when user sign out,
         // this method is called and FirebaseUser instance become null.
@@ -44,11 +64,11 @@ public class UserConnectionRepository {
         }
     }
 
-    public Completable saveOffline(String userId) {
+    public Completable saveOffline(@NonNull String userId) {
         return Completable.create(subscriber -> {
             Task task = reference
                     .child(userId)
-                    .child(IS_CONNECTED_KEY)
+                    .child(KEY_IS_CONNECTED)
                     .setValue(false);
 
             Exception e = task.getException();
@@ -60,29 +80,12 @@ public class UserConnectionRepository {
         });
     }
 
-    public void saveOfflineOnDisconnect(String userId) {
+    public void saveOfflineOnDisconnect(@NonNull String userId) {
         reference
                 .child(userId)
-                .child(IS_CONNECTED_KEY)
+                .child(KEY_IS_CONNECTED)
                 .onDisconnect()
                 .setValue(false);
-    }
-
-    public Single<Connection> find(String userId) {
-        return Single.create(subscriber ->
-                reference
-                        .child(userId)
-                        .addListenerForSingleValueEvent(new ValueEventListener() {
-                            @Override
-                            public void onDataChange(DataSnapshot dataSnapshot) {
-                                subscriber.onSuccess(map(dataSnapshot));
-                            }
-
-                            @Override
-                            public void onCancelled(DatabaseError databaseError) {
-                                subscriber.onError(databaseError.toException());
-                            }
-                        }));
     }
 
     private Connection map(DataSnapshot dataSnapshot) {

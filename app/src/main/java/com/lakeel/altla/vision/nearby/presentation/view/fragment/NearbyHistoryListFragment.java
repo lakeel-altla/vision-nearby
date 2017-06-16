@@ -1,6 +1,7 @@
 package com.lakeel.altla.vision.nearby.presentation.view.fragment;
 
 import android.os.Bundle;
+import android.support.annotation.NonNull;
 import android.support.design.widget.Snackbar;
 import android.support.v4.app.Fragment;
 import android.support.v7.widget.LinearLayoutManager;
@@ -16,6 +17,7 @@ import com.lakeel.altla.vision.nearby.presentation.view.NearbyHistoryListView;
 import com.lakeel.altla.vision.nearby.presentation.view.activity.MainActivity;
 import com.lakeel.altla.vision.nearby.presentation.view.adapter.NearbyHistoryAdapter;
 import com.lakeel.altla.vision.nearby.presentation.view.divider.DividerItemDecoration;
+import com.lakeel.altla.vision.nearby.presentation.view.fragment.bundle.PassingUser;
 import com.marshalchen.ultimaterecyclerview.UltimateRecyclerView;
 import com.marshalchen.ultimaterecyclerview.layoutmanagers.ScrollSmoothLineaerLayoutManager;
 import com.marshalchen.ultimaterecyclerview.swipe.SwipeItemManagerInterface;
@@ -58,9 +60,9 @@ public final class NearbyHistoryListFragment extends Fragment implements NearbyH
     public void onActivityCreated(Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
 
-        getActivity().setTitle(R.string.toolbar_title_history);
-
-        ((MainActivity) getActivity()).setDrawerIndicatorEnabled(true);
+        MainActivity activity = ((MainActivity) getActivity());
+        activity.setTitle(R.string.toolbar_title_history);
+        activity.setDrawerIndicatorEnabled(true);
 
         RecyclerView.LayoutManager layoutManager = new ScrollSmoothLineaerLayoutManager(getContext(), LinearLayoutManager.VERTICAL, false, 500);
         recyclerView.setLayoutManager(layoutManager);
@@ -89,7 +91,8 @@ public final class NearbyHistoryListFragment extends Fragment implements NearbyH
 
     @Override
     public void removeAll(int size) {
-        recyclerView.getAdapter().notifyItemRangeRemoved(0, size);
+        RecyclerView.Adapter adapter = recyclerView.getAdapter();
+        adapter.notifyItemRangeRemoved(0, size);
     }
 
     @Override
@@ -104,13 +107,13 @@ public final class NearbyHistoryListFragment extends Fragment implements NearbyH
     }
 
     @Override
-    public void showSnackBar(int resId) {
-        Snackbar.make(mainLayout, resId, Snackbar.LENGTH_SHORT).show();
+    public void showPassingUserFragment(@NonNull PassingUser passingUser) {
+        FragmentController controller = new FragmentController(this);
+        controller.showPassingUserFragment(passingUser);
     }
 
     @Override
-    public void showPassingUserFragment(String historyId) {
-        FragmentController controller = new FragmentController(this);
-        controller.showPassingUserFragment(historyId);
+    public void showSnackBar(int resId) {
+        Snackbar.make(mainLayout, resId, Snackbar.LENGTH_SHORT).show();
     }
 }

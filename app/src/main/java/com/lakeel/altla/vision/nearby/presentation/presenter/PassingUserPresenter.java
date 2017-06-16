@@ -14,6 +14,7 @@ import com.lakeel.altla.vision.nearby.presentation.analytics.AnalyticsReporter;
 import com.lakeel.altla.vision.nearby.presentation.presenter.mapper.UserPassingModelMapper;
 import com.lakeel.altla.vision.nearby.presentation.presenter.model.PassingUserModel;
 import com.lakeel.altla.vision.nearby.presentation.view.PassingUserView;
+import com.lakeel.altla.vision.nearby.presentation.view.fragment.bundle.PassingUser;
 import com.lakeel.altla.vision.nearby.rx.ReusableCompositeSubscription;
 
 import org.slf4j.Logger;
@@ -52,13 +53,13 @@ public final class PassingUserPresenter extends BasePresenter<PassingUserView> {
 
     private static final Logger LOGGER = LoggerFactory.getLogger(PassingUserPresenter.class);
 
-    private static final String BUNDLE_HISTORY_ID = "historyId";
+    private static final String BUNDLE_PASSING_USER = "passingUser";
 
     private final ReusableCompositeSubscription subscriptions = new ReusableCompositeSubscription();
 
     private PassingUserModel model;
 
-    private String historyId;
+    private PassingUser passingUser;
 
     private boolean isMapReadied;
 
@@ -70,18 +71,23 @@ public final class PassingUserPresenter extends BasePresenter<PassingUserView> {
 
     public void onCreateView(PassingUserView view, Bundle bundle) {
         super.onCreateView(view);
-        historyId = bundle.getString(BUNDLE_HISTORY_ID);
+        passingUser = (PassingUser) bundle.getSerializable(BUNDLE_PASSING_USER);
+    }
+
+    public void onActivityCreated() {
+        analyticsReporter.viewPassingUser(passingUser.userId, passingUser.userName);
     }
 
     public void onResume() {
         Subscription subscription = findNearbyHistoryUseCase
-                .execute(historyId)
+                .execute(passingUser.historyId)
                 .map(history -> {
                     model = UserPassingModelMapper.map(history);
                     return model;
                 })
                 .flatMap(model ->
-                        findUserUseCase.execute(model.userId)
+                        findUserUseCase
+                                .execute(model.userId)
                                 .map(user -> {
                                     this.model.userName = user.name;
                                     this.model.imageUri = user.imageUri;
@@ -89,20 +95,23 @@ public final class PassingUserPresenter extends BasePresenter<PassingUserView> {
                                     return this.model;
                                 }))
                 .flatMap(model ->
-                        findConnectionUseCase.execute(model.userId)
+                        findConnectionUseCase
+                                .execute(model.userId)
                                 .map(connection -> {
                                     this.model.isConnected = connection.isConnected;
                                     this.model.lastOnlineTime = (Long) connection.lastOnlineTime;
                                     return this.model;
                                 }))
                 .flatMap(model ->
-                        findAllPassingTimeUseCase.execute(model.userId)
+                        findAllPassingTimeUseCase
+                                .execute(model.userId)
                                 .map(times -> {
-                                    this.model.times = times;
+                                    this.model.passingTimes = times;
                                     return this.model;
                                 }))
                 .flatMap(model ->
-                        findLineLinkUseCase.execute(model.userId)
+                        findLineLinkUseCase
+                                .execute(model.userId)
                                 .map(lineLink -> {
                                     if (lineLink != null) {
                                         this.model.lineUrl = lineLink.url;
@@ -131,6 +140,7 @@ public final class PassingUserPresenter extends BasePresenter<PassingUserView> {
 
     public void onMapReady() {
         isMapReadied = true;
+
         if (model == null || model.locationModel == null) {
             getView().hideLocation();
         } else {
@@ -142,11 +152,13 @@ public final class PassingUserPresenter extends BasePresenter<PassingUserView> {
         if (isAdding) {
             return;
         }
+
         isAdding = true;
 
         analyticsReporter.addFavorite(model.userId, model.userName);
 
-        Subscription subscription = saveFavoriteUseCase.execute(model.userId)
+        Subscription subscription = saveFavoriteUseCase
+                .execute(model.userId)
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribe(e -> isAdding = false,
                         () -> {
@@ -154,6 +166,7 @@ public final class PassingUserPresenter extends BasePresenter<PassingUserView> {
                             getView().hideAddButton();
                             getView().showSnackBar(R.string.snackBar_message_added);
                         });
+
         subscriptions.add(subscription);
     }
 
@@ -168,6 +181,7 @@ public final class PassingUserPresenter extends BasePresenter<PassingUserView> {
                             LOGGER.error("Failed.", e);
                             getView().showSnackBar(R.string.snackBar_error_failed);
                         });
+
         subscriptions.add(subscription);
     }
 }

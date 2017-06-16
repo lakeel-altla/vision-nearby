@@ -33,6 +33,7 @@ public class LINEService extends IntentService {
 
     private static final Logger LOGGER = LoggerFactory.getLogger(LINEService.class);
 
+    // NOTE:
     // This constructor is need.
     public LINEService() {
         this(LINEService.class.getSimpleName());
@@ -54,7 +55,8 @@ public class LINEService extends IntentService {
         // Show LINE URL notification.
         findUserUseCase.execute(userId)
                 .subscribeOn(Schedulers.io())
-                .subscribe(userProfile -> showLineNotification(userId, userProfile.name), e -> LOGGER.error("Failed.", e));
+                .subscribe(userProfile -> showLineNotification(userId, userProfile.name),
+                        e -> LOGGER.error("Failed.", e));
     }
 
     private void showLineNotification(String userId, String userName) {

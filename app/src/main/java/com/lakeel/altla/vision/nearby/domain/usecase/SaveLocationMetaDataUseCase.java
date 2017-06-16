@@ -1,5 +1,7 @@
 package com.lakeel.altla.vision.nearby.domain.usecase;
 
+import android.support.annotation.NonNull;
+
 import com.google.firebase.database.ServerValue;
 import com.lakeel.altla.vision.nearby.data.repository.firebase.UserLocationMetaDataRepository;
 import com.lakeel.altla.vision.nearby.domain.model.LocationMeta;
@@ -18,7 +20,7 @@ public final class SaveLocationMetaDataUseCase {
     SaveLocationMetaDataUseCase() {
     }
 
-    public Completable execute(String userId, String locationMetaDataId, String beaconId) {
+    public Completable execute(@NonNull String userId, @NonNull String locationMetaDataId, @NonNull String beaconId) {
         LocationMeta locationMeta = new LocationMeta();
         locationMeta.userId = userId;
         locationMeta.locationMetaDataId = locationMetaDataId;

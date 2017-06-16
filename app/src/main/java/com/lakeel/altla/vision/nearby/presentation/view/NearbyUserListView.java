@@ -1,10 +1,11 @@
 package com.lakeel.altla.vision.nearby.presentation.view;
 
 import android.content.Intent;
+import android.support.annotation.NonNull;
 
 public interface NearbyUserListView {
 
-    void showBleEnabledActivity(Intent intent);
+    void showBleEnabledActivity(@NonNull Intent intent);
 
     void requestAccessFineLocationPermission();
 

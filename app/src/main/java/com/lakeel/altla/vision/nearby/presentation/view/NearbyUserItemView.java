@@ -1,12 +1,14 @@
 package com.lakeel.altla.vision.nearby.presentation.view;
 
 
-import com.lakeel.altla.vision.nearby.presentation.presenter.model.NearbyUserModel;
+import android.support.annotation.NonNull;
+
 import com.lakeel.altla.vision.nearby.presentation.presenter.NearbyUserListPresenter;
+import com.lakeel.altla.vision.nearby.presentation.presenter.model.NearbyUserModel;
 
 public interface NearbyUserItemView extends ItemView {
 
-    void setItemPresenter(NearbyUserListPresenter.NearbyUserItemPresenter itemPresenter);
+    void setItemPresenter(@NonNull NearbyUserListPresenter.NearbyUserItemPresenter itemPresenter);
 
-    void showItem(NearbyUserModel model);
+    void showItem(@NonNull NearbyUserModel model);
 }

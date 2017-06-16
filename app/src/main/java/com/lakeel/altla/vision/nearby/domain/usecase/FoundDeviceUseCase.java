@@ -1,5 +1,7 @@
 package com.lakeel.altla.vision.nearby.domain.usecase;
 
+import android.support.annotation.NonNull;
+
 import com.lakeel.altla.vision.nearby.data.repository.firebase.BeaconRepository;
 
 import javax.inject.Inject;
@@ -16,7 +18,7 @@ public final class FoundDeviceUseCase {
     FoundDeviceUseCase() {
     }
 
-    public Completable execute(String beaconId) {
+    public Completable execute(@NonNull String beaconId) {
         return repository.foundDevice(beaconId).subscribeOn(Schedulers.io());
     }
 }

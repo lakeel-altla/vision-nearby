@@ -1,6 +1,9 @@
 package com.lakeel.altla.vision.nearby.presentation.view;
 
+import android.support.annotation.NonNull;
 import android.support.annotation.StringRes;
+
+import com.lakeel.altla.vision.nearby.presentation.view.fragment.bundle.PassingUser;
 
 public interface NearbyHistoryListView {
 
@@ -12,7 +15,7 @@ public interface NearbyHistoryListView {
 
     void hideEmptyView();
 
-    void showSnackBar(@StringRes int resId);
+    void showPassingUserFragment(@NonNull PassingUser passingUser);
 
-    void showPassingUserFragment(String historyId);
+    void showSnackBar(@StringRes int resId);
 }

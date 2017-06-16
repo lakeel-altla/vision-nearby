@@ -1,6 +1,7 @@
 package com.lakeel.altla.vision.nearby.presentation.view.fragment;
 
 import android.os.Bundle;
+import android.support.annotation.NonNull;
 import android.support.annotation.StringRes;
 import android.support.design.widget.Snackbar;
 import android.support.v4.app.Fragment;
@@ -28,7 +29,6 @@ import com.lakeel.altla.vision.nearby.presentation.presenter.TrackingPresenter;
 import com.lakeel.altla.vision.nearby.presentation.view.TrackingView;
 import com.lakeel.altla.vision.nearby.presentation.view.activity.MainActivity;
 import com.lakeel.altla.vision.nearby.presentation.view.color.AppColor;
-import com.lakeel.altla.vision.nearby.presentation.view.date.DateFormatter;
 import com.lakeel.altla.vision.nearby.presentation.view.fragment.bundle.EstimationTarget;
 import com.lakeel.altla.vision.nearby.presentation.view.fragment.bundle.TrackingBeacon;
 import com.lakeel.altla.vision.nearby.presentation.view.intent.GoogleMapIntent;
@@ -70,10 +70,9 @@ public final class TrackingFragment extends Fragment implements TrackingView, On
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_tracking, container, false);
+        ButterKnife.bind(this, view);
 
         setHasOptionsMenu(true);
-
-        ButterKnife.bind(this, view);
 
         MainActivity.getUserComponent(this).inject(this);
 
@@ -86,17 +85,18 @@ public final class TrackingFragment extends Fragment implements TrackingView, On
     public void onActivityCreated(Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
 
-        getActivity().setTitle(R.string.toolbar_title_tracking);
-
         MainActivity activity = ((MainActivity) getActivity());
         activity.setDrawerIndicatorEnabled(false);
+        activity.setTitle(R.string.toolbar_title_tracking);
 
-        FragmentManager fm = getChildFragmentManager();
-        supportMapFragment = (SupportMapFragment) fm.findFragmentById(R.id.layoutTrackingMap);
+        FragmentManager fragmentManager = getChildFragmentManager();
+        supportMapFragment = (SupportMapFragment) fragmentManager.findFragmentById(R.id.layoutTrackingMap);
+
         if (supportMapFragment == null) {
             supportMapFragment = SupportMapFragment.newInstance();
-            fm.beginTransaction().replace(R.id.layoutTrackingMap, supportMapFragment).commit();
+            fragmentManager.beginTransaction().replace(R.id.layoutTrackingMap, supportMapFragment).commit();
         }
+
         supportMapFragment.getMapAsync(this);
     }
 
@@ -121,6 +121,7 @@ public final class TrackingFragment extends Fragment implements TrackingView, On
     @Override
     public void onPrepareOptionsMenu(Menu menu) {
         boolean isMenuEnabled = false;
+
         if (presenter.isMenuEnabled()) {
             isMenuEnabled = true;
         }
@@ -167,7 +168,7 @@ public final class TrackingFragment extends Fragment implements TrackingView, On
     }
 
     @Override
-    public void showLocationMap(GeoLocation location) {
+    public void showLocationMap(@NonNull GeoLocation location) {
         mapView.setVisibility(View.VISIBLE);
 
         LatLng latLng = new LatLng(location.latitude, location.longitude);
@@ -193,15 +194,12 @@ public final class TrackingFragment extends Fragment implements TrackingView, On
     }
 
     @Override
-    public void showFoundDate(long foundTime) {
-        DateFormatter formatter = new DateFormatter(foundTime);
-        String formattedDate = formatter.format();
-        String time = getContext().getResources().getString(R.string.snackBar_message_found_date_format, formattedDate);
-        foundDateTextView.setText(time);
+    public void showFoundDate(@NonNull String dateText) {
+        foundDateTextView.setText(dateText);
     }
 
     @Override
-    public void launchGoogleMapApp(GoogleMapIntent intent) {
+    public void launchGoogleMapApp(@NonNull GoogleMapIntent intent) {
         startActivity(intent);
     }
 
@@ -211,7 +209,7 @@ public final class TrackingFragment extends Fragment implements TrackingView, On
     }
 
     @Override
-    public void showDistanceEstimationFragment(EstimationTarget target) {
+    public void showDistanceEstimationFragment(@NonNull EstimationTarget target) {
         FragmentController controller = new FragmentController(this);
         controller.showDistanceEstimationFragment(target);
     }

@@ -1,14 +1,15 @@
 package com.lakeel.altla.vision.nearby.presentation.presenter;
 
 import android.os.Bundle;
+import android.support.annotation.NonNull;
 
-import com.firebase.geofire.GeoLocation;
 import com.lakeel.altla.vision.nearby.R;
 import com.lakeel.altla.vision.nearby.domain.usecase.FindDeviceLocationUseCase;
 import com.lakeel.altla.vision.nearby.presentation.analytics.AnalyticsReporter;
 import com.lakeel.altla.vision.nearby.presentation.presenter.mapper.TrackingModelMapper;
 import com.lakeel.altla.vision.nearby.presentation.presenter.model.TrackingModel;
 import com.lakeel.altla.vision.nearby.presentation.view.TrackingView;
+import com.lakeel.altla.vision.nearby.presentation.view.date.DateFormatter;
 import com.lakeel.altla.vision.nearby.presentation.view.fragment.bundle.EstimationTarget;
 import com.lakeel.altla.vision.nearby.presentation.view.fragment.bundle.TrackingBeacon;
 import com.lakeel.altla.vision.nearby.presentation.view.intent.GoogleMapIntent;
@@ -38,7 +39,7 @@ public final class TrackingPresenter extends BasePresenter<TrackingView> {
 
     private final ReusableCompositeSubscription subscriptions = new ReusableCompositeSubscription();
 
-    private TrackingModel viewModel = new TrackingModel();
+    private TrackingModel model;
 
     private TrackingBeacon trackingBeacon;
 
@@ -50,14 +51,14 @@ public final class TrackingPresenter extends BasePresenter<TrackingView> {
     TrackingPresenter() {
     }
 
-    public void onCreateView(TrackingView view, Bundle bundle) {
+    public void onCreateView(@NonNull TrackingView view, @NonNull Bundle bundle) {
         super.onCreateView(view);
         trackingBeacon = (TrackingBeacon) bundle.getSerializable(BUNDLE_TRACKING_BEACON);
     }
 
     public void onResume() {
         Subscription subscription = findDeviceLocationUseCase
-                .execute(trackingBeacon.beaconId)
+                .execute(trackingBeacon.id)
                 .toObservable()
                 .doOnNext(location -> {
                     if (location == null) {
@@ -68,14 +69,18 @@ public final class TrackingPresenter extends BasePresenter<TrackingView> {
                 .map(TrackingModelMapper::map)
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribe(model -> {
-                    this.viewModel = model;
+                    this.model = model;
 
                     if (model.geoLocation == null) {
                         getView().showEmptyView();
                     } else {
-                        getView().showFoundDate(model.foundTime);
+                        DateFormatter formatter = new DateFormatter(model.foundTime);
+                        String dateText = formatter.format();
+                        getView().showFoundDate(dateText);
+
                         if (isMapReadied) {
                             isMenuEnabled = true;
+
                             getView().showLocationMap(model.geoLocation);
                             getView().showOptionMenu();
                         }
@@ -94,8 +99,8 @@ public final class TrackingPresenter extends BasePresenter<TrackingView> {
     public void onMapReady() {
         isMapReadied = true;
 
-        if (viewModel.geoLocation != null) {
-            getView().showLocationMap(viewModel.geoLocation);
+        if (model != null && model.geoLocation != null) {
+            getView().showLocationMap(model.geoLocation);
         }
     }
 
@@ -107,7 +112,7 @@ public final class TrackingPresenter extends BasePresenter<TrackingView> {
         analyticsReporter.estimateDistance(trackingBeacon.name);
 
         ArrayList<String> beaconIds = new ArrayList<>(1);
-        beaconIds.add(trackingBeacon.beaconId);
+        beaconIds.add(trackingBeacon.id);
 
         EstimationTarget target = new EstimationTarget(trackingBeacon.name, beaconIds);
         getView().showDistanceEstimationFragment(target);
@@ -116,9 +121,7 @@ public final class TrackingPresenter extends BasePresenter<TrackingView> {
     public void onDirectionMenuClick() {
         analyticsReporter.launchGoogleMap();
 
-        GeoLocation geoLocation = viewModel.geoLocation;
-        GoogleMapIntent intent = new GoogleMapIntent(geoLocation.latitude, geoLocation.longitude);
-
+        GoogleMapIntent intent = new GoogleMapIntent(model.geoLocation.latitude, model.geoLocation.longitude);
         getView().launchGoogleMapApp(intent);
     }
 }

@@ -1,5 +1,7 @@
 package com.lakeel.altla.vision.nearby.data.repository.firebase;
 
+import android.support.annotation.NonNull;
+
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
@@ -29,7 +31,7 @@ public final class UserLocationMetaDataRepository {
         this.reference = FirebaseDatabase.getInstance().getReferenceFromUrl(DATABASE_URI);
     }
 
-    public Single<LocationMeta> findLatest(String userId, String beaconId) {
+    public Single<LocationMeta> findLatest(@NonNull String userId, @NonNull String beaconId) {
         return Single.create(subscriber ->
                 reference
                         .child(userId)
@@ -37,6 +39,7 @@ public final class UserLocationMetaDataRepository {
                         .equalTo(beaconId)
                         .limitToFirst(1)
                         .addListenerForSingleValueEvent(new ValueEventListener() {
+
                             @Override
                             public void onDataChange(DataSnapshot dataSnapshot) {
                                 if (!dataSnapshot.hasChildren()) {
@@ -58,7 +61,7 @@ public final class UserLocationMetaDataRepository {
                         }));
     }
 
-    public Completable save(LocationMeta locationMeta) {
+    public Completable save(@NonNull LocationMeta locationMeta) {
         return Completable.create(subscriber -> {
             Task task = reference
                     .child(locationMeta.userId)

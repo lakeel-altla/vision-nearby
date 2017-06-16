@@ -1,5 +1,7 @@
 package com.lakeel.altla.vision.nearby.presentation.presenter.mapper;
 
+import android.support.annotation.NonNull;
+
 import com.lakeel.altla.vision.nearby.domain.model.NearbyHistory;
 import com.lakeel.altla.vision.nearby.presentation.presenter.model.LocationModel;
 import com.lakeel.altla.vision.nearby.presentation.presenter.model.PassingUserModel;
@@ -12,32 +14,36 @@ public final class UserPassingModelMapper {
     private UserPassingModelMapper() {
     }
 
-    public static PassingUserModel map(NearbyHistory nearbyHistory) {
+    public static PassingUserModel map(@NonNull NearbyHistory nearbyHistory) {
         PassingUserModel model = new PassingUserModel();
 
         model.userId = nearbyHistory.userId;
         model.userActivity = nearbyHistory.userActivity;
-        model.passingTimes = (Long) nearbyHistory.passingTime;
+        model.passingTime = (Long) nearbyHistory.passingTime;
 
         NearbyHistory.Location location = nearbyHistory.location;
         if (location != null) {
             LocationModel locationModel = new LocationModel();
             locationModel.latitude = location.latitude;
             locationModel.longitude = location.longitude;
+
             model.locationModel = locationModel;
         }
 
         NearbyHistory.Weather weather = nearbyHistory.weather;
         if (weather != null) {
             List<Integer> conditionList = weather.conditions;
+
             int[] conditionArray = new int[conditionList.size()];
             for (int count = 0; count < conditionList.size(); count++) {
                 conditionArray[count] = conditionList.get(count);
             }
+
             WeatherModel weatherModel = new WeatherModel();
             weatherModel.conditions = conditionArray;
             weatherModel.humidity = weather.humidity;
             weatherModel.temperature = weather.temperature;
+
             model.weatherModel = weatherModel;
         }
 

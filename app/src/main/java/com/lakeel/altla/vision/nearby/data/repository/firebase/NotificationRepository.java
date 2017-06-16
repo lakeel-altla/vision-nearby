@@ -1,5 +1,7 @@
 package com.lakeel.altla.vision.nearby.data.repository.firebase;
 
+import android.support.annotation.NonNull;
+
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
@@ -20,7 +22,7 @@ public class NotificationRepository {
         this.reference = FirebaseDatabase.getInstance().getReferenceFromUrl(DATABASE_URI);
     }
 
-    public Completable save(Notification notification) {
+    public Completable save(@NonNull Notification notification) {
         return Completable.create(subscriber -> {
             Task task = reference
                     .push()

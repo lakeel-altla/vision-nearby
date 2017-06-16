@@ -1,6 +1,7 @@
 package com.lakeel.altla.vision.nearby.presentation.view.adapter;
 
 import android.support.annotation.IntRange;
+import android.support.annotation.NonNull;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -11,10 +12,10 @@ import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import com.lakeel.altla.vision.nearby.R;
-import com.lakeel.altla.vision.nearby.presentation.presenter.model.DeviceModel;
 import com.lakeel.altla.vision.nearby.presentation.presenter.DeviceListPresenter;
-import com.lakeel.altla.vision.nearby.presentation.view.date.DateFormatter;
+import com.lakeel.altla.vision.nearby.presentation.presenter.model.DeviceModel;
 import com.lakeel.altla.vision.nearby.presentation.view.DeviceItemView;
+import com.lakeel.altla.vision.nearby.presentation.view.date.DateFormatter;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -23,15 +24,17 @@ public final class DeviceAdapter extends RecyclerView.Adapter<DeviceAdapter.Devi
 
     private DeviceListPresenter deviceListPresenter;
 
-    public DeviceAdapter(DeviceListPresenter presenter) {
+    public DeviceAdapter(@NonNull DeviceListPresenter presenter) {
         deviceListPresenter = presenter;
     }
 
     @Override
     public DeviceItemViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
         View itemView = LayoutInflater.from(parent.getContext()).inflate(R.layout.item_device, parent, false);
+
         DeviceItemViewHolder viewHolder = new DeviceItemViewHolder(itemView);
         deviceListPresenter.onCreateItemView(viewHolder);
+
         return viewHolder;
     }
 
@@ -67,7 +70,7 @@ public final class DeviceAdapter extends RecyclerView.Adapter<DeviceAdapter.Devi
 
         private DeviceListPresenter.DeviceItemPresenter itemPresenter;
 
-        DeviceItemViewHolder(View itemView) {
+        DeviceItemViewHolder(@NonNull View itemView) {
             super(itemView);
             ButterKnife.bind(this, itemView);
         }
@@ -78,20 +81,16 @@ public final class DeviceAdapter extends RecyclerView.Adapter<DeviceAdapter.Devi
         }
 
         @Override
-        public void setItemPresenter(DeviceListPresenter.DeviceItemPresenter itemPresenter) {
+        public void setItemPresenter(@NonNull DeviceListPresenter.DeviceItemPresenter itemPresenter) {
             this.itemPresenter = itemPresenter;
         }
 
         @Override
-        public void showItem(DeviceModel model) {
+        public void showItem(@NonNull DeviceModel model) {
             deviceNameTextView.setText(model.deviceName);
-            itemLayout.setOnClickListener(view -> itemPresenter.onClick(model));
 
             DateFormatter formatter = new DateFormatter(model.lastUsedTime);
-            String lastUsedTimeText = formatter.format();
-            lastUsedTimeTextView.setText(lastUsedTimeText);
-
-            removeButton.setOnClickListener(view -> itemPresenter.onRemove(model));
+            lastUsedTimeTextView.setText(formatter.format());
 
             if (model.isLost) {
                 lostButton.setText(R.string.button_found);
@@ -105,6 +104,9 @@ public final class DeviceAdapter extends RecyclerView.Adapter<DeviceAdapter.Devi
 
                 lostImageView.setVisibility(View.INVISIBLE);
             }
+
+            itemLayout.setOnClickListener(view -> itemPresenter.onClick(model));
+            removeButton.setOnClickListener(view -> itemPresenter.onRemove(model));
         }
     }
 }

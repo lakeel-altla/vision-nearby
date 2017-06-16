@@ -1,5 +1,7 @@
 package com.lakeel.altla.vision.nearby.domain.usecase;
 
+import android.support.annotation.NonNull;
+
 import com.google.firebase.database.ServerValue;
 import com.lakeel.altla.vision.nearby.data.repository.firebase.NotificationRepository;
 import com.lakeel.altla.vision.nearby.domain.model.Notification;
@@ -18,7 +20,7 @@ public final class SaveNotificationUseCase {
     SaveNotificationUseCase() {
     }
 
-    public Completable execute(String token, String title, String message) {
+    public Completable execute(@NonNull String token, @NonNull String title, @NonNull String message) {
         Notification notification = new Notification();
         notification.token = token;
         notification.title = title;

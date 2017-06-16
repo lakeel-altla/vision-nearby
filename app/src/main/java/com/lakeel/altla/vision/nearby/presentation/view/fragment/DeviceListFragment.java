@@ -1,10 +1,12 @@
 package com.lakeel.altla.vision.nearby.presentation.view.fragment;
 
 import android.os.Bundle;
+import android.support.annotation.NonNull;
 import android.support.annotation.StringRes;
 import android.support.design.widget.Snackbar;
 import android.support.v4.app.Fragment;
 import android.support.v7.widget.LinearLayoutManager;
+import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.MenuItem;
 import android.view.View;
@@ -47,10 +49,9 @@ public final class DeviceListFragment extends Fragment implements DeviceListView
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_list, container, false);
+        ButterKnife.bind(this, view);
 
         setHasOptionsMenu(true);
-
-        ButterKnife.bind(this, view);
 
         MainActivity.getUserComponent(this).inject(this);
 
@@ -65,8 +66,7 @@ public final class DeviceListFragment extends Fragment implements DeviceListView
 
         MainActivity activity = (MainActivity) getActivity();
         activity.setDrawerIndicatorEnabled(false);
-
-        getActivity().setTitle(R.string.toolbar_title_devices);
+        activity.setTitle(R.string.toolbar_title_devices);
 
         recyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
         recyclerView.setHasFixedSize(true);
@@ -99,18 +99,20 @@ public final class DeviceListFragment extends Fragment implements DeviceListView
 
     @Override
     public void updateItems() {
-        recyclerView.getAdapter().notifyDataSetChanged();
-    }
-
-    @Override
-    public void showTrackingFragment(String beaconId, String beaconName) {
-        FragmentController controller = new FragmentController(this);
-        controller.showTrackingFragment(new TrackingBeacon(beaconId, beaconName));
+        RecyclerView.Adapter adapter = recyclerView.getAdapter();
+        adapter.notifyDataSetChanged();
     }
 
     @Override
     public void removeAll(int size) {
-        recyclerView.getAdapter().notifyItemRangeRemoved(0, size);
+        RecyclerView.Adapter adapter = recyclerView.getAdapter();
+        adapter.notifyItemRangeRemoved(0, size);
+    }
+
+    @Override
+    public void showTrackingFragment(@NonNull String beaconId, @NonNull String name) {
+        FragmentController controller = new FragmentController(this);
+        controller.showTrackingFragment(new TrackingBeacon(beaconId, name));
     }
 
     @Override
