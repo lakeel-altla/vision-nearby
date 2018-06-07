@@ -18,13 +18,11 @@ import rx.Single;
 
 public final class UserDeviceTokenRepository {
 
-    private static final String DATABASE_URI = "https://profile-notification-95441.firebaseio.com/userDeviceTokens";
-
     private final DatabaseReference reference;
 
     @Inject
-    UserDeviceTokenRepository() {
-        this.reference = FirebaseDatabase.getInstance().getReferenceFromUrl(DATABASE_URI);
+    public UserDeviceTokenRepository(String url) {
+        this.reference = FirebaseDatabase.getInstance().getReferenceFromUrl(url);
     }
 
     public Observable<DeviceToken> findAll(@NonNull String userId) {

@@ -43,9 +43,9 @@ public final class BleChecker {
         // BLE of support in Android OS is it from the API 18, advertising support will be from the API 21.
         // Because it may not support the advertisement, check the devices.
         BluetoothAdapter bluetoothAdapter = manager.getAdapter();
-        if (!bluetoothAdapter.isEnabled()) {
-            return OFF;
-        }
+        if (bluetoothAdapter == null) return OFF;
+        if (!bluetoothAdapter.isEnabled()) return OFF;
+
         if (Build.VERSION_CODES.LOLLIPOP <= Build.VERSION.SDK_INT) {
             // There are also devices that do not support the advertised after Lollipop.
             int result = BeaconTransmitter.checkTransmissionSupported(context);

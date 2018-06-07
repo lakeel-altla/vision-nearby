@@ -21,15 +21,13 @@ import rx.Single;
 
 public final class UserProfileRepository {
 
-    private static final String DATABASE_URI = "https://profile-notification-95441.firebaseio.com/userProfiles";
-
     private static final String KEY_BEACONS = "beacons";
 
     private final DatabaseReference reference;
 
     @Inject
-    public UserProfileRepository() {
-        this.reference = FirebaseDatabase.getInstance().getReferenceFromUrl(DATABASE_URI);
+    public UserProfileRepository(String url) {
+        this.reference = FirebaseDatabase.getInstance().getReferenceFromUrl(url);
     }
 
     public Single<UserProfile> find(@NonNull String userId) {

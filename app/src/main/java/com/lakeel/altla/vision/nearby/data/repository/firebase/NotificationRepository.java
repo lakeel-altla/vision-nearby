@@ -13,13 +13,11 @@ import rx.Completable;
 
 public class NotificationRepository {
 
-    private static final String DATABASE_URI = "https://profile-notification-95441.firebaseio.com/notifications";
-
     private final DatabaseReference reference;
 
     @Inject
-    NotificationRepository() {
-        this.reference = FirebaseDatabase.getInstance().getReferenceFromUrl(DATABASE_URI);
+    public NotificationRepository(String url) {
+        this.reference = FirebaseDatabase.getInstance().getReferenceFromUrl(url);
     }
 
     public Completable save(@NonNull Notification notification) {

@@ -18,13 +18,11 @@ import rx.Single;
 
 public class UserInformationRepository {
 
-    private static final String DATABASE_URI = "https://profile-notification-95441.firebaseio.com/userInformation";
-
     private final DatabaseReference reference;
 
     @Inject
-    UserInformationRepository() {
-        this.reference = FirebaseDatabase.getInstance().getReferenceFromUrl(DATABASE_URI);
+    public UserInformationRepository(String url) {
+        this.reference = FirebaseDatabase.getInstance().getReferenceFromUrl(url);
     }
 
     public Completable save(@NonNull Information information) {

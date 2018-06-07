@@ -25,8 +25,6 @@ import rx.Single;
 
 public final class UserNearbyHistoryRepository {
 
-    private static final String DATABASE_URI = "https://profile-notification-95441.firebaseio.com/userNearbyHistory";
-
     private static final String KEY_USER_ID = "userId";
 
     private static final String KEY_IS_ENTERED = "isEntered";
@@ -40,8 +38,8 @@ public final class UserNearbyHistoryRepository {
     private final DatabaseReference reference;
 
     @Inject
-    public UserNearbyHistoryRepository() {
-        reference = FirebaseDatabase.getInstance().getReferenceFromUrl(DATABASE_URI);
+    public UserNearbyHistoryRepository(String url) {
+        reference = FirebaseDatabase.getInstance().getReferenceFromUrl(url);
     }
 
     public Observable<NearbyHistory> findAll(@NonNull String userId) {

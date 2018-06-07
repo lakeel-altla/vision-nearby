@@ -19,15 +19,13 @@ import rx.Single;
 
 public class UserConnectionRepository {
 
-    private static final String DATABASE_URI = "https://profile-notification-95441.firebaseio.com/userConnections";
-
     private static final String KEY_IS_CONNECTED = "isConnected";
 
     private final DatabaseReference reference;
 
     @Inject
-    UserConnectionRepository() {
-        this.reference = FirebaseDatabase.getInstance().getReferenceFromUrl(DATABASE_URI);
+    public UserConnectionRepository(String url) {
+        this.reference = FirebaseDatabase.getInstance().getReferenceFromUrl(url);
     }
 
     public Single<Connection> find(@NonNull String userId) {

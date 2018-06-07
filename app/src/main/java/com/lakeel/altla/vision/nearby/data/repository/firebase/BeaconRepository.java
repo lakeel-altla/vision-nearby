@@ -17,14 +17,13 @@ import java.util.HashMap;
 import java.util.Map;
 
 import javax.inject.Inject;
+import javax.inject.Named;
 
 import rx.Completable;
 import rx.Observable;
 import rx.Single;
 
 public class BeaconRepository {
-
-    private static final String DATABASE_URI = "https://profile-notification-95441.firebaseio.com/beacons";
 
     private static final String KEY_IS_LOST = "isLost";
 
@@ -33,8 +32,8 @@ public class BeaconRepository {
     private final DatabaseReference reference;
 
     @Inject
-    public BeaconRepository() {
-        reference = FirebaseDatabase.getInstance().getReferenceFromUrl(DATABASE_URI);
+    public BeaconRepository(String url) {
+        reference = FirebaseDatabase.getInstance().getReferenceFromUrl(url);
     }
 
     public Single<Beacon> find(@NonNull String beaconId) {

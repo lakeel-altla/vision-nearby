@@ -20,13 +20,11 @@ import rx.Single;
 
 public class UserFavoriteRepository {
 
-    private static final String DATABASE_URI = "https://profile-notification-95441.firebaseio.com/userFavorites";
-
     private final DatabaseReference reference;
 
     @Inject
-    public UserFavoriteRepository() {
-        reference = FirebaseDatabase.getInstance().getReferenceFromUrl(DATABASE_URI);
+    public UserFavoriteRepository(String url) {
+        reference = FirebaseDatabase.getInstance().getReferenceFromUrl(url);
     }
 
     public Observable<String> findAll(@NonNull String userId) {

@@ -10,6 +10,8 @@ import android.content.Context;
 import android.os.Build;
 import android.support.annotation.NonNull;
 
+import com.lakeel.altla.vision.nearby.presentation.ble.exception.BleNotSupportedException;
+
 @TargetApi(value = Build.VERSION_CODES.LOLLIPOP)
 final class BleScanner implements Scanner {
 
@@ -31,7 +33,11 @@ final class BleScanner implements Scanner {
 
     BleScanner(@NonNull Context context, @NonNull BleScanCallback scanCallback) {
         BluetoothManager bluetoothManager = (BluetoothManager) context.getSystemService(Context.BLUETOOTH_SERVICE);
+        if (bluetoothManager == null) throw new BleNotSupportedException("This device is not supported for ble. The variable 'bluetoothManager' is null.");
+
         BluetoothAdapter bluetoothAdapter = bluetoothManager.getAdapter();
+        if (bluetoothAdapter == null) throw new BleNotSupportedException("This device is not supported for ble. The variable 'bluetoothAdapter' is null.");
+
         this.bluetoothLeScanner = bluetoothAdapter.getBluetoothLeScanner();
         this.bleScanCallback = scanCallback;
     }

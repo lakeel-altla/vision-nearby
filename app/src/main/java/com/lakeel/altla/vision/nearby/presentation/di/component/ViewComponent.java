@@ -10,10 +10,10 @@ import com.lakeel.altla.vision.nearby.presentation.view.fragment.DeviceListFragm
 import com.lakeel.altla.vision.nearby.presentation.view.fragment.DistanceEstimationFragment;
 import com.lakeel.altla.vision.nearby.presentation.view.fragment.FavoriteListFragment;
 import com.lakeel.altla.vision.nearby.presentation.view.fragment.FavoriteUserFragment;
-import com.lakeel.altla.vision.nearby.presentation.view.fragment.NearbyHistoryListFragment;
 import com.lakeel.altla.vision.nearby.presentation.view.fragment.InformationFragment;
 import com.lakeel.altla.vision.nearby.presentation.view.fragment.InformationListFragment;
 import com.lakeel.altla.vision.nearby.presentation.view.fragment.LineSettingsFragment;
+import com.lakeel.altla.vision.nearby.presentation.view.fragment.NearbyHistoryListFragment;
 import com.lakeel.altla.vision.nearby.presentation.view.fragment.NearbyUserListFragment;
 import com.lakeel.altla.vision.nearby.presentation.view.fragment.PassingUserFragment;
 import com.lakeel.altla.vision.nearby.presentation.view.fragment.SettingsFragment;

@@ -19,13 +19,11 @@ import rx.Single;
 
 public class LINELinksRepository {
 
-    private static final String DATABASE_URI = "https://profile-notification-95441.firebaseio.com/link/line";
-
     private final DatabaseReference reference;
 
     @Inject
-    LINELinksRepository() {
-        this.reference = FirebaseDatabase.getInstance().getReferenceFromUrl(DATABASE_URI);
+    public LINELinksRepository(String url) {
+        this.reference = FirebaseDatabase.getInstance().getReferenceFromUrl(url);
     }
 
     public Single<LineLink> find(@NonNull String userId) {

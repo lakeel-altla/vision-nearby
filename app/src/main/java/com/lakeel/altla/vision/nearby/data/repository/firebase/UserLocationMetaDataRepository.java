@@ -20,15 +20,13 @@ import rx.Single;
 
 public final class UserLocationMetaDataRepository {
 
-    private static final String DATABASE_URI = "https://profile-notification-95441.firebaseio.com/userLocationMetaData";
-
     private static final String KEY_BEACON_ID = "beaconId";
 
     private final DatabaseReference reference;
 
     @Inject
-    UserLocationMetaDataRepository() {
-        this.reference = FirebaseDatabase.getInstance().getReferenceFromUrl(DATABASE_URI);
+    public UserLocationMetaDataRepository(String url) {
+        this.reference = FirebaseDatabase.getInstance().getReferenceFromUrl(url);
     }
 
     public Single<LocationMeta> findLatest(@NonNull String userId, @NonNull String beaconId) {

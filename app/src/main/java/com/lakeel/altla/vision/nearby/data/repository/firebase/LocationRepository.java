@@ -16,13 +16,11 @@ import rx.Single;
 
 public class LocationRepository {
 
-    private static final String DATABASE_URI = "https://profile-notification-95441.firebaseio.com/locations";
-
     private final GeoFire geoFire;
 
     @Inject
-    LocationRepository() {
-        geoFire = new GeoFire(FirebaseDatabase.getInstance().getReferenceFromUrl(DATABASE_URI));
+    public LocationRepository(String url) {
+        geoFire = new GeoFire(FirebaseDatabase.getInstance().getReferenceFromUrl(url));
     }
 
     public Single<GeoLocation> find(@NonNull String locationMetaDataId) {
