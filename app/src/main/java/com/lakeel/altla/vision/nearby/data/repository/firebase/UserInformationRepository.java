@@ -1,5 +1,7 @@
 package com.lakeel.altla.vision.nearby.data.repository.firebase;
 
+import android.support.annotation.NonNull;
+
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
@@ -16,16 +18,14 @@ import rx.Single;
 
 public class UserInformationRepository {
 
-    private static final String DATABASE_URI = "https://profile-notification-95441.firebaseio.com/userInformation";
-
     private final DatabaseReference reference;
 
     @Inject
-    UserInformationRepository() {
-        this.reference = FirebaseDatabase.getInstance().getReferenceFromUrl(DATABASE_URI);
+    public UserInformationRepository(String url) {
+        this.reference = FirebaseDatabase.getInstance().getReferenceFromUrl(url);
     }
 
-    public Completable save(Information information) {
+    public Completable save(@NonNull Information information) {
         return Completable.create(subscriber -> {
             Task task = reference
                     .child(information.userId)
@@ -41,11 +41,12 @@ public class UserInformationRepository {
         });
     }
 
-    public Observable<Information> findAll(String userId) {
+    public Observable<Information> findAll(@NonNull String userId) {
         return Observable.create(subscriber -> {
             reference
                     .child(userId)
                     .addListenerForSingleValueEvent(new ValueEventListener() {
+
                         @Override
                         public void onDataChange(DataSnapshot dataSnapshot) {
                             for (DataSnapshot snapshot : dataSnapshot.getChildren()) {
@@ -62,12 +63,13 @@ public class UserInformationRepository {
         });
     }
 
-    public Single<Information> find(String userId, String informationId) {
+    public Single<Information> find(@NonNull String userId, @NonNull String informationId) {
         return Single.create(subscriber ->
                 reference
                         .child(userId)
                         .child(informationId)
                         .addListenerForSingleValueEvent(new ValueEventListener() {
+
                             @Override
                             public void onDataChange(DataSnapshot dataSnapshot) {
                                 subscriber.onSuccess(map(userId, dataSnapshot));

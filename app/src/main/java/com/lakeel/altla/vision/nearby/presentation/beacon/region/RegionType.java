@@ -19,6 +19,7 @@ public enum RegionType {
                 return type;
             }
         }
+
         return RegionType.EXIT;
     }
 }

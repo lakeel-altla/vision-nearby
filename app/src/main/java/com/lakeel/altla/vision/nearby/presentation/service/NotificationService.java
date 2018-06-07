@@ -35,6 +35,7 @@ public class NotificationService extends IntentService {
 
     private static final Logger LOGGER = LoggerFactory.getLogger(NotificationService.class);
 
+    // NOTE:
     // This constructor is need.
     public NotificationService() {
         this(NotificationService.class.getSimpleName());

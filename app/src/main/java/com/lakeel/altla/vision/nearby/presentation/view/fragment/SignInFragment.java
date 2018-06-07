@@ -3,6 +3,7 @@ package com.lakeel.altla.vision.nearby.presentation.view.fragment;
 import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
+import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.design.widget.Snackbar;
 import android.support.v4.app.Fragment;
@@ -81,13 +82,14 @@ public final class SignInFragment extends Fragment implements SignInView {
     }
 
     @Override
-    public void showSignInActivity(Intent intent) {
+    public void showGoogleSignInActivity(@NonNull Intent intent) {
         startActivityForResult(intent, SIGN_IN_REQUEST_CODE);
     }
 
     @Override
     public void onSignedIn() {
-        ((MainActivity) getActivity()).postSignIn();
+        MainActivity activity = ((MainActivity) getActivity());
+        activity.onSignedIn();
     }
 
     @Override

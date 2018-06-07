@@ -39,19 +39,20 @@ public final class FavoriteListPresenter extends BasePresenter<FavoriteListView>
 
     private final ReusableCompositeSubscription subscriptions = new ReusableCompositeSubscription();
 
-    private final List<FavoriteModel> viewModels = new ArrayList<>();
+    private final List<FavoriteModel> models = new ArrayList<>();
 
     @Inject
     FavoriteListPresenter() {
     }
 
     public void onActivityCreated() {
-        Subscription subscription = findAllFavoriteUseCase.execute()
+        Subscription subscription = findAllFavoriteUseCase
+                .execute()
                 .map(FavoriteModelMapper::map)
                 .toList()
                 .subscribe(favoritesModels -> {
-                    viewModels.clear();
-                    viewModels.addAll(favoritesModels);
+                    models.clear();
+                    models.addAll(favoritesModels);
 
                     if (CollectionUtils.isEmpty(favoritesModels)) {
                         getView().showEmptyView();
@@ -59,7 +60,7 @@ public final class FavoriteListPresenter extends BasePresenter<FavoriteListView>
                         getView().hideEmptyView();
                     }
 
-                    getView().updateItems(viewModels);
+                    getView().updateItems(models);
                 }, e -> {
                     LOGGER.error("Failed.", e);
                     getView().showSnackBar(R.string.snackBar_error_failed);
@@ -81,7 +82,7 @@ public final class FavoriteListPresenter extends BasePresenter<FavoriteListView>
 
         @Override
         public void onBind(@IntRange(from = 0) int position) {
-            getItemView().showItem(viewModels.get(position));
+            getItemView().showItem(models.get(position));
         }
 
         public void onClick(FavoriteModel model) {
@@ -91,22 +92,23 @@ public final class FavoriteListPresenter extends BasePresenter<FavoriteListView>
         public void onRemove(FavoriteModel model) {
             analyticsReporter.removeFavorite(model.userId, model.userName);
 
-            Subscription subscription = removeFavoriteUseCase.execute(model.userId)
+            Subscription subscription = removeFavoriteUseCase
+                    .execute(model.userId)
                     .observeOn(AndroidSchedulers.mainThread())
                     .subscribe(e -> {
                                 LOGGER.error("Failed.", e);
                                 getView().showSnackBar(R.string.snackBar_error_failed);
                             },
                             () -> {
-                                int size = viewModels.size();
-                                viewModels.remove(model);
+                                int size = models.size();
+                                models.remove(model);
 
-                                if (CollectionUtils.isEmpty(viewModels)) {
+                                if (CollectionUtils.isEmpty(models)) {
                                     getView().removeAll(size);
                                     getView().showEmptyView();
                                 } else {
                                     getView().hideEmptyView();
-                                    getView().updateItems(viewModels);
+                                    getView().updateItems(models);
                                 }
 
                                 getView().showSnackBar(R.string.snackBar_message_removed);

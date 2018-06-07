@@ -92,28 +92,28 @@ public final class BeaconSubscriber {
         }
     }
 
-    private void startNearbyHistoryService(@NonNull String userId) {
+    private void startNearbyHistoryService(String userId) {
         Intent intent = new Intent(context, NearbyHistoryService.class);
         intent.putExtra(IntentKey.USER_ID.name(), userId);
         intent.putExtra(IntentKey.REGION_TYPE.name(), regionType.getValue());
         context.startService(intent);
     }
 
-    private void startNotificationService(@NonNull Beacon beacon) {
+    private void startNotificationService(Beacon beacon) {
         Intent intent = new Intent(context, NotificationService.class);
         intent.putExtra(IntentKey.USER_ID.name(), beacon.userId);
         intent.putExtra(IntentKey.BEACON_ID.name(), beacon.beaconId);
         context.startService(intent);
     }
 
-    private void startLocationService(@NonNull Beacon beacon) {
+    private void startLocationService(Beacon beacon) {
         Intent intent = new Intent(context, LocationService.class);
         intent.putExtra(IntentKey.USER_ID.name(), beacon.userId);
         intent.putExtra(IntentKey.BEACON_ID.name(), beacon.beaconId);
         context.startService(intent);
     }
 
-    private void startLineService(@NonNull String userId) {
+    private void startLineService(String userId) {
         Intent intent = new Intent(context, LINEService.class);
         intent.putExtra(IntentKey.USER_ID.name(), userId);
         context.startService(intent);

@@ -71,6 +71,7 @@ public final class DistanceEstimationFragment extends Fragment implements Distan
 
         DistanceEstimationFragment fragment = new DistanceEstimationFragment();
         fragment.setArguments(args);
+
         return fragment;
     }
 
@@ -94,10 +95,12 @@ public final class DistanceEstimationFragment extends Fragment implements Distan
     public void onActivityCreated(Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
 
-        ((MainActivity) getActivity()).setDrawerIndicatorEnabled(false);
+        MainActivity activity = ((MainActivity) getActivity());
+        activity.setDrawerIndicatorEnabled(false);
+
+        ImageLoader imageLoader = ImageLoader.getInstance();
 
         FirebaseUser firebaseUser = CurrentUser.getUser();
-        ImageLoader imageLoader = ImageLoader.getInstance();
         if (firebaseUser.getPhotoUrl() == null) {
             imageLoader.displayImage(null, userImageView);
         } else {
@@ -121,7 +124,7 @@ public final class DistanceEstimationFragment extends Fragment implements Distan
             if (RESULT_OK == resultCode) {
                 presenter.subscribe();
             } else {
-                LOGGER.warn("User deny token enable BLE.");
+                LOGGER.warn("User deny to enable BLE.");
                 Snackbar.make(mainLayout, R.string.snackBar_error_not_enable_ble, Snackbar.LENGTH_SHORT).show();
             }
         } else {
@@ -154,7 +157,7 @@ public final class DistanceEstimationFragment extends Fragment implements Distan
     }
 
     @Override
-    public void showTitle(String targetName) {
+    public void showTitle(@NonNull String targetName) {
         String title = getResources().getString(R.string.toolbar_title_finding_for_format, targetName);
         getActivity().setTitle(title);
     }
@@ -171,7 +174,7 @@ public final class DistanceEstimationFragment extends Fragment implements Distan
     }
 
     @Override
-    public void showDistanceMessage(String distanceMessage) {
+    public void showDistanceMessage(@NonNull String distanceMessage) {
         distanceTextView.setText(distanceMessage);
     }
 
@@ -182,7 +185,7 @@ public final class DistanceEstimationFragment extends Fragment implements Distan
     }
 
     @Override
-    public void showBleEnabledActivity(Intent intent) {
+    public void showBleEnabledActivity(@NonNull Intent intent) {
         startActivityForResult(intent, REQUEST_CODE_ENABLE_BLE);
     }
 }

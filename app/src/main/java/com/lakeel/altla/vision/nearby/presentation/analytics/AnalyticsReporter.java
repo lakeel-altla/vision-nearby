@@ -83,7 +83,7 @@ public final class AnalyticsReporter {
         logEvent(AnalyticsEvent.LAUNCH_GOOGLE_MAP, userParam);
     }
 
-    public void viewHistoryItem(String userId, String userName) {
+    public void viewPassingUser(String userId, String userName) {
         UserParam userParam = new UserParam();
         userParam.putString(AnalyticsParam.HISTORY_USER_ID.getValue(), userId);
         userParam.putString(AnalyticsParam.HISTORY_USER_NAME.getValue(), userName);

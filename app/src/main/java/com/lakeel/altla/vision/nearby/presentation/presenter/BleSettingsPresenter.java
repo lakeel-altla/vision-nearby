@@ -54,7 +54,8 @@ public final class BleSettingsPresenter extends BasePresenter<BleSettingsView> {
     public void onStartAdvertise() {
         analyticsReporter.onAdvertise();
 
-        Subscription subscription = findPreferenceUseCase.execute()
+        Subscription subscription = findPreferenceUseCase
+                .execute()
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribe(preference -> getView().startAdvertiseInBackground(preference.beaconId),
                         e -> {
@@ -67,8 +68,8 @@ public final class BleSettingsPresenter extends BasePresenter<BleSettingsView> {
     public void onStopAdvertise() {
         analyticsReporter.offAdvertise();
 
-        RunningServiceManager runningServiceManager = new RunningServiceManager(context, AdvertiseService.class);
-        runningServiceManager.stopService();
+        RunningServiceManager serviceManager = new RunningServiceManager(context, AdvertiseService.class);
+        serviceManager.stopService();
     }
 
     public void onStartSubscribe() {

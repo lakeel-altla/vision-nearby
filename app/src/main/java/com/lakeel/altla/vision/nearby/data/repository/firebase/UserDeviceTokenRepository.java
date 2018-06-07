@@ -1,5 +1,7 @@
 package com.lakeel.altla.vision.nearby.data.repository.firebase;
 
+import android.support.annotation.NonNull;
+
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
@@ -11,26 +13,24 @@ import com.lakeel.altla.vision.nearby.domain.model.DeviceToken;
 
 import javax.inject.Inject;
 
-import rx.Completable;
 import rx.Observable;
 import rx.Single;
 
 public final class UserDeviceTokenRepository {
 
-    private static final String DATABASE_URI = "https://profile-notification-95441.firebaseio.com/userDeviceTokens";
-
     private final DatabaseReference reference;
 
     @Inject
-    UserDeviceTokenRepository() {
-        this.reference = FirebaseDatabase.getInstance().getReferenceFromUrl(DATABASE_URI);
+    public UserDeviceTokenRepository(String url) {
+        this.reference = FirebaseDatabase.getInstance().getReferenceFromUrl(url);
     }
 
-    public Observable<DeviceToken> findAll(String userId) {
+    public Observable<DeviceToken> findAll(@NonNull String userId) {
         return Observable.create(subscriber -> {
             reference
                     .child(userId)
                     .addListenerForSingleValueEvent(new ValueEventListener() {
+
                         @Override
                         public void onDataChange(DataSnapshot dataSnapshot) {
                             for (DataSnapshot snapshot : dataSnapshot.getChildren()) {
@@ -47,11 +47,12 @@ public final class UserDeviceTokenRepository {
         });
     }
 
-    public Single<String> find(String userId) {
+    public Single<String> find(@NonNull String userId) {
         return Single.create(subscriber ->
                 reference
                         .child(userId)
                         .addListenerForSingleValueEvent(new ValueEventListener() {
+
                             @Override
                             public void onDataChange(DataSnapshot dataSnapshot) {
                                 String token = (String) dataSnapshot.getValue();
@@ -65,8 +66,8 @@ public final class UserDeviceTokenRepository {
                         }));
     }
 
-    public Completable save(DeviceToken deviceToken) {
-        return Completable.create(subscriber -> {
+    public Observable<DeviceToken> save(@NonNull DeviceToken deviceToken) {
+        return Observable.create(subscriber -> {
             Task task = reference
                     .child(deviceToken.userId)
                     .child(deviceToken.beaconId)
@@ -77,7 +78,7 @@ public final class UserDeviceTokenRepository {
                 throw new DataStoreException(e);
             }
 
-            subscriber.onCompleted();
+            subscriber.onNext(deviceToken);
         });
     }
 

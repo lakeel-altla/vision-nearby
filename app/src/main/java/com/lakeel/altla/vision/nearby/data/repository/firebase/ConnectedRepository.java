@@ -12,13 +12,11 @@ import rx.Completable;
 
 public final class ConnectedRepository {
 
-    private static final String DATABASE_URI = "https://profile-notification-95441.firebaseio.com/.info/connected";
-
     private DatabaseReference reference;
 
     @Inject
-    ConnectedRepository() {
-        this.reference = FirebaseDatabase.getInstance().getReferenceFromUrl(DATABASE_URI);
+    public ConnectedRepository(String url) {
+        this.reference = FirebaseDatabase.getInstance().getReferenceFromUrl(url);
     }
 
     public Completable observe() {

@@ -2,6 +2,7 @@ package com.lakeel.altla.vision.nearby.data.repository.firebase;
 
 
 import android.location.Location;
+import android.support.annotation.NonNull;
 
 import com.firebase.geofire.GeoFire;
 import com.firebase.geofire.GeoLocation;
@@ -15,18 +16,17 @@ import rx.Single;
 
 public class LocationRepository {
 
-    private static final String DATABASE_URI = "https://profile-notification-95441.firebaseio.com/locations";
-
     private final GeoFire geoFire;
 
     @Inject
-    LocationRepository() {
-        geoFire = new GeoFire(FirebaseDatabase.getInstance().getReferenceFromUrl(DATABASE_URI));
+    public LocationRepository(String url) {
+        geoFire = new GeoFire(FirebaseDatabase.getInstance().getReferenceFromUrl(url));
     }
 
-    public Single<GeoLocation> find(String locationKey) {
+    public Single<GeoLocation> find(@NonNull String locationMetaDataId) {
         return Single.create(subscriber ->
-                geoFire.getLocation(locationKey, new LocationCallback() {
+                geoFire.getLocation(locationMetaDataId, new LocationCallback() {
+
                     @Override
                     public void onLocationResult(String key, GeoLocation location) {
                         if (location == null) {
@@ -43,12 +43,13 @@ public class LocationRepository {
                 }));
     }
 
-    public Single<String> save(Location location) {
-        String uniqueId = geoFire.getDatabaseReference().push().getKey();
+    public Single<String> save(@NonNull Location location) {
+        String pushedKey = geoFire.getDatabaseReference().push().getKey();
+
         return Single.create(subscriber ->
-                geoFire.setLocation(uniqueId, new GeoLocation(location.getLatitude(), location.getLongitude()), (key, error) -> {
+                geoFire.setLocation(pushedKey, new GeoLocation(location.getLatitude(), location.getLongitude()), (key, error) -> {
                     if (error == null) {
-                        subscriber.onSuccess(uniqueId);
+                        subscriber.onSuccess(pushedKey);
                     } else {
                         subscriber.onError(error.toException());
                     }

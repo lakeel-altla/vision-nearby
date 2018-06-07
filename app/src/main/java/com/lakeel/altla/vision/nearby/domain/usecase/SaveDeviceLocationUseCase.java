@@ -1,6 +1,7 @@
 package com.lakeel.altla.vision.nearby.domain.usecase;
 
 import android.location.Location;
+import android.support.annotation.NonNull;
 
 import com.lakeel.altla.vision.nearby.data.repository.firebase.LocationRepository;
 
@@ -18,7 +19,7 @@ public final class SaveDeviceLocationUseCase {
     SaveDeviceLocationUseCase() {
     }
 
-    public Single<String> execute(Location location) {
+    public Single<String> execute(@NonNull Location location) {
         return repository.save(location).subscribeOn(Schedulers.io());
     }
 }

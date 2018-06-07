@@ -1,6 +1,7 @@
 package com.lakeel.altla.vision.nearby.presentation.view.adapter;
 
 import android.support.annotation.IntRange;
+import android.support.annotation.NonNull;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -20,7 +21,7 @@ public final class InformationAdapter extends RecyclerView.Adapter<InformationAd
 
     private final InformationListPresenter presenter;
 
-    public InformationAdapter(InformationListPresenter presenter) {
+    public InformationAdapter(@NonNull InformationListPresenter presenter) {
         this.presenter = presenter;
     }
 
@@ -62,12 +63,12 @@ public final class InformationAdapter extends RecyclerView.Adapter<InformationAd
         }
 
         @Override
-        public void setItemPresenter(InformationListPresenter.InformationItemPresenter itemPresenter) {
+        public void setItemPresenter(@NonNull InformationListPresenter.InformationItemPresenter itemPresenter) {
             this.itemPresenter = itemPresenter;
         }
 
         @Override
-        public void showItem(InformationModel model) {
+        public void showItem(@NonNull InformationModel model) {
             titleTextView.setText(model.title);
 
             DateFormatter formatter = new DateFormatter(model.postTime);

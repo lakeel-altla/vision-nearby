@@ -1,6 +1,7 @@
 package com.lakeel.altla.vision.nearby.presentation.view;
 
 import android.content.Context;
+import android.support.annotation.NonNull;
 import android.support.v7.widget.RecyclerView;
 import android.util.AttributeSet;
 import android.view.View;
@@ -35,15 +36,15 @@ public final class EmptySupportedRecyclerView extends RecyclerView {
         }
     };
 
-    public EmptySupportedRecyclerView(Context context) {
+    public EmptySupportedRecyclerView(@NonNull Context context) {
         super(context);
     }
 
-    public EmptySupportedRecyclerView(Context context, AttributeSet attrs) {
+    public EmptySupportedRecyclerView(@NonNull Context context, @NonNull AttributeSet attrs) {
         super(context, attrs);
     }
 
-    public EmptySupportedRecyclerView(Context context, AttributeSet attrs, int defStyle) {
+    public EmptySupportedRecyclerView(@NonNull Context context, @NonNull AttributeSet attrs, int defStyle) {
         super(context, attrs, defStyle);
     }
 
@@ -58,7 +59,7 @@ public final class EmptySupportedRecyclerView extends RecyclerView {
         emptyObserver.onChanged();
     }
 
-    public void setEmptyView(View emptyView) {
+    public void setEmptyView(@NonNull View emptyView) {
         this.emptyView = emptyView;
     }
 }

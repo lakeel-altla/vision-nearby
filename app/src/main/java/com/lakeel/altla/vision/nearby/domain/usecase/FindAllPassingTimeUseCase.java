@@ -1,5 +1,7 @@
 package com.lakeel.altla.vision.nearby.domain.usecase;
 
+import android.support.annotation.NonNull;
+
 import com.lakeel.altla.vision.nearby.data.repository.firebase.UserNearbyHistoryRepository;
 import com.lakeel.altla.vision.nearby.presentation.helper.CurrentUser;
 
@@ -17,7 +19,7 @@ public final class FindAllPassingTimeUseCase {
     FindAllPassingTimeUseCase() {
     }
 
-    public Single<Long> execute(String passingUserId) {
+    public Single<Long> execute(@NonNull String passingUserId) {
         String userId = CurrentUser.getUid();
         return repository.findPassingTimes(userId, passingUserId).subscribeOn(Schedulers.io());
     }

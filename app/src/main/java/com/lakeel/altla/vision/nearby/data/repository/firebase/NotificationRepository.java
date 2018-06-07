@@ -1,5 +1,7 @@
 package com.lakeel.altla.vision.nearby.data.repository.firebase;
 
+import android.support.annotation.NonNull;
+
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
@@ -11,16 +13,14 @@ import rx.Completable;
 
 public class NotificationRepository {
 
-    private static final String DATABASE_URI = "https://profile-notification-95441.firebaseio.com/notifications";
-
     private final DatabaseReference reference;
 
     @Inject
-    NotificationRepository() {
-        this.reference = FirebaseDatabase.getInstance().getReferenceFromUrl(DATABASE_URI);
+    public NotificationRepository(String url) {
+        this.reference = FirebaseDatabase.getInstance().getReferenceFromUrl(url);
     }
 
-    public Completable save(Notification notification) {
+    public Completable save(@NonNull Notification notification) {
         return Completable.create(subscriber -> {
             Task task = reference
                     .push()

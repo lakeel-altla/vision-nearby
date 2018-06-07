@@ -1,6 +1,7 @@
 package com.lakeel.altla.vision.nearby.data.repository.firebase;
 
 import android.location.Location;
+import android.support.annotation.NonNull;
 
 import com.google.android.gms.awareness.state.Weather;
 import com.google.android.gms.location.DetectedActivity;
@@ -9,11 +10,9 @@ import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
-import com.google.firebase.database.ServerValue;
 import com.google.firebase.database.ValueEventListener;
 import com.lakeel.altla.vision.nearby.data.execption.DataStoreException;
 import com.lakeel.altla.vision.nearby.domain.model.NearbyHistory;
-import com.lakeel.altla.vision.nearby.presentation.beacon.region.RegionType;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -24,39 +23,39 @@ import rx.Completable;
 import rx.Observable;
 import rx.Single;
 
-public class UserNearbyHistoryRepository {
+public final class UserNearbyHistoryRepository {
 
-    private static final String DATABASE_URI = "https://profile-notification-95441.firebaseio.com/userNearbyHistory";
+    private static final String KEY_USER_ID = "userId";
 
-    private static final String USER_ID_KEY = "userId";
+    private static final String KEY_IS_ENTERED = "isEntered";
 
-    private static final String IS_ENTERED_KEY = "isEntered";
+    private static final String KEY_USER_ACTIVITY = "userActivity";
 
-    private static final String USER_ACTIVITY = "userActivity";
+    private static final String KEY_LOCATION = "location";
 
-    private static final String LOCATION = "location";
-
-    private static final String WEATHER = "weather";
+    private static final String KEY_WEATHER = "weather";
 
     private final DatabaseReference reference;
 
     @Inject
-    public UserNearbyHistoryRepository() {
-        this.reference = FirebaseDatabase.getInstance().getReferenceFromUrl(DATABASE_URI);
+    public UserNearbyHistoryRepository(String url) {
+        reference = FirebaseDatabase.getInstance().getReferenceFromUrl(url);
     }
 
-    public Observable<NearbyHistory> findAll(String userId) {
+    public Observable<NearbyHistory> findAll(@NonNull String userId) {
         return Observable.create(subscriber -> {
             reference
                     .child(userId)
-                    .orderByChild(IS_ENTERED_KEY)
+                    .orderByChild(KEY_IS_ENTERED)
                     .equalTo(true)
                     .addListenerForSingleValueEvent(new ValueEventListener() {
+
                         @Override
                         public void onDataChange(DataSnapshot dataSnapshot) {
                             for (DataSnapshot snapshot : dataSnapshot.getChildren()) {
                                 subscriber.onNext(map(snapshot));
                             }
+
                             subscriber.onCompleted();
                         }
 
@@ -68,30 +67,13 @@ public class UserNearbyHistoryRepository {
         });
     }
 
-    public Single<NearbyHistory> find(String userId, String historyId) {
-        return Single.create(subscriber ->
-                reference
-                        .child(userId)
-                        .child(historyId)
-                        .addListenerForSingleValueEvent(new ValueEventListener() {
-                            @Override
-                            public void onDataChange(DataSnapshot snapshot) {
-                                subscriber.onSuccess(map(snapshot));
-                            }
-
-                            @Override
-                            public void onCancelled(DatabaseError databaseError) {
-                                subscriber.onError(databaseError.toException());
-                            }
-                        }));
-    }
-
-    public Single<NearbyHistory> findLatest(String userId, String favoriteUserId) {
+    public Single<NearbyHistory> findLatest(@NonNull String userId, @NonNull String favoriteUserId) {
         return Single.create(subscriber ->
                 reference.child(userId)
-                        .orderByChild(USER_ID_KEY)
+                        .orderByChild(KEY_USER_ID)
                         .equalTo(favoriteUserId)
                         .addListenerForSingleValueEvent(new ValueEventListener() {
+
                             @Override
                             public void onDataChange(DataSnapshot dataSnapshot) {
                                 DataSnapshot latestSnapshot = null;
@@ -126,13 +108,34 @@ public class UserNearbyHistoryRepository {
                         }));
     }
 
-    public Single<Long> findPassingTimes(String myUserId, String passingUserId) {
+    public Single<NearbyHistory> find(@NonNull String userId, @NonNull String historyId) {
         return Single.create(subscriber ->
                 reference
-                        .child(myUserId)
-                        .orderByChild(USER_ID_KEY)
+                        .child(userId)
+                        .child(historyId)
+                        .addListenerForSingleValueEvent(new ValueEventListener() {
+
+                            @Override
+                            public void onDataChange(DataSnapshot snapshot) {
+                                subscriber.onSuccess(map(snapshot));
+                            }
+
+                            @Override
+                            public void onCancelled(DatabaseError databaseError) {
+                                subscriber.onError(databaseError.toException());
+                            }
+                        }));
+    }
+
+
+    public Single<Long> findPassingTimes(@NonNull String userId, @NonNull String passingUserId) {
+        return Single.create(subscriber ->
+                reference
+                        .child(userId)
+                        .orderByChild(KEY_USER_ID)
                         .equalTo(passingUserId)
                         .addListenerForSingleValueEvent(new ValueEventListener() {
+
                             @Override
                             public void onDataChange(DataSnapshot dataSnapshot) {
                                 long time = 0;
@@ -152,15 +155,9 @@ public class UserNearbyHistoryRepository {
                         }));
     }
 
-    public Single<String> save(String userId, String passingUserId, RegionType regionType) {
+    public Single<String> save(@NonNull String userId, @NonNull NearbyHistory nearbyHistory) {
         return Single.create(subscriber -> {
-            NearbyHistory nearbyHistory = new NearbyHistory();
-            nearbyHistory.userId = passingUserId;
-            nearbyHistory.isEntered = RegionType.ENTER == regionType;
-            nearbyHistory.passingTime = ServerValue.TIMESTAMP;
-
             DatabaseReference pushedReference = reference.child(userId).push();
-            String historyId = pushedReference.getKey();
 
             Task<Void> task = pushedReference
                     .setValue(nearbyHistory);
@@ -170,18 +167,19 @@ public class UserNearbyHistoryRepository {
                 throw new DataStoreException(exception);
             }
 
-            subscriber.onSuccess(historyId);
+            // Return unique key.
+            subscriber.onSuccess(pushedReference.getKey());
         });
     }
 
-    public Completable saveUserActivity(String uniqueId, String userId, DetectedActivity userActivity) {
+    public Completable saveUserActivity(@NonNull String userId, @NonNull String historyId, @NonNull DetectedActivity userActivity) {
         return Completable.create(subscriber -> {
             Map<String, Object> map = new HashMap<>();
-            map.put(USER_ACTIVITY, userActivity);
+            map.put(KEY_USER_ACTIVITY, userActivity.getType());
 
             Task<Void> task = reference
                     .child(userId)
-                    .child(uniqueId)
+                    .child(historyId)
                     .updateChildren(map);
 
             Exception exception = task.getException();
@@ -193,14 +191,14 @@ public class UserNearbyHistoryRepository {
         });
     }
 
-    public Completable saveLocation(String uniqueId, String userId, Location location) {
+    public Completable saveLocation(@NonNull String userId, @NonNull String historyId, @NonNull Location location) {
         return Completable.create(subscriber -> {
             Map<String, Object> map = new HashMap<>();
-            map.put(LOCATION, location);
+            map.put(KEY_LOCATION, location);
 
             Task<Void> task = reference
                     .child(userId)
-                    .child(uniqueId)
+                    .child(historyId)
                     .updateChildren(map);
 
             Exception exception = task.getException();
@@ -212,14 +210,14 @@ public class UserNearbyHistoryRepository {
         });
     }
 
-    public Completable saveWeather(String uniqueId, String userId, Weather weather) {
+    public Completable saveWeather(@NonNull String userId, @NonNull String historyId, @NonNull Weather weather) {
         return Completable.create(subscriber -> {
             Map<String, Object> map = new HashMap<>();
-            map.put(WEATHER, weather);
+            map.put(KEY_WEATHER, weather);
 
             Task<Void> task = reference
                     .child(userId)
-                    .child(uniqueId)
+                    .child(historyId)
                     .updateChildren(map);
 
             Exception exception = task.getException();
@@ -231,11 +229,11 @@ public class UserNearbyHistoryRepository {
         });
     }
 
-    public Completable remove(String userId, String uniqueKey) {
+    public Completable remove(@NonNull String userId, @NonNull String historyId) {
         return Completable.create(subscriber -> {
-            Task task = reference.
-                    child(userId)
-                    .child(uniqueKey)
+            Task task = reference
+                    .child(userId)
+                    .child(historyId)
                     .removeValue();
 
             Exception e = task.getException();

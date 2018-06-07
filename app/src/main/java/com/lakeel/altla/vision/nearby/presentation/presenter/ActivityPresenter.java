@@ -12,14 +12,10 @@ import com.firebase.ui.auth.AuthUI;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.FirebaseUser;
 import com.lakeel.altla.vision.nearby.R;
-import com.lakeel.altla.vision.nearby.beacon.EddystoneUid;
-import com.lakeel.altla.vision.nearby.core.StringUtils;
 import com.lakeel.altla.vision.nearby.domain.usecase.FindPreferenceUseCase;
 import com.lakeel.altla.vision.nearby.domain.usecase.ObserveConnectionUseCase;
 import com.lakeel.altla.vision.nearby.domain.usecase.ObserveUserProfileUseCase;
 import com.lakeel.altla.vision.nearby.domain.usecase.OfflineUseCase;
-import com.lakeel.altla.vision.nearby.domain.usecase.SaveBeaconUseCase;
-import com.lakeel.altla.vision.nearby.domain.usecase.SaveDeviceTokenUseCase;
 import com.lakeel.altla.vision.nearby.domain.usecase.SaveLastUsedDeviceTimeUseCase;
 import com.lakeel.altla.vision.nearby.presentation.analytics.AnalyticsReporter;
 import com.lakeel.altla.vision.nearby.presentation.ble.checker.BleChecker;
@@ -38,7 +34,6 @@ import javax.inject.Inject;
 
 import rx.Subscription;
 import rx.android.schedulers.AndroidSchedulers;
-import rx.schedulers.Schedulers;
 
 public final class ActivityPresenter extends BasePresenter<ActivityView> {
 
@@ -58,13 +53,7 @@ public final class ActivityPresenter extends BasePresenter<ActivityView> {
     SaveLastUsedDeviceTimeUseCase saveLastUsedDeviceTimeUseCase;
 
     @Inject
-    SaveDeviceTokenUseCase saveDeviceTokenUseCase;
-
-    @Inject
     OfflineUseCase offlineUseCase;
-
-    @Inject
-    SaveBeaconUseCase saveBeaconUseCase;
 
     private static final Logger LOGGER = LoggerFactory.getLogger(ActivityPresenter.class);
 
@@ -87,11 +76,11 @@ public final class ActivityPresenter extends BasePresenter<ActivityView> {
     }
 
     @Override
-    public void onCreateView(ActivityView activityView) {
-        super.onCreateView(activityView);
+    public void onCreateView(@NonNull ActivityView view) {
+        super.onCreateView(view);
 
         if (CurrentUser.isSignedIn()) {
-            postSignIn();
+            onSignedIn();
         } else {
             getView().showSignInFragment();
         }
@@ -101,54 +90,22 @@ public final class ActivityPresenter extends BasePresenter<ActivityView> {
         subscriptions.unSubscribe();
     }
 
-    public void postSignIn() {
+    public void onSignedIn() {
         getView().showFavoriteListFragment();
-        getView().updateProfile(ActivityModelMapper.map());
+        getView().updateDrawerProfile(ActivityModelMapper.map());
+
+        observeSignedInUser();
+        saveLastUsedDeviceTime();
 
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
-            // Need token grant permission for subscribing beacons.
+            // Need to grant permission for subscribing beacons.
             checkAccessFineLocationPermission();
         } else {
             isAccessFineLocationGranted = true;
             checkDeviceBle();
         }
 
-        // Observe user presence.
-        observeConnectionUseCase.execute();
-
-        // Observe user profile
-        Subscription subscription = observeUserProfileUseCase.execute()
-                .map(ActivityModelMapper::map)
-                .observeOn(AndroidSchedulers.mainThread())
-                .subscribe(model -> {
-                    getView().updateProfile(model);
-                }, e -> {
-                    LOGGER.error("Failed.", e);
-                    getView().showSnackBar(R.string.snackBar_error_failed);
-                });
-        observeSubscriptions.add(subscription);
-
-        // TODO (Simply)
-        Subscription subscription1 = findPreferenceUseCase.execute()
-                .observeOn(Schedulers.io())
-                .subscribe(preference -> {
-                    String beaconId = preference.beaconId;
-                    if (StringUtils.isEmpty(beaconId)) {
-                        // Create a Eddystone-UID.
-                        EddystoneUid eddystoneUid = new EddystoneUid();
-                        beaconId = eddystoneUid.getBeaconId();
-                    } else {
-                        saveLastUsedDeviceTime(beaconId);
-                    }
-
-                    saveBeacon(beaconId);
-                    saveToken(beaconId);
-                    startAdvertiseInBackgroundIfNeeded();
-                }, e -> {
-                    LOGGER.error("Failed.", e);
-                    getView().showSnackBar(R.string.snackBar_error_failed);
-                });
-        subscriptions.add(subscription1);
+        startAdvertiseInBackgroundIfNeeded();
     }
 
     public void onBleEnabled() {
@@ -167,7 +124,8 @@ public final class ActivityPresenter extends BasePresenter<ActivityView> {
     }
 
     public void onSignOut(@NonNull Activity activity) {
-        Subscription subscription = offlineUseCase.execute()
+        Subscription subscription = offlineUseCase
+                .execute()
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribe(e -> {
                             LOGGER.error("Failed.", e);
@@ -192,7 +150,7 @@ public final class ActivityPresenter extends BasePresenter<ActivityView> {
                                     RunningServiceManager serviceManager = new RunningServiceManager(context, AdvertiseService.class);
                                     serviceManager.stopService();
 
-                                    stopDetectBeaconsInBackground();
+                                    getView().stopDetectBeaconsInBackground();
                                     getView().finishActivity();
                                 } else {
                                     LOGGER.error("Failed token sign out.", result.getException());
@@ -206,36 +164,8 @@ public final class ActivityPresenter extends BasePresenter<ActivityView> {
                                 getView().showSnackBar(R.string.snackBar_error_not_signed_out);
                             }
                         });
+
         subscriptions.add(subscription);
-    }
-
-    private void checkDeviceBle() {
-        BleChecker checker = new BleChecker(context);
-        State state = checker.checkState();
-
-        if (state == State.ENABLE) {
-            isAdvertiseAvailableDevice = true;
-            startAdvertiseInBackgroundIfNeeded();
-
-            if (isAccessFineLocationGranted) {
-                startDetectBeaconsInBackgroundIfNeeded();
-            }
-        } else if (state == State.OFF) {
-            isAdvertiseAvailableDevice = false;
-            getView().showBleEnabledActivity();
-        } else if (state == State.SUBSCRIBE_ONLY) {
-            isAdvertiseAvailableDevice = false;
-            getView().showAdvertiseDisableConfirmDialog();
-
-            if (isAccessFineLocationGranted) {
-                startDetectBeaconsInBackgroundIfNeeded();
-            }
-        } else {
-            isAdvertiseAvailableDevice = false;
-        }
-
-        // Set user property.
-        analyticsReporter.setBleProperty(state);
     }
 
     private void checkAccessFineLocationPermission() {
@@ -250,9 +180,80 @@ public final class ActivityPresenter extends BasePresenter<ActivityView> {
         }
     }
 
-    private void startDetectBeaconsInBackgroundIfNeeded() {
-        Subscription subscription = findPreferenceUseCase.execute()
+    private void observeSignedInUser() {
+        observeConnectionUseCase.execute();
+
+        Subscription subscription = observeUserProfileUseCase
+                .execute()
+                .map(ActivityModelMapper::map)
                 .observeOn(AndroidSchedulers.mainThread())
+                .subscribe(model -> {
+                    getView().updateDrawerProfile(model);
+                }, e -> {
+                    LOGGER.error("Failed.", e);
+                    getView().showSnackBar(R.string.snackBar_error_failed);
+                });
+        observeSubscriptions.add(subscription);
+    }
+
+    private void checkDeviceBle() {
+        BleChecker checker = new BleChecker(context);
+        State state = checker.checkState();
+
+        switch (state) {
+            case ENABLE: {
+                isAdvertiseAvailableDevice = true;
+                startAdvertiseInBackgroundIfNeeded();
+
+                if (isAccessFineLocationGranted) {
+                    startDetectBeaconsInBackgroundIfNeeded();
+                }
+                break;
+            }
+            case OFF: {
+                isAdvertiseAvailableDevice = false;
+                getView().showBleEnabledActivity();
+                break;
+            }
+            case SUBSCRIBE_ONLY: {
+                isAdvertiseAvailableDevice = false;
+                getView().showAdvertiseDisableConfirmDialog();
+
+                if (isAccessFineLocationGranted) {
+                    startDetectBeaconsInBackgroundIfNeeded();
+                }
+                break;
+            }
+            default: {
+                isAdvertiseAvailableDevice = false;
+                break;
+            }
+        }
+
+        // Set user property.
+        analyticsReporter.setBleProperty(state);
+    }
+
+    private void startAdvertiseInBackgroundIfNeeded() {
+        Subscription subscription = findPreferenceUseCase
+                .execute()
+                .subscribe(preference -> {
+                    if (preference.isAdvertiseInBackgroundEnabled && isAdvertiseAvailableDevice) {
+                        if (!isAlreadyAdvertised) {
+                            isAlreadyAdvertised = true;
+                            getView().startAdvertiseInBackground(preference.beaconId);
+                        }
+                    }
+                }, e -> {
+                    LOGGER.error("Failed.", e);
+                    getView().showSnackBar(R.string.snackBar_error_failed);
+                });
+        subscriptions.add(subscription);
+    }
+
+    private void startDetectBeaconsInBackgroundIfNeeded() {
+        Subscription subscription = findPreferenceUseCase
+                .execute()
                 .subscribe(preference -> {
                     if (preference.isSubscribeInBackgroundEnabled) {
                         getView().startDetectBeaconsInBackground();
@@ -264,54 +265,14 @@ public final class ActivityPresenter extends BasePresenter<ActivityView> {
         subscriptions.add(subscription);
     }
 
-    private void saveBeacon(String beaconId) {
-        Subscription subscription = saveBeaconUseCase.execute(beaconId)
-                .subscribe(s -> {
+    private void saveLastUsedDeviceTime() {
+        Subscription subscription = saveLastUsedDeviceTimeUseCase
+                .execute()
+                .subscribe(aVoid -> {
                 }, e -> {
                     LOGGER.error("Failed.", e);
                     getView().showSnackBar(R.string.snackBar_error_failed);
                 });
         subscriptions.add(subscription);
-    }
-
-    private void saveLastUsedDeviceTime(String beaconId) {
-        Subscription subscription = saveLastUsedDeviceTimeUseCase.execute(beaconId)
-                .subscribe();
-        subscriptions.add(subscription);
-    }
-
-    private void saveToken(String beaconId) {
-        Subscription subscription = saveDeviceTokenUseCase.execute(beaconId)
-                .subscribe(e -> {
-                    LOGGER.error("Failed.", e);
-                    getView().showSnackBar(R.string.snackBar_error_failed);
-                }, () -> {
-                });
-        subscriptions.add(subscription);
-    }
-
-    private void startAdvertiseInBackgroundIfNeeded() {
-        Subscription subscription = findPreferenceUseCase.execute()
-                .observeOn(AndroidSchedulers.mainThread())
-                .subscribe(preference -> {
-                    if (StringUtils.isEmpty(preference.beaconId)) {
-                        return;
-                    }
-                    if (preference.isAdvertiseInBackgroundEnabled && isAdvertiseAvailableDevice) {
-                        if (isAlreadyAdvertised) {
-                            return;
-                        }
-                        isAlreadyAdvertised = true;
-                        getView().startAdvertise(preference.beaconId);
-                    }
-                }, e -> {
-                    LOGGER.error("Failed.", e);
-                    getView().showSnackBar(R.string.snackBar_error_failed);
-                });
-        subscriptions.add(subscription);
-    }
-
-    private void stopDetectBeaconsInBackground() {
-        getView().stopDetectBeaconsInBackground();
     }
 }

@@ -1,5 +1,6 @@
 package com.lakeel.altla.vision.nearby.data.repository.firebase;
 
+import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 
 import com.google.android.gms.tasks.Task;
@@ -19,16 +20,14 @@ import rx.Single;
 
 public class UserFavoriteRepository {
 
-    private static final String DATABASE_URI = "https://profile-notification-95441.firebaseio.com/userFavorites";
-
     private final DatabaseReference reference;
 
     @Inject
-    public UserFavoriteRepository() {
-        reference = FirebaseDatabase.getInstance().getReferenceFromUrl(DATABASE_URI);
+    public UserFavoriteRepository(String url) {
+        reference = FirebaseDatabase.getInstance().getReferenceFromUrl(url);
     }
 
-    public Observable<String> findAll(String userId) {
+    public Observable<String> findAll(@NonNull String userId) {
         return Observable.create(subscriber -> {
             reference
                     .child(userId)
@@ -38,13 +37,15 @@ public class UserFavoriteRepository {
                         public void onDataChange(DataSnapshot dataSnapshot) {
                             for (DataSnapshot snapshot : dataSnapshot.getChildren()) {
                                 Boolean isFavorite = (Boolean) snapshot.getValue();
+
                                 if (isFavorite == null || !isFavorite) {
-                                    subscriber.onNext(null);
-                                } else {
-                                    // Return favorite user id.
-                                    subscriber.onNext(snapshot.getKey());
+                                    throw new DataStoreException("Invalid value:isFavorite=" + isFavorite);
                                 }
+
+                                // Return favorite user id.
+                                subscriber.onNext(snapshot.getKey());
                             }
+
                             subscriber.onCompleted();
                         }
 
@@ -56,12 +57,13 @@ public class UserFavoriteRepository {
         });
     }
 
-    public Single<Favorite> find(String userId, String favoriteUserId) {
+    public Single<Favorite> find(@NonNull String userId, @NonNull String favoriteUserId) {
         return Single.create(subscriber ->
                 reference
                         .child(userId)
                         .child(favoriteUserId)
                         .addListenerForSingleValueEvent(new ValueEventListener() {
+
                             @Override
                             public void onDataChange(DataSnapshot dataSnapshot) {
                                 subscriber.onSuccess(map(userId, dataSnapshot));
@@ -74,7 +76,7 @@ public class UserFavoriteRepository {
                         }));
     }
 
-    public Completable save(Favorite favorite) {
+    public Completable save(@NonNull Favorite favorite) {
         return Completable.create(subscriber -> {
             Task<Void> task = reference
                     .child(favorite.userId)
@@ -90,7 +92,7 @@ public class UserFavoriteRepository {
         });
     }
 
-    public Completable remove(String userId, String favoriteUserId) {
+    public Completable remove(@NonNull String userId, @NonNull String favoriteUserId) {
         return Completable.create(subscriber -> {
             Task task = reference
                     .child(userId)
@@ -111,10 +113,12 @@ public class UserFavoriteRepository {
         if (dataSnapshot.getValue() == null) {
             return null;
         }
+
         Boolean isFavoriteUser = (Boolean) dataSnapshot.getValue();
         if (!isFavoriteUser) {
             return null;
         }
+
         Favorite favorite = new Favorite();
         favorite.favoriteUserId = dataSnapshot.getKey();
         favorite.userId = userId;

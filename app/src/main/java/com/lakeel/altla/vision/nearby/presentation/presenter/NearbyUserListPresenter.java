@@ -10,11 +10,11 @@ import android.support.annotation.IntRange;
 import android.support.v4.content.ContextCompat;
 
 import com.lakeel.altla.vision.nearby.R;
-import com.lakeel.altla.vision.nearby.domain.usecase.FindAllNearbyUserUseCase;
+import com.lakeel.altla.vision.nearby.domain.usecase.FindNearbyUserUseCase;
 import com.lakeel.altla.vision.nearby.presentation.ble.checker.BleChecker;
 import com.lakeel.altla.vision.nearby.presentation.ble.scanner.BleScanCallback;
-import com.lakeel.altla.vision.nearby.presentation.ble.scanner.Scanner;
 import com.lakeel.altla.vision.nearby.presentation.ble.scanner.BleScannerFactory;
+import com.lakeel.altla.vision.nearby.presentation.ble.scanner.Scanner;
 import com.lakeel.altla.vision.nearby.presentation.presenter.mapper.NearbyUsersModelMapper;
 import com.lakeel.altla.vision.nearby.presentation.presenter.model.NearbyUserModel;
 import com.lakeel.altla.vision.nearby.presentation.view.NearbyUserItemView;
@@ -40,13 +40,13 @@ import rx.android.schedulers.AndroidSchedulers;
 public final class NearbyUserListPresenter extends BasePresenter<NearbyUserListView> {
 
     @Inject
-    FindAllNearbyUserUseCase findAllNearbyUserUseCase;
+    FindNearbyUserUseCase findNearbyUserUseCase;
 
     private static final Logger LOGGER = LoggerFactory.getLogger(NearbyUserListPresenter.class);
 
     private final ReusableCompositeSubscription subscriptions = new ReusableCompositeSubscription();
 
-    private final List<NearbyUserModel> viewModels = new ArrayList<>();
+    private final List<NearbyUserModel> models = new ArrayList<>();
 
     private final ScheduledThreadPoolExecutor executor = new ScheduledThreadPoolExecutor(1);
 
@@ -69,22 +69,21 @@ public final class NearbyUserListPresenter extends BasePresenter<NearbyUserListV
                     EddystoneUID eddystoneUID = (EddystoneUID) structure;
                     String beaconId = eddystoneUID.getBeaconIdAsString().toLowerCase();
 
-                    Subscription subscription = findAllNearbyUserUseCase.execute(beaconId)
+                    Subscription subscription = findNearbyUserUseCase
+                            .execute(beaconId)
                             .map(NearbyUsersModelMapper::map)
                             .observeOn(AndroidSchedulers.mainThread())
                             .subscribe(scannedModel -> {
-                                for (NearbyUserModel model : viewModels) {
+                                for (NearbyUserModel model : models) {
                                     // Check already scanned.
                                     if (model.userId.equals(scannedModel.userId)) {
                                         return;
                                     }
                                 }
 
-                                viewModels.add(scannedModel);
+                                models.add(scannedModel);
                                 getView().updateItems();
-                            }, e -> {
-                                LOGGER.error("Failed.", e);
-                            });
+                            }, e -> LOGGER.error("Failed.", e));
                     subscriptions.add(subscription);
                 }
             }
@@ -112,10 +111,9 @@ public final class NearbyUserListPresenter extends BasePresenter<NearbyUserListV
 
     public void onStop() {
         subscriptions.unSubscribe();
+        scanner.stopScan();
 
         getView().hideIndicator();
-
-        scanner.stopScan();
     }
 
     public void onBleEnabled() {
@@ -128,7 +126,8 @@ public final class NearbyUserListPresenter extends BasePresenter<NearbyUserListV
             return;
         }
 
-        viewModels.clear();
+        models.clear();
+
         getView().updateItems();
 
         subscribe();
@@ -141,7 +140,7 @@ public final class NearbyUserListPresenter extends BasePresenter<NearbyUserListV
     }
 
     public int getItemCount() {
-        return viewModels.size();
+        return models.size();
     }
 
     public void onAccessFineLocationGranted() {
@@ -180,14 +179,13 @@ public final class NearbyUserListPresenter extends BasePresenter<NearbyUserListV
         isScanning = true;
 
         executor.schedule(() -> {
-            // Stop token scan after 5 seconds.
             scanner.stopScan();
 
             isScanning = false;
 
             getView().hideIndicator();
 
-            if (viewModels.size() == 0) {
+            if (models.size() == 0) {
                 getView().showSnackBar(R.string.snackBar_message_not_found);
             }
 
@@ -199,7 +197,7 @@ public final class NearbyUserListPresenter extends BasePresenter<NearbyUserListV
 
         @Override
         public void onBind(@IntRange(from = 0) int position) {
-            getItemView().showItem(viewModels.get(position));
+            getItemView().showItem(models.get(position));
         }
     }
 }

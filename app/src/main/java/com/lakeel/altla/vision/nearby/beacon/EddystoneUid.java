@@ -1,5 +1,7 @@
 package com.lakeel.altla.vision.nearby.beacon;
 
+import android.support.annotation.NonNull;
+
 import java.util.UUID;
 
 public final class EddystoneUid {
@@ -9,14 +11,15 @@ public final class EddystoneUid {
     public EddystoneUid() {
         String uuid = UUID.randomUUID().toString();
         String replacedString = uuid.replace("-", "");
-        // Remove 5 - 10 bytes.
+
+        // Remove 5-10 bytes from the uuid.
         String namespaceId = replacedString.substring(0, 8) + replacedString.substring(20, 32);
         String instanceId = "000000000001";
+
         beaconId = namespaceId + instanceId;
     }
 
-    public EddystoneUid(String beaconId) {
-        // TODO: Check the format.
+    public EddystoneUid(@NonNull String beaconId) {
         this.beaconId = beaconId;
     }
 

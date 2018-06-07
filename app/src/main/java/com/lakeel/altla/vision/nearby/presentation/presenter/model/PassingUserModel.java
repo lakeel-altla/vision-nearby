@@ -14,11 +14,11 @@ public final class PassingUserModel {
 
     public String imageUri;
 
-    public long passingTimes;
+    public long passingTime;
 
     public Integer userActivity;
 
-    public long times;
+    public long passingTimes;
 
     public String lineUrl;
 

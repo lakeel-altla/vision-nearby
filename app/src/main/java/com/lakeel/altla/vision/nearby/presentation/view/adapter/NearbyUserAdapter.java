@@ -2,6 +2,7 @@ package com.lakeel.altla.vision.nearby.presentation.view.adapter;
 
 import android.graphics.Color;
 import android.support.annotation.IntRange;
+import android.support.annotation.NonNull;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -13,8 +14,8 @@ import android.widget.TextView;
 import com.amulyakhare.textdrawable.TextDrawable;
 import com.lakeel.altla.vision.nearby.R;
 import com.lakeel.altla.vision.nearby.core.StringUtils;
-import com.lakeel.altla.vision.nearby.presentation.presenter.model.NearbyUserModel;
 import com.lakeel.altla.vision.nearby.presentation.presenter.NearbyUserListPresenter;
+import com.lakeel.altla.vision.nearby.presentation.presenter.model.NearbyUserModel;
 import com.lakeel.altla.vision.nearby.presentation.view.NearbyUserItemView;
 import com.nostra13.universalimageloader.core.ImageLoader;
 
@@ -25,7 +26,7 @@ public final class NearbyUserAdapter extends RecyclerView.Adapter<NearbyUserAdap
 
     private NearbyUserListPresenter nearbyUserListPresenter;
 
-    public NearbyUserAdapter(NearbyUserListPresenter presenter) {
+    public NearbyUserAdapter(@NonNull NearbyUserListPresenter presenter) {
         nearbyUserListPresenter = presenter;
     }
 
@@ -66,7 +67,7 @@ public final class NearbyUserAdapter extends RecyclerView.Adapter<NearbyUserAdap
         }
 
         @Override
-        public void setItemPresenter(NearbyUserListPresenter.NearbyUserItemPresenter nearbyUserItemPresenter) {
+        public void setItemPresenter(@NonNull NearbyUserListPresenter.NearbyUserItemPresenter nearbyUserItemPresenter) {
             itemPresenter = nearbyUserItemPresenter;
         }
 
@@ -76,7 +77,7 @@ public final class NearbyUserAdapter extends RecyclerView.Adapter<NearbyUserAdap
         }
 
         @Override
-        public void showItem(NearbyUserModel model) {
+        public void showItem(@NonNull NearbyUserModel model) {
             String userName = model.userName;
             userNameTextView.setText(model.userName);
 

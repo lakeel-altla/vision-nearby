@@ -4,6 +4,7 @@ import android.bluetooth.BluetoothAdapter;
 import android.bluetooth.BluetoothManager;
 import android.content.Context;
 import android.os.Build;
+import android.support.annotation.NonNull;
 
 import org.altbeacon.beacon.BeaconTransmitter;
 
@@ -33,21 +34,17 @@ public final class BleChecker {
 
     private BluetoothManager manager;
 
-    public BleChecker(Context context) {
+    public BleChecker(@NonNull Context context) {
         this.context = context;
         manager = (BluetoothManager) this.context.getSystemService(Context.BLUETOOTH_SERVICE);
     }
 
     public State checkState() {
-
         // BLE of support in Android OS is it from the API 18, advertising support will be from the API 21.
         // Because it may not support the advertisement, check the devices.
-
         BluetoothAdapter bluetoothAdapter = manager.getAdapter();
-
-        if (!bluetoothAdapter.isEnabled()) {
-            return OFF;
-        }
+        if (bluetoothAdapter == null) return OFF;
+        if (!bluetoothAdapter.isEnabled()) return OFF;
 
         if (Build.VERSION_CODES.LOLLIPOP <= Build.VERSION.SDK_INT) {
             // There are also devices that do not support the advertised after Lollipop.
@@ -59,7 +56,6 @@ public final class BleChecker {
             // If later Android version of Ice Cream Sandwich(4.0), it can't advertise packet.
             return SUBSCRIBE_ONLY;
         }
-
         return ENABLE;
     }
 }

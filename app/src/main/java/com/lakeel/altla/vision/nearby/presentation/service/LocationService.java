@@ -72,6 +72,7 @@ public final class LocationService extends IntentService {
 
     private GoogleApiClient googleApiClient;
 
+    // NOTE:
     // This constructor is need.
     public LocationService() {
         this(LocationService.class.getSimpleName());
@@ -90,11 +91,10 @@ public final class LocationService extends IntentService {
 
         String beaconId = intent.getStringExtra(IntentKey.BEACON_ID.name());
         String userId = intent.getStringExtra(IntentKey.USER_ID.name());
-        Context context = getApplicationContext();
 
-        googleApiClient = new GoogleApiClient.Builder(context)
+        googleApiClient = new GoogleApiClient.Builder(getApplicationContext())
                 .addApi(Awareness.API)
-                .addConnectionCallbacks(new ConnectionCallback(context, userId, beaconId))
+                .addConnectionCallbacks(new ConnectionCallback(getApplicationContext(), userId, beaconId))
                 .build();
 
         googleApiClient.connect();

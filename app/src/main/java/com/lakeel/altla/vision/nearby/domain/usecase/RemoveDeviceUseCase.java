@@ -1,5 +1,7 @@
 package com.lakeel.altla.vision.nearby.domain.usecase;
 
+import android.support.annotation.NonNull;
+
 import com.lakeel.altla.vision.nearby.data.repository.firebase.BeaconRepository;
 import com.lakeel.altla.vision.nearby.data.repository.firebase.UserProfileRepository;
 import com.lakeel.altla.vision.nearby.presentation.helper.CurrentUser;
@@ -21,10 +23,11 @@ public final class RemoveDeviceUseCase {
     RemoveDeviceUseCase() {
     }
 
-    public Single<String> execute(String beaconId) {
+    public Single<String> execute(@NonNull String beaconId) {
         String userId = CurrentUser.getUid();
 
-        return beaconsRepository.remove(beaconId)
+        return beaconsRepository
+                .remove(beaconId)
                 .subscribeOn(Schedulers.io())
                 .flatMap(beaconId1 -> removeUserBeacon(userId, beaconId));
     }

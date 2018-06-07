@@ -15,9 +15,9 @@ public enum WeatherCondition {
     UNKNOWN(Weather.CONDITION_UNKNOWN, R.string.weather_condition_unknown),
     WINDY(Weather.CONDITION_WINDY, R.string.weather_condition_windy);
 
-    private int conditionValue;
+    private final int conditionValue;
 
-    private int resValue;
+    private final int resValue;
 
     WeatherCondition(int conditionValue, int resValue) {
         this.conditionValue = conditionValue;

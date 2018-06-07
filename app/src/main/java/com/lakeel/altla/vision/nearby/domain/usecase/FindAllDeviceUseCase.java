@@ -25,7 +25,8 @@ public final class FindAllDeviceUseCase {
     public Observable<Beacon> execute() {
         String userId = CurrentUser.getUid();
 
-        return usersRepository.findUserBeacons(userId)
+        return usersRepository
+                .findUserBeacons(userId)
                 .subscribeOn(Schedulers.io())
                 .flatMap(this::findBeacon)
                 .filter(beacon -> beacon != null);

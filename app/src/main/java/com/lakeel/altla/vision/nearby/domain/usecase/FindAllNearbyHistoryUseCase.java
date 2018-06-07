@@ -2,8 +2,7 @@ package com.lakeel.altla.vision.nearby.domain.usecase;
 
 import com.lakeel.altla.vision.nearby.data.repository.firebase.UserNearbyHistoryRepository;
 import com.lakeel.altla.vision.nearby.data.repository.firebase.UserProfileRepository;
-import com.lakeel.altla.vision.nearby.domain.model.NearbyHistory;
-import com.lakeel.altla.vision.nearby.domain.model.PassingUserProfile;
+import com.lakeel.altla.vision.nearby.domain.model.NearbyHistoryUserProfile;
 import com.lakeel.altla.vision.nearby.domain.model.UserProfile;
 import com.lakeel.altla.vision.nearby.presentation.helper.CurrentUser;
 
@@ -15,29 +14,25 @@ import rx.schedulers.Schedulers;
 public final class FindAllNearbyHistoryUseCase {
 
     @Inject
-    UserNearbyHistoryRepository historyRepository;
+    UserNearbyHistoryRepository nearbyHistoryRepository;
 
     @Inject
-    UserProfileRepository usersRepository;
+    UserProfileRepository userProfileRepository;
 
     @Inject
     FindAllNearbyHistoryUseCase() {
     }
 
-    public Observable<PassingUserProfile> execute() {
+    public Observable<NearbyHistoryUserProfile> execute() {
         String userId = CurrentUser.getUid();
 
-        return historyRepository.findAll(userId)
+        return nearbyHistoryRepository
+                .findAll(userId)
                 .subscribeOn(Schedulers.io())
-                // Join the data.
-                .flatMap(nearbyHistory -> {
-                    Observable<NearbyHistory> observable = Observable.just(nearbyHistory);
-                    Observable<UserProfile> observable1 = findUser(nearbyHistory.userId);
-                    return Observable.zip(observable, observable1, PassingUserProfile::new);
-                });
+                .flatMap(nearbyHistory -> Observable.zip(Observable.just(nearbyHistory), findUser(nearbyHistory.userId), NearbyHistoryUserProfile::new));
     }
 
     private Observable<UserProfile> findUser(String userId) {
-        return usersRepository.find(userId).subscribeOn(Schedulers.io()).toObservable();
+        return userProfileRepository.find(userId).subscribeOn(Schedulers.io()).toObservable();
     }
 }

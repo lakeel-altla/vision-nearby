@@ -1,6 +1,6 @@
 package com.lakeel.altla.vision.nearby.presentation.analytics;
 
-public enum AnalyticsParam {
+enum AnalyticsParam {
     USER_ID("user_id"),
     USER_NAME("user_name"),
     FAVORITE_USER_ID("favorite_user_id"),
@@ -11,7 +11,7 @@ public enum AnalyticsParam {
     HISTORY_USER_ID("history_user_id"),
     HISTORY_USER_NAME("history_user_name");
 
-    private String value;
+    private final String value;
 
     AnalyticsParam(String value) {
         this.value = value;

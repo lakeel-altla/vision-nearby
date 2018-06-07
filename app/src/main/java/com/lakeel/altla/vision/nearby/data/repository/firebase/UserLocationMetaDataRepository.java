@@ -1,5 +1,7 @@
 package com.lakeel.altla.vision.nearby.data.repository.firebase;
 
+import android.support.annotation.NonNull;
+
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
@@ -18,18 +20,16 @@ import rx.Single;
 
 public final class UserLocationMetaDataRepository {
 
-    private static final String DATABASE_URI = "https://profile-notification-95441.firebaseio.com/userLocationMetaData";
-
     private static final String KEY_BEACON_ID = "beaconId";
 
     private final DatabaseReference reference;
 
     @Inject
-    UserLocationMetaDataRepository() {
-        this.reference = FirebaseDatabase.getInstance().getReferenceFromUrl(DATABASE_URI);
+    public UserLocationMetaDataRepository(String url) {
+        this.reference = FirebaseDatabase.getInstance().getReferenceFromUrl(url);
     }
 
-    public Single<LocationMeta> findLatest(String userId, String beaconId) {
+    public Single<LocationMeta> findLatest(@NonNull String userId, @NonNull String beaconId) {
         return Single.create(subscriber ->
                 reference
                         .child(userId)
@@ -37,6 +37,7 @@ public final class UserLocationMetaDataRepository {
                         .equalTo(beaconId)
                         .limitToFirst(1)
                         .addListenerForSingleValueEvent(new ValueEventListener() {
+
                             @Override
                             public void onDataChange(DataSnapshot dataSnapshot) {
                                 if (!dataSnapshot.hasChildren()) {
@@ -58,7 +59,7 @@ public final class UserLocationMetaDataRepository {
                         }));
     }
 
-    public Completable save(LocationMeta locationMeta) {
+    public Completable save(@NonNull LocationMeta locationMeta) {
         return Completable.create(subscriber -> {
             Task task = reference
                     .child(locationMeta.userId)

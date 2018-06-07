@@ -1,10 +1,11 @@
 package com.lakeel.altla.vision.nearby.domain.usecase;
 
+import android.support.annotation.NonNull;
+
 import com.firebase.geofire.GeoLocation;
 import com.lakeel.altla.vision.nearby.data.repository.firebase.LocationRepository;
 import com.lakeel.altla.vision.nearby.data.repository.firebase.UserLocationMetaDataRepository;
 import com.lakeel.altla.vision.nearby.domain.model.Location;
-import com.lakeel.altla.vision.nearby.domain.model.LocationMeta;
 import com.lakeel.altla.vision.nearby.presentation.helper.CurrentUser;
 
 import javax.inject.Inject;
@@ -24,18 +25,17 @@ public final class FindDeviceLocationUseCase {
     FindDeviceLocationUseCase() {
     }
 
-    public Single<Location> execute(String beaconId) {
+    public Single<Location> execute(@NonNull String beaconId) {
         String userId = CurrentUser.getUid();
 
-        return locationMetaDataRepository.findLatest(userId, beaconId)
+        return locationMetaDataRepository
+                .findLatest(userId, beaconId)
                 .subscribeOn(Schedulers.io())
-                .flatMap(metaData -> {
-                    if (metaData == null) {
+                .flatMap(locationMetaData -> {
+                    if (locationMetaData == null) {
                         return Single.just(null);
                     } else {
-                        Single<LocationMeta> single = Single.just(metaData);
-                        Single<GeoLocation> single1 = findLocation(metaData.locationMetaDataId);
-                        return Single.zip(single, single1, Location::new);
+                        return Single.zip(Single.just(locationMetaData), findLocation(locationMetaData.locationMetaDataId), Location::new);
                     }
                 });
     }

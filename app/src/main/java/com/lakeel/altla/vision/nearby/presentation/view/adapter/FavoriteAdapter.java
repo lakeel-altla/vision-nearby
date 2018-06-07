@@ -1,6 +1,7 @@
 package com.lakeel.altla.vision.nearby.presentation.view.adapter;
 
 import android.support.annotation.IntRange;
+import android.support.annotation.NonNull;
 import android.view.View;
 import android.widget.Button;
 import android.widget.ImageView;
@@ -25,11 +26,12 @@ import butterknife.ButterKnife;
 
 public final class FavoriteAdapter extends SwipeableUltimateViewAdapter<FavoriteModel> {
 
-    private FavoriteListPresenter favoriteListPresenter;
+    private FavoriteListPresenter presenter;
 
-    public FavoriteAdapter(FavoriteListPresenter presenter) {
+    public FavoriteAdapter(@NonNull FavoriteListPresenter presenter) {
+        // NOTE: Must set a mutable list.
         super(new ArrayList<>());
-        favoriteListPresenter = presenter;
+        this.presenter = presenter;
     }
 
     @Override
@@ -40,7 +42,7 @@ public final class FavoriteAdapter extends SwipeableUltimateViewAdapter<Favorite
     @Override
     protected UltimateRecyclerviewViewHolder newViewHolder(View view) {
         FavoriteItemViewHolder viewHolder = new FavoriteItemViewHolder(view, true);
-        favoriteListPresenter.onCreateItemView(viewHolder);
+        presenter.onCreateItemView(viewHolder);
         return viewHolder;
     }
 
@@ -66,7 +68,7 @@ public final class FavoriteAdapter extends SwipeableUltimateViewAdapter<Favorite
         @BindView(R.id.buttonRemove)
         Button removeButton;
 
-        @BindView(R.id.swipeLayout)
+        @BindView(R.id.layoutSwipe)
         SwipeLayout swipeLayout;
 
         FavoriteItemViewHolder(View itemView, boolean bind) {
@@ -79,12 +81,12 @@ public final class FavoriteAdapter extends SwipeableUltimateViewAdapter<Favorite
         }
 
         @Override
-        public void setItemPresenter(FavoriteListPresenter.FavoritesItemPresenter itemPresenter) {
+        public void setItemPresenter(@NonNull FavoriteListPresenter.FavoritesItemPresenter itemPresenter) {
             this.itemPresenter = itemPresenter;
         }
 
         @Override
-        public void showItem(FavoriteModel model) {
+        public void showItem(@NonNull FavoriteModel model) {
             String userName = model.userName;
             userNameTextView.setText(userName);
 

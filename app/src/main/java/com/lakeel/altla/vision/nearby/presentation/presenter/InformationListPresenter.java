@@ -39,7 +39,8 @@ public final class InformationListPresenter extends BasePresenter<InformationLis
     }
 
     public void onActivityCreated() {
-        Subscription subscription = findAllInformationUseCase.execute()
+        Subscription subscription = findAllInformationUseCase
+                .execute()
                 .map(InformationModelMapper::map)
                 .toList()
                 .observeOn(AndroidSchedulers.mainThread())

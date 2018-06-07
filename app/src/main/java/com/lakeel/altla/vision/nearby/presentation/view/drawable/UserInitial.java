@@ -1,6 +1,7 @@
 package com.lakeel.altla.vision.nearby.presentation.view.drawable;
 
 import android.graphics.drawable.Drawable;
+import android.support.annotation.NonNull;
 
 import com.amulyakhare.textdrawable.TextDrawable;
 import com.amulyakhare.textdrawable.util.ColorGenerator;
@@ -9,7 +10,7 @@ public final class UserInitial {
 
     private final String userName;
 
-    public UserInitial(String userName) {
+    public UserInitial(@NonNull String userName) {
         this.userName = userName;
     }
 

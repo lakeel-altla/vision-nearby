@@ -1,5 +1,6 @@
 package com.lakeel.altla.vision.nearby.presentation.view;
 
+import android.support.annotation.NonNull;
 import android.support.annotation.StringRes;
 
 import com.lakeel.altla.vision.nearby.presentation.presenter.model.ActivityModel;
@@ -10,9 +11,7 @@ public interface ActivityView {
 
     void showSignInFragment();
 
-    void updateProfile(ActivityModel model);
-
-    void showSnackBar(@StringRes int resId);
+    void updateDrawerProfile(@NonNull ActivityModel model);
 
     void showAdvertiseDisableConfirmDialog();
 
@@ -24,7 +23,9 @@ public interface ActivityView {
 
     void stopDetectBeaconsInBackground();
 
-    void startAdvertise(String beaconId);
+    void startAdvertiseInBackground(@NonNull String beaconId);
 
     void finishActivity();
+
+    void showSnackBar(@StringRes int resId);
 }

@@ -1,7 +1,8 @@
 package com.lakeel.altla.vision.nearby.data.repository.firebase;
 
+import android.support.annotation.NonNull;
+
 import com.google.android.gms.tasks.Task;
-import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
@@ -9,31 +10,27 @@ import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
 import com.lakeel.altla.vision.nearby.data.execption.DataStoreException;
 import com.lakeel.altla.vision.nearby.domain.model.UserProfile;
-import com.lakeel.altla.vision.nearby.presentation.helper.CurrentUser;
 
 import java.util.HashMap;
 import java.util.Map;
 
 import javax.inject.Inject;
 
-import rx.Completable;
 import rx.Observable;
 import rx.Single;
 
 public final class UserProfileRepository {
-
-    private static final String DATABASE_URI = "https://profile-notification-95441.firebaseio.com/userProfiles";
 
     private static final String KEY_BEACONS = "beacons";
 
     private final DatabaseReference reference;
 
     @Inject
-    public UserProfileRepository() {
-        this.reference = FirebaseDatabase.getInstance().getReferenceFromUrl(DATABASE_URI);
+    public UserProfileRepository(String url) {
+        this.reference = FirebaseDatabase.getInstance().getReferenceFromUrl(url);
     }
 
-    public Single<UserProfile> find(String userId) {
+    public Single<UserProfile> find(@NonNull String userId) {
         return Single.create(subscriber ->
                 reference
                         .child(userId)
@@ -51,41 +48,20 @@ public final class UserProfileRepository {
                         }));
     }
 
-    public Completable save(String userId) {
-        return Completable.create(subscriber -> {
-            UserProfile userProfile = new UserProfile();
-            FirebaseUser firebaseUser = CurrentUser.getUser();
-            userProfile.name = firebaseUser.getDisplayName();
-            userProfile.email = firebaseUser.getEmail();
-            if (firebaseUser.getPhotoUrl() != null) {
-                userProfile.imageUri = firebaseUser.getPhotoUrl().toString();
-            }
-
-            Task task = reference
-                    .child(userId)
-                    .setValue(userProfile);
-
-            Exception e = task.getException();
-            if (e != null) {
-                throw new DataStoreException(e);
-            }
-
-            subscriber.onCompleted();
-        });
-    }
-
-    public Observable<String> findUserBeacons(String userId) {
+    public Observable<String> findUserBeacons(@NonNull String userId) {
         return Observable.create(subscriber -> {
             reference
                     .child(userId)
                     .child(KEY_BEACONS)
                     .addListenerForSingleValueEvent(new ValueEventListener() {
+
                         @Override
                         public void onDataChange(DataSnapshot dataSnapshot) {
                             for (DataSnapshot snapshot : dataSnapshot.getChildren()) {
-                                String beaconId = snapshot.getKey();
-                                subscriber.onNext(beaconId);
+                                // Return beacon id.
+                                subscriber.onNext(snapshot.getKey());
                             }
+
                             subscriber.onCompleted();
                         }
 
@@ -97,8 +73,23 @@ public final class UserProfileRepository {
         });
     }
 
-    public Single<String> saveUserBeacon(String userId, String beaconId) {
-        return Single.create(subscriber -> {
+    public Observable<UserProfile> save(UserProfile userProfile) {
+        return Observable.create(subscriber -> {
+            Task task = reference
+                    .child(userProfile.userId)
+                    .setValue(userProfile);
+
+            Exception e = task.getException();
+            if (e != null) {
+                throw new DataStoreException(e);
+            }
+
+            subscriber.onNext(userProfile);
+        });
+    }
+
+    public Observable<String> saveUserBeacon(@NonNull String userId, @NonNull String beaconId) {
+        return Observable.create(subscriber -> {
             Map<String, Object> map = new HashMap<>();
             map.put(beaconId, true);
 
@@ -112,11 +103,11 @@ public final class UserProfileRepository {
                 subscriber.onError(e);
             }
 
-            subscriber.onSuccess(beaconId);
+            subscriber.onNext(beaconId);
         });
     }
 
-    public Single<String> removeUserBeacon(String userId, String beaconId) {
+    public Single<String> removeUserBeacon(@NonNull String userId, @NonNull String beaconId) {
         return Single.create(subscriber -> {
             Task task = reference
                     .child(userId)
@@ -138,6 +129,7 @@ public final class UserProfileRepository {
                 reference
                         .child(userId)
                         .addValueEventListener(new ValueEventListener() {
+
                             @Override
                             public void onDataChange(DataSnapshot dataSnapshot) {
                                 subscriber.onNext(map(userId, dataSnapshot));

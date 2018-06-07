@@ -21,8 +21,8 @@ public final class RunningServiceManager {
 
     public void stopService() {
         ActivityManager activityManager = (ActivityManager) context.getSystemService(ACTIVITY_SERVICE);
-
         List<ActivityManager.RunningServiceInfo> services = activityManager.getRunningServices(Integer.MAX_VALUE);
+
         for (ActivityManager.RunningServiceInfo info : services) {
             if (info.service.getClassName().equals(clazz.getName())) {
                 Intent intent = new Intent(context, clazz);

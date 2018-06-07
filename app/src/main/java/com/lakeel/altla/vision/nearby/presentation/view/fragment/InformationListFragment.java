@@ -1,6 +1,7 @@
 package com.lakeel.altla.vision.nearby.presentation.view.fragment;
 
 import android.os.Bundle;
+import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.annotation.StringRes;
 import android.support.design.widget.Snackbar;
@@ -43,6 +44,7 @@ public final class InformationListFragment extends Fragment implements Informati
 
         InformationListFragment fragment = new InformationListFragment();
         fragment.setArguments(args);
+
         return fragment;
     }
 
@@ -64,9 +66,9 @@ public final class InformationListFragment extends Fragment implements Informati
     public void onActivityCreated(@Nullable Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
 
-        getActivity().setTitle(R.string.toolbar_title_information);
-
-        ((MainActivity) getActivity()).setDrawerIndicatorEnabled(true);
+        MainActivity activity = ((MainActivity) getActivity());
+        activity.setTitle(R.string.toolbar_title_information);
+        activity.setDrawerIndicatorEnabled(true);
 
         recyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
         recyclerView.setHasFixedSize(false);
@@ -91,7 +93,7 @@ public final class InformationListFragment extends Fragment implements Informati
     }
 
     @Override
-    public void showInformationFragment(String informationId) {
+    public void showInformationFragment(@NonNull String informationId) {
         FragmentController controller = new FragmentController(this);
         controller.showInformationFragment(informationId);
     }

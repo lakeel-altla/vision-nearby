@@ -1,5 +1,7 @@
 package com.lakeel.altla.vision.nearby.domain.usecase;
 
+import android.support.annotation.NonNull;
+
 import com.lakeel.altla.vision.nearby.data.repository.firebase.BeaconRepository;
 import com.lakeel.altla.vision.nearby.domain.model.Beacon;
 
@@ -17,7 +19,7 @@ public final class FindBeaconUseCase {
     FindBeaconUseCase() {
     }
 
-    public Single<Beacon> execute(String beaconId) {
+    public Single<Beacon> execute(@NonNull String beaconId) {
         return repository.find(beaconId).subscribeOn(Schedulers.io());
     }
 }

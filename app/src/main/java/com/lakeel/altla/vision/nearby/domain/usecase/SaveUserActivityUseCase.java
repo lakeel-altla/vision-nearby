@@ -1,5 +1,7 @@
 package com.lakeel.altla.vision.nearby.domain.usecase;
 
+import android.support.annotation.NonNull;
+
 import com.google.android.gms.location.DetectedActivity;
 import com.lakeel.altla.vision.nearby.data.repository.firebase.UserNearbyHistoryRepository;
 import com.lakeel.altla.vision.nearby.presentation.helper.CurrentUser;
@@ -18,8 +20,8 @@ public final class SaveUserActivityUseCase {
     SaveUserActivityUseCase() {
     }
 
-    public Completable execute(String uniqueId, DetectedActivity userActivity) {
+    public Completable execute(@NonNull String historyId, @NonNull DetectedActivity userActivity) {
         String userId = CurrentUser.getUid();
-        return repository.saveUserActivity(uniqueId, userId, userActivity).subscribeOn(Schedulers.io());
+        return repository.saveUserActivity(userId, historyId, userActivity).subscribeOn(Schedulers.io());
     }
 }

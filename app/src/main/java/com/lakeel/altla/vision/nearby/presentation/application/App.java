@@ -52,7 +52,7 @@ public class App extends Application {
     public void onCreate() {
         super.onCreate();
 
-        LOGGER.info("Altla Nearby launch.");
+        LOGGER.info("App launch.");
 
         // NOTE:
         // Must invoke here before using Dagger2.
@@ -87,6 +87,7 @@ public class App extends Application {
         }
 
         registerActivityLifecycleCallbacks(new EmptyActivityLifecycleCallbacks() {
+
             @Override
             public void onActivityStopped(Activity activity) {
                 subscriptions.unSubscribe();
@@ -143,7 +144,8 @@ public class App extends Application {
     }
 
     private void subscribeInBackgroundIfNeeded() {
-        Subscription subscription = findPreferenceUseCase.execute()
+        Subscription subscription = findPreferenceUseCase
+                .execute()
                 .subscribe(preference -> {
                     if (preference.isSubscribeInBackgroundEnabled) {
                         beaconClient.startDetectBeaconsInBackground();

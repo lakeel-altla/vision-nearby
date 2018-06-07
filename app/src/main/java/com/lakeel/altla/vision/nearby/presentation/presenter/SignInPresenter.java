@@ -5,7 +5,7 @@ import android.content.Intent;
 import com.firebase.ui.auth.AuthUI;
 import com.google.firebase.auth.FirebaseAuth;
 import com.lakeel.altla.vision.nearby.R;
-import com.lakeel.altla.vision.nearby.domain.usecase.SaveUserProfileUseCase;
+import com.lakeel.altla.vision.nearby.domain.usecase.SignInUseCase;
 import com.lakeel.altla.vision.nearby.presentation.analytics.AnalyticsReporter;
 import com.lakeel.altla.vision.nearby.presentation.view.SignInView;
 import com.lakeel.altla.vision.nearby.rx.ReusableCompositeSubscription;
@@ -24,7 +24,7 @@ public final class SignInPresenter extends BasePresenter<SignInView> {
     AnalyticsReporter analyticsReporter;
 
     @Inject
-    SaveUserProfileUseCase saveUserProfileUseCase;
+    SignInUseCase signInUseCase;
 
     private static final Logger LOGGER = LoggerFactory.getLogger(SignInPresenter.class);
 
@@ -45,7 +45,7 @@ public final class SignInPresenter extends BasePresenter<SignInView> {
                 .setTheme(R.style.AuthUiTheme)
                 .build();
 
-        getView().showSignInActivity(intent);
+        getView().showGoogleSignInActivity(intent);
     }
 
     public void onStop() {
@@ -55,14 +55,17 @@ public final class SignInPresenter extends BasePresenter<SignInView> {
     public void onSignedIn() {
         analyticsReporter.signIn();
 
-        Subscription subscription = saveUserProfileUseCase.execute()
+        Subscription subscription = signInUseCase
+                .execute()
                 .observeOn(AndroidSchedulers.mainThread())
-                .subscribe(e -> {
-                    LOGGER.error("Failed token sign in.", e);
+                .subscribe(deviceToken -> {
+                    getView().onSignedIn();
+                }, e -> {
+                    LOGGER.error("Failed to sign in.", e);
 
                     FirebaseAuth.getInstance().signOut();
                     getView().showSnackBar(R.string.snackBar_error_not_signed_in);
-                }, () -> getView().onSignedIn());
+                });
         subscriptions.add(subscription);
     }
 }

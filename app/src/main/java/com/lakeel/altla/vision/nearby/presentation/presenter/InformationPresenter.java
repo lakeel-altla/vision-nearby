@@ -39,7 +39,8 @@ public final class InformationPresenter extends BasePresenter<InformationView> {
     }
 
     public void onActivityCreated() {
-        Subscription subscription = findInformationUseCase.execute(informationId)
+        Subscription subscription = findInformationUseCase
+                .execute(informationId)
                 .map(InformationModelMapper::map)
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribe(model -> getView().showInformation(model),

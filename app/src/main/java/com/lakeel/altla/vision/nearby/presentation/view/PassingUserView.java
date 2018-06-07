@@ -1,16 +1,17 @@
 package com.lakeel.altla.vision.nearby.presentation.view;
 
+import android.support.annotation.NonNull;
 import android.support.annotation.StringRes;
 
 import com.lakeel.altla.vision.nearby.presentation.presenter.model.PassingUserModel;
 
 public interface PassingUserView {
 
-    void showTitle(String title);
+    void showTitle(@NonNull String title);
 
-    void updateModel(PassingUserModel model);
+    void updateModel(@NonNull PassingUserModel model);
 
-    void showLocation(String latitude, String longitude);
+    void showLocation(@NonNull String latitude, @NonNull String longitude);
 
     void hideLocation();
 

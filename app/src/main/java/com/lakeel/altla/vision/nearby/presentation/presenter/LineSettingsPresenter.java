@@ -1,11 +1,10 @@
 package com.lakeel.altla.vision.nearby.presentation.presenter;
 
-import com.google.firebase.auth.FirebaseAuth;
-import com.google.firebase.auth.FirebaseUser;
 import com.lakeel.altla.vision.nearby.R;
 import com.lakeel.altla.vision.nearby.domain.usecase.FindLineLinkUseCase;
 import com.lakeel.altla.vision.nearby.domain.usecase.SaveLINEUrlUseCase;
 import com.lakeel.altla.vision.nearby.presentation.analytics.AnalyticsReporter;
+import com.lakeel.altla.vision.nearby.presentation.helper.CurrentUser;
 import com.lakeel.altla.vision.nearby.presentation.view.LineSettingsView;
 import com.lakeel.altla.vision.nearby.rx.ReusableCompositeSubscription;
 
@@ -33,35 +32,33 @@ public final class LineSettingsPresenter extends BasePresenter<LineSettingsView>
 
     private final ReusableCompositeSubscription subscriptions = new ReusableCompositeSubscription();
 
+    private final UrlValidator validator = UrlValidator.getInstance();
+
     @Inject
     LineSettingsPresenter() {
     }
 
     public void onActivityCreated() {
-        FirebaseUser firebaseUser = FirebaseAuth.getInstance().getCurrentUser();
-        if (firebaseUser != null) {
-            Subscription subscription = findLineLinkUseCase.execute(firebaseUser.getUid())
-                    .toObservable()
-                    .filter(lineLink -> lineLink != null)
-                    .map(lineLink -> lineLink.url)
-                    .observeOn(AndroidSchedulers.mainThread())
-                    .subscribe(url -> getView().showLineUrl(url),
-                            e -> {
-                                LOGGER.error("Failed.", e);
-                                getView().showSnackBar(R.string.snackBar_error_failed);
-                            });
-            subscriptions.add(subscription);
-
-        }
+        Subscription subscription = findLineLinkUseCase
+                .execute(CurrentUser.getUid())
+                .toObservable()
+                .filter(lineLink -> lineLink != null)
+                .map(lineLink -> lineLink.url)
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribe(url -> getView().showLineUrl(url),
+                        e -> {
+                            LOGGER.error("Failed.", e);
+                            getView().showSnackBar(R.string.snackBar_error_failed);
+                        });
+        subscriptions.add(subscription);
     }
 
     public void onStop() {
         subscriptions.unSubscribe();
     }
 
-    public void onSave(String url) {
-        UrlValidator validator = UrlValidator.getInstance();
-        boolean isValid = validator.isValid(url);
+    public void onSave(String lineUrl) {
+        boolean isValid = validator.isValid(lineUrl);
         if (!isValid) {
             getView().showSnackBar(R.string.snackBar_error_invalid_uri);
             return;
@@ -69,10 +66,11 @@ public final class LineSettingsPresenter extends BasePresenter<LineSettingsView>
 
         analyticsReporter.inputLineUrl();
 
-        Subscription subscription = saveLineUrlUseCase.execute(url)
+        Subscription subscription = saveLineUrlUseCase
+                .execute(lineUrl)
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribe(s -> {
-                    getView().showLineUrl(url);
+                    getView().showLineUrl(lineUrl);
                     getView().showSnackBar(R.string.snackBar_message_added);
                 }, e -> {
                     LOGGER.error("Failed.", e);
